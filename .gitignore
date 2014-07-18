@@ -1,0 +1,35 @@
+
+# IntelliJ IDEA #
+######################
+*.iml
+.idea
+
+# Eclipse #
+#####################
+.project
+.classpath
+.settings
+
+# Java #
+###################
+*.class
+target
+
+# Info #
+#######
+velocity.log
+*.versionsBackup
+
+# TestNG #
+#######
+test-output
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
