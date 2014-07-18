@@ -5,6 +5,6 @@ package org.obehave.sample;
  */
 public class TestMain {
     public static void main(String[] args) {
-        System.out.println("A very first test - test");
+        System.out.println("A very first test");
     }
 }
