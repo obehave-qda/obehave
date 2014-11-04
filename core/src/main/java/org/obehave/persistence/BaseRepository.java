@@ -1,4 +1,4 @@
-package org.obehave.repository;
+package org.obehave.persistence;
 
 import org.obehave.model.BaseEntity;
 import org.slf4j.Logger;
