@@ -24,8 +24,8 @@ public abstract class BaseRepository<T extends BaseEntity> {
 		this.con = con;
 	}
 
-    public List<Long> save(T... entities) {
-        log.trace("Saving {} entities in repository", entities.length);
+    public List<Long> save(List<T> entities) {
+        log.trace("Saving {} entities in repository", entities.size());
 		List<Long> savedIds = new ArrayList<>();
 
 		for (T entity : entities) {
