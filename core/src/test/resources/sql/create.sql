@@ -1,0 +1,1 @@
+-- sql statements to initialize the data structure of the in-memory test database
