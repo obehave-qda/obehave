@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Serves as a base class for all sql repositroy implementations
+ * Serves as a base class for all sql repository implementations
  */
 public abstract class BaseRepository<T extends BaseEntity> {
     private static final Logger log = LoggerFactory.getLogger(BaseRepository.class);
