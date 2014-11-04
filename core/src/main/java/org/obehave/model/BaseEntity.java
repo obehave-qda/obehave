@@ -1,8 +1,10 @@
 package org.obehave.model;
 
+import com.j256.ormlite.field.DatabaseField;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.obehave.persistence.util.LocalDateTimeType;
 
 import java.time.LocalDateTime;
 
@@ -16,21 +18,25 @@ public class BaseEntity {
      * Represents the primary key for an object in the sql database.
      * Must be unique within a table, but NOT a subsequent sequence WITHOUT gaps
      */
+    @DatabaseField(generatedId = true)
     private Long id;
 
     /**
      * Serves as operand for optimistic locking - http://infos.zu.optimistic.locking.com
      */
+    @DatabaseField(version = true)
     private Integer version = 0;
 
     /**
      * Marks the timestamp when the instance was created
      */
+    @DatabaseField(persisterClass = LocalDateTimeType.class)
     private LocalDateTime creationTS;
 
     /**
      * Marks the timestamp when the instance was modified last
      */
+    @DatabaseField(persisterClass = LocalDateTimeType.class)
     private LocalDateTime modifiedTS;
 
     /**
