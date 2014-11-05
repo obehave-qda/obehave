@@ -11,4 +11,12 @@
     </parent>
 
     <artifactId>desktop</artifactId>
+    <packaging>jar</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.obehave</groupId>
+            <artifactId>core</artifactId>
+        </dependency>
+    </dependencies>
 </project>
