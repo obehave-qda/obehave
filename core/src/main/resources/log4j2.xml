@@ -10,5 +10,8 @@
         <Root level="TRACE">
             <AppenderRef ref="Console"/>
         </Root>
+        <Logger name="com.j256.ormlite" level="ERROR" additivity="false">
+            <AppenderRef ref="Console" />
+        </Logger>
     </Loggers>
 </Configuration>
