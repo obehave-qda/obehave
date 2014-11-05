@@ -11,4 +11,11 @@
     </parent>
 
     <artifactId>mobile</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.obehave</groupId>
+            <artifactId>core</artifactId>
+        </dependency>
+    </dependencies>
 </project>
