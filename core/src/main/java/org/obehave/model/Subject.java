@@ -1,14 +1,14 @@
 package org.obehave.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 
 /**
  * This class describes the observed subjects of a study
  */
-@Entity
+@DatabaseTable
 public class Subject extends BaseEntity {
-    @Column
+    @DatabaseField
     private String name;
 
     public String getName() {
