@@ -13,7 +13,7 @@ import java.text.ParseException;
 import java.time.LocalDateTime;
 
 /**
- * Created by Markus.Moeslinger on 05.11.2014.
+ * Persister to be able to create and read LocalDateTime objects with OrmLite.
  */
 public class LocalDateTimeType extends BaseDateType {
     private static final LocalDateTimeType singleTon = new LocalDateTimeType();
