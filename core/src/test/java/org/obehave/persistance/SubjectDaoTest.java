@@ -21,6 +21,7 @@ import static org.junit.Assert.assertThat;
  */
 public class SubjectDaoTest {
     private static final Logger log = LoggerFactory.getLogger(SubjectDaoTest.class);
+    private static final String SUBJECT_NAME = "Test";
 
     private JdbcConnectionSource cs;
     private Dao<Subject, Long> dao;
@@ -29,13 +30,13 @@ public class SubjectDaoTest {
     @Before
     public void prepare() throws Exception {
         Class.forName("org.h2.Driver");
-        cs = new JdbcConnectionSource("jdbc:h2:mem:testdb;");
+        cs = new JdbcConnectionSource("jdbc:h2:mem:testdb");
 
         TableUtils.createTable(cs, Subject.class);
         dao = DaoFactory.createDao(cs, Subject.class);
 
         testSubject = new Subject();
-        testSubject.setName("Test");
+        testSubject.setName(SUBJECT_NAME);
     }
 
     @After
@@ -46,12 +47,10 @@ public class SubjectDaoTest {
     @Test
     public void testLocalDateTime() throws Exception {
         LocalDateTime creation = LocalDate.now().atStartOfDay();
-        LocalDateTime modified = creation.plusHours(1);
 
-        log.info("Created timestamps.\ncreationTS: {}\nmodifiedTS: {}", creation, modified);
+        log.info("Created timestamps creationTS: {}", creation);
 
         testSubject.setCreationTS(creation);
-        testSubject.setModifiedTS(modified);
 
         log.info("Saving subject {}", testSubject);
         int id = dao.create(testSubject);
@@ -62,6 +61,13 @@ public class SubjectDaoTest {
 
         log.info("Checking equalness of timestamps");
         assertThat(loadedSubject.getCreationTS(), is(equalTo(creation)));
-        assertThat(loadedSubject.getModifiedTS(), is(equalTo(modified)));
+    }
+
+    @Test
+    public void testNameProperty() throws Exception {
+        log.info("Testing name property, via getter and via loaded dao");
+        assertThat(testSubject.getName(), is(equalTo(SUBJECT_NAME)));
+
+        assertThat(dao.queryForId(Long.valueOf(dao.create(testSubject))).getName(), is(equalTo(SUBJECT_NAME)));
     }
 }
