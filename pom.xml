@@ -12,6 +12,7 @@
         <module>core</module>
         <module>desktop</module>
         <module>mobile</module>
+        <module>playground</module>
     </modules>
 
     <properties>

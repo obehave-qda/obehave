@@ -22,12 +22,6 @@ public class BaseEntity {
     private Long id;
 
     /**
-     * Serves as operand for optimistic locking - http://infos.zu.optimistic.locking.com
-     */
-    @DatabaseField(version = true)
-    private Integer version = 0;
-
-    /**
      * Marks the timestamp when the instance was created
      */
     @DatabaseField(persisterClass = LocalDateTimeType.class)
@@ -36,30 +30,12 @@ public class BaseEntity {
     /**
      * Marks the timestamp when the instance was modified last
      */
-    @DatabaseField(persisterClass = LocalDateTimeType.class)
+    @DatabaseField(persisterClass = LocalDateTimeType.class, version = true)
     private LocalDateTime modifiedTS;
 
-    /**
-     * Indicates whether the instance was modified since the last read operation.
-     * Used to optimize write operations towards the sql database.
-     * Due to the transient keyword, we indicate, that we do not want it stored.
-     */
-    private transient boolean dirtyFlag;
-
     public BaseEntity() {
-        // needed for compatibility
-        this(LocalDateTime.now());
-    }
-
-    public BaseEntity(LocalDateTime creationTS) {
-        setCreationTS(creationTS);
-        markAsDirty();
-    }
-
-    public BaseEntity(Long id, Integer version, LocalDateTime creationTS) {
-        this(creationTS); // delegate initialization of creationTS to other constructor
-        setId(id);
-        setVersion(version);
+        LocalDateTime now = LocalDateTime.now();
+        setCreationTS(now);
     }
 
     public void setId(Long id) {
@@ -70,14 +46,6 @@ public class BaseEntity {
         return id;
     }
 
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
-
-    public Integer getVersion() {
-        return version;
-    }
-
     public void setCreationTS(LocalDateTime creationTS) {
         this.creationTS = creationTS;
     }
@@ -86,41 +54,8 @@ public class BaseEntity {
         return creationTS;
     }
 
-    public void setModifiedTS(LocalDateTime modifiedTS) {
-        this.modifiedTS = modifiedTS;
-    }
-
-    public void updateModifiedTS() {
-        setModifiedTS(LocalDateTime.now());
-    }
-
     public LocalDateTime getModifiedTS() {
         return modifiedTS;
-    }
-
-    /**
-     * Exposes the behaviour/capability, but not the technical implementation details of the feature.
-     * This will update the modified timestamp too.
-     *
-     * @return self-reference, which enables us to do method-chaining
-     */
-    public BaseEntity markAsDirty() {
-        dirtyFlag = true;
-        updateModifiedTS();
-        return this;
-    }
-
-    public BaseEntity markAsClean() {
-        dirtyFlag = false;
-        return this;
-    }
-
-    public boolean isDirty() {
-        return dirtyFlag;
-    }
-
-    public boolean isNew() {
-        return id == null;
     }
 
     @Override
@@ -147,10 +82,8 @@ public class BaseEntity {
     public String toString() {
         return new ToStringBuilder(this)
                 .append("id", id)
-                .append("version", version)
                 .append("creationTS", creationTS)
                 .append("modifiedTS", modifiedTS)
-                .append("dirty", dirtyFlag)
                 .toString();
     }
 }
