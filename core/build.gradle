@@ -1,0 +1,5 @@
+dependencies {
+    compile "com.h2database:h2:$versionH2"
+    compile "com.j256.ormlite:ormlite-jdbc:$versionOrmlite"
+}
+
