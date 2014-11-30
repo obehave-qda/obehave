@@ -30,7 +30,7 @@ public class BaseEntity {
     /**
      * Marks the timestamp when the instance was modified last
      */
-    @DatabaseField(persisterClass = LocalDateTimeType.class, version = true)
+    @DatabaseField(persisterClass = LocalDateTimeType.class)
     private LocalDateTime modifiedTS;
 
     public BaseEntity() {
