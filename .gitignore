@@ -33,3 +33,5 @@ test-output
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+.gradle
