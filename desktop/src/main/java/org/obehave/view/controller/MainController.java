@@ -2,10 +2,10 @@ package org.obehave.view.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.obehave.model.Study;
+import org.obehave.view.controller.components.ProjectTreeComponent;
 import org.obehave.view.controller.components.VideoComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +18,7 @@ import java.util.ResourceBundle;
  */
 public class MainController {
     private static final Logger log = LoggerFactory.getLogger(MainController.class);
+    private Study study = new Study("Whatever");
 
     @FXML
     private ResourceBundle resources;
@@ -26,7 +27,7 @@ public class MainController {
     private URL location;
 
     @FXML
-    private TreeView<String> tree;
+    private ProjectTreeComponent tree;
 
     @FXML
     private VideoComponent videoComponent;
@@ -53,16 +54,8 @@ public class MainController {
         assert tree != null : "fx:id=\"tree\" was not injected: check your FXML file 'main.fxml'.";
         assert videoComponent != null : "fx:id=\"videoComponent\" was not injected: check your FXML file 'main.fxml'.";
 
-        TreeItem<String> root = new TreeItem<>("Study Xyz");
-        TreeItem<String> subjects = new TreeItem<>("Subjects");
-        TreeItem<String> actions = new TreeItem<>("Action");
-        TreeItem<String> observations = new TreeItem<>("Observations");
-
-        root.getChildren().addAll(subjects, actions, observations);
-        root.setExpanded(true);
-
-        tree.setRoot(root);
-
+        tree.setStudy(study);
+        tree.updateTree();
     }
 
     @FXML
