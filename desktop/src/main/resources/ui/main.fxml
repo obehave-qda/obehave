@@ -5,6 +5,7 @@
 <?import org.obehave.view.controller.components.VideoComponent?>
 <?import org.obehave.view.controller.components.CodingComponent?>
 
+<?import org.obehave.view.controller.components.ProjectTreeComponent?>
 <VBox prefHeight="768" prefWidth="1024" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="org.obehave.view.controller.MainController">
     <MenuBar>
@@ -14,7 +15,7 @@
         </Menu>
     </MenuBar>
     <SplitPane dividerPositions="0.25">
-        <TreeView fx:id="tree" SplitPane.resizableWithParent="false" onMouseClicked="#addTreeComponent" />
+        <ProjectTreeComponent fx:id="tree" SplitPane.resizableWithParent="false" onMouseClicked="#addTreeComponent" />
         <BorderPane>
             <center>
                 <AnchorPane>
