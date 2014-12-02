@@ -4,9 +4,8 @@ import com.j256.ormlite.field.DatabaseField;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.obehave.persistence.util.LocalDateTimeType;
+import org.joda.time.DateTime;
 
-import java.time.LocalDateTime;
 
 /**
  * Serves as a base class for all entities, which will be persisted into sql databases.
@@ -24,18 +23,17 @@ public class BaseEntity {
     /**
      * Marks the timestamp when the instance was created
      */
-    @DatabaseField(persisterClass = LocalDateTimeType.class)
-    private LocalDateTime creationTS;
+    @DatabaseField
+    private DateTime creationTS;
 
     /**
      * Marks the timestamp when the instance was modified last
      */
-    @DatabaseField(persisterClass = LocalDateTimeType.class)
-    private LocalDateTime modifiedTS;
+    @DatabaseField
+    private DateTime modifiedTS;
 
     public BaseEntity() {
-        LocalDateTime now = LocalDateTime.now();
-        setCreationTS(now);
+        setCreationTS(new DateTime());
     }
 
     public void setId(Long id) {
@@ -46,15 +44,15 @@ public class BaseEntity {
         return id;
     }
 
-    public void setCreationTS(LocalDateTime creationTS) {
+    public void setCreationTS(DateTime creationTS) {
         this.creationTS = creationTS;
     }
 
-    public LocalDateTime getCreationTS() {
+    public DateTime getCreationTS() {
         return creationTS;
     }
 
-    public LocalDateTime getModifiedTS() {
+    public DateTime getModifiedTS() {
         return modifiedTS;
     }
 
