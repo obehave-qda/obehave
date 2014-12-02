@@ -28,6 +28,6 @@ android {
 }
 
 dependencies {
-//     compile project (":core")
+    compile project (":core")
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }
