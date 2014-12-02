@@ -1,4 +1,4 @@
-package org.obehave.controller.components;
+package org.obehave.view.controller.components;
 
 
 import javafx.event.ActionEvent;
