@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 public class Obehave extends Application {
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("ui.fxml"));
+        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("ui/main.fxml"));
 
         Scene scene = new Scene(root, 1024, 768);
 
