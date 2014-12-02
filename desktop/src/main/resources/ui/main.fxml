@@ -13,7 +13,7 @@
         </Menu>
     </MenuBar>
     <SplitPane dividerPositions="0.25">
-        <TreeView fx:id="tree" SplitPane.resizableWithParent="false"/>
+        <TreeView fx:id="tree" SplitPane.resizableWithParent="false" onMouseClicked="#addTreeComponent" />
         <BorderPane>
             <center>
                 <AnchorPane>
@@ -25,7 +25,6 @@
                     <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="200.0" stroke="BLACK"
                                strokeType="INSIDE" width="200.0" AnchorPane.bottomAnchor="20.0"
                                AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0"/>
-
                 </AnchorPane>
             </bottom>
         </BorderPane>

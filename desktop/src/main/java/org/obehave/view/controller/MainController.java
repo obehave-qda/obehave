@@ -2,6 +2,7 @@ package org.obehave.view.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -25,7 +26,7 @@ public class MainController {
     private URL location;
 
     @FXML
-    private TreeView<?> tree;
+    private TreeView<String> tree;
 
     @FXML
     private VideoComponent videoComponent;
@@ -51,5 +52,21 @@ public class MainController {
     void initialize() {
         assert tree != null : "fx:id=\"tree\" was not injected: check your FXML file 'main.fxml'.";
         assert videoComponent != null : "fx:id=\"videoComponent\" was not injected: check your FXML file 'main.fxml'.";
+
+        TreeItem<String> root = new TreeItem<>("Study Xyz");
+        TreeItem<String> subjects = new TreeItem<>("Subjects");
+        TreeItem<String> actions = new TreeItem<>("Action");
+        TreeItem<String> observations = new TreeItem<>("Observations");
+
+        root.getChildren().addAll(subjects, actions, observations);
+        root.setExpanded(true);
+
+        tree.setRoot(root);
+
+    }
+
+    @FXML
+    void addTreeComponent() {
+
     }
 }
