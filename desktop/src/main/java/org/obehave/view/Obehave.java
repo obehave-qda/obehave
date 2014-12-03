@@ -11,10 +11,11 @@ public class Obehave extends Application {
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("ui/main.fxml"));
 
-        Scene scene = new Scene(root, 1024, 768);
+        Scene scene = new Scene(root);
 
         stage.setTitle("obehave");
         stage.setScene(scene);
+        stage.setMaximized(true);
         stage.show();
     }
 }
