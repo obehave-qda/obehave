@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import org.obehave.model.Subject;
 
 
 public class MainActivity extends Activity {
@@ -21,6 +22,10 @@ public class MainActivity extends Activity {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
+
+        Subject s = new Subject();
+        s.setName("ABC");
+
     }
 
 
