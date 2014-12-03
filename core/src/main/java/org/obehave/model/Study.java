@@ -1,16 +1,14 @@
 package org.obehave.model;
 
-import java.util.Collections;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * A study contains multiple subjects, actions and observations.
  */
 public class Study extends BaseEntity {
-    private Set<Subject> subjects = new TreeSet<>();
-    private Set<Action> actions = new TreeSet<>();
-    private Set<Observation> observations = new TreeSet<>();
+    private List<Subject> subjects = new ArrayList<>();
+    private List<Action> actions = new ArrayList<>();
+    private List<Observation> observations = new ArrayList<>();
 
     private String name;
 
@@ -18,28 +16,37 @@ public class Study extends BaseEntity {
         this.name = name;
     }
 
-    public Set<Subject> getSubjects() {
-        return Collections.unmodifiableSet(subjects);
+    public List<Subject> getSubjects() {
+        return Collections.unmodifiableList(subjects);
     }
 
     public boolean addSubject(Subject subject) {
-        return subjects.add(subject);
+        final boolean result = subjects.add(subject);
+        setChanged();
+        notifyObservers(subject);
+        return result;
     }
 
-    public Set<Action> getActions() {
-        return Collections.unmodifiableSet(actions);
+    public List<Action> getActions() {
+        return Collections.unmodifiableList(actions);
     }
 
     public boolean addAction(Action action) {
-        return actions.add(action);
+        final boolean result = actions.add(action);
+        setChanged();
+        notifyObservers(action);
+        return result;
     }
 
-    public Set<Observation> getObservations() {
-        return Collections.unmodifiableSet(observations);
+    public List<Observation> getObservations() {
+        return Collections.unmodifiableList(observations);
     }
 
     public boolean addObservation(Observation observation) {
-        return observations.add(observation);
+        final boolean result = observations.add(observation);
+        setChanged();
+        notifyObservers(observation);
+        return result;
     }
 
     public String getName() {
