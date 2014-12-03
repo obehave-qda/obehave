@@ -9,7 +9,7 @@ package org.obehave.model;
  *<p />
  * Actions can be modified in some way.
  */
-public class Action extends BaseEntity {
+public class Action extends BaseEntity implements Displayable {
     private String name;
 
     public Action(String name) {
@@ -22,5 +22,10 @@ public class Action extends BaseEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String getDisplayString() {
+        return getName();
     }
 }

@@ -55,7 +55,6 @@ public class MainController {
         assert videoComponent != null : "fx:id=\"videoComponent\" was not injected: check your FXML file 'main.fxml'.";
 
         tree.setStudy(study);
-        tree.updateTree();
     }
 
     @FXML
