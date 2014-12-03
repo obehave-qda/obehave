@@ -1,20 +1,19 @@
 package org.obehave.view.controller.components;
 
-import javafx.fxml.FXML;
-import javafx.scene.Node;
-import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.text.Text;
 import org.obehave.model.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
 public class ProjectTreeComponent extends TreeView<String> implements Observer {
+    private static final Logger log = LoggerFactory.getLogger(ProjectTreeComponent.class);
+
     private Study study;
 
     private TreeItem root;
@@ -28,37 +27,35 @@ public class ProjectTreeComponent extends TreeView<String> implements Observer {
         actionNode.setExpanded(true);
         observationsNode.setExpanded(true);
 
-        addEventHandler(MouseEvent.MOUSE_CLICKED, event -> addThing(event));
+        addEventHandler(KeyEvent.KEY_TYPED, event -> addNewItem(event));
     }
 
-    private void addThing(MouseEvent event) {
-        Node node = event.getPickResult().getIntersectedNode();
-        if (node instanceof Text || node instanceof TreeCell) {
-            TreeItem<String> selectedItem = getSelectionModel().getSelectedItem();
-            if (selectedItem == subjectNode) {
-                addRandomSubject();
-            } else if (selectedItem == actionNode) {
-                addRandomAction();
-            } else if (selectedItem == observationsNode) {
-                addRandomObservation();
-            }
+    private void addNewItem(KeyEvent event) {
+        String key = event.getCharacter();
+        TreeItem<String> selectedItem = getSelectionModel().getSelectedItem();
+        if (selectedItem == subjectNode) {
+            addRandomSubject(key);
+        } else if (selectedItem == actionNode) {
+            addRandomAction(key);
+        } else if (selectedItem == observationsNode) {
+            addRandomObservation(key);
         }
     }
 
-    private void addRandomSubject() {
-        study.addSubject(new Subject(getRandomString("Subject")));
+    private void addRandomSubject(String key) {
+        study.addSubject(new Subject(getRandomString("Subject " + key)));
     }
 
-    private void addRandomAction() {
-        study.addAction(new Action(getRandomString("Action")));
+    private void addRandomAction(String key) {
+        study.addAction(new Action(getRandomString("Action " + key)));
     }
 
-    private void addRandomObservation() {
-        study.addObservation(new Observation(getRandomString("Observation")));
+    private void addRandomObservation(String key) {
+        study.addObservation(new Observation(getRandomString("Observation " + key)));
     }
 
     private String getRandomString(String prefix) {
-        int number = (int) (Math.random() * 100);
+        int number = (int) (Math.random() * 5);
         return prefix + " " + number;
     }
 
@@ -71,48 +68,36 @@ public class ProjectTreeComponent extends TreeView<String> implements Observer {
         root.setExpanded(true);
 
         setRoot(root);
-
-        updateTree();
-    }
-
-    @FXML
-    public void updateTree() {
-        Subject s1 = new Subject("Wolf A");
-        Subject s2 = new Subject("Wolf B");
-        Action a1 = new Action("Running");
-        Action a2 = new Action("Sleeping");
-        Observation o1 = new Observation("Observation 1");
-        Observation o2 = new Observation("Observation 2");
-
-        study.addSubject(s1);
-        study.addSubject(s2);
-        study.addAction(a1);
-        study.addAction(a2);
-        study.addObservation(o1);
-        study.addObservation(o2);
     }
 
     @Override
     public void update(Observable o, Object changedObject) {
         if (changedObject instanceof Displayable) {
             Displayable displayable = (Displayable) changedObject;
+            String displayString = displayable.getDisplayString();
+            log.debug("Something has changed - adding {}", displayString);
 
             if (displayable instanceof Subject) {
-                TreeItem<String> ti = new TreeItem<>(displayable.getDisplayString());
+                TreeItem<String> ti = new TreeItem<>(displayString);
                 addOnce(subjectNode.getChildren(), ti);
             } else if (displayable instanceof Action) {
-                TreeItem<String> ti = new TreeItem<>(displayable.getDisplayString());
+                TreeItem<String> ti = new TreeItem<>(displayString);
                 addOnce(actionNode.getChildren(), ti);
             } else if (displayable instanceof Observation) {
-                TreeItem<String> ti = new TreeItem<>(displayable.getDisplayString());
+                TreeItem<String> ti = new TreeItem<>(displayString);
                 addOnce(observationsNode.getChildren(), ti);
             }
         }
     }
 
-    private <T> void addOnce(List<T> children, T entity) {
-        if (!children.contains(entity)) {
-            children.add(entity);
+    private void addOnce(List<TreeItem<String>> children, TreeItem<String> entity) {
+        for (TreeItem<String> item : children) {
+            if (item.getValue().equals(entity.getValue())) {
+                log.debug("Won't add another {}", entity.getValue());
+                return;
+            }
         }
+
+        children.add(entity);
     }
 }

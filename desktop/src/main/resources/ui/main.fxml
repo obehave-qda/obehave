@@ -15,7 +15,7 @@
         </Menu>
     </MenuBar>
     <SplitPane dividerPositions="0.25">
-        <ProjectTreeComponent fx:id="tree" SplitPane.resizableWithParent="false" onMouseClicked="#addTreeComponent" />
+        <ProjectTreeComponent fx:id="tree" SplitPane.resizableWithParent="false" />
         <BorderPane>
             <center>
                 <AnchorPane>
