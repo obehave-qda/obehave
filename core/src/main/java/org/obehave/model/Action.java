@@ -6,7 +6,7 @@ package org.obehave.model;
  * <p />
  * Point and state actions
  * Single actions or interactions between different subjects
- *<p />
+ * <p />
  * Actions can be modified in some way.
  */
 public class Action extends BaseEntity implements Displayable {
