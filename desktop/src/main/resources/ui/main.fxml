@@ -5,7 +5,7 @@
 <?import org.obehave.view.controller.components.VideoComponent?>
 <?import org.obehave.view.controller.components.CodingComponent?>
 
-<?import org.obehave.view.controller.components.ProjectTreeComponent?>
+<?import org.obehave.view.controller.components.tree.ProjectTreeComponent?>
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="org.obehave.view.controller.MainController">
     <MenuBar>
