@@ -1,6 +1,5 @@
 package org.obehave.model;
 
-import com.google.common.eventbus.EventBus;
 import org.obehave.events.ChangeEvent;
 import org.obehave.events.ChangeType;
 import org.obehave.events.EventBusHolder;
@@ -30,7 +29,13 @@ public class Study extends BaseEntity {
     }
 
     public boolean addSubject(Subject subject) {
+        if (subjects.contains(subject)) {
+            log.debug("Won't add another {}", subject);
+            return false;
+        }
+
         log.debug("Adding subject {}", subject);
+
         final boolean added = subjects.add(subject);
         EventBusHolder.post(new ChangeEvent<>(subject, ChangeType.CREATE));
         return added;
@@ -48,6 +53,11 @@ public class Study extends BaseEntity {
     }
 
     public boolean addAction(Action action) {
+        if (actions.contains(action)) {
+            log.debug("Won't add another {}", action);
+            return false;
+        }
+
         log.debug("Adding action {}", action);
         final boolean added = actions.add(action);
         EventBusHolder.post(new ChangeEvent<>(action, ChangeType.CREATE));
@@ -66,6 +76,11 @@ public class Study extends BaseEntity {
     }
 
     public boolean addObservation(Observation observation) {
+        if (observations.contains(observation)) {
+            log.debug("Won't add another {}", observation);
+            return false;
+        }
+
         log.debug("Adding observation {}", observation);
         final boolean added = observations.add(observation);
         EventBusHolder.post(new ChangeEvent<>(observation, ChangeType.CREATE));
@@ -87,6 +102,7 @@ public class Study extends BaseEntity {
         this.name = name;
     }
 
+    // ONLY FOR TEMPORARILY TESTING!
     public void addRandomSubject(String key) {
         addSubject(new Subject(getRandomString("Subject " + key)));
     }
