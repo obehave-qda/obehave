@@ -5,7 +5,7 @@ import javafx.fxml.FXML;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.obehave.model.Study;
-import org.obehave.view.controller.components.ProjectTreeComponent;
+import org.obehave.view.controller.components.tree.ProjectTreeComponent;
 import org.obehave.view.controller.components.VideoComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

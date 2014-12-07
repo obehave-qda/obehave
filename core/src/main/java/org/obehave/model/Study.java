@@ -7,6 +7,8 @@ import org.obehave.events.EventBusHolder;
 import org.obehave.model.events.ActionChangeEvent;
 import org.obehave.model.events.ObservationChangeEvent;
 import org.obehave.model.events.SubjectChangeEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -14,6 +16,7 @@ import java.util.*;
  * A study contains multiple subjects, actions and observations.
  */
 public class Study extends BaseEntity {
+    private static final Logger log = LoggerFactory.getLogger(Study.class);
     private final EventBus eventBus = EventBusHolder.getEventBus();
 
     private List<Subject> subjects = new ArrayList<>();
@@ -31,9 +34,17 @@ public class Study extends BaseEntity {
     }
 
     public boolean addSubject(Subject subject) {
-        final boolean result = subjects.add(subject);
+        log.debug("Adding subject {}", subject);
+        final boolean added = subjects.add(subject);
         eventBus.post(new SubjectChangeEvent(subject, ChangeType.CREATE));
-        return result;
+        return added;
+    }
+
+    public boolean removeSubject(Subject subject) {
+        log.debug("Removing subject {}", subject);
+        final boolean deleted = subjects.remove(subject);
+        eventBus.post(new SubjectChangeEvent(subject, ChangeType.DELETE));
+        return deleted;
     }
 
     public List<Action> getActions() {
@@ -41,9 +52,17 @@ public class Study extends BaseEntity {
     }
 
     public boolean addAction(Action action) {
-        final boolean result = actions.add(action);
+        log.debug("Adding action {}", action);
+        final boolean added = actions.add(action);
         eventBus.post(new ActionChangeEvent(action, ChangeType.CREATE));
-        return result;
+        return added;
+    }
+
+    public boolean removeAction(Action action) {
+        log.debug("Removing action {}", action);
+        final boolean deleted = actions.remove(action);
+        eventBus.post(new ActionChangeEvent(action, ChangeType.DELETE));
+        return deleted;
     }
 
     public List<Observation> getObservations() {
@@ -51,9 +70,17 @@ public class Study extends BaseEntity {
     }
 
     public boolean addObservation(Observation observation) {
-        final boolean result = observations.add(observation);
+        log.debug("Adding observation {}", observation);
+        final boolean added = observations.add(observation);
         eventBus.post(new ObservationChangeEvent(observation, ChangeType.CREATE));
-        return result;
+        return added;
+    }
+
+    public boolean removeObservation(Observation observation) {
+        log.debug("Removing observation {}", observation);
+        final boolean deleted = observations.remove(observation);
+        eventBus.post(new ObservationChangeEvent(observation, ChangeType.DELETE));
+        return deleted;
     }
 
     public String getName() {
@@ -62,5 +89,22 @@ public class Study extends BaseEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void addRandomSubject(String key) {
+        addSubject(new Subject(getRandomString("Subject " + key)));
+    }
+
+    public void addRandomAction(String key) {
+        addAction(new Action(getRandomString("Action " + key)));
+    }
+
+    public void addRandomObservation(String key) {
+        addObservation(new Observation(getRandomString("Observation " + key)));
+    }
+
+    private String getRandomString(String prefix) {
+        int number = (int) (Math.random() * 5);
+        return prefix + " " + number;
     }
 }
