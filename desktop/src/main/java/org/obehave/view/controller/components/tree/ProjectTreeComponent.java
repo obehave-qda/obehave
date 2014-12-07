@@ -41,7 +41,7 @@ public class ProjectTreeComponent extends TreeView<String> {
 
         eventBus.register(this);
 
-        addEventHandler(KeyEvent.KEY_TYPED, event -> addNewItem(event));
+        addEventHandler(KeyEvent.KEY_TYPED, this::addNewItem);
     }
 
     private void addNewItem(KeyEvent event) {
@@ -101,7 +101,6 @@ public class ProjectTreeComponent extends TreeView<String> {
             observationsNode.getChildren().remove(getMatchingTreeItem(root, displayString));
         }
     }
-
 
     private Optional<TreeItem<String>> addOnce(TreeItem<String> treeItem, String text) {
         List<TreeItem<String>> children = treeItem.getChildren();

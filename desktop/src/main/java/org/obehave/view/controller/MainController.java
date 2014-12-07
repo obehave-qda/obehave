@@ -13,9 +13,6 @@ import org.slf4j.LoggerFactory;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-/**
- * Created by Markus.Moeslinger on 02.12.2014.
- */
 public class MainController {
     private static final Logger log = LoggerFactory.getLogger(MainController.class);
     private Study study = new Study("Whatever");
