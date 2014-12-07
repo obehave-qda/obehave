@@ -1,6 +1,5 @@
 package org.obehave.view.controller.components.tree;
 
-import com.google.common.collect.Lists;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeItem;
@@ -19,11 +18,8 @@ public class ContextMenuTreeCell extends TextFieldTreeCell<String> {
     private ContextMenu removeAction = new ContextMenu();
     private ContextMenu removeObservation = new ContextMenu();
 
-    private Study study;
-
     public ContextMenuTreeCell(Study study) {
         super();
-        this.study = study;
 
 
         MenuItem addSubjectItem = new MenuItem("Add subject");
@@ -60,12 +56,16 @@ public class ContextMenuTreeCell extends TextFieldTreeCell<String> {
             if (parent != null) {
                 // second level
                 if (parent.getParent() == null) {
-                    if (item.equals("Subjects")) {
-                        setContextMenu(addSubject);
-                    } else if (item.equals("Actions")) {
-                        setContextMenu(addAction);
-                    } else if (item.equals("Observations")) {
-                        setContextMenu(addObservation);
+                    switch (item) {
+                        case "Subjects":
+                            setContextMenu(addSubject);
+                            break;
+                        case "Actions":
+                            setContextMenu(addAction);
+                            break;
+                        case "Observations":
+                            setContextMenu(addObservation);
+                            break;
                     }
                 } else {
                     if (parent.getValue().equals("Subjects")) {
