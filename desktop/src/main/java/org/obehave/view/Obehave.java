@@ -13,7 +13,7 @@ public class Obehave extends Application {
     public void start(Stage stage) throws Exception {
         final URL mainFxml = getClass().getClassLoader().getResource("ui/main.fxml");
         if (mainFxml == null) {
-            throw new IllegalStateException("Couldn't find main.fxml!");
+            throw new IllegalStateException("Couldn't load main.fxml!");
         }
 
         Parent root = FXMLLoader.load(mainFxml);
@@ -24,5 +24,9 @@ public class Obehave extends Application {
         stage.setScene(scene);
         stage.setMaximized(true);
         stage.show();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
     }
 }

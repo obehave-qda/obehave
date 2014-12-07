@@ -1,11 +1,21 @@
 package org.obehave.model;
 
+import com.google.common.eventbus.EventBus;
+import org.obehave.events.ChangeEvent;
+import org.obehave.events.ChangeType;
+import org.obehave.events.EventBusHolder;
+import org.obehave.model.events.ActionChangeEvent;
+import org.obehave.model.events.ObservationChangeEvent;
+import org.obehave.model.events.SubjectChangeEvent;
+
 import java.util.*;
 
 /**
  * A study contains multiple subjects, actions and observations.
  */
 public class Study extends BaseEntity {
+    private final EventBus eventBus = EventBusHolder.getEventBus();
+
     private List<Subject> subjects = new ArrayList<>();
     private List<Action> actions = new ArrayList<>();
     private List<Observation> observations = new ArrayList<>();
@@ -22,8 +32,7 @@ public class Study extends BaseEntity {
 
     public boolean addSubject(Subject subject) {
         final boolean result = subjects.add(subject);
-        setChanged();
-        notifyObservers(subject);
+        eventBus.post(new SubjectChangeEvent(subject, ChangeType.CREATE));
         return result;
     }
 
@@ -33,8 +42,7 @@ public class Study extends BaseEntity {
 
     public boolean addAction(Action action) {
         final boolean result = actions.add(action);
-        setChanged();
-        notifyObservers(action);
+        eventBus.post(new ActionChangeEvent(action, ChangeType.CREATE));
         return result;
     }
 
@@ -44,8 +52,7 @@ public class Study extends BaseEntity {
 
     public boolean addObservation(Observation observation) {
         final boolean result = observations.add(observation);
-        setChanged();
-        notifyObservers(observation);
+        eventBus.post(new ObservationChangeEvent(observation, ChangeType.CREATE));
         return result;
     }
 
