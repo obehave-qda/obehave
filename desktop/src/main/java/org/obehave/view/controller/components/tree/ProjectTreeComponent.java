@@ -9,12 +9,10 @@ import javafx.scene.control.cell.CheckBoxTreeCell;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
+import org.obehave.events.ChangeEvent;
 import org.obehave.events.ChangeType;
 import org.obehave.events.EventBusHolder;
 import org.obehave.model.*;
-import org.obehave.model.events.ActionChangeEvent;
-import org.obehave.model.events.ObservationChangeEvent;
-import org.obehave.model.events.SubjectChangeEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,8 +54,6 @@ public class ProjectTreeComponent extends TreeView<String> {
         }
     }
 
-
-
     public void setStudy(Study study) {
         this.study = study;
 
@@ -70,35 +66,27 @@ public class ProjectTreeComponent extends TreeView<String> {
     }
 
     @Subscribe
-    public void handleSubjectChange(SubjectChangeEvent subjectChange) {
-        String displayString = subjectChange.getChanged().getDisplayString();
+    public void changeEvent(ChangeEvent<?> change) {
+        if (change.getChanged() instanceof Displayable) {
+            Displayable d = (Displayable) change.getChanged();
 
-        if (subjectChange.getChangeType() == ChangeType.CREATE) {
-            addOnce(subjectNode, displayString);
-        } else if (subjectChange.getChangeType() == ChangeType.DELETE) {
-            subjectNode.getChildren().remove(getMatchingTreeItem(root, displayString));
+            if (d instanceof Subject) {
+                handleEntityChange(d, change.getChangeType(), subjectNode);
+            } else if (d instanceof Action) {
+                handleEntityChange(d, change.getChangeType(), actionNode);
+            } else if (d instanceof Observation) {
+                handleEntityChange(d, change.getChangeType(), observationsNode);
+            }
         }
     }
 
-    @Subscribe
-    public void handleActionChange(ActionChangeEvent actionChange) {
-        String displayString = actionChange.getChanged().getDisplayString();
+    private void handleEntityChange(Displayable displayable, ChangeType changeType, TreeItem node) {
+        String displayString = displayable.getDisplayString();
 
-        if (actionChange.getChangeType() == ChangeType.CREATE) {
-            addOnce(actionNode, displayString);
-        } else if (actionChange.getChangeType() == ChangeType.DELETE) {
-            actionNode.getChildren().remove(getMatchingTreeItem(root, displayString));
-        }
-    }
-
-    @Subscribe
-    public void handleObservationChange(ObservationChangeEvent observationChange) {
-        String displayString = observationChange.getChanged().getDisplayString();
-
-        if (observationChange.getChangeType() == ChangeType.CREATE) {
-            addOnce(observationsNode, displayString);
-        } else if (observationChange.getChangeType() == ChangeType.DELETE) {
-            observationsNode.getChildren().remove(getMatchingTreeItem(root, displayString));
+        if (changeType == ChangeType.CREATE) {
+            addOnce(node, displayString);
+        } else if (changeType == ChangeType.DELETE) {
+            node.getChildren().remove(getMatchingTreeItem(root, displayString));
         }
     }
 
