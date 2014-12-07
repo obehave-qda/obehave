@@ -83,33 +83,10 @@ public class ProjectTreeComponent extends TreeView<String> {
         String displayString = displayable.getDisplayString();
 
         if (changeType == ChangeType.CREATE) {
-            addOnce(node, displayString);
+            node.getChildren().add(new TreeItem<>(displayString));
         } else if (changeType == ChangeType.DELETE) {
             node.getChildren().remove(getMatchingTreeItem(root, displayString));
         }
-    }
-
-    /**
-     * Add a new item to the tree, if it isn't there already.
-     * <p/>
-     * This kind of check should be done in the study itself, not in the view
-     *
-     * @param treeItem the treeitem to add
-     * @param text     the text to look for
-     * @return an optional TreeItem once it's added - if it wasn't there already
-     */
-    private Optional<TreeItem<String>> addOnce(TreeItem<String> treeItem, String text) {
-        List<TreeItem<String>> children = treeItem.getChildren();
-        TreeItem<String> entity = new TreeItem<>(text);
-        for (TreeItem<String> item : children) {
-            if (item.getValue().equals(entity.getValue())) {
-                log.debug("Won't add another {} to the tree", entity.getValue());
-                return Optional.empty();
-            }
-        }
-
-        children.add(entity);
-        return Optional.of(entity);
     }
 
     /**
