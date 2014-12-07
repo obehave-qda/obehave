@@ -12,10 +12,12 @@
          AnchorPane.topAnchor="20.0">
 
     <center>
-        <AnchorPane>
-            <MediaView fx:id="mediaView" fitHeight="420.0" fitWidth="680.0" AnchorPane.bottomAnchor="5.0"
-                       AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0"/>
-        </AnchorPane>
+        <Group BorderPane.alignment="CENTER">
+            <AnchorPane>
+                <MediaView fx:id="mediaView" fitHeight="420.0" fitWidth="680.0" AnchorPane.bottomAnchor="5.0"
+                           AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
+            </AnchorPane>
+        </Group>
     </center>
     <bottom>
         <Group BorderPane.alignment="CENTER">
