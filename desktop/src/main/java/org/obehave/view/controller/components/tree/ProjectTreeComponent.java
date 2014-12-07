@@ -31,7 +31,7 @@ public class ProjectTreeComponent extends TreeView<String> {
         actionNode.setExpanded(true);
         observationsNode.setExpanded(true);
 
-        EventBusHolder.getEventBus().register(this);
+        EventBusHolder.register(this);
 
         addEventHandler(KeyEvent.KEY_TYPED, this::addNewItem);
     }

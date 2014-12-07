@@ -14,7 +14,6 @@ import java.util.*;
  */
 public class Study extends BaseEntity {
     private static final Logger log = LoggerFactory.getLogger(Study.class);
-    private final EventBus eventBus = EventBusHolder.getEventBus();
 
     private List<Subject> subjects = new ArrayList<>();
     private List<Action> actions = new ArrayList<>();
@@ -33,14 +32,14 @@ public class Study extends BaseEntity {
     public boolean addSubject(Subject subject) {
         log.debug("Adding subject {}", subject);
         final boolean added = subjects.add(subject);
-        eventBus.post(new ChangeEvent<>(subject, ChangeType.CREATE));
+        EventBusHolder.post(new ChangeEvent<>(subject, ChangeType.CREATE));
         return added;
     }
 
     public boolean removeSubject(Subject subject) {
         log.debug("Removing subject {}", subject);
         final boolean deleted = subjects.remove(subject);
-        eventBus.post(new ChangeEvent<>(subject, ChangeType.DELETE));
+        EventBusHolder.post(new ChangeEvent<>(subject, ChangeType.DELETE));
         return deleted;
     }
 
@@ -51,14 +50,14 @@ public class Study extends BaseEntity {
     public boolean addAction(Action action) {
         log.debug("Adding action {}", action);
         final boolean added = actions.add(action);
-        eventBus.post(new ChangeEvent<>(action, ChangeType.CREATE));
+        EventBusHolder.post(new ChangeEvent<>(action, ChangeType.CREATE));
         return added;
     }
 
     public boolean removeAction(Action action) {
         log.debug("Removing action {}", action);
         final boolean deleted = actions.remove(action);
-        eventBus.post(new ChangeEvent<>(action, ChangeType.DELETE));
+        EventBusHolder.post(new ChangeEvent<>(action, ChangeType.DELETE));
         return deleted;
     }
 
@@ -69,14 +68,14 @@ public class Study extends BaseEntity {
     public boolean addObservation(Observation observation) {
         log.debug("Adding observation {}", observation);
         final boolean added = observations.add(observation);
-        eventBus.post(new ChangeEvent<>(observation, ChangeType.CREATE));
+        EventBusHolder.post(new ChangeEvent<>(observation, ChangeType.CREATE));
         return added;
     }
 
     public boolean removeObservation(Observation observation) {
         log.debug("Removing observation {}", observation);
         final boolean deleted = observations.remove(observation);
-        eventBus.post(new ChangeEvent<>(observation, ChangeType.DELETE));
+        EventBusHolder.post(new ChangeEvent<>(observation, ChangeType.DELETE));
         return deleted;
     }
 
