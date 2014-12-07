@@ -2,13 +2,9 @@ package org.obehave.view.controller.components.tree;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
-import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.control.cell.CheckBoxTreeCell;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.util.Callback;
 import org.obehave.events.ChangeEvent;
 import org.obehave.events.ChangeType;
 import org.obehave.events.EventBusHolder;
@@ -24,8 +20,6 @@ public class ProjectTreeComponent extends TreeView<String> {
 
     private Study study;
 
-    private EventBus eventBus = EventBusHolder.getEventBus();
-
     private TreeItem root;
     private TreeItem subjectNode = new TreeItem<>("Subjects");
     private TreeItem actionNode = new TreeItem<>("Actions");
@@ -37,11 +31,16 @@ public class ProjectTreeComponent extends TreeView<String> {
         actionNode.setExpanded(true);
         observationsNode.setExpanded(true);
 
-        eventBus.register(this);
+        EventBusHolder.getEventBus().register(this);
 
         addEventHandler(KeyEvent.KEY_TYPED, this::addNewItem);
     }
 
+    /**
+     * A method only meant for testing purpouses - this will add a new item when a key was pressed
+     *
+     * @param event the keyevent, where the keycode will be read from
+     */
     private void addNewItem(KeyEvent event) {
         String key = event.getCharacter();
         TreeItem<String> selectedItem = getSelectionModel().getSelectedItem();
@@ -90,6 +89,15 @@ public class ProjectTreeComponent extends TreeView<String> {
         }
     }
 
+    /**
+     * Add a new item to the tree, if it isn't there already.
+     * <p/>
+     * This kind of check should be done in the study itself, not in the view
+     *
+     * @param treeItem the treeitem to add
+     * @param text     the text to look for
+     * @return an optional TreeItem once it's added - if it wasn't there already
+     */
     private Optional<TreeItem<String>> addOnce(TreeItem<String> treeItem, String text) {
         List<TreeItem<String>> children = treeItem.getChildren();
         TreeItem<String> entity = new TreeItem<>(text);
@@ -104,6 +112,13 @@ public class ProjectTreeComponent extends TreeView<String> {
         return Optional.of(entity);
     }
 
+    /**
+     * Searches for a item, where the displayed value is equal to a given text
+     *
+     * @param root the node where to start the search from
+     * @param text the text to search
+     * @return a matching item
+     */
     private TreeItem<String> getMatchingTreeItem(TreeItem<String> root, String text) {
         for (TreeItem<String> i : root.getChildren()) {
             if (i.getValue().equals(text)) {
