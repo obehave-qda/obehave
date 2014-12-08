@@ -53,7 +53,7 @@ public class CodingComponent extends BorderPane implements Initializable {
         }
 
 
-        subjectHeightProperty.setValue(50);
+        subjectHeightProperty.setValue(30);
         secondWithProperty.setValue(15);
         timelineHeightProperty.setValue(30);
     }
