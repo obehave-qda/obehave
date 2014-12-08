@@ -77,6 +77,7 @@ public class CodingComponent extends BorderPane implements Initializable {
 
     @Subscribe
     public void changeEvent(ChangeEvent<?> change) {
+        log.trace("Received event {}", change);
         if (change.getChanged() instanceof Displayable) {
             Displayable d = (Displayable) change.getChanged();
             if (d instanceof Subject) {
