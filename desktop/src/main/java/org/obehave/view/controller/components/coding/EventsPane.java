@@ -57,6 +57,7 @@ public class EventsPane extends Pane {
         pane.layoutXProperty().set(0);
         pane.layoutYProperty().bind(subjectHeightProperty.multiply(currentSubjectPanes));
         pane.prefHeightProperty().bind(subjectHeightProperty);
+        pane.prefWidthProperty().bind(widthProperty());
 
         getChildren().add(pane);
         subjectPanes.add(pane);
@@ -74,13 +75,9 @@ public class EventsPane extends Pane {
             }
         }
         subjectPanesSize.setValue(subjectPanes.size());
-
-        refresh();
     }
 
     public void refresh() {
-        getChildren().clear();
-
         final int interval = 5;
         // lines
         for (int second = 0; second < msProperty.doubleValue() / 1000; second += interval) {
