@@ -10,11 +10,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import org.obehave.android.R;
 
-import java.util.ArrayList;
+public class SimpleListViewFragment extends Fragment {
 
-public class GroupFragment extends Fragment {
+    private ListView lvGroups;
+    private ArrayAdapter<String> arrayAdapter;
 
-    ListView lvGroups;
     private String[] mockedData = {
         "Subject Group 1",
         "Subject Group 2",
@@ -23,16 +23,21 @@ public class GroupFragment extends Fragment {
         "Subject Group 5"
     };
 
-    public GroupFragment() {
+    public SimpleListViewFragment() {
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_group_listview, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_simple_listview, container, false);
 
+        lvGroups = (ListView) rootView.findViewById(R.id.lvSimple);
         Log.d("fragment", "GroupFragment loaded!");
+
+        arrayAdapter = new ArrayAdapter<String>(getActivity(), R.layout.simple_textview_for_listview, mockedData);
+
+        lvGroups.setAdapter(arrayAdapter);
 
         return rootView;
     }
@@ -41,16 +46,16 @@ public class GroupFragment extends Fragment {
     public void onCreate (Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         Log.d("fragment", "GroupFragment created!");
-        if(savedInstanceState == null){
-             lvGroups = (ListView) getView().findViewById(R.id.lvGroups);
-        }
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(), R.layout.simple_textview_for_listview);
-        for(int i = 0; i < mockedData.length; i++){
-            arrayAdapter.add(mockedData[i]);
+        // only on init
+        if(savedInstanceState == null){
+
         }
+        /*
+
 
         lvGroups.setAdapter(arrayAdapter);
+        */
 
     }
 
