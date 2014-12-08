@@ -4,6 +4,10 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.css.CssMetaData;
+import javafx.css.SimpleStyleableDoubleProperty;
+import javafx.css.Styleable;
+import javafx.css.StyleableProperty;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
 import javafx.scene.text.FontSmoothingType;
@@ -14,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -49,7 +54,7 @@ public class EventsPane extends Pane {
         return subjectHeightProperty;
     }
 
-    public void addSubjectPane(Subject subject) {
+    public void addSubject(Subject subject) {
         SubjectPane pane = new SubjectPane(subject);
         int currentSubjectPanes = subjectPanes.size();
 
@@ -62,6 +67,22 @@ public class EventsPane extends Pane {
         getChildren().add(pane);
         subjectPanes.add(pane);
         subjectPanesSize.setValue(subjectPanes.size());
+    }
+
+    public void removeSubject(Subject subject) {
+        SubjectPane pane = null;
+        Iterator<SubjectPane> iter = subjectPanes.iterator();
+        while (iter.hasNext()) {
+            SubjectPane next = iter.next();
+            if (next.getSubject().equals(subject)) {
+                getChildren().remove(next);
+                iter.remove();
+                break;
+            }
+        }
+        subjectPanesSize.setValue(subjectPanes.size());
+
+        refresh();
     }
 
     public void refresh() {

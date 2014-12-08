@@ -10,6 +10,10 @@ public class SubjectPane extends Pane {
     private Subject subject;
 
     public SubjectPane(Subject subject) {
+        this.subject = subject;
+    }
 
+    public Subject getSubject() {
+        return subject;
     }
 }

@@ -56,4 +56,9 @@ public class SubjectsList extends Pane {
         subjects.add(subject);
         refresh();
     }
+
+    public void removeSubject(Subject subject) {
+        subjects.remove(subject);
+        refresh();
+    }
 }

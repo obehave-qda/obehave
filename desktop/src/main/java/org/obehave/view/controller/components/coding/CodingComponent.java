@@ -1,17 +1,17 @@
 package org.obehave.view.controller.components.coding;
 
 
+import com.google.common.eventbus.Subscribe;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.css.CssMetaData;
-import javafx.css.SimpleStyleableDoubleProperty;
-import javafx.css.Styleable;
-import javafx.css.StyleableDoubleProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
+import org.obehave.events.ChangeEvent;
+import org.obehave.events.ChangeType;
+import org.obehave.events.EventBusHolder;
+import org.obehave.model.Displayable;
 import org.obehave.model.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +38,9 @@ public class CodingComponent extends BorderPane implements Initializable {
 
     public CodingComponent() {
         super();
+
+        EventBusHolder.register(this);
+
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("ui/components/codingComponent.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
@@ -68,17 +71,31 @@ public class CodingComponent extends BorderPane implements Initializable {
         subjectsList.timelineHeightProperty().bind(timelineHeightProperty);
 
 
-        Subject hans = new Subject("Hans");
-        eventsPane.addSubjectPane(hans);
-        subjectsList.addSubject(hans);
-        Subject huns = new Subject("Huns");
-        eventsPane.addSubjectPane(huns);
-        subjectsList.addSubject(huns);
-        Subject hins = new Subject("Hins");
-        eventsPane.addSubjectPane(hins);
-        subjectsList.addSubject(hins);
-
         timelinePane.msProperty().setValue(180 * 1000);
         eventsPane.msProperty().setValue(180 * 1000);
+    }
+
+    @Subscribe
+    public void changeEvent(ChangeEvent<?> change) {
+        if (change.getChanged() instanceof Displayable) {
+            Displayable d = (Displayable) change.getChanged();
+            if (d instanceof Subject) {
+                if (change.getChangeType() == ChangeType.CREATE) {
+                    addSubject((Subject) d);
+                } else if (change.getChangeType() == ChangeType.DELETE) {
+                    removeSubject((Subject) d);
+                }
+            }
+        }
+    }
+
+    public void addSubject(Subject subject) {
+        eventsPane.addSubject(subject);
+        subjectsList.addSubject(subject);
+    }
+
+    public void removeSubject(Subject subject) {
+        eventsPane.removeSubject(subject);
+        subjectsList.removeSubject(subject);
     }
 }
