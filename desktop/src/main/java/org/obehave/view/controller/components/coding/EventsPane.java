@@ -4,14 +4,8 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.css.CssMetaData;
-import javafx.css.SimpleStyleableDoubleProperty;
-import javafx.css.Styleable;
-import javafx.css.StyleableProperty;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
-import javafx.scene.text.FontSmoothingType;
-import javafx.scene.text.Text;
 import org.obehave.model.Subject;
 import org.obehave.view.NodeUtil;
 import org.slf4j.Logger;
@@ -70,12 +64,11 @@ public class EventsPane extends Pane {
     }
 
     public void removeSubject(Subject subject) {
-        SubjectPane pane = null;
         Iterator<SubjectPane> iter = subjectPanes.iterator();
         while (iter.hasNext()) {
-            SubjectPane next = iter.next();
-            if (next.getSubject().equals(subject)) {
-                getChildren().remove(next);
+            SubjectPane pane = iter.next();
+            if (pane.getSubject().equals(subject)) {
+                getChildren().remove(pane);
                 iter.remove();
                 break;
             }
