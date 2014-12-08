@@ -2,14 +2,20 @@ package org.obehave.model;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * This class describes the observed subjects of a study
  */
 @DatabaseTable
-public class Subject extends BaseEntity {
+public class Subject extends BaseEntity implements Displayable {
     @DatabaseField
     private String name;
+
+    public Subject(String name) {
+        this.name = name;
+    }
 
     public String getName() {
         return name;
@@ -17,5 +23,31 @@ public class Subject extends BaseEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String getDisplayString() {
+        return getName();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+        if (obj.getClass() != getClass()) {
+            return false;
+        }
+        Subject rhs = (Subject) obj;
+
+        return new EqualsBuilder().append(name, rhs.name).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder().append(name).build();
     }
 }
