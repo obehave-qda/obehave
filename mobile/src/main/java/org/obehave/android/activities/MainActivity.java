@@ -1,17 +1,26 @@
-package org.obehave.android;
+package org.obehave.android.activities;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.GridView;
+import org.obehave.android.R;
+import org.obehave.android.fragments.GroupFragment;
 import org.obehave.model.Subject;
 
 
 public class MainActivity extends Activity {
+
+    private GridView gvCoding;
+    private Button btnCoding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,13 +28,36 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
+                    .add(R.id.container, new CodingTableFragment())
                     .commit();
         }
+
+        initGUIComponents();
+
 
         Subject s = new Subject();
         s.setName("ABC");
 
+    }
+
+    private void initGUIComponents() {
+        gvCoding = (GridView) findViewById(R.id.gvCoding);
+        btnCoding = (Button) findViewById(R.id.btnCoding);
+    }
+
+    public void onCodingButtonClicked(View v){
+        Log.d("events", "onCodingButton Clicked");
+        replaceCurrentFragmentByGroupFragment();
+    }
+
+    private void replaceCurrentFragmentByGroupFragment() {
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        GroupFragment groupFragment = new GroupFragment();
+        groupFragment.setArguments(new Bundle());
+        transaction.replace(R.id.container, groupFragment);
+        transaction.setBreadCrumbShortTitle(R.string.bc_group_fragment_subject);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
 
@@ -48,12 +80,9 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
+    public static class CodingTableFragment extends Fragment {
 
-        public PlaceholderFragment() {
+        public CodingTableFragment() {
         }
 
         @Override
@@ -63,4 +92,8 @@ public class MainActivity extends Activity {
             return rootView;
         }
     }
+
+
+
+
 }
