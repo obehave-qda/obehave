@@ -53,6 +53,8 @@ public class CodingComponent extends BorderPane implements Initializable {
 
         timelinePane.secondWidthProperty().bind(secondWithProperty);
         timelinePane.timelineHeightProperty().bind(timelineHeightProperty);
+        subjectsList.subjectHeightProperty().bind(subjectHeightProperty);
+        subjectsList.timelineHeightProperty().bind(timelineHeightProperty);
 
 
         Subject hans = new Subject("Hans");
