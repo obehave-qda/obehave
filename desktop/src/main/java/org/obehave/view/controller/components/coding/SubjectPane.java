@@ -17,7 +17,6 @@ public class SubjectPane extends Pane {
 
     private Rectangle resizeRectangle;
     private Subject subject;
-    private boolean dragged;
     private boolean rectangleToRight = true;
 
     public SubjectPane(Subject subject) {
@@ -47,8 +46,6 @@ public class SubjectPane extends Pane {
 
             // this event should not be processed by the appointment area
             mouseEvent.consume();
-
-            dragged = false;
         });
         // visualize resize
         setOnMouseDragged((mouseEvent) -> {
@@ -56,9 +53,10 @@ public class SubjectPane extends Pane {
                 return;
             }
 
-            // - calculate the number of pixels from onscreen nodeY (layoutY) to onscreen mouseY
+            // calculate pixels between left rectangle border and mouse
             double lWidth = mouseEvent.getScreenX() - NodeUtil.screenX(resizeRectangle);
             if (!rectangleToRight) {
+                // i don't know exactly why we have to do this here, but it works
                 lWidth -= resizeRectangle.getWidth();
             }
 
@@ -72,9 +70,7 @@ public class SubjectPane extends Pane {
                 resizeRectangle.setTranslateX(lWidth);
             }
 
-            // no one else
             mouseEvent.consume();
-            dragged = true;
         });
         // end resize
         setOnMouseReleased((mouseEvent) -> {
@@ -82,17 +78,9 @@ public class SubjectPane extends Pane {
                 return;
             }
 
-            // no one else
+            log.debug("Painted rectangle {}", resizeRectangle);
             mouseEvent.consume();
-
-            // reset ui
             setCursor(Cursor.HAND);
-            //getChildren().remove(resizeRectangle);
-
-            // must have dragged (otherwise it is considered an "unselect all" action)
-            if (dragged == false) {
-                return;
-            }
         });
     }
 }
