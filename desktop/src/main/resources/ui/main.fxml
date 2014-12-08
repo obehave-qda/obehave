@@ -2,9 +2,11 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.Rectangle?>
 <?import org.obehave.view.controller.components.VideoComponent?>
-<VBox prefHeight="768" prefWidth="1024" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+<?import org.obehave.view.controller.components.CodingComponent?>
+
+<?import org.obehave.view.controller.components.tree.ProjectTreeComponent?>
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="org.obehave.view.controller.MainController">
     <MenuBar>
         <Menu text="File">
@@ -13,7 +15,7 @@
         </Menu>
     </MenuBar>
     <SplitPane dividerPositions="0.25">
-        <TreeView fx:id="tree" SplitPane.resizableWithParent="false"/>
+        <ProjectTreeComponent fx:id="tree" SplitPane.resizableWithParent="false" />
         <BorderPane>
             <center>
                 <AnchorPane>
@@ -21,12 +23,7 @@
                 </AnchorPane>
             </center>
             <bottom>
-                <AnchorPane>
-                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="200.0" stroke="BLACK"
-                               strokeType="INSIDE" width="200.0" AnchorPane.bottomAnchor="20.0"
-                               AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0"/>
-
-                </AnchorPane>
+                <CodingComponent />
             </bottom>
         </BorderPane>
     </SplitPane>

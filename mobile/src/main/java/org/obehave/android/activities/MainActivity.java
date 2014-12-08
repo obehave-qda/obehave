@@ -33,8 +33,6 @@ public class MainActivity extends Activity {
         }
 
         initGUIComponents();
-
-
         Subject s = new Subject();
         s.setName("ABC");
 
