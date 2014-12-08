@@ -13,7 +13,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridView;
 import org.obehave.android.R;
-import org.obehave.android.fragments.GroupFragment;
+import org.obehave.android.fragments.ExpandableListviewFragment;
+import org.obehave.android.fragments.SimpleListViewFragment;
 import org.obehave.model.Subject;
 
 
@@ -33,8 +34,7 @@ public class MainActivity extends Activity {
         }
 
         initGUIComponents();
-        Subject s = new Subject();
-        s.setName("ABC");
+        Subject s = new Subject("ABC");
 
     }
 
@@ -45,14 +45,25 @@ public class MainActivity extends Activity {
 
     public void onCodingButtonClicked(View v){
         Log.d("events", "onCodingButton Clicked");
-        replaceCurrentFragmentByGroupFragment();
+        //replaceCurrentFragmentBySimpleListViewFragment();
+        replaceCurrentFragmentByExpandableListViewFragment();
     }
 
-    private void replaceCurrentFragmentByGroupFragment() {
+    private void replaceCurrentFragmentByExpandableListViewFragment() {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        GroupFragment groupFragment = new GroupFragment();
-        groupFragment.setArguments(new Bundle());
-        transaction.replace(R.id.container, groupFragment);
+        ExpandableListviewFragment expandableViewFragment = new ExpandableListviewFragment();
+        expandableViewFragment.setArguments(new Bundle());
+        transaction.replace(R.id.container, expandableViewFragment);
+        transaction.setBreadCrumbShortTitle(R.string.bc_group_fragment_subject);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    private void replaceCurrentFragmentBySimpleListViewFragment() {
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        SimpleListViewFragment simpleListViewFragment = new SimpleListViewFragment();
+        simpleListViewFragment.setArguments(new Bundle());
+        transaction.replace(R.id.container, simpleListViewFragment);
         transaction.setBreadCrumbShortTitle(R.string.bc_group_fragment_subject);
         transaction.addToBackStack(null);
         transaction.commit();
