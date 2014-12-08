@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.shape.Rectangle?>
-<fx:root type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/8"
-         xmlns:fx="http://javafx.com/fxml/1">
-    <Rectangle fx:id="rect" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="200.0" stroke="BLACK"
-               strokeType="INSIDE" width="200.0" AnchorPane.bottomAnchor="20.0"
-               AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0" onMouseClicked="#changeColor" />
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import org.obehave.view.controller.components.coding.SubjectsList?>
+<?import org.obehave.view.controller.components.coding.TimelinePane?>
+<?import org.obehave.view.controller.components.coding.EventsPane?>
+<fx:root type="javafx.scene.layout.BorderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+    <left>
+        <SubjectsList fx:id="subjectsList"/>
+    </left>
+    <center>
+        <ScrollPane hbarPolicy="NEVER" vbarPolicy="NEVER">
+            <BorderPane>
+                <center>
+                    <ScrollPane hbarPolicy="NEVER" vbarPolicy="AS_NEEDED">
+                        <EventsPane/>
+                    </ScrollPane>
+                </center>
+                <bottom>
+                    <TimelinePane fx:id="timelinePane"/>
+                </bottom>
+            </BorderPane>
+        </ScrollPane>
+    </center>
 </fx:root>

@@ -1,0 +1,12 @@
+.fivesecondsline, .fifteensecondsline {
+	-fx-stroke: #ababab;
+	-fx-fill: transparent;
+}
+
+.fivesecondsline {
+	-fx-stroke-dash-array: 4 8;
+}
+
+.minuteline {
+	-fx-fill: BLACK;
+}

@@ -9,5 +9,6 @@ javafx {
 
 dependencies {
     compile project (":core")
+    compile "org.jfxtras:jfxtras-all:8.0-r3"
 }
 
