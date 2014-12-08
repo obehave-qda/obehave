@@ -23,7 +23,7 @@ public class SubjectsList extends Pane {
     private DoubleProperty timelineHeightProperty = new SimpleDoubleProperty(this, "timelineHeightProperty");
 
     public SubjectsList() {
-        setPrefWidth(100);
+
     }
 
     public DoubleProperty subjectHeightProperty() {

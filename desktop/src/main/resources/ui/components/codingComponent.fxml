@@ -2,26 +2,29 @@
 
 
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import org.obehave.view.controller.components.coding.EventsPane?>
 <?import org.obehave.view.controller.components.coding.SubjectsList?>
 <?import org.obehave.view.controller.components.coding.TimelinePane?>
-<?import org.obehave.view.controller.components.coding.EventsPane?>
 <fx:root type="javafx.scene.layout.BorderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     <left>
         <SubjectsList fx:id="subjectsList"/>
     </left>
     <center>
-        <ScrollPane hbarPolicy="NEVER" vbarPolicy="NEVER">
-            <BorderPane>
-                <center>
-                    <ScrollPane hbarPolicy="NEVER" vbarPolicy="AS_NEEDED">
-                        <EventsPane/>
-                    </ScrollPane>
-                </center>
-                <bottom>
-                    <TimelinePane fx:id="timelinePane"/>
-                </bottom>
-            </BorderPane>
-        </ScrollPane>
+        <AnchorPane>
+            <ScrollPane hbarPolicy="NEVER" vbarPolicy="NEVER" pannable="true" AnchorPane.leftAnchor="5" AnchorPane.rightAnchor="5">
+                <BorderPane>
+                    <center>
+                        <ScrollPane hbarPolicy="NEVER" vbarPolicy="AS_NEEDED">
+                            <EventsPane fx:id="eventsPane"/>
+                        </ScrollPane>
+                    </center>
+                    <bottom>
+                        <TimelinePane fx:id="timelinePane"/>
+                    </bottom>
+                </BorderPane>
+            </ScrollPane>
+        </AnchorPane>
     </center>
 </fx:root>
