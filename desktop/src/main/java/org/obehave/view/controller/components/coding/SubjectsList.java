@@ -20,6 +20,7 @@ public class SubjectsList extends Pane {
 
     private List<Subject> subjects = new ArrayList<>();
     private DoubleProperty subjectHeightProperty = new SimpleDoubleProperty(this, "subjectHeightProperty");
+    private DoubleProperty timelineHeightProperty = new SimpleDoubleProperty(this, "timelineHeightProperty");
 
     public SubjectsList() {
         setPrefWidth(100);
@@ -29,6 +30,10 @@ public class SubjectsList extends Pane {
         return subjectHeightProperty;
     }
 
+    public DoubleProperty timelineHeightProperty() {
+        return timelineHeightProperty;
+    }
+
     public void refresh() {
         getChildren().clear();
         for (int i = 0; i < subjects.size(); i++) {
@@ -36,8 +41,8 @@ public class SubjectsList extends Pane {
 
             Text subjectText = new Text(subject.getDisplayString());
             subjectText.xProperty().setValue(2);
-            subjectText.yProperty().bind(subjectHeightProperty.multiply(i).add(subjectHeightProperty.divide(2)));
-            subjectText.setTranslateY(-(subjectText.getBoundsInParent().getHeight() / 2));
+            subjectText.yProperty().bind(heightProperty().subtract(timelineHeightProperty).subtract(subjectHeightProperty.multiply(subjects.size() - i - 1).add(subjectHeightProperty.divide(2))));
+            subjectText.setTranslateY(subjectText.getBoundsInParent().getHeight() / 2);
             subjectText.getStyleClass().add("secondLabel");
             subjectText.setFontSmoothingType(FontSmoothingType.LCD);
             getChildren().add(subjectText);
@@ -49,6 +54,6 @@ public class SubjectsList extends Pane {
 
     public void addSubject(Subject subject) {
         subjects.add(subject);
-        return;
+        refresh();
     }
 }
