@@ -2,25 +2,46 @@ package org.obehave.android.activities;
 
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.GridView;
+import android.support.v4.app.*;
+import android.support.v4.view.ViewPager;
 import org.obehave.android.R;
-import org.obehave.android.fragments.ExpandableListviewFragment;
-import org.obehave.android.fragments.SimpleListViewFragment;
-import org.obehave.model.Subject;
+import org.obehave.android.fragments.CodingFragment;
+import org.obehave.android.fragments.SubjectFragment;
 
 
 public class MainActivity extends FragmentActivity {
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        ViewPager pager = (ViewPager) findViewById(R.id.viewPager);
+        pager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
+    }
+
+    private class MyPagerAdapter extends FragmentPagerAdapter {
+
+        public MyPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int pos) {
+            switch(pos) {
+                case 0: return CodingFragment.newInstance();
+                case 1: return SubjectFragment.newInstance();
+            }
+
+            return null;
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+    }
+/*
     private GridView gvCoding;
     private Button btnCoding;
 
@@ -102,7 +123,7 @@ public class MainActivity extends FragmentActivity {
             return rootView;
         }
     }
-
+*/
 
 
 
