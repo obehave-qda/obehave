@@ -1,9 +1,10 @@
 package org.obehave.android.activities;
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
+
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,7 +19,7 @@ import org.obehave.android.fragments.SimpleListViewFragment;
 import org.obehave.model.Subject;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity {
 
     private GridView gvCoding;
     private Button btnCoding;
@@ -28,7 +29,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new CodingTableFragment())
                     .commit();
         }
@@ -50,7 +51,7 @@ public class MainActivity extends Activity {
     }
 
     private void replaceCurrentFragmentByExpandableListViewFragment() {
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         ExpandableListviewFragment expandableViewFragment = new ExpandableListviewFragment();
         expandableViewFragment.setArguments(new Bundle());
         transaction.replace(R.id.container, expandableViewFragment);
@@ -60,7 +61,7 @@ public class MainActivity extends Activity {
     }
 
     private void replaceCurrentFragmentBySimpleListViewFragment() {
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         SimpleListViewFragment simpleListViewFragment = new SimpleListViewFragment();
         simpleListViewFragment.setArguments(new Bundle());
         transaction.replace(R.id.container, simpleListViewFragment);
