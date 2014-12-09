@@ -15,4 +15,7 @@
     <string name="table_header_action">Aktion</string>
     <string name="aktion_kodieren">kodieren</string>
     <string name="bc_group_fragment_subject">Subject Groups</string>
+    <string name="open_study">Open study</string>
+    <string name="new_obeservation">New observation</string>
+    <string name="edit_observation">Edit observation</string>
 </resources>
