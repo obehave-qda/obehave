@@ -9,13 +9,14 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import org.obehave.android.R;
 import org.obehave.android.adapters.ExpandableListAdapter;
+import org.obehave.model.Subject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 
-public class ExpandableListviewFragment extends Fragment {
+public class SubjectFragment extends Fragment {
 
     private ExpandableListView lvExpandable;
 
@@ -31,7 +32,7 @@ public class ExpandableListviewFragment extends Fragment {
             "Subject Group 5"
     };
 
-    public ExpandableListviewFragment() {
+    public SubjectFragment() {
 
     }
 
@@ -60,6 +61,14 @@ public class ExpandableListviewFragment extends Fragment {
         if(savedInstanceState == null){
 
         }
+    }
+
+    public static SubjectFragment newInstance(){
+        SubjectFragment f = new SubjectFragment();
+        Bundle b = new Bundle();
+        f.setArguments(b);
+
+        return f;
     }
 
     private void prepareListData() {
