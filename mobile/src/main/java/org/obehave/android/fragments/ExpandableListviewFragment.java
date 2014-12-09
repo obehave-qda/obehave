@@ -1,13 +1,12 @@
 package org.obehave.android.fragments;
 
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
-import android.widget.ListView;
 import org.obehave.android.R;
 import org.obehave.android.adapters.ExpandableListAdapter;
 
@@ -16,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 
 
-public class ExpandableListviewFragment extends Fragment{
+public class ExpandableListviewFragment extends Fragment {
 
     private ExpandableListView lvExpandable;
 
