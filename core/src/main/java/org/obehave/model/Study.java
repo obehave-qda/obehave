@@ -104,7 +104,7 @@ public class Study extends BaseEntity {
 
     // ONLY FOR TEMPORARILY TESTING!
     public void addRandomSubject(String key) {
-        addSubject(new Subject(getRandomString("Subject " + key)));
+        addSubject(new Subject(getRandomString("Wolf " + key)));
     }
 
     public void addRandomAction(String key) {
