@@ -19,7 +19,7 @@ public class BaseEntity {
      * Represents the primary key for an object in the sql database.
      * Must be unique within a table, but NOT a subsequent sequence WITHOUT gaps
      */
-    @DatabaseField(generatedId = true)
+    @DatabaseField(generatedId = true, columnName = "_id")
     private Long id;
 
     /**

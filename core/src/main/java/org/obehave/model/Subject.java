@@ -10,8 +10,19 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 @DatabaseTable
 public class Subject extends BaseEntity implements Displayable {
+
     @DatabaseField
     private String name;
+
+    @DatabaseField(foreign = true, columnName = "study_id")
+    private Study study;
+
+    @DatabaseField(foreign = true, canBeNull = true, columnName = "group_id")
+    private SubjectGroup subjectGroup;
+
+    public Subject() {
+
+    }
 
     public Subject(String name) {
         this.name = name;
@@ -21,6 +32,14 @@ public class Subject extends BaseEntity implements Displayable {
         return name;
     }
 
+    public void setStudy(Study study) {
+        this.study = study;
+    }
+
+    public Study getStudy() {
+        return study;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -28,6 +47,15 @@ public class Subject extends BaseEntity implements Displayable {
     @Override
     public String getDisplayString() {
         return getName();
+    }
+
+
+    public SubjectGroup getSubjectGroup() {
+        return subjectGroup;
+    }
+
+    public void setSubjectGroup(SubjectGroup subjectGroup) {
+        this.subjectGroup = subjectGroup;
     }
 
     @Override
