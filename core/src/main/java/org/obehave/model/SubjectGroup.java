@@ -1,43 +1,32 @@
 package org.obehave.model;
 
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
+import com.j256.ormlite.table.DatabaseTable;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 /**
- * This class describes actions a subject is able to perform.
- * There are several types of actions:
- * <p />
- * Point and state actions
- * Single actions or interactions between different subjects
- * <p />
- * Actions can be modified in some way.
+ * This class describes subject groups
  */
-public class Action extends BaseEntity implements Displayable {
+@DatabaseTable
+public class SubjectGroup extends BaseEntity implements Displayable {
 
     @DatabaseField
     private String name;
 
-    @DatabaseField(foreign = true, foreignAutoRefresh = true, columnName = "study_id")
-    private Study study;
+    @ForeignCollectionField
+    private Collection<Subject> subjects = new ArrayList<>();
 
-    @DatabaseField(foreign = true, canBeNull = true, columnName = "group_id")
-    private ActionGroup actionGroup;
-
-    public Action(){
+    public SubjectGroup(){
 
     }
 
-    public Action(String name) {
+    public SubjectGroup(String name) {
         this.name = name;
-    }
-
-    public void setStudy(Study study){
-        this.study = study;
-    }
-
-    public Study getStudy(){
-        return study;
     }
 
     public String getName() {
@@ -53,6 +42,13 @@ public class Action extends BaseEntity implements Displayable {
         return getName();
     }
 
+    public Collection<Subject> getSubjects() {
+        return subjects;
+    }
+
+    public void setSubjects(Collection<Subject> subjects) {
+        this.subjects = subjects;
+    }
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -64,7 +60,7 @@ public class Action extends BaseEntity implements Displayable {
         if (obj.getClass() != getClass()) {
             return false;
         }
-        Action rhs = (Action) obj;
+        SubjectGroup rhs = (SubjectGroup) obj;
 
         return new EqualsBuilder().append(name, rhs.name).isEquals();
     }
@@ -72,13 +68,5 @@ public class Action extends BaseEntity implements Displayable {
     @Override
     public int hashCode() {
         return new HashCodeBuilder().append(name).build();
-    }
-
-    public ActionGroup getActionGroup() {
-        return actionGroup;
-    }
-
-    public void setActionGroup(ActionGroup actionGroup) {
-        this.actionGroup = actionGroup;
     }
 }

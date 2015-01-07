@@ -13,12 +13,30 @@ public class Subject extends BaseEntity implements Displayable {
     @DatabaseField
     private String name;
 
+    @DatabaseField(foreign = true, columnName = "study_id")
+    private Study study;
+
+    @DatabaseField(foreign = true, canBeNull = true, columnName = "group_id")
+    private SubjectGroup subjectGroup;
+
+    public Subject() {
+
+    }
+
     public Subject(String name) {
         this.name = name;
     }
 
     public String getName() {
         return name;
+    }
+
+    public void setStudy(Study study) {
+        this.study = study;
+    }
+
+    public Study getStudy() {
+        return study;
     }
 
     public void setName(String name) {
