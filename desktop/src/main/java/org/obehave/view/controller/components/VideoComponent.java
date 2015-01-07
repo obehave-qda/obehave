@@ -31,6 +31,9 @@ public class VideoComponent extends BorderPane {
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
+
+        mediaView.fitWidthProperty().bind(prefWidthProperty());
+        mediaView.fitHeightProperty().bind(prefHeightProperty().subtract(30));
     }
 
     @FXML

@@ -23,7 +23,7 @@ public class MainActivity extends Activity {
                     .commit();
         }
 
-        Subject s = new Subject();
+        Subject s = new Subject("ABC");
         s.setName("ABC");
 
     }

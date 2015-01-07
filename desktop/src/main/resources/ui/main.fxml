@@ -2,19 +2,22 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.Rectangle?>
+<?import org.obehave.view.controller.components.coding.CodingComponent?>
+<?import org.obehave.view.controller.components.tree.ProjectTreeComponent?>
 <?import org.obehave.view.controller.components.VideoComponent?>
-<VBox prefHeight="768" prefWidth="1024" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="org.obehave.view.controller.MainController">
-    <MenuBar>
+<?import java.net.URL?>
+
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.obehave.view.controller.MainController" fx:id="vbox">
+    <MenuBar fx:id="menubar">
         <Menu text="File">
             <MenuItem onAction="#loadVideo" text="Load Video"/>
             <MenuItem onAction="#close" text="Close"/>
         </Menu>
     </MenuBar>
-    <SplitPane dividerPositions="0.25">
-        <TreeView fx:id="tree" SplitPane.resizableWithParent="false"/>
-        <BorderPane>
+    <SplitPane dividerPositions="0.25" fx:id="splitpane">
+        <ProjectTreeComponent fx:id="tree" SplitPane.resizableWithParent="false"/>
+        <BorderPane fx:id="contentBorderPane">
             <center>
                 <AnchorPane>
                     <VideoComponent fx:id="videoComponent"/>
@@ -22,12 +25,13 @@
             </center>
             <bottom>
                 <AnchorPane>
-                    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="200.0" stroke="BLACK"
-                               strokeType="INSIDE" width="200.0" AnchorPane.bottomAnchor="20.0"
-                               AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0"/>
-
+                    <CodingComponent AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0"
+                                     AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" fx:id="codingComponent"/>
                 </AnchorPane>
             </bottom>
         </BorderPane>
     </SplitPane>
+    <stylesheets>
+        <URL value="@obehave.css"/>
+    </stylesheets>
 </VBox>

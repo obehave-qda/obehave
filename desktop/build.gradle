@@ -1,7 +1,14 @@
 apply plugin: 'java'
+apply from: "http://dl.bintray.com/content/shemnon/javafx-gradle/0.4.0/javafx.plugin"
 
 sourceCompatibility = 1.8
 
+javafx {
+    mainClass 'org.obehave.view.Obehave'
+}
+
 dependencies {
     compile project (":core")
+    compile "org.jfxtras:jfxtras-all:8.0-r3"
 }
+

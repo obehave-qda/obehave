@@ -5,6 +5,7 @@ sourceCompatibility = 1.7
 dependencies {
     ext {
         versionCommonsLang = "3.1"
+        guavaVersion = "18.0"
         versionLog4j = "2.0.2"
         versionSlf4j = "1.7.7"
 
@@ -18,6 +19,7 @@ dependencies {
     }
 
     compile "org.apache.commons:commons-lang3:$versionCommonsLang"
+    compile "com.google.guava:guava:$guavaVersion"
 
     compile "org.apache.logging.log4j:log4j-slf4j-impl:$versionLog4j"
     compile "org.apache.logging.log4j:log4j-core:$versionLog4j"
