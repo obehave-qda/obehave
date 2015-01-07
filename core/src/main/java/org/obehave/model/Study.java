@@ -4,6 +4,7 @@ import org.obehave.events.ChangeEvent;
 import org.obehave.events.ChangeType;
 import org.obehave.events.EventBusHolder;
 import org.obehave.model.domain.Action;
+import org.obehave.model.domain.Group;
 import org.obehave.model.domain.Observation;
 import org.obehave.model.domain.Subject;
 import org.obehave.model.domain.modifier.ModifierFactory;
@@ -23,10 +24,10 @@ public class Study extends BaseEntity {
 
     private String name;
 
-    private List<Subject> subjects = new ArrayList<>();
-    private List<Action> actions = new ArrayList<>();
-    private List<Observation> observations = new ArrayList<>();
-    private List<ModifierFactory> modifierFactories = new ArrayList<>();
+    private Group<Subject> subjects = new Group<>();
+    private Group<Action> actions = new Group<>();
+    private Group<Observation> observations = new Group<>();
+    private Group<ModifierFactory> modifierFactories = new Group<>();
 
     public Study(){
 
@@ -36,8 +37,8 @@ public class Study extends BaseEntity {
         this.name = name;
     }
 
-    public List<Subject> getSubjects() {
-        return Collections.unmodifiableList(subjects);
+    public Group<Subject> getSubjects() {
+        return subjects;
     }
 
     public boolean addSubject(Subject subject) {
@@ -60,8 +61,8 @@ public class Study extends BaseEntity {
         return deleted;
     }
 
-    public List<Action> getActions() {
-        return Collections.unmodifiableList(actions);
+    public Group<Action> getActions() {
+        return actions;
     }
 
     public boolean addAction(Action action) {
@@ -83,8 +84,8 @@ public class Study extends BaseEntity {
         return deleted;
     }
 
-    public List<Observation> getObservations() {
-        return Collections.unmodifiableList(observations);
+    public Group<Observation> getObservations() {
+        return observations;
     }
 
     public boolean addObservation(Observation observation) {
