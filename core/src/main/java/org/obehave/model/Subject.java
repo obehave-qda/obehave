@@ -68,4 +68,12 @@ public class Subject extends BaseEntity implements Displayable {
     public int hashCode() {
         return new HashCodeBuilder().append(name).build();
     }
+
+    public SubjectGroup getSubjectGroup() {
+        return subjectGroup;
+    }
+
+    public void setSubjectGroup(SubjectGroup subjectGroup) {
+        this.subjectGroup = subjectGroup;
+    }
 }
