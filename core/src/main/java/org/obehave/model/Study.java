@@ -1,13 +1,5 @@
 package org.obehave.model;
 
-import org.obehave.events.ChangeEvent;
-import org.obehave.events.ChangeType;
-import org.obehave.events.EventBusHolder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.*;
-
 /**
  * A study contains multiple subjects, actions and observations.
  */
@@ -19,6 +11,10 @@ public class Study extends BaseEntity {
     private List<Observation> observations = new ArrayList<>();
 
     private String name;
+
+    public Study(){
+
+    }
 
     public Study(String name) {
         this.name = name;

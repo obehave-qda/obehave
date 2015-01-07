@@ -4,6 +4,5 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-    <ExpandableListView android:listSelector="@color/highlight" android:id="@+id/lvExpandable" android:layout_width="match_parent" android:layout_height="match_parent">
-    </ExpandableListView>
+
 </LinearLayout>

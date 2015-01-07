@@ -3,9 +3,12 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="android:Theme.Holo">
         <item name="android:actionBarStyle">@style/MyActionBar</item>
+        <item name="android:textViewStyle">@style/MyTextViewStyle</item>
     </style>
     <style name="MyActionBar" parent="@android:style/Widget.Holo.ActionBar">
-        <item name="android:background">#ff0000</item>
+        <item name="android:background">@color/action_bar</item>
     </style>
-
+    <style name="MyTextViewStyle" parent="@android:style/Widget.Holo.TextView">
+        <item name="android:textSize">22sp</item>
+    </style>
 </resources>

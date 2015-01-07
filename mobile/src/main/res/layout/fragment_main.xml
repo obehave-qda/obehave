@@ -16,5 +16,5 @@
     <GridView android:layout_height="match_parent" android:layout_width="match_parent" android:layout_weight="1" android:id="@+id/gvCoding">
 
     </GridView>
-    <Button android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/aktion_kodieren" android:id="@+id/btnCoding" android:onClick="onCodingButtonClicked"/>
+    <Button android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/aktion_kodieren" android:id="@+id/btnCoding"/>
 </LinearLayout>

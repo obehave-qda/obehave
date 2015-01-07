@@ -9,6 +9,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 public class Observation extends BaseEntity implements Displayable {
     private String name;
 
+    public Observation(){
+
+    }
+
     public Observation(String name) {
         this.name = name;
     }
