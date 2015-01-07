@@ -30,13 +30,19 @@ android {
 
     buildTypes {
         release {
-            runProguard false
+            minifyEnabled false
             // proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }
 
 dependencies {
+    ext {
+        versionOrmlite = "4.48"
+    }
     compile project (":core")
     compile fileTree(dir: 'libs', include: ['*.jar'])
+
+
+    compile "com.j256.ormlite:ormlite-android:$versionOrmlite"
 }
