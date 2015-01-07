@@ -6,14 +6,12 @@ dependencies {
     ext {
         versionCommonsLang = "3.1"
         guavaVersion = "18.0"
-        versionLog4j = "2.0.2"
         versionSlf4j = "1.7.7"
 
         versionJunit = "4.11"
         versionHamcrest = "1.3"
 
         versionOrmlite = "4.48"
-        versionH2 = "1.3.176"
 
         versionJoda = "2.5"
     }
@@ -21,15 +19,12 @@ dependencies {
     compile "org.apache.commons:commons-lang3:$versionCommonsLang"
     compile "com.google.guava:guava:$guavaVersion"
 
-    compile "org.apache.logging.log4j:log4j-slf4j-impl:$versionLog4j"
-    compile "org.apache.logging.log4j:log4j-core:$versionLog4j"
     compile "org.slf4j:slf4j-api:$versionSlf4j"
 
     testCompile "junit:junit:$versionJunit"
     testCompile "org.hamcrest:hamcrest-all:$versionHamcrest"
 
-    compile "com.h2database:h2:$versionH2"
-    compile "com.j256.ormlite:ormlite-jdbc:$versionOrmlite"
+    compile "com.j256.ormlite:ormlite-core:$versionOrmlite"
 
     compile "joda-time:joda-time:$versionJoda"
 }
