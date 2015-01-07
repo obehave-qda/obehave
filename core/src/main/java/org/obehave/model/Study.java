@@ -1,5 +1,15 @@
 package org.obehave.model;
 
+import org.obehave.events.ChangeEvent;
+import org.obehave.events.ChangeType;
+import org.obehave.events.EventBusHolder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * A study contains multiple subjects, actions and observations.
  */
