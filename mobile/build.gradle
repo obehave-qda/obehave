@@ -39,5 +39,6 @@ android {
 dependencies {
     compile project (":core")
     compile "com.android.support:support-v4:21.0.+"
+    compile 'com.j256.ormlite:ormlite-android:4.48'
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }
