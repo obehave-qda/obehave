@@ -1,0 +1,76 @@
+package org.obehave.model.domain;
+
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.joda.time.LocalDateTime;
+import org.obehave.model.BaseEntity;
+import org.obehave.model.Displayable;
+
+import java.io.File;
+
+/**
+ * During an observation, it's possible to code subjects and actions.
+ */
+public class Observation extends BaseEntity implements Displayable {
+    private String name;
+    private File video;
+    private LocalDateTime dateTime;
+
+    public Observation(){
+
+    }
+
+    public Observation(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public File getVideo() {
+        return video;
+    }
+
+    public void setVideo(File video) {
+        this.video = video;
+    }
+
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
+    }
+
+    @Override
+    public String getDisplayString() {
+        return getName();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+        if (obj.getClass() != getClass()) {
+            return false;
+        }
+        Observation rhs = (Observation) obj;
+
+        return new EqualsBuilder().append(name, rhs.name).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder().append(name).build();
+    }
+}

@@ -1,9 +1,12 @@
-package org.obehave.model;
+package org.obehave.model.domain;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.obehave.model.BaseEntity;
+import org.obehave.model.Color;
+import org.obehave.model.Displayable;
 
 /**
  * This class describes the observed subjects of a study
@@ -12,12 +15,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 public class Subject extends BaseEntity implements Displayable {
     @DatabaseField
     private String name;
-
-    @DatabaseField(foreign = true, columnName = "study_id")
-    private Study study;
-
-    @DatabaseField(foreign = true, canBeNull = true, columnName = "group_id")
-    private SubjectGroup subjectGroup;
+    private Color color;
+    private String alias;
 
     public Subject() {
 
@@ -31,16 +30,24 @@ public class Subject extends BaseEntity implements Displayable {
         return name;
     }
 
-    public void setStudy(Study study) {
-        this.study = study;
-    }
-
-    public Study getStudy() {
-        return study;
-    }
-
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
     }
 
     @Override
@@ -67,13 +74,5 @@ public class Subject extends BaseEntity implements Displayable {
     @Override
     public int hashCode() {
         return new HashCodeBuilder().append(name).build();
-    }
-
-    public SubjectGroup getSubjectGroup() {
-        return subjectGroup;
-    }
-
-    public void setSubjectGroup(SubjectGroup subjectGroup) {
-        this.subjectGroup = subjectGroup;
     }
 }

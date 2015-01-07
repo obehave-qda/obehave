@@ -1,8 +1,10 @@
-package org.obehave.model;
+package org.obehave.model.domain;
 
 import com.j256.ormlite.field.DatabaseField;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.obehave.model.*;
+import org.obehave.model.domain.modifier.ModifierFactory;
 
 /**
  * This class describes actions a subject is able to perform.
@@ -14,15 +16,17 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * Actions can be modified in some way.
  */
 public class Action extends BaseEntity implements Displayable {
+    public static enum Type {
+        POINT, STATE;
+    }
 
     @DatabaseField
     private String name;
+    private String alias;
+    private Type type;
+    private ModifierFactory<?> modifierFactory;
+    private RecurringEvent recurringEvent;
 
-    @DatabaseField(foreign = true, foreignAutoRefresh = true, columnName = "study_id")
-    private Study study;
-
-    @DatabaseField(foreign = true, canBeNull = true, columnName = "group_id")
-    private ActionGroup actionGroup;
 
     public Action(){
 
@@ -30,14 +34,6 @@ public class Action extends BaseEntity implements Displayable {
 
     public Action(String name) {
         this.name = name;
-    }
-
-    public void setStudy(Study study){
-        this.study = study;
-    }
-
-    public Study getStudy(){
-        return study;
     }
 
     public String getName() {
@@ -74,11 +70,7 @@ public class Action extends BaseEntity implements Displayable {
         return new HashCodeBuilder().append(name).build();
     }
 
-    public ActionGroup getActionGroup() {
-        return actionGroup;
-    }
-
-    public void setActionGroup(ActionGroup actionGroup) {
-        this.actionGroup = actionGroup;
+    public boolean isRecurring() {
+        return recurringEvent != null;
     }
 }

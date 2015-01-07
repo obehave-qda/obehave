@@ -6,7 +6,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
-import org.obehave.model.Subject;
+import org.obehave.model.domain.Subject;
 import org.obehave.view.util.NodeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

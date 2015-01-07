@@ -1,25 +1,17 @@
 package org.obehave.android.ui.fragments;
 
-import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
-import com.j256.ormlite.android.AndroidDatabaseResults;
-import com.j256.ormlite.dao.CloseableIterator;
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.PreparedQuery;
-import com.j256.ormlite.stmt.QueryBuilder;
 import org.obehave.android.R;
 import org.obehave.android.ui.activities.MainActivity;
 import org.obehave.android.ui.adapters.MyCursorTreeAdapter;
 import org.obehave.android.ui.events.ListViewItemSelectedEvent;
 import org.obehave.events.EventBusHolder;
-import org.obehave.model.SubjectGroup;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 
