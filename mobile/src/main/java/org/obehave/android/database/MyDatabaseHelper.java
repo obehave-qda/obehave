@@ -1,7 +1,6 @@
 package org.obehave.android.database;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
@@ -9,6 +8,9 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import org.obehave.model.*;
+import org.obehave.model.domain.Action;
+import org.obehave.model.domain.Observation;
+import org.obehave.model.domain.Subject;
 
 import java.sql.SQLException;
 

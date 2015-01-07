@@ -9,8 +9,7 @@ import com.j256.ormlite.dao.CloseableIterator;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
-import org.obehave.model.Action;
-import org.obehave.model.Subject;
+import org.obehave.model.domain.Subject;
 
 import java.sql.SQLException;
 import java.util.Collection;

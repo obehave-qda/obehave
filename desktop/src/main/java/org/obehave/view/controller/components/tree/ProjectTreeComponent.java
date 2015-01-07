@@ -1,6 +1,5 @@
 package org.obehave.view.controller.components.tree;
 
-import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -9,11 +8,11 @@ import org.obehave.events.ChangeEvent;
 import org.obehave.events.ChangeType;
 import org.obehave.events.EventBusHolder;
 import org.obehave.model.*;
+import org.obehave.model.domain.Action;
+import org.obehave.model.domain.Observation;
+import org.obehave.model.domain.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
-import java.util.Optional;
 
 public class ProjectTreeComponent extends TreeView<String> {
     private static final Logger log = LoggerFactory.getLogger(ProjectTreeComponent.class);

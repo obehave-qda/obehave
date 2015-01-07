@@ -2,15 +2,12 @@ package org.obehave.view.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Control;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import org.obehave.model.Study;
 import org.obehave.view.controller.components.coding.CodingComponent;
 import org.obehave.view.controller.components.tree.ProjectTreeComponent;

@@ -3,6 +3,10 @@ package org.obehave.model;
 import org.obehave.events.ChangeEvent;
 import org.obehave.events.ChangeType;
 import org.obehave.events.EventBusHolder;
+import org.obehave.model.domain.Action;
+import org.obehave.model.domain.Observation;
+import org.obehave.model.domain.Subject;
+import org.obehave.model.domain.modifier.ModifierFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,11 +20,13 @@ import java.util.List;
 public class Study extends BaseEntity {
     private static final Logger log = LoggerFactory.getLogger(Study.class);
 
+
+    private String name;
+
     private List<Subject> subjects = new ArrayList<>();
     private List<Action> actions = new ArrayList<>();
     private List<Observation> observations = new ArrayList<>();
-
-    private String name;
+    private List<ModifierFactory> modifierFactories = new ArrayList<>();
 
     public Study(){
 
@@ -121,7 +127,7 @@ public class Study extends BaseEntity {
         addObservation(new Observation(getRandomString("Observation " + key)));
     }
 
-    private String getRandomString(String prefix) {
+    private static String getRandomString(String prefix) {
         int number = (int) (Math.random() * 5);
         return prefix + " " + number;
     }

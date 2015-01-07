@@ -5,11 +5,9 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.FontSmoothingType;
 import javafx.scene.text.Text;
-import org.obehave.model.Subject;
+import org.obehave.model.domain.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
