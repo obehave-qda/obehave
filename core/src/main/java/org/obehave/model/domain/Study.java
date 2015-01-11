@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 public class Study extends BaseEntity {
     private static final Logger log = LoggerFactory.getLogger(Study.class);
 
-
     private String name;
 
     private Group<Subject> subjects = new Group<>();

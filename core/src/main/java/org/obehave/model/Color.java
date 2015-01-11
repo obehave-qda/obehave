@@ -18,21 +18,25 @@ public class Color {
     }
 
     public Color(int red, int green, int blue, double opacity) {
+        if (opacity < 0 || opacity > 1) {
+            throw new IllegalArgumentException("Opacity has to be between 0 and 1");
+        }
+
         this.red = red;
         this.green = green;
         this.blue = blue;
         this.opacity = opacity;
     }
 
-    public double getRed() {
+    public int getRed() {
         return red;
     }
 
-    public double getGreen() {
+    public int getGreen() {
         return green;
     }
 
-    public double getBlue() {
+    public int getBlue() {
         return blue;
     }
 
