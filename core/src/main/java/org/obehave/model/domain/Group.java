@@ -1,14 +1,12 @@
 package org.obehave.model.domain;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * A {@code Group} contains elements of the type {@code T} and other groups of the same type. No duplicates are allowed, regardless if it's in the same group or in one of the subgroups.
  * @param <T> the type of the elements to store in this {@code Group}
  */
-public class Group<T> {
+public class Group<T> implements Iterable<T> {
     private final List<Group<T>> subgroups = new ArrayList<>();
     private final List<T> elements = new ArrayList<>();
 
@@ -197,5 +195,26 @@ public class Group<T> {
         final int newIndex = position > oldIndex ? position - 1 : position;
 
         list.add(newIndex, element);
+    }
+
+    /**
+     * This method resolves all nested groups to one flattened list.
+     * @return a flattened, unmodifiable list, containing first all elements of each subgroup, and then the own elements
+     */
+    public List<T> flatten() {
+        List<T> flattened = new ArrayList<>();
+
+        for (Group<T> subgroup : subgroups) {
+            flattened.addAll(subgroup.flatten());
+        }
+
+        flattened.addAll(elements);
+
+        return Collections.unmodifiableList(flattened);
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return flatten().iterator();
     }
 }
