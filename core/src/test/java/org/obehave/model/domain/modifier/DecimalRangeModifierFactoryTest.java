@@ -131,4 +131,17 @@ public class DecimalRangeModifierFactoryTest {
     public void cannotCreateModifierWithStringInsteadOfNumber() throws FactoryException {
         factory.create("not a number");
     }
+
+    @Test
+    public void factoryNameAndDisplayString() {
+        factory.setName("Random name");
+        assertEquals(factory.getName(), "Random name");
+        assertEquals(factory.getDisplayString(), "Random name");
+    }
+
+    @Test
+    public void factoryAlias() {
+        factory.setAlias("Random alias");
+        assertEquals(factory.getAlias(), "Random alias");
+    }
 }

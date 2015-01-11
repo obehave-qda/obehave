@@ -4,6 +4,8 @@ import java.util.*;
 
 /**
  * A {@code Group} contains elements of the type {@code T} and other groups of the same type. No duplicates are allowed, regardless if it's in the same group or in one of the subgroups.
+ * <p/>
+ * {@code Group} is {@see Iterable}, so using a for each loop will return every item contained in this group or one of it's subgroups.
  * @param <T> the type of the elements to store in this {@code Group}
  */
 public class Group<T> implements Iterable<T> {
@@ -215,6 +217,7 @@ public class Group<T> implements Iterable<T> {
 
     @Override
     public Iterator<T> iterator() {
+        // there could be a better way than to flatten the group first. But I don't want to implement a new Iterator...
         return flatten().iterator();
     }
 }

@@ -58,4 +58,17 @@ public class SubjectModifierFactoryTest {
 
         assertEquals(modifier.get(), VALID_SUBJECTS[0]);
     }
+
+    @Test
+    public void factoryNameAndDisplayString() {
+        factory.setName("Random name");
+        assertEquals(factory.getName(), "Random name");
+        assertEquals(factory.getDisplayString(), "Random name");
+    }
+
+    @Test
+    public void factoryAlias() {
+        factory.setAlias("Random alias");
+        assertEquals(factory.getAlias(), "Random alias");
+    }
 }
