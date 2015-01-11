@@ -4,6 +4,7 @@ import com.j256.ormlite.field.DatabaseField;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.obehave.model.*;
+import org.obehave.model.domain.coding.Coding;
 import org.obehave.model.domain.modifier.ModifierFactory;
 
 /**
@@ -17,7 +18,7 @@ import org.obehave.model.domain.modifier.ModifierFactory;
  */
 public class Action extends BaseEntity implements Displayable {
     public static enum Type {
-        POINT, STATE;
+        POINT, STATE
     }
 
     @DatabaseField
@@ -25,7 +26,7 @@ public class Action extends BaseEntity implements Displayable {
     private String alias;
     private Type type;
     private ModifierFactory<?> modifierFactory;
-    private RecurringEvent recurringEvent;
+    private int recurring;
 
 
     public Action(){
@@ -42,6 +43,42 @@ public class Action extends BaseEntity implements Displayable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    public ModifierFactory<?> getModifierFactory() {
+        return modifierFactory;
+    }
+
+    public void setModifierFactory(ModifierFactory<?> modifierFactory) {
+        this.modifierFactory = modifierFactory;
+    }
+
+    public int getRecurring() {
+        return recurring;
+    }
+
+    public void setRecurring(int recurring) {
+        if (recurring < 0) {
+            this.recurring = 0;
+        } else {
+            this.recurring = recurring;
+        }
     }
 
     @Override
@@ -71,6 +108,6 @@ public class Action extends BaseEntity implements Displayable {
     }
 
     public boolean isRecurring() {
-        return recurringEvent != null;
+        return recurring != 0;
     }
 }

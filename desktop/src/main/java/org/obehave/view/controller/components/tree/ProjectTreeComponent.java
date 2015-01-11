@@ -10,6 +10,7 @@ import org.obehave.events.EventBusHolder;
 import org.obehave.model.*;
 import org.obehave.model.domain.Action;
 import org.obehave.model.domain.Observation;
+import org.obehave.model.domain.Study;
 import org.obehave.model.domain.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

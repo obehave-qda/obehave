@@ -16,8 +16,24 @@ public class ActionGroup extends Group<Object> {
         /**
          * Recursive - only one element is allowed to be active
          */
-        TOTAL_EXCLUSIVE;
+        TOTAL_EXCLUSIVE
     }
 
     private Exclusivity exclusivity;
+
+    public ActionGroup(Exclusivity exclusivity) {
+        this.exclusivity = exclusivity;
+    }
+
+    public Exclusivity getExclusivity() {
+        return exclusivity;
+    }
+
+    public void setExclusivity(Exclusivity exclusivity) {
+        if (exclusivity == null) {
+            throw new IllegalArgumentException("Exclusivity must not be null!");
+        }
+
+        this.exclusivity = exclusivity;
+    }
 }

@@ -9,6 +9,10 @@ public class Color {
     private final int blue;
     private final double opacity;
 
+    public Color(int color) {
+        this(color, color, color, 1);
+    }
+
     public Color(int red, int green, int blue) {
         this(red, green, blue, 1);
     }

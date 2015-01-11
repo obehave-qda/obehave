@@ -1,22 +1,49 @@
 package org.obehave.model.domain.modifier;
 
+import org.obehave.exceptions.FactoryException;
 import org.obehave.model.domain.Subject;
 
-import java.util.Set;
+import java.util.*;
 
 /**
- * @author Markus Möslinger
+ * Objects of this class can create
  */
 public class SubjectModifierFactory extends ModifierFactory<SubjectModifier> {
-    private Set<Subject> validSubjects;
+    private List<Subject> validSubjects = new ArrayList<>();
 
+    public SubjectModifierFactory() {
+
+    }
+
+    public SubjectModifierFactory(Subject... subjects) {
+        addValidSubjects(subjects);
+    }
+
+    /**
+     * If {@code subjectName} is parsable to a valid {@code Subject} stored in this factory, return a new {@code SubjectModifier} containing the parsed {@code Subject}
+     * @param subjectName a string matching either the name or the alias of a subject valid in this factory's context
+     * @return a new {@code SubjectModifier} containing the matched subject
+     */
     @Override
-    public SubjectModifier create(String subjectName) {
-        Subject s = null; // look in study for subject with same name
-        if (validSubjects.contains(s)) {
-            return new SubjectModifier(s);
-        } else {
-            throw new IllegalArgumentException("This subject isn't allowed here!"); // more precise message
+    public SubjectModifier create(String subjectName) throws FactoryException {
+        for (Subject subject : validSubjects) {
+            if (subjectName.equals(subject.getName()) || subjectName.equals(subject.getAlias())) {
+                return new SubjectModifier(subject);
+            }
         }
+
+        throw new FactoryException("This subject isn't allowed here!"); // more precise message
+    }
+
+    public boolean addValidSubjects(Subject... subjects) {
+        if (subjects == null) {
+            throw new IllegalArgumentException("Subjects must not be null");
+        }
+
+        return validSubjects.addAll(Arrays.asList(subjects));
+    }
+
+    public List<Subject> getValidSubjects() {
+        return Collections.unmodifiableList(validSubjects);
     }
 }

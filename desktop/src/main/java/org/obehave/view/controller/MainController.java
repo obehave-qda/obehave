@@ -8,7 +8,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import org.obehave.model.Study;
+import org.obehave.model.domain.Study;
 import org.obehave.view.controller.components.coding.CodingComponent;
 import org.obehave.view.controller.components.tree.ProjectTreeComponent;
 import org.obehave.view.controller.components.VideoComponent;

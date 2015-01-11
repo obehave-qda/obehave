@@ -31,6 +31,10 @@ public class Subject extends BaseEntity implements Displayable {
     }
 
     public void setName(String name) {
+        if (name == null) {
+            throw new IllegalArgumentException("name must not be null!");
+        }
+
         this.name = name;
     }
 
@@ -39,6 +43,10 @@ public class Subject extends BaseEntity implements Displayable {
     }
 
     public void setColor(Color color) {
+        if (color == null) {
+            color = new Color(0);
+        }
+
         this.color = color;
     }
 

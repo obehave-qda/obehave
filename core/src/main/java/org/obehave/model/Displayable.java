@@ -1,8 +1,12 @@
 package org.obehave.model;
 
 /**
- * Created by Markus.Moeslinger on 03.12.2014.
+ * By implementing this interface, a class can be shown in the UI as a string
  */
 public interface Displayable {
+    /**
+     * Get the string to display in the UI
+     * @return the displaystring
+     */
     String getDisplayString();
 }
