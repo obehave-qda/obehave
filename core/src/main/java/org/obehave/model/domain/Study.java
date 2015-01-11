@@ -1,19 +1,12 @@
-package org.obehave.model;
+package org.obehave.model.domain;
 
 import org.obehave.events.ChangeEvent;
 import org.obehave.events.ChangeType;
 import org.obehave.events.EventBusHolder;
-import org.obehave.model.domain.Action;
-import org.obehave.model.domain.Group;
-import org.obehave.model.domain.Observation;
-import org.obehave.model.domain.Subject;
+import org.obehave.model.BaseEntity;
 import org.obehave.model.domain.modifier.ModifierFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * A study contains multiple subjects, actions and observations.

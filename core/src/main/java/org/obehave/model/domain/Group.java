@@ -75,7 +75,7 @@ public class Group<T> {
      * @see java.util.List#get(int)
      */
     public Group<T> getSubgroup(int i) {
-        return subgroups.get(0);
+        return subgroups.get(i);
     }
 
     /**
@@ -148,7 +148,7 @@ public class Group<T> {
 
     /**
      * Moves a position to a new position within it's list
-     * @param position the position to move
+     * @param element the element to move
      * @param position the position to move the element to
      * @throws java.lang.IllegalArgumentException if the element isn't in this group
      * @throws java.lang.IndexOutOfBoundsException if the new position isn't a valid list index
@@ -164,7 +164,7 @@ public class Group<T> {
      * @throws java.lang.IllegalArgumentException if the subgroup isn't in this group
      * @throws java.lang.IndexOutOfBoundsException if the new position isn't a valid list index
      */
-    public void move(Group subgroup, int position) {
+    public void move(Group<T> subgroup, int position) {
         move(subgroups, subgroup, position);
     }
 

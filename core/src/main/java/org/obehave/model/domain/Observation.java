@@ -16,7 +16,7 @@ public class Observation extends BaseEntity implements Displayable {
     private File video;
     private LocalDateTime dateTime;
 
-    public Observation(){
+    public Observation() {
 
     }
 
@@ -29,6 +29,9 @@ public class Observation extends BaseEntity implements Displayable {
     }
 
     public void setName(String name) {
+        if (name == null) {
+            throw new IllegalArgumentException("name must not be null!");
+        }
         this.name = name;
     }
 
@@ -45,6 +48,10 @@ public class Observation extends BaseEntity implements Displayable {
     }
 
     public void setDateTime(LocalDateTime dateTime) {
+        if (dateTime == null) {
+            throw new IllegalArgumentException("dateTime must not be null!");
+        }
+
         this.dateTime = dateTime;
     }
 
