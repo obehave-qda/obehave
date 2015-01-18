@@ -1,9 +1,9 @@
-package org.obehave.model.domain.modifier;
+package org.obehave.model.modifier;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.obehave.exceptions.FactoryException;
-import org.obehave.model.domain.Subject;
+import org.obehave.model.Subject;
 
 import java.util.ArrayList;
 import java.util.Arrays;

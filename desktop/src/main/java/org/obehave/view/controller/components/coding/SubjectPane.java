@@ -5,7 +5,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import jfxtras.util.NodeUtil;
-import org.obehave.model.domain.Subject;
+import org.obehave.model.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

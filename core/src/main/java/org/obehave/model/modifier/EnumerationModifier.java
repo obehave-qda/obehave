@@ -1,4 +1,4 @@
-package org.obehave.model.domain.modifier;
+package org.obehave.model.modifier;
 
 /**
  * @author Markus Möslinger

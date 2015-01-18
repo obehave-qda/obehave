@@ -11,7 +11,7 @@ import org.obehave.android.R;
 import org.obehave.android.database.AbstractDbAdapter;
 import org.obehave.android.ui.activities.MainActivity;
 import org.obehave.android.ui.adapters.MyCheckboxCursorAdapter;
-import org.obehave.model.domain.Action;
+import org.obehave.model.Action;
 
 
 public class ModifierFragment extends BaseFragment {

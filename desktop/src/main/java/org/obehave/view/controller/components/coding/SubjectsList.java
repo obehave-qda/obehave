@@ -7,7 +7,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.FontSmoothingType;
 import javafx.scene.text.Text;
-import org.obehave.model.domain.Subject;
+import org.obehave.model.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

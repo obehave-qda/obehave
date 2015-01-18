@@ -7,10 +7,10 @@ import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
-import org.obehave.model.domain.Action;
-import org.obehave.model.domain.Observation;
-import org.obehave.model.domain.Study;
-import org.obehave.model.domain.Subject;
+import org.obehave.model.Action;
+import org.obehave.model.Observation;
+import org.obehave.model.Study;
+import org.obehave.model.Subject;
 
 import java.sql.SQLException;
 

@@ -8,10 +8,10 @@ import org.obehave.events.ChangeEvent;
 import org.obehave.events.ChangeType;
 import org.obehave.events.EventBusHolder;
 import org.obehave.model.*;
-import org.obehave.model.domain.Action;
-import org.obehave.model.domain.Observation;
-import org.obehave.model.domain.Study;
-import org.obehave.model.domain.Subject;
+import org.obehave.model.Action;
+import org.obehave.model.Observation;
+import org.obehave.model.Study;
+import org.obehave.model.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +37,7 @@ public class ProjectTreeComponent extends TreeView<String> {
     }
 
     /**
-     * A method only meant for testing purpouses - this will add a new item when a key was pressed
+     * A method only meant for testing purpouses - this will setData a new item when a key was pressed
      *
      * @param event the keyevent, where the keycode will be read from
      */

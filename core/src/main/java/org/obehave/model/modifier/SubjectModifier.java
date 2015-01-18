@@ -1,9 +1,9 @@
-package org.obehave.model.domain.modifier;
+package org.obehave.model.modifier;
 
-import org.obehave.model.domain.Subject;
+import org.obehave.model.Subject;
 
 /**
- * A {@code SubjectModifier} modifies a coded action with another {@link org.obehave.model.domain.Subject}
+ * A {@code SubjectModifier} modifies a coded action with another {@link org.obehave.model.Subject}
  */
 public class SubjectModifier extends Modifier<Subject> {
     private final Subject subject;

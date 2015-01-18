@@ -1,4 +1,4 @@
-package org.obehave.model.domain.modifier;
+package org.obehave.model.modifier;
 
 /**
  * A modifier can modify a coded action with other classes of type M

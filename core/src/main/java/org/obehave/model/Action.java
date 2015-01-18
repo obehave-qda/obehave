@@ -1,10 +1,9 @@
-package org.obehave.model.domain;
+package org.obehave.model;
 
 import com.j256.ormlite.field.DatabaseField;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.obehave.model.*;
-import org.obehave.model.domain.modifier.ModifierFactory;
+import org.obehave.model.modifier.ModifierFactory;
 
 /**
  * This class describes actions a subject is able to perform.

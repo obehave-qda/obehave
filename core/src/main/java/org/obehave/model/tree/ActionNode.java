@@ -1,9 +1,11 @@
-package org.obehave.model.domain;
+package org.obehave.model.tree;
+
+import org.obehave.model.Action;
 
 /**
  * @author Markus Möslinger
  */
-public class ActionGroup extends Group<Action> {
+public class ActionNode extends Node<Action> {
     public static enum Exclusivity {
         /**
          * Multiple state actions are allowed at the same time
@@ -21,7 +23,7 @@ public class ActionGroup extends Group<Action> {
 
     private Exclusivity exclusivity;
 
-    public ActionGroup(Exclusivity exclusivity) {
+    public ActionNode(Exclusivity exclusivity) {
         this.exclusivity = exclusivity;
     }
 
