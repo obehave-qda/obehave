@@ -1,6 +1,6 @@
 package org.obehave;
 
-import org.obehave.model.domain.Observation;
+import org.obehave.model.Observation;
 
 /**
  * Created by Markus.Moeslinger on 30.11.2014.

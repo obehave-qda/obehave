@@ -1,4 +1,4 @@
-package org.obehave.model.domain.modifier;
+package org.obehave.model.modifier;
 
 import org.junit.Before;
 import org.junit.Test;

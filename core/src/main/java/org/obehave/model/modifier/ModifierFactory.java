@@ -1,4 +1,4 @@
-package org.obehave.model.domain.modifier;
+package org.obehave.model.modifier;
 
 import org.obehave.exceptions.FactoryException;
 import org.obehave.model.Displayable;

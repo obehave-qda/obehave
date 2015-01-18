@@ -1,26 +1,25 @@
-package org.obehave.model.domain;
+package org.obehave.model;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.joda.time.LocalDateTime;
-import org.obehave.model.BaseEntity;
-import org.obehave.model.Displayable;
-
-import java.io.File;
 
 /**
- * During an observation, it's possible to code subjects and actions.
+ * This class describes the observed subjects of a study
  */
-public class Observation extends BaseEntity implements Displayable {
+@DatabaseTable
+public class Subject extends BaseEntity implements Displayable {
+    @DatabaseField
     private String name;
-    private File video;
-    private LocalDateTime dateTime;
+    private Color color;
+    private String alias;
 
-    public Observation() {
+    public Subject() {
 
     }
 
-    public Observation(String name) {
+    public Subject(String name) {
         this.name = name;
     }
 
@@ -32,27 +31,28 @@ public class Observation extends BaseEntity implements Displayable {
         if (name == null) {
             throw new IllegalArgumentException("name must not be null!");
         }
+
         this.name = name;
     }
 
-    public File getVideo() {
-        return video;
+    public Color getColor() {
+        return color;
     }
 
-    public void setVideo(File video) {
-        this.video = video;
-    }
-
-    public LocalDateTime getDateTime() {
-        return dateTime;
-    }
-
-    public void setDateTime(LocalDateTime dateTime) {
-        if (dateTime == null) {
-            throw new IllegalArgumentException("dateTime must not be null!");
+    public void setColor(Color color) {
+        if (color == null) {
+            color = new Color(0);
         }
 
-        this.dateTime = dateTime;
+        this.color = color;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
     }
 
     @Override
@@ -71,7 +71,7 @@ public class Observation extends BaseEntity implements Displayable {
         if (obj.getClass() != getClass()) {
             return false;
         }
-        Observation rhs = (Observation) obj;
+        Subject rhs = (Subject) obj;
 
         return new EqualsBuilder().append(name, rhs.name).isEquals();
     }

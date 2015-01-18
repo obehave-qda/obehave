@@ -14,7 +14,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import org.obehave.events.ChangeEvent;
 import org.obehave.events.EventBusHolder;
-import org.obehave.model.domain.Subject;
+import org.obehave.model.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

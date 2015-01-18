@@ -1,9 +1,9 @@
-package org.obehave.model.domain.coding;
+package org.obehave.model.coding;
 
 import org.obehave.exceptions.FactoryException;
-import org.obehave.model.domain.Action;
-import org.obehave.model.domain.Subject;
-import org.obehave.model.domain.modifier.Modifier;
+import org.obehave.model.Action;
+import org.obehave.model.Subject;
+import org.obehave.model.modifier.Modifier;
 
 /**
  * @author Markus Möslinger

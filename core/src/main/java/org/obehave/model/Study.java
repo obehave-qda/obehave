@@ -1,10 +1,9 @@
-package org.obehave.model.domain;
+package org.obehave.model;
 
 import org.obehave.events.ChangeEvent;
 import org.obehave.events.ChangeType;
 import org.obehave.events.EventBusHolder;
-import org.obehave.model.BaseEntity;
-import org.obehave.model.domain.modifier.ModifierFactory;
+import org.obehave.model.modifier.ModifierFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +34,7 @@ public class Study extends BaseEntity {
 
     public boolean addSubject(Subject subject) {
         if (subjects.contains(subject)) {
-            log.debug("Won't add another {}", subject);
+            log.debug("Won't setData another {}", subject);
             return false;
         }
 
@@ -59,7 +58,7 @@ public class Study extends BaseEntity {
 
     public boolean addAction(Action action) {
         if (actions.contains(action)) {
-            log.debug("Won't add another {}", action);
+            log.debug("Won't setData another {}", action);
             return false;
         }
 
@@ -82,7 +81,7 @@ public class Study extends BaseEntity {
 
     public boolean addObservation(Observation observation) {
         if (observations.contains(observation)) {
-            log.debug("Won't add another {}", observation);
+            log.debug("Won't setData another {}", observation);
             return false;
         }
 

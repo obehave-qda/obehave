@@ -4,10 +4,10 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.cell.TextFieldTreeCell;
-import org.obehave.model.domain.Action;
-import org.obehave.model.domain.Observation;
-import org.obehave.model.domain.Study;
-import org.obehave.model.domain.Subject;
+import org.obehave.model.Action;
+import org.obehave.model.Observation;
+import org.obehave.model.Study;
+import org.obehave.model.Subject;
 
 
 public class ContextMenuTreeCell extends TextFieldTreeCell<String> {
