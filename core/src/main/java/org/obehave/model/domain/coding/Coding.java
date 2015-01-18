@@ -8,19 +8,20 @@ import org.obehave.model.domain.modifier.Modifier;
 /**
  * @author Markus Möslinger
  */
-public abstract class Coding {
+public class Coding {
     private Subject subject;
     private Action action;
     private Modifier modifier;
+    private long startMs;
 
-    public Coding(Subject subject, Action action) {
+    public Coding(Subject subject, Action action, long startMs) {
         setSubject(subject);
         setAction(action);
+        setStartMs(startMs);
     }
 
-    public Coding(Subject subject, Action action, String modifierInput) throws FactoryException {
-        setSubject(subject);
-        setAction(action);
+    public Coding(Subject subject, Action action, String modifierInput, long startMs) throws FactoryException {
+        this(subject, action, startMs);
         setModifier(modifierInput);
     }
 
@@ -52,6 +53,22 @@ public abstract class Coding {
     }
 
     public void setModifier(String input) throws FactoryException {
+        if (input == null) {
+            throw new IllegalArgumentException("Input must not be null");
+        }
+
         this.modifier = action.getModifierFactory().create(input);
+    }
+
+    public long getStartMs() {
+        return startMs;
+    }
+
+    public void setStartMs(long startMs) {
+        if (startMs <= 0) {
+            throw new IllegalArgumentException("ms must not be lower or equal to 0");
+        }
+
+        this.startMs = startMs;
     }
 }

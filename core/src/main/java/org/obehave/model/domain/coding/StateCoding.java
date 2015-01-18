@@ -8,31 +8,16 @@ import org.obehave.model.domain.Subject;
  * @author Markus Möslinger
  */
 public class StateCoding extends Coding {
-    private long startMs;
-    private long endMs;
+    private long endMs = -1;
 
     public StateCoding(Subject subject, Action action, long startMs, long endMs) {
-        super(subject, action);
-        this.startMs = startMs;
-        this.endMs = endMs;
+        super(subject, action, startMs);
+        setEndMs(endMs);
     }
 
     public StateCoding(Subject subject, Action action, String modifierInput, long startMs, long endMs) throws FactoryException {
-        super(subject, action, modifierInput);
-        this.startMs = startMs;
-        this.endMs = endMs;
-    }
-
-    public long getStartMs() {
-        return startMs;
-    }
-
-    public void setStartMs(long startMs) {
-        if (startMs <= 0) {
-            throw new IllegalArgumentException("startMs must be positive!");
-        }
-
-        this.startMs = startMs;
+        this(subject, action, startMs, endMs);
+        setModifier(modifierInput);
     }
 
     public long getEndMs() {
@@ -40,10 +25,14 @@ public class StateCoding extends Coding {
     }
 
     public void setEndMs(long endMs) {
-        if (endMs <= 0) {
-            throw new IllegalArgumentException("endMs must be positive!");
-        }
-
         this.endMs = endMs;
+    }
+
+    public long getDuration() {
+        if (endMs >= getStartMs()) {
+            return endMs - getStartMs();
+        } else {
+            return -1;
+        }
     }
 }
