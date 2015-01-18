@@ -73,13 +73,13 @@ public class Node<T extends Displayable> implements Iterable<T>, Displayable {
         return data;
     }
 
-    public void addAsChild(T data) {
+    public boolean addAsChild(T data) {
         if (this.data != null) {
             children.add(new Node<>(this.data));
             this.data = null;
         }
 
-        children.add(new Node<>(data));
+        return children.add(new Node<>(data));
     }
 
     public String getTitle() {
@@ -92,6 +92,14 @@ public class Node<T extends Displayable> implements Iterable<T>, Displayable {
         }
 
         this.title = title;
+    }
+
+    public boolean remove(Node<T> node) {
+        return children.remove(node);
+    }
+
+    public boolean remove(T data) {
+        return false;
     }
 
     /**

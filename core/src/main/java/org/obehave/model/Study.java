@@ -4,6 +4,7 @@ import org.obehave.events.ChangeEvent;
 import org.obehave.events.ChangeType;
 import org.obehave.events.EventBusHolder;
 import org.obehave.model.modifier.ModifierFactory;
+import org.obehave.model.tree.Node;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,10 +16,10 @@ public class Study extends BaseEntity {
 
     private String name;
 
-    private Group<Subject> subjects = new Group<>();
-    private Group<Action> actions = new Group<>();
-    private Group<Observation> observations = new Group<>();
-    private Group<ModifierFactory> modifierFactories = new Group<>();
+    private Node<Subject> subjects = new Node<>();
+    private Node<Action> actions = new Node<>();
+    private Node<Observation> observations = new Node<>();
+    private Node<ModifierFactory> modifierFactories = new Node<>();
 
     public Study(){
 
@@ -28,7 +29,7 @@ public class Study extends BaseEntity {
         this.name = name;
     }
 
-    public Group<Subject> getSubjects() {
+    public Node<Subject> getSubjects() {
         return subjects;
     }
 
@@ -40,7 +41,7 @@ public class Study extends BaseEntity {
 
         log.debug("Adding subject {}", subject);
 
-        final boolean added = subjects.add(subject);
+        final boolean added = subjects.addAsChild(subject);
         EventBusHolder.post(new ChangeEvent<>(subject, ChangeType.CREATE));
         return added;
     }
@@ -52,7 +53,7 @@ public class Study extends BaseEntity {
         return deleted;
     }
 
-    public Group<Action> getActions() {
+    public Node<Action> getActions() {
         return actions;
     }
 
@@ -63,7 +64,7 @@ public class Study extends BaseEntity {
         }
 
         log.debug("Adding action {}", action);
-        final boolean added = actions.add(action);
+        final boolean added = actions.addAsChild(action);
         EventBusHolder.post(new ChangeEvent<>(action, ChangeType.CREATE));
         return added;
     }
@@ -75,7 +76,7 @@ public class Study extends BaseEntity {
         return deleted;
     }
 
-    public Group<Observation> getObservations() {
+    public Node<Observation> getObservations() {
         return observations;
     }
 
@@ -86,7 +87,7 @@ public class Study extends BaseEntity {
         }
 
         log.debug("Adding observation {}", observation);
-        final boolean added = observations.add(observation);
+        final boolean added = observations.addAsChild(observation);
         EventBusHolder.post(new ChangeEvent<>(observation, ChangeType.CREATE));
         return added;
     }
