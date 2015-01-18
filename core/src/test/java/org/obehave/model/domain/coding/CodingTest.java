@@ -14,17 +14,16 @@ import static org.junit.Assert.assertEquals;
 /**
  * @author Markus Möslinger
  */
-public class StateCodingTest {
+public class CodingTest {
     private final Subject subject = new Subject("Test subject");
     private final Action action = new Action("Test action");
     private final long millis = 500;
-    private final long endMillis = millis + 250;
 
-    private StateCoding coding;
+    private Coding coding;
 
     @Before
     public void prepare() throws FactoryException {
-        coding = new StateCoding(subject, action, millis, endMillis);
+        coding = new Coding(subject, action, millis);
 
         action.setModifierFactory(new DecimalRangeModifierFactory(0, 10));
 
@@ -33,22 +32,22 @@ public class StateCodingTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void noCreationWithoutSubject() {
-        new StateCoding(null, action, millis, endMillis);
+        new Coding(null, action, millis);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void noCreationWithoutAction() {
-        new StateCoding(subject, null, millis, endMillis);
+        new Coding(subject, null, millis);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void noCreationWithNullAsModifierInput() throws FactoryException {
-        new StateCoding(subject, action, null, millis, endMillis);
+        new Coding(subject, action, null, millis);
     }
 
     @Test
     public void accessingFieldsShouldWork() {
-        StateCoding coding = new StateCoding(new Subject("Dummy"), new Action("Dummy"), 300, 400);
+        Coding coding = new Coding(new Subject("Dummy"), new Action("Dummy"), 300);
 
         coding.setSubject(subject);
         coding.setAction(action);
@@ -58,6 +57,5 @@ public class StateCodingTest {
         assertEquals(coding.getAction(), action);
         assertEquals(coding.getStartMs(), millis);
         assertEquals(coding.getModifier().get(), BigDecimal.valueOf(3));
-        assertEquals(coding.getDuration(), 400 - 300);
     }
 }

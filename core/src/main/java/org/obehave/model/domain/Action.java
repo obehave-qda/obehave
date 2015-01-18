@@ -4,7 +4,6 @@ import com.j256.ormlite.field.DatabaseField;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.obehave.model.*;
-import org.obehave.model.domain.coding.Coding;
 import org.obehave.model.domain.modifier.ModifierFactory;
 
 /**

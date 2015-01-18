@@ -3,7 +3,7 @@ package org.obehave.model.domain;
 /**
  * @author Markus Möslinger
  */
-public class ActionGroup extends Group<Object> {
+public class ActionGroup extends Group<Action> {
     public static enum Exclusivity {
         /**
          * Multiple state actions are allowed at the same time
