@@ -32,7 +32,7 @@ public class Node<T extends Displayable> implements Iterable<T>, Displayable {
      * @return true, if the element is found either within this group itself, or in one of it's subgroups
      */
     public boolean contains(T element) {
-        if (data.equals(element)) {
+        if (element.equals(data)) {
             return true;
         }
 
@@ -50,7 +50,7 @@ public class Node<T extends Displayable> implements Iterable<T>, Displayable {
      * @param child the child to look for
      * @return true, if the subgroup is found either within this group itself, or in one of it's subgroups
      */
-    public boolean contains(Node child) {
+    public boolean contains(Node<T> child) {
         if (children.contains(child)) {
             return true;
         }
@@ -73,13 +73,17 @@ public class Node<T extends Displayable> implements Iterable<T>, Displayable {
         return data;
     }
 
-    public boolean addAsChild(T data) {
-        if (this.data != null) {
-            children.add(new Node<>(this.data));
-            this.data = null;
-        }
+    public boolean addChild(T data) {
+        makeToParent();
 
         return children.add(new Node<>(data));
+    }
+
+    public void makeToParent() {
+        if (data != null) {
+            children.add(new Node<>(data));
+            data = null;
+        }
     }
 
     public String getTitle() {
@@ -164,7 +168,9 @@ public class Node<T extends Displayable> implements Iterable<T>, Displayable {
             flattened.addAll(child.flatten());
         }
 
-        flattened.add(data);
+        if (data != null) {
+            flattened.add(data);
+        }
 
         return Collections.unmodifiableList(flattened);
     }
