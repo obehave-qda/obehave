@@ -41,7 +41,7 @@ public class Study extends BaseEntity {
 
         log.debug("Adding subject {}", subject);
 
-        final boolean added = subjects.addAsChild(subject);
+        final boolean added = subjects.addChild(subject);
         EventBusHolder.post(new ChangeEvent<>(subject, ChangeType.CREATE));
         return added;
     }
@@ -64,7 +64,7 @@ public class Study extends BaseEntity {
         }
 
         log.debug("Adding action {}", action);
-        final boolean added = actions.addAsChild(action);
+        final boolean added = actions.addChild(action);
         EventBusHolder.post(new ChangeEvent<>(action, ChangeType.CREATE));
         return added;
     }
@@ -87,7 +87,7 @@ public class Study extends BaseEntity {
         }
 
         log.debug("Adding observation {}", observation);
-        final boolean added = observations.addAsChild(observation);
+        final boolean added = observations.addChild(observation);
         EventBusHolder.post(new ChangeEvent<>(observation, ChangeType.CREATE));
         return added;
     }
