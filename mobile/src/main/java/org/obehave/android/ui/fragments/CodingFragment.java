@@ -25,8 +25,8 @@ public class CodingFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        btnCoding = (Button)rootView.findViewById(R.id.btnCoding);
-
+        //btnCoding = (Button)rootView.findViewById(R.id.btnCoding);
+/*
         btnCoding.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -35,6 +35,9 @@ public class CodingFragment extends BaseFragment {
             }
         });
 
+
+
+        */
 
         return rootView;
     }
