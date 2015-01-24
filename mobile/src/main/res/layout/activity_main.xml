@@ -1,7 +1,6 @@
-<org.obehave.android.ui.utils.MyViewPager
-xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-android:id="@+id/viewPager"
-android:layout_width="fill_parent"
-android:layout_height="fill_parent"
-/>
+<android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+                                   xmlns:tools="http://schemas.android.com/tools"
+                                   android:id="@+id/pager"
+                                   android:layout_width="match_parent"
+                                   android:layout_height="match_parent"
+                                   tools:context="org.obehave.android.ui.activities.MainActivity"/>

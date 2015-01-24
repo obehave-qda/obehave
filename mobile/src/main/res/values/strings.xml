@@ -1,18 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Obehave</string>
-    <string name="hello_world">Hello Subject!</string>
+    <string name="app_name">obehave</string>
     <string name="action_settings">Settings</string>
 
     <!-- Main Activity -->
     <string name="start_button">Start</string>
     <string name="stop_button">Stop</string>
-    <string name="table_header_start">Start</string>
-    <string name="table_header_end">End</string>
-    <string name="table_header_subject">Subjekt</string>
-    <string name="table_header_modifier">Modifier</string>
-    <string name="table_header_action">Aktion</string>
     <string name="aktion_kodieren">kodieren</string>
     <string name="bc_group_fragment_subject">Subject Groups</string>
     <string name="open_study">Open study</string>
@@ -20,4 +14,13 @@
     <string name="edit_observation">Edit observation</string>
     <string name="accept">Accept</string>
     <string name="uncategorized">uncategorized</string>
+    <string name="title_activity_open_observation">OpenObservationActivity</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_section1">All Codings</string>
+    <string name="title_section2">Running Codings</string>
+    <string name="title_section3">Create Coding</string>
+    <string name="action_example">Example action</string>
+    <string name="title_load_coding_schema">Load Coding Schema</string>
+    <string name="title_activity_open_coding_schema">OpenCodingSchemaActivity</string>
+
 </resources>

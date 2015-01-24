@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="action_bar">#F7941D</color>
+    <color name="action_bar_text_color">#ffffff</color>
     <color name="highlight">#F7941D</color>
     <color name="highlightTextColor">#101010</color>
+    <color name="window_background">#f0f0f0</color>
+    <color name="listview_background">#ffffff</color>
+    <color name="PrimaryTextColor">#aaaaaa</color>
+    <color name="primary_text_color">#555555</color>
+    <color name="btn_disabled_background">#cccccc</color>
+    <color name="button_background">#F7941D</color>
+    <color name="button_foreground">#ffffff</color>
+    <color name="subline_listview">#6e6e6e</color>
 </resources>

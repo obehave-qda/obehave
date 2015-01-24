@@ -24,8 +24,8 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper{
     private Dao<Subject, Long> subjectDao;
     private Dao<Action, Long> actionDao;
     private Dao<Observation, Long> observationDao;
-    private Dao<SubjectGroup, Long> subjectGroupDao;
-    private Dao<ActionGroup, Long> actionGroupDao;
+    //private Dao<SubjectGroup, Long> subjectGroupDao;
+    //private Dao<ActionGroup, Long> actionGroupDao;
 
 
     public MyDatabaseHelper(Context context){
@@ -51,8 +51,8 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper{
         TableUtils.createTable(connectionSource, Subject.class);
         TableUtils.createTable(connectionSource, Action.class);
         TableUtils.createTable(connectionSource, Observation.class);
-        TableUtils.createTable(connectionSource, SubjectGroup.class);
-        TableUtils.createTable(connectionSource, ActionGroup.class);;
+        //TableUtils.createTable(connectionSource, SubjectGroup.class);
+        //TableUtils.createTable(connectionSource, ActionGroup.class);;
     }
 
 
@@ -74,8 +74,8 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper{
         TableUtils.dropTable(connectionSource, Subject.class, ignoreErrors);
         TableUtils.dropTable(connectionSource, Observation.class, ignoreErrors);
         TableUtils.dropTable(connectionSource, Action.class, ignoreErrors);
-        TableUtils.dropTable(connectionSource, SubjectGroup.class, ignoreErrors);
-        TableUtils.dropTable(connectionSource, ActionGroup.class, ignoreErrors);
+        //TableUtils.dropTable(connectionSource, SubjectGroup.class, ignoreErrors);
+        //TableUtils.dropTable(connectionSource, ActionGroup.class, ignoreErrors);
     }
 
     public Dao<Study, Long> getStudyDao() throws SQLException {
@@ -99,13 +99,14 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper{
         }
         return actionDao;
     }
-
+/*
     public Dao<ActionGroup, Long> getActionGroupDao() throws SQLException{
         if(actionGroupDao == null){
             actionGroupDao = getDao(ActionGroup.class);
         }
         return actionGroupDao;
     }
+    */
 
     public Dao<Action, Long> getObservationDao() throws SQLException{
         if(observationDao == null){
@@ -113,21 +114,22 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper{
         }
         return actionDao;
     }
-
+/*
     public Dao<SubjectGroup, Long> getSubjectGroupDao() throws SQLException{
         if(subjectGroupDao == null){
             subjectGroupDao = getDao(SubjectGroup.class);
         }
         return subjectGroupDao;
     }
+    */
 
     private void createTestEntries() throws SQLException {
             Study study = new Study();
             study.setName("Test Study");
-            generateTestEntries(study);
+          //  generateTestEntries(study);
             getStudyDao().create(study);
     }
-
+/*
     private void generateTestEntries(Study study) throws SQLException {
         Subject subject;
         study.setName("Android TestStudy");
@@ -170,4 +172,6 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper{
         subject.setSubjectGroup(null);
         subjectDao.create(subject);
     }
+
+*/
 }
