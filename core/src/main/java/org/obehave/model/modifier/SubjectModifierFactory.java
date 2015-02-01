@@ -12,10 +12,11 @@ public class SubjectModifierFactory extends ModifierFactory<SubjectModifier> {
     private List<Subject> validSubjects = new ArrayList<>();
 
     public SubjectModifierFactory() {
-
+        super(SubjectModifierFactory.class);
     }
 
     public SubjectModifierFactory(Subject... subjects) {
+        this();
         addValidSubjects(subjects);
     }
 
