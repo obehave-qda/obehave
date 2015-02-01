@@ -11,49 +11,30 @@ import org.joda.time.DateTime;
  * Serves as a base class for all entities, which will be persisted into sql databases.
  * Provides basic functionality to determin new instances as well as support for optimistic locking.
  */
-public class BaseEntity {
+public abstract class BaseEntity {
 
     /**
      * Represents the primary key for an object in the sql database.
      * Must be unique within a table, but NOT a subsequent sequence WITHOUT gaps
      */
-    @DatabaseField(generatedId = true, columnName = "_id")
+    @DatabaseField(generatedId = true, columnName = "id")
     private Long id;
-
-    /**
-     * Marks the timestamp when the instance was created
-     */
-    @DatabaseField
-    private DateTime creationTS;
 
     /**
      * Marks the timestamp when the instance was modified last
      */
-    @DatabaseField
-    private DateTime modifiedTS;
+    @DatabaseField(columnName = "modified")
+    private DateTime modified;
 
     public BaseEntity() {
-        setCreationTS(new DateTime());
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Long getId() {
         return id;
     }
 
-    public void setCreationTS(DateTime creationTS) {
-        this.creationTS = creationTS;
-    }
-
-    public DateTime getCreationTS() {
-        return creationTS;
-    }
-
-    public DateTime getModifiedTS() {
-        return modifiedTS;
+    public DateTime getModified() {
+        return modified;
     }
 
     @Override
@@ -80,8 +61,7 @@ public class BaseEntity {
     public String toString() {
         return new ToStringBuilder(this)
                 .append("id", id)
-                .append("creationTS", creationTS)
-                .append("modifiedTS", modifiedTS)
+                .append("modified", modified)
                 .toString();
     }
 }
