@@ -14,7 +14,8 @@ CREATE TABLE PUBLIC.Observation
   id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
   modified TIMESTAMP NOT NULL,
   name VARCHAR2(255) NOT NULL,
-  video VARCHAR(255)
+  video VARCHAR(255),
+  date DATETIME
 );
 
 CREATE TABLE PUBLIC.ModifierFactory
@@ -81,5 +82,24 @@ CREATE TABLE PUBLIC.Coding
   FOREIGN KEY (subject) REFERENCES Public.Subject(id),
   FOREIGN KEY (action) REFERENCES Public.Action(id),
   FOREIGN KEY (modifier) REFERENCES Public.Modifier(id),
+  FOREIGN KEY (observation) REFERENCES Public.Observation(id)
+);
+
+CREATE TABLE PUBLIC.Node
+(
+  id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+  modified TIMESTAMP NOT NULL,
+  parent INT,
+  title VARCHAR2(255),
+  type VARCHAR2(100) NOT NULL,
+  subject INT,
+  action INT,
+  actionType VARCHAR2(100),
+  modifierFactory INT,
+  observation INT,
+  FOREIGN KEY (parent) REFERENCES (id),
+  FOREIGN KEY (subject) REFERENCES Public.Subject(id),
+  FOREIGN KEY (action) REFERENCES Public.Action(id),
+  FOREIGN KEY (modifierFactory) REFERENCES Public.ModifierFactory(id),
   FOREIGN KEY (observation) REFERENCES Public.Observation(id)
 );

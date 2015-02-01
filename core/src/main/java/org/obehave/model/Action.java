@@ -1,6 +1,7 @@
 package org.obehave.model;
 
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.obehave.model.modifier.ModifierFactory;
@@ -14,16 +15,25 @@ import org.obehave.model.modifier.ModifierFactory;
  * <p />
  * Actions can be modified in some way.
  */
+@DatabaseTable(tableName = "Action")
 public class Action extends BaseEntity implements Displayable {
     public static enum Type {
         POINT, STATE
     }
 
-    @DatabaseField
+    @DatabaseField(columnName = "name")
     private String name;
+
+    @DatabaseField(columnName = "alias")
     private String alias;
+
+    @DatabaseField(columnName = "type")
     private Type type;
+
+    @DatabaseField(columnName = "modifierFactory")
     private ModifierFactory<?> modifierFactory;
+
+    @DatabaseField(columnName = "recurring")
     private int recurring;
 
 
