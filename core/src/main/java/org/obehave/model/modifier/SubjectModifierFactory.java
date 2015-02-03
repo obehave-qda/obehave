@@ -1,5 +1,6 @@
 package org.obehave.model.modifier;
 
+import com.j256.ormlite.field.ForeignCollectionField;
 import org.obehave.exceptions.FactoryException;
 import org.obehave.model.Subject;
 
@@ -9,6 +10,7 @@ import java.util.*;
  * Objects of this class can create
  */
 public class SubjectModifierFactory extends ModifierFactory<SubjectModifier> {
+    @ForeignCollectionField(eager = false)
     private List<Subject> validSubjects = new ArrayList<>();
 
     public SubjectModifierFactory() {
