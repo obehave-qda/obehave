@@ -1,0 +1,33 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    tools:context=".MainActivity$CodingTableFragment">
+    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_gravity="center_horizontal">
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginRight="25dp"
+                android:text="00:00" android:id="@+id/tvCounter" android:textColor="@color/highlight"
+                android:textSize="48dp"
+                />
+        <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginRight="25dp"
+                 android:text="start" android:textColor="#fff" android:layout_gravity="center_vertical"/>
+
+        <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginRight="25dp" android:layout_gravity="center_vertical"
+                android:background="@color/btn_disabled_background" android:text="stop"/>
+    </LinearLayout>
+    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="40dp">
+        <ListView android:layout_width="match_parent" android:layout_height="match_parent" android:id="@id/android:list">
+        </ListView>
+        <TextView android:id="@id/android:empty"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:background="#FF0000"
+                  android:text="No data."/>
+
+    </LinearLayout>
+</LinearLayout>

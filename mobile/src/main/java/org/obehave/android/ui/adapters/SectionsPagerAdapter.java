@@ -5,9 +5,15 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import org.obehave.android.R;
 import org.obehave.android.ui.fragments.AllCodingsFragment;
+import org.obehave.android.ui.fragments.CodingFragment;
 import org.obehave.android.ui.fragments.RunningCodingsFragment;
 
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+    final static int POSITION_ALL_CODING_FRAGMENT = 0;
+    final static int POSITION_RUNNING_CODING_FRAGMENT = 1;
+    final static int POSITION_CODING_FRAGMENT = 2;
+
 
     public SectionsPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -17,13 +23,18 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         // getItem is called to instantiate the fragment for the given page.
         // Return a PlaceholderFragment (defined as a static inner class below).
-        if (position == 0) {
-            return AllCodingsFragment.newInstance(position + 1);
+
+        switch(position){
+            case POSITION_ALL_CODING_FRAGMENT:
+                return AllCodingsFragment.newInstance(position + 1);
+            case POSITION_RUNNING_CODING_FRAGMENT:
+                return RunningCodingsFragment.newInstance(position + 1);
+            case POSITION_CODING_FRAGMENT:
+            default:
+                return CodingFragment.newInstance(position + 1);
         }
-        else if(position == 1){
-            return RunningCodingsFragment.newInstance(position+1);
-        }
-        return PlaceholderFragment.newInstance(position + 1);
+
+
     }
 
     @Override
