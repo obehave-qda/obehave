@@ -9,6 +9,8 @@ public class DecimalRangeModifier extends Modifier<BigDecimal> {
     private final BigDecimal value;
 
     DecimalRangeModifier(BigDecimal value) {
+        super(DecimalRangeModifier.class);
+
         if (value == null) {
             throw new IllegalArgumentException("value must not be null!");
         }

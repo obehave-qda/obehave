@@ -1,5 +1,7 @@
 package org.obehave.model;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.joda.time.LocalDateTime;
@@ -9,9 +11,15 @@ import java.io.File;
 /**
  * During an observation, it's possible to code subjects and actions.
  */
+@DatabaseTable(tableName = "Observation")
 public class Observation extends BaseEntity implements Displayable {
+    @DatabaseField(columnName = "name")
     private String name;
+
+    @DatabaseField(columnName = "video")
     private File video;
+
+    @DatabaseField(columnName = "date")
     private LocalDateTime dateTime;
 
     public Observation() {

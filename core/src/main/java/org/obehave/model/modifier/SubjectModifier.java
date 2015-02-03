@@ -9,6 +9,8 @@ public class SubjectModifier extends Modifier<Subject> {
     private final Subject subject;
 
     SubjectModifier(Subject subject) {
+        super(SubjectModifier.class);
+
         if (subject == null) {
             throw new IllegalArgumentException("subject must not be null!");
         }

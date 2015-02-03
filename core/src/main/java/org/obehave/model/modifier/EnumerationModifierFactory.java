@@ -11,10 +11,11 @@ public class EnumerationModifierFactory extends ModifierFactory<EnumerationModif
     private List<String> validValues = new ArrayList<>();
 
     public EnumerationModifierFactory() {
-
+        super(EnumerationModifierFactory.class);
     }
 
     public EnumerationModifierFactory(String... values) {
+        this();
         addValidValues(values);
     }
 
