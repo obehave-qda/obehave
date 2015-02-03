@@ -5,15 +5,32 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 import org.obehave.android.R;
+import org.obehave.android.database.MyDatabaseHelper;
 import org.obehave.android.ui.adapters.SectionsPagerAdapter;
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
 
+    private static final String LOG_TAG = MainActivity.class.getSimpleName();
     SectionsPagerAdapter mSectionsPagerAdapter;
     ViewPager mViewPager;
+
+    MyDatabaseHelper databaseHelper;
+
+    public MyDatabaseHelper getHelper() {
+        if (databaseHelper == null) {
+            Log.d(LOG_TAG, "getHelper() get database helper back");
+            databaseHelper = OpenHelperManager.getHelper(this, MyDatabaseHelper.class);
+
+            databaseHelper.getWritableDatabase();
+        }
+        return databaseHelper;
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,5 +104,15 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
     @Override
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if(databaseHelper != null) {
+            OpenHelperManager.releaseHelper();
+            databaseHelper = null;
+        }
     }
 }
