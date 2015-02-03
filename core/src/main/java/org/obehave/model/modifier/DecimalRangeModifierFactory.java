@@ -15,10 +15,11 @@ public class DecimalRangeModifierFactory extends ModifierFactory<DecimalRangeMod
     private int to;
 
     public DecimalRangeModifierFactory() {
-
+        super(DecimalRangeModifierFactory.class);
     }
 
     public DecimalRangeModifierFactory(int from, int to) {
+        this();
         setRange(from, to);
     }
 

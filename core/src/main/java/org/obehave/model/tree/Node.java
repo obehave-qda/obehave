@@ -1,5 +1,7 @@
 package org.obehave.model.tree;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 import org.obehave.model.Displayable;
 
 import java.util.ArrayList;
@@ -13,16 +15,29 @@ import java.util.List;
  * {@code Group} is {@see Iterable}, so using a for each loop will return every item contained in this group or one of it's subgroups.
  * @param <T> the type of the children to store in this {@code Group}
  */
+@DatabaseTable(tableName = "Node")
 public class Node<T extends Displayable> implements Iterable<T>, Displayable {
     private final ArrayList<Node<T>> children = new ArrayList<>();
+
+    @DatabaseField(columnName = "type")
+    private Class<T> dataType;
+
+    @DatabaseField
     private T data;
+
+    @DatabaseField(columnName = "title")
     private String title = "";
 
     public Node() {
 
     }
 
-    public Node(T data) {
+    public Node(Class<T> dataType) {
+        this.dataType = dataType;
+    }
+
+    public Node(T data, Class<T> dataType) {
+        this(dataType);
         this.data = data;
     }
 
@@ -76,12 +91,12 @@ public class Node<T extends Displayable> implements Iterable<T>, Displayable {
     public boolean addChild(T data) {
         makeToParent();
 
-        return children.add(new Node<>(data));
+        return children.add(new Node<>(data, dataType));
     }
 
     public void makeToParent() {
         if (data != null) {
-            children.add(new Node<>(data));
+            children.add(new Node<>(data, dataType));
             data = null;
         }
     }

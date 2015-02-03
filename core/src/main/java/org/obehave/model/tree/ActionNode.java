@@ -1,5 +1,6 @@
 package org.obehave.model.tree;
 
+import com.j256.ormlite.field.DatabaseField;
 import org.obehave.model.Action;
 
 /**
@@ -21,9 +22,11 @@ public class ActionNode extends Node<Action> {
         TOTAL_EXCLUSIVE
     }
 
+    @DatabaseField(columnName = "actionType")
     private Exclusivity exclusivity;
 
     public ActionNode(Exclusivity exclusivity) {
+        super(Action.class);
         this.exclusivity = exclusivity;
     }
 

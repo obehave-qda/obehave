@@ -1,14 +1,27 @@
 package org.obehave.model.modifier;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 import org.obehave.exceptions.FactoryException;
 import org.obehave.model.Displayable;
 
 /**
  * A class to create valid modifiers
  */
+@DatabaseTable(tableName = "ModifierFactory")
 public abstract class ModifierFactory<T extends Modifier> implements Displayable {
+    @DatabaseField(columnName = "type")
+    private Class<? extends ModifierFactory> type;
+
+    @DatabaseField(columnName = "name")
     private String name;
+
+    @DatabaseField(columnName = "alias")
     private String alias;
+
+    public ModifierFactory(Class<? extends ModifierFactory> type) {
+        this.type = type;
+    }
 
     public abstract T create(String input) throws FactoryException;
 

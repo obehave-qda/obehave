@@ -1,4 +1,4 @@
-package org.obehave.model;
+package org.obehave.model.old;
 
 import com.j256.ormlite.field.DatabaseField;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -11,30 +11,49 @@ import org.joda.time.DateTime;
  * Serves as a base class for all entities, which will be persisted into sql databases.
  * Provides basic functionality to determin new instances as well as support for optimistic locking.
  */
-public abstract class BaseEntity {
+public class BaseEntity {
 
     /**
      * Represents the primary key for an object in the sql database.
      * Must be unique within a table, but NOT a subsequent sequence WITHOUT gaps
      */
-    @DatabaseField(generatedId = true, columnName = "id")
+    @DatabaseField(generatedId = true, columnName = "_id")
     private Long id;
+
+    /**
+     * Marks the timestamp when the instance was created
+     */
+    @DatabaseField
+    private DateTime creationTS;
 
     /**
      * Marks the timestamp when the instance was modified last
      */
-    @DatabaseField(columnName = "modified")
-    private DateTime modified;
+    @DatabaseField
+    private DateTime modifiedTS;
 
     public BaseEntity() {
+        setCreationTS(new DateTime());
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getId() {
         return id;
     }
 
-    public DateTime getModified() {
-        return modified;
+    public void setCreationTS(DateTime creationTS) {
+        this.creationTS = creationTS;
+    }
+
+    public DateTime getCreationTS() {
+        return creationTS;
+    }
+
+    public DateTime getModifiedTS() {
+        return modifiedTS;
     }
 
     @Override
@@ -61,7 +80,8 @@ public abstract class BaseEntity {
     public String toString() {
         return new ToStringBuilder(this)
                 .append("id", id)
-                .append("modified", modified)
+                .append("creationTS", creationTS)
+                .append("modifiedTS", modifiedTS)
                 .toString();
     }
 }

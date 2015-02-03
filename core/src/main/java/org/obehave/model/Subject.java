@@ -8,12 +8,16 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 /**
  * This class describes the observed subjects of a study
  */
-@DatabaseTable
+@DatabaseTable(tableName = "Subject")
 public class Subject extends BaseEntity implements Displayable {
-    @DatabaseField
+    @DatabaseField(columnName = "name")
     private String name;
-    private Color color;
+
+    @DatabaseField(columnName = "alias")
     private String alias;
+
+    @DatabaseField(columnName = "color")
+    private Color color;
 
     public Subject() {
 
