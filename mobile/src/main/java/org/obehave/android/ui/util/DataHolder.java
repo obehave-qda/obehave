@@ -27,7 +27,7 @@ public class DataHolder {
                 subjects = subjectDao.queryForAll();
             } catch (SQLException e) {
                 // TODO: locale Exception!
-                throw new UiException("Es ist ein schwerer Fehler aufgetreten", e);
+                throw new UiException("Es ist ein schwerer Fehler aufgetreten!", e);
             }
 
             subjects = new ArrayList<>();
