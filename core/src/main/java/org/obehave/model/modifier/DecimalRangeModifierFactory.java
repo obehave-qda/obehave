@@ -1,5 +1,6 @@
 package org.obehave.model.modifier;
 
+import com.j256.ormlite.field.DatabaseField;
 import org.obehave.exceptions.FactoryException;
 
 import java.math.BigDecimal;
@@ -11,7 +12,10 @@ import java.util.Locale;
  * @author Markus Möslinger
  */
 public class DecimalRangeModifierFactory extends ModifierFactory<DecimalRangeModifier> {
+    @DatabaseField(columnName = "rangeFrom")
     private int from;
+
+    @DatabaseField(columnName = "rangeTo")
     private int to;
 
     public DecimalRangeModifierFactory() {
