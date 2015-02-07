@@ -1,7 +1,6 @@
 package org.obehave.android.ui.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +25,7 @@ public class CodingFragment extends MyListFragment {
                              Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        View rootView = inflater.inflate(R.layout.fragment_all_codings, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_subject, container, false);
         String[] values = new String[] { "Amarok - spielt - Peter", "Amarok - markiert",  "Lessie - frisst"};
 
 
