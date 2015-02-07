@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import org.obehave.android.R;
 
-public class CodingFragment extends ListFragment {
+public class CodingFragment extends MyListFragment {
 
     private static final String ARG_SECTION_NUMBER = "section_number";
 
