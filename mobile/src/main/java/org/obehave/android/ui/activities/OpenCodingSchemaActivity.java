@@ -8,7 +8,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import org.obehave.android.R;
 
-import java.util.ArrayList;
 
 public class OpenCodingSchemaActivity extends Activity {
 
