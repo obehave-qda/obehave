@@ -8,9 +8,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import com.j256.ormlite.android.apptools.OpenHelperManager;
 import org.obehave.android.R;
-import org.obehave.android.database.MyDatabaseHelper;
 import org.obehave.android.ui.adapters.SectionsPagerAdapter;
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
@@ -19,17 +17,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     SectionsPagerAdapter mSectionsPagerAdapter;
     ViewPager mViewPager;
 
-    MyDatabaseHelper databaseHelper;
-
-    public MyDatabaseHelper getHelper() {
-        if (databaseHelper == null) {
-            Log.d(LOG_TAG, "getHelper() get database helper back");
-            databaseHelper = OpenHelperManager.getHelper(this, MyDatabaseHelper.class);
-
-            databaseHelper.getWritableDatabase();
-        }
-        return databaseHelper;
-    }
 
 
     @Override
@@ -109,10 +96,5 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-        if(databaseHelper != null) {
-            OpenHelperManager.releaseHelper();
-            databaseHelper = null;
-        }
     }
 }
