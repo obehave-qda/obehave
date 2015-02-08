@@ -7,10 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
+import android.widget.ListView;
 import org.obehave.android.R;
 import org.obehave.android.ui.adapters.SubjectAdapter;
+import org.obehave.android.ui.events.SubjectSelectedEvent;
 import org.obehave.android.ui.exceptions.UiException;
 import org.obehave.android.ui.util.DataHolder;
+import org.obehave.events.EventBusHolder;
+import org.obehave.model.Subject;
 
 public class SubjectFragment extends MyListFragment {
 
@@ -49,7 +53,14 @@ public class SubjectFragment extends MyListFragment {
             e.printStackTrace();
         }
 
-
         return rootView;
+    }
+
+    @Override
+    public void onListItemClick(ListView listView, View view, int position, long id) {
+        super.onListItemClick(listView, view, position, id);
+        Subject subject = (Subject) adapter.getItem(position);
+        EventBusHolder.post(new SubjectSelectedEvent(subject));
+
     }
 }
