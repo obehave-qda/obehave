@@ -5,7 +5,6 @@ import org.obehave.model.Action;
 import org.obehave.model.Color;
 import org.obehave.model.Subject;
 import org.obehave.model.modifier.DecimalRangeModifierFactory;
-import org.obehave.model.modifier.EnumerationModifier;
 import org.obehave.model.modifier.EnumerationModifierFactory;
 import org.obehave.model.modifier.SubjectModifierFactory;
 
@@ -78,7 +77,7 @@ public class DataHolder {
     public List<Action> getAllActions() throws UiException {
         if(actions == null) {
             generateSubjectModifierFactoryActions();
-            generateEnumberationModifierActions();
+            generateEnumerationModifierActions();
             generateNumberRangeActions();
         }
 
@@ -88,8 +87,16 @@ public class DataHolder {
     /**
      *  Only for testing purpose.
      */
-    private void generateSubjectModifierFactoryActions(){
+
+    private void generateActions(){
         actions = new ArrayList<Action>();
+        generateNumberRangeActions();
+        generateSubjectModifierFactoryActions();
+        generateEnumerationModifierActions();
+    }
+
+    private void generateSubjectModifierFactoryActions(){
+
 
         String actionNames[] = {
                 "spielen",
@@ -115,7 +122,7 @@ public class DataHolder {
     }
 
     private void generateNumberRangeActions(){
-        actions = new ArrayList<Action>();
+
 
         String actionNames[] = {
                 "number 1",
@@ -140,7 +147,7 @@ public class DataHolder {
     }
 
     private void generateEnumerationModifierActions(){
-        actions = new ArrayList<Action>();
+
 
         String actionNames[] = {
                 "enum 1",
