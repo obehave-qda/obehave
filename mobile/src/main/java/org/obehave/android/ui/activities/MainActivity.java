@@ -14,8 +14,11 @@ import org.obehave.android.ui.adapters.SectionsPagerAdapter;
 import org.obehave.android.ui.events.ActionSelectedEvent;
 import org.obehave.android.ui.events.SubjectSelectedEvent;
 import org.obehave.android.ui.fragments.ActionFragment;
+import org.obehave.android.ui.fragments.SubjectModifierFragment;
 import org.obehave.android.ui.util.AppState;
 import org.obehave.events.EventBusHolder;
+import org.obehave.model.Action;
+import org.obehave.model.modifier.SubjectModifierFactory;
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
 
@@ -36,9 +39,18 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     @Subscribe
     public  void onActionSelected(ActionSelectedEvent event){
         Log.d(LOG_TAG, "onActionSelected");
-        Log.d(LOG_TAG, event.getAction().getDisplayString());
+        Action action = event.getAction();
+        Log.d(LOG_TAG, action.getDisplayString());
         mSectionsPagerAdapter.setCodingFragment(new ActionFragment());
-        AppState.getInstance().setAction(event.getAction());
+        AppState.getInstance().setAction(action);
+        if(action.getModifierFactory() == null){
+            // save selection / jump back to subject selection
+        }
+        else if(action.getModifierFactory() instanceof SubjectModifierFactory){
+            mSectionsPagerAdapter.setCodingFragment(new SubjectModifierFragment());
+        }
+
+
     }
 
     @Override
