@@ -8,19 +8,41 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import com.google.common.eventbus.Subscribe;
 import org.obehave.android.R;
 import org.obehave.android.ui.adapters.SectionsPagerAdapter;
+import org.obehave.android.ui.events.SubjectSelectedEvent;
+import org.obehave.android.ui.fragments.ActionFragment;
+import org.obehave.android.ui.util.AppState;
+import org.obehave.events.EventBusHolder;
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
-    SectionsPagerAdapter mSectionsPagerAdapter;
-    ViewPager mViewPager;
+    private SectionsPagerAdapter mSectionsPagerAdapter;
+    private ViewPager mViewPager;
 
 
+
+    @Subscribe
+    public  void onSubjectSelected(SubjectSelectedEvent event){
+        Log.d(LOG_TAG, "onSubjectSelected");
+        Log.d(LOG_TAG, event.getSubject().getDisplayString());
+        mSectionsPagerAdapter.setCodingFragment(new ActionFragment());
+        AppState.getInstance().setSubject(event.getSubject());
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        super.onBackPressed();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        EventBusHolder.register(this);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 

@@ -5,7 +5,6 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import org.obehave.android.R;
 
@@ -22,8 +21,6 @@ public class Circle extends View{
 
 
     private void init(Context context, AttributeSet attrs){
-
-        Log.d("init", "init");
 
         circlePaint = new Paint();
         //get the attributes specified in attrs.xml using the name we included
