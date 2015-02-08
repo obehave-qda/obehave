@@ -12,6 +12,10 @@ public class UiException extends Exception{
         this.innerException = ex;
     }
 
+    public UiException(String message){
+        super(message);
+    }
+
     private Exception getInnerException(){
         return innerException;
     }

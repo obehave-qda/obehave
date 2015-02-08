@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="6dip"
+                android:id="@+id/lvClickArea">
+
+    <CheckBox
+            android:id="@+id/lvCheckbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:focusable="false"
+            android:focusableInTouchMode="false" android:layout_margin="10dp"/>
+    <org.obehave.android.ui.views.Circle android:id="@+id/circle" android:layout_width="30dp"
+                                         android:layout_height="30dp" android:layout_gravity="center_vertical"
+                                         />
+
+    <TextView
+            android:id="@+id/lvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/lvCheckbox"
+            android:layout_alignBottom="@+id/lvCheckbox"
+            android:layout_toRightOf="@+id/lvCheckbox"
+            android:text="TextView" />
+
+</RelativeLayout>
