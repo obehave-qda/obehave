@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import com.google.common.eventbus.Subscribe;
 import org.obehave.android.R;
 import org.obehave.android.ui.adapters.SectionsPagerAdapter;
+import org.obehave.android.ui.events.ActionSelectedEvent;
 import org.obehave.android.ui.events.SubjectSelectedEvent;
 import org.obehave.android.ui.fragments.ActionFragment;
 import org.obehave.android.ui.util.AppState;
@@ -30,6 +31,14 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         Log.d(LOG_TAG, event.getSubject().getDisplayString());
         mSectionsPagerAdapter.setCodingFragment(new ActionFragment());
         AppState.getInstance().setSubject(event.getSubject());
+    }
+
+    @Subscribe
+    public  void onActionSelected(ActionSelectedEvent event){
+        Log.d(LOG_TAG, "onActionSelected");
+        Log.d(LOG_TAG, event.getAction().getDisplayString());
+        mSectionsPagerAdapter.setCodingFragment(new ActionFragment());
+        AppState.getInstance().setAction(event.getAction());
     }
 
     @Override

@@ -7,23 +7,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
-import android.widget.ListView;
 import org.obehave.android.R;
-import org.obehave.android.ui.adapters.ActionAdapter;
-import org.obehave.android.ui.events.ActionSelectedEvent;
+import org.obehave.android.ui.adapters.SubjectAdapter;
 import org.obehave.android.ui.exceptions.UiException;
 import org.obehave.android.ui.util.DataHolder;
-import org.obehave.events.EventBusHolder;
-import org.obehave.model.Action;
 
-public class ActionFragment extends MyListFragment {
+public class SubjectModifierFragment extends MyListFragment {
 
     private static final String ARG_SECTION_NUMBER = "section_number";
 
     private ListAdapter adapter;
 
-    public static ActionFragment newInstance(int sectionNumber) {
-        ActionFragment fragment = new ActionFragment();
+    public static SubjectModifierFragment newInstance(int sectionNumber) {
+        SubjectModifierFragment fragment = new SubjectModifierFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_SECTION_NUMBER, sectionNumber);
         fragment.setArguments(args);
@@ -36,9 +32,9 @@ public class ActionFragment extends MyListFragment {
                              Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        View rootView = inflater.inflate(R.layout.fragment_subject, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_subject_modifier, container, false);
         try {
-            adapter = (ActionAdapter) new ActionAdapter(this.getActivity(), DataHolder.getInstance().getAllActions());
+            adapter = (SubjectAdapter) new SubjectAdapter(this.getActivity(), DataHolder.getInstance().getAllSubjects());
             setListAdapter(adapter);
         } catch (UiException e) {
             AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
@@ -53,15 +49,6 @@ public class ActionFragment extends MyListFragment {
             e.printStackTrace();
         }
 
-
         return rootView;
-    }
-
-    @Override
-    public void onListItemClick(ListView listView, View view, int position, long id) {
-        super.onListItemClick(listView, view, position, id);
-        Action action = (Action) adapter.getItem(position);
-        EventBusHolder.post(new ActionSelectedEvent(action));
-
     }
 }
