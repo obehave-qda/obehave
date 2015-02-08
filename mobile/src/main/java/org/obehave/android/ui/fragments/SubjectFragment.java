@@ -1,7 +1,5 @@
 package org.obehave.android.ui.fragments;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +11,7 @@ import org.obehave.android.ui.adapters.SubjectAdapter;
 import org.obehave.android.ui.events.SubjectSelectedEvent;
 import org.obehave.android.ui.exceptions.UiException;
 import org.obehave.android.ui.util.DataHolder;
+import org.obehave.android.ui.util.ErrorDialog;
 import org.obehave.events.EventBusHolder;
 import org.obehave.model.Subject;
 
@@ -41,15 +40,7 @@ public class SubjectFragment extends MyListFragment {
             adapter = (SubjectAdapter) new SubjectAdapter(this.getActivity(), DataHolder.getInstance().getAllSubjects());
             setListAdapter(adapter);
         } catch (UiException e) {
-            AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-            alertDialog.setMessage(e.getMessage());
-            alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
-            alertDialog.show();
+            new ErrorDialog(e, getActivity()).invoke();
             e.printStackTrace();
         }
 

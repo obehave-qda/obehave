@@ -1,16 +1,19 @@
 package org.obehave.android.ui.fragments;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import org.obehave.android.R;
-import org.obehave.android.ui.adapters.SubjectAdapter;
+import org.obehave.android.ui.adapters.SubjectModifierAdapter;
 import org.obehave.android.ui.exceptions.UiException;
-import org.obehave.android.ui.util.DataHolder;
+import org.obehave.android.ui.util.AppState;
+import org.obehave.android.ui.util.ErrorDialog;
+import org.obehave.model.Subject;
+import org.obehave.model.modifier.SubjectModifierFactory;
+
+import java.util.List;
 
 public class SubjectModifierFragment extends MyListFragment {
 
@@ -24,6 +27,7 @@ public class SubjectModifierFragment extends MyListFragment {
         args.putInt(ARG_SECTION_NUMBER, sectionNumber);
         fragment.setArguments(args);
         /* which type of fragment should be loaded */
+
         return fragment;
     }
 
@@ -34,21 +38,32 @@ public class SubjectModifierFragment extends MyListFragment {
 
         View rootView = inflater.inflate(R.layout.fragment_subject_modifier, container, false);
         try {
-            adapter = (SubjectAdapter) new SubjectAdapter(this.getActivity(), DataHolder.getInstance().getAllSubjects());
+            List<Subject> subjects = loadSubjectsForSelection();
+            adapter = (SubjectModifierAdapter) new SubjectModifierAdapter(this.getActivity(), subjects);
             setListAdapter(adapter);
         } catch (UiException e) {
-            AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-            alertDialog.setMessage(e.getMessage());
-            alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
-            alertDialog.show();
+            new ErrorDialog(e, getActivity()).invoke();
             e.printStackTrace();
         }
 
         return rootView;
     }
+
+    private List<Subject> loadSubjectsForSelection() throws UiException {
+        if(AppState.getInstance().getAction() == null){
+            // FIXME: Error Message should be in resource file.
+            throw new UiException("Es wurde keine Aktion ausgewählt!");
+        }
+
+        if(AppState.getInstance().getAction().getModifierFactory() == null){
+            // FIXME: Error Message should be in resource file.
+            throw new UiException("Es wurde keine ModifierFactory ausgewählt!");
+        }
+
+        SubjectModifierFactory subjectModifierFactory = (SubjectModifierFactory) AppState.getInstance().getAction().getModifierFactory();
+
+        return subjectModifierFactory.getValidSubjects();
+    }
+
+
 }
