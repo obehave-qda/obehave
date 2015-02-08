@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import org.obehave.android.R;
 import org.obehave.android.ui.fragments.AllCodingsFragment;
-import org.obehave.android.ui.fragments.CodingFragment;
+import org.obehave.android.ui.fragments.SubjectFragment;
 import org.obehave.android.ui.fragments.RunningCodingsFragment;
 
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
@@ -31,7 +31,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                 return RunningCodingsFragment.newInstance(position + 1);
             case POSITION_CODING_FRAGMENT:
             default:
-                return CodingFragment.newInstance(position + 1);
+                return SubjectFragment.newInstance(position + 1);
         }
 
 

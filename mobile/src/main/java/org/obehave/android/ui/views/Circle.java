@@ -43,7 +43,7 @@ public class Circle extends View{
 
     public void setCircleColor(int newColor){
         //update the instance variable
-        circleColor=newColor;
+        circleColor = newColor;
         //redraw the view
         invalidate();
         requestLayout();
@@ -51,20 +51,16 @@ public class Circle extends View{
 
     @Override
     protected void onDraw(Canvas canvas) {
-        Log.d("init", "drawsss");
+
         int viewWidthHalf = this.getMeasuredWidth()/2;
         int viewHeightHalf = this.getMeasuredHeight()/2;
 
-        Log.d("viewHeightHalf","" + viewHeightHalf);
-        Log.d("viewWidthHalf","" + viewWidthHalf);
-
         int radius = 0;
+
         if(viewWidthHalf>viewHeightHalf)
             radius=viewHeightHalf;
         else
             radius=viewWidthHalf;
-
-        Log.d("","" + radius);
 
         circlePaint.setStyle(Paint.Style.FILL);
         circlePaint.setAntiAlias(true);
