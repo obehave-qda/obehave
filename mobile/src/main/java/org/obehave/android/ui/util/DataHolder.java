@@ -4,9 +4,9 @@ import org.obehave.android.ui.exceptions.UiException;
 import org.obehave.model.Action;
 import org.obehave.model.Color;
 import org.obehave.model.Subject;
+import org.obehave.model.modifier.SubjectModifierFactory;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class DataHolder {
@@ -26,12 +26,11 @@ public class DataHolder {
     }
 
     public List<Subject> getAllSubjects() throws UiException {
-        if(subjects != null) {
+        if(subjects == null) {
             generateSubjects();
-            return subjects;
         }
 
-        return Collections.emptyList();
+        return subjects;
     }
 
     /**
@@ -74,9 +73,39 @@ public class DataHolder {
     }
 
     public List<Action> getAllActions() throws UiException {
-        if(actions != null) {
+        if(actions == null) {
+            generateActions();
         }
 
-        return Collections.emptyList();
+        return actions;
+    }
+
+    /**
+     *  Only for testing purpose.
+     */
+    public void generateActions(){
+        actions = new ArrayList<Action>();
+
+        String actionNames[] = {
+                "spielen",
+                "beißen",
+                "schlafen",
+                "heulen"
+        };
+
+        for(int i=0; i < actionNames.length; i++){
+            Action action = new Action();
+            action.setName(actionNames[i]);
+            action.setType(Action.Type.POINT);
+            action.setAlias(actionNames[i].substring(0,2));
+            action.setRecurring(0);
+            SubjectModifierFactory subjectModifierFactory = new SubjectModifierFactory();
+            subjectModifierFactory.setName("Subject Modifier");
+            subjectModifierFactory.setAlias("su");
+            subjectModifierFactory.addValidSubjects(subjects.get(1), subjects.get(2), subjects.get(3));
+            action.setModifierFactory(subjectModifierFactory);
+
+            actions.add(action);
+        }
     }
 }
