@@ -4,6 +4,9 @@ import org.obehave.android.ui.exceptions.UiException;
 import org.obehave.model.Action;
 import org.obehave.model.Color;
 import org.obehave.model.Subject;
+import org.obehave.model.modifier.DecimalRangeModifierFactory;
+import org.obehave.model.modifier.EnumerationModifier;
+import org.obehave.model.modifier.EnumerationModifierFactory;
 import org.obehave.model.modifier.SubjectModifierFactory;
 
 import java.util.ArrayList;
@@ -74,7 +77,9 @@ public class DataHolder {
 
     public List<Action> getAllActions() throws UiException {
         if(actions == null) {
-            generateActions();
+            generateSubjectModifierFactoryActions();
+            generateEnumberationModifierActions();
+            generateNumberRangeActions();
         }
 
         return actions;
@@ -83,7 +88,7 @@ public class DataHolder {
     /**
      *  Only for testing purpose.
      */
-    public void generateActions(){
+    private void generateSubjectModifierFactoryActions(){
         actions = new ArrayList<Action>();
 
         String actionNames[] = {
@@ -104,6 +109,57 @@ public class DataHolder {
             subjectModifierFactory.setAlias("su");
             subjectModifierFactory.addValidSubjects(subjects.get(1), subjects.get(2), subjects.get(3));
             action.setModifierFactory(subjectModifierFactory);
+
+            actions.add(action);
+        }
+    }
+
+    private void generateNumberRangeActions(){
+        actions = new ArrayList<Action>();
+
+        String actionNames[] = {
+                "number 1",
+                "number 2",
+                "number 3"
+        };
+
+        for(int i=0; i < actionNames.length; i++){
+            Action action = new Action();
+            action.setName(actionNames[i]);
+            action.setType(Action.Type.POINT);
+            action.setAlias(actionNames[i].substring(0,2));
+            action.setRecurring(0);
+            DecimalRangeModifierFactory decimalRangeModifierFactory = new DecimalRangeModifierFactory();
+            decimalRangeModifierFactory.setName("Decimal Modifier");
+            decimalRangeModifierFactory.setAlias("su");
+            decimalRangeModifierFactory.setRange(20,100);
+            action.setModifierFactory(decimalRangeModifierFactory);
+
+            actions.add(action);
+        }
+    }
+
+    private void generateEnumerationModifierActions(){
+        actions = new ArrayList<Action>();
+
+        String actionNames[] = {
+                "enum 1",
+                "enum 2",
+                "enum 3"
+        };
+
+        for(int i=0; i < actionNames.length; i++){
+            Action action = new Action();
+            action.setName(actionNames[i]);
+            action.setType(Action.Type.POINT);
+            action.setAlias(actionNames[i].substring(0,2));
+            action.setRecurring(0);
+            EnumerationModifierFactory enumerationModifierFactory = new EnumerationModifierFactory();
+            enumerationModifierFactory.setName("Enumeration Modifier");
+            enumerationModifierFactory.setAlias("enu");
+            enumerationModifierFactory.addValidValues("Value1", "Value 2", "Value 3", "Value4");
+
+            action.setModifierFactory(enumerationModifierFactory);
 
             actions.add(action);
         }

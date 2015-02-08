@@ -37,9 +37,10 @@ public class SubjectModifierAdapter extends ArrayAdapter{
 
         if (convertView == null) {
             LayoutInflater inflater = ((Activity)mContext).getLayoutInflater();
-            convertView = inflater.inflate(R.layout.list_item_subject, null);
+            convertView = inflater.inflate(R.layout.list_item_subject_modifier, null);
             // cache view fields into the holder
             holder = new ViewHolder();
+            holder.checkBox = (CheckBox) convertView.findViewById(R.id.lvCheckbox);
             holder.txtView = (TextView) convertView.findViewById(R.id.liListHeader);
             holder.circle = (Circle) convertView.findViewById(R.id.circle);
             // associate the holder with the view for later lookup
@@ -56,6 +57,7 @@ public class SubjectModifierAdapter extends ArrayAdapter{
             int blue = subject.getColor().getBlue();
             int green = subject.getColor().getGreen();
 
+            holder.checkBox.setChecked(false);
             holder.txtView.setText(subject.getDisplayString());
             holder.circle.setCircleColor(Color.rgb(red, green, blue));
         }
