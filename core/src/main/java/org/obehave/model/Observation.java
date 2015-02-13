@@ -5,13 +5,18 @@ import com.j256.ormlite.table.DatabaseTable;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.joda.time.LocalDateTime;
+import org.obehave.exceptions.Validate;
+import org.obehave.model.coding.Coding;
+import org.obehave.persistence.impl.ObservationDaoImpl;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * During an observation, it's possible to code subjects and actions.
  */
-@DatabaseTable(tableName = "Observation")
+@DatabaseTable(tableName = "Observation", daoClass = ObservationDaoImpl.class)
 public class Observation extends BaseEntity implements Displayable {
     @DatabaseField(columnName = "name")
     private String name;
@@ -21,6 +26,8 @@ public class Observation extends BaseEntity implements Displayable {
 
     @DatabaseField(columnName = "date")
     private LocalDateTime dateTime;
+
+    private List<Coding> codings = new ArrayList<>();
 
     public Observation() {
 
@@ -59,6 +66,12 @@ public class Observation extends BaseEntity implements Displayable {
         }
 
         this.dateTime = dateTime;
+    }
+
+    public void addCoding(Coding coding) {
+        Validate.isNotNull(coding);
+
+        codings.add(coding);
     }
 
     @Override

@@ -29,6 +29,7 @@ public class Coding {
         return subject;
     }
 
+    @Deprecated
     public void setSubject(Subject subject) {
         if (subject == null) {
             throw new IllegalArgumentException("Subject must not be null!");
@@ -41,6 +42,7 @@ public class Coding {
         return action;
     }
 
+    @Deprecated
     public void setAction(Action action) {
         if (action == null) {
             throw new IllegalArgumentException("Action must not be null!");
@@ -52,9 +54,13 @@ public class Coding {
         return modifier;
     }
 
+    @Deprecated
     public void setModifier(String input) throws FactoryException {
         if (input == null) {
             throw new IllegalArgumentException("Input must not be null");
+        }
+        if (action.getModifierFactory() == null) {
+            throw new FactoryException("This action has no modifier factory!");
         }
 
         this.modifier = action.getModifierFactory().create(input);
@@ -64,6 +70,7 @@ public class Coding {
         return startMs;
     }
 
+    @Deprecated
     public void setStartMs(long startMs) {
         if (startMs <= 0) {
             throw new IllegalArgumentException("ms must not be lower or equal to 0");

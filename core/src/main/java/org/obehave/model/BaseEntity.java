@@ -6,6 +6,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.joda.time.DateTime;
 
+import java.util.Date;
+
 
 /**
  * Serves as a base class for all entities, which will be persisted into sql databases.
@@ -23,8 +25,8 @@ public abstract class BaseEntity {
     /**
      * Marks the timestamp when the instance was modified last
      */
-    @DatabaseField(columnName = "modified")
-    private DateTime modified;
+    @DatabaseField(columnName = "modified", version = true)
+    private Date modified;
 
     public BaseEntity() {
     }
@@ -33,7 +35,7 @@ public abstract class BaseEntity {
         return id;
     }
 
-    public DateTime getModified() {
+    public Date getModified() {
         return modified;
     }
 

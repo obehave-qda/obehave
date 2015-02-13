@@ -47,17 +47,11 @@ public class StateCodingTest {
     }
 
     @Test
-    public void accessingFieldsShouldWork() {
-        StateCoding coding = new StateCoding(new Subject("Dummy"), new Action("Dummy"), 300, 400);
-
-        coding.setSubject(subject);
-        coding.setAction(action);
-        coding.setStartMs(millis);
-
+    public void accessingFieldsShouldWork() throws FactoryException {
         assertEquals(coding.getSubject(), subject);
         assertEquals(coding.getAction(), action);
         assertEquals(coding.getStartMs(), millis);
         assertEquals(coding.getModifier().get(), BigDecimal.valueOf(3));
-        assertEquals(coding.getDuration(), 400 - 300);
+        assertEquals(coding.getDuration(), endMillis - millis);
     }
 }

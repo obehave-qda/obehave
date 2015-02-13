@@ -4,11 +4,12 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.obehave.persistence.impl.SubjectDaoImpl;
 
 /**
  * This class describes the observed subjects of a study
  */
-@DatabaseTable(tableName = "Subject")
+@DatabaseTable(tableName = "Subject", daoClass = SubjectDaoImpl.class)
 public class Subject extends BaseEntity implements Displayable {
     @DatabaseField(columnName = "name")
     private String name;

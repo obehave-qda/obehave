@@ -46,13 +46,7 @@ public class CodingTest {
     }
 
     @Test
-    public void accessingFieldsShouldWork() {
-        Coding coding = new Coding(new Subject("Dummy"), new Action("Dummy"), 300);
-
-        coding.setSubject(subject);
-        coding.setAction(action);
-        coding.setStartMs(millis);
-
+    public void accessingFieldsShouldWork() throws FactoryException {
         assertEquals(coding.getSubject(), subject);
         assertEquals(coding.getAction(), action);
         assertEquals(coding.getStartMs(), millis);

@@ -4,12 +4,14 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import org.obehave.exceptions.FactoryException;
 import org.obehave.model.Displayable;
+import org.obehave.persistence.impl.ModifierFactoryDaoImpl;
 
 /**
  * A class to create valid modifiers
  */
-@DatabaseTable(tableName = "ModifierFactory")
 public abstract class ModifierFactory<T extends Modifier> implements Displayable {
+    public static final String ORM_TABLE = "ModifierFactory";
+
     @DatabaseField(columnName = "type")
     private Class<? extends ModifierFactory> type;
 
