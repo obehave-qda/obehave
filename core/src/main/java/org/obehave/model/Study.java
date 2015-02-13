@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 /**
  * A study contains multiple subjects, actions and observations.
  */
-public class Study extends BaseEntity {
+public class Study {
     private static final Logger log = LoggerFactory.getLogger(Study.class);
 
     private String name;
