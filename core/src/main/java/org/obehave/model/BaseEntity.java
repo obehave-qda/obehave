@@ -26,7 +26,7 @@ public abstract class BaseEntity {
      * Marks the timestamp when the instance was modified last
      */
     @DatabaseField(columnName = "modified", version = true)
-    private Date modified;
+    private DateTime modified;
 
     public BaseEntity() {
     }
@@ -35,7 +35,7 @@ public abstract class BaseEntity {
         return id;
     }
 
-    public Date getModified() {
+    public DateTime getModified() {
         return modified;
     }
 

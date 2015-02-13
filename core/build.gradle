@@ -25,6 +25,8 @@ dependencies {
     compile "com.google.guava:guava:$guavaVersion"
 
     compile "org.slf4j:slf4j-api:$versionSlf4j"
+    testCompile "org.apache.logging.log4j:log4j-slf4j-impl:$versionLog4j"
+    testCompile "org.apache.logging.log4j:log4j-core:$versionLog4j"
 
     testCompile "junit:junit:$versionJunit"
     testCompile "org.hamcrest:hamcrest-all:$versionHamcrest"
