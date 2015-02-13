@@ -2,13 +2,14 @@ package org.obehave.model.coding;
 
 import org.obehave.exceptions.FactoryException;
 import org.obehave.model.Action;
+import org.obehave.model.BaseEntity;
 import org.obehave.model.Subject;
 import org.obehave.model.modifier.Modifier;
 
 /**
  * @author Markus Möslinger
  */
-public class Coding {
+public class Coding extends BaseEntity {
     private Subject subject;
     private Action action;
     private Modifier modifier;

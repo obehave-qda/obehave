@@ -53,6 +53,24 @@ public class ColorTest {
         assertEquals(c.getOpacity(), 0x43);
     }
 
+    @Test
+    public void valueOfWith6DigitsAndHash() {
+        Color c = Color.valueOf("#FF1000");
+        assertEquals(c.getRed(), 0xFF);
+        assertEquals(c.getRed(), 0x10);
+        assertEquals(c.getRed(), 0x00);
+        assertEquals(c.getOpacity(), 0xFF);
+    }
+
+    @Test
+    public void valueOfWith8DigitsAndHash() {
+        Color c = Color.valueOf("#FF100043");
+        assertEquals(c.getRed(), 0xFF);
+        assertEquals(c.getRed(), 0x10);
+        assertEquals(c.getRed(), 0x00);
+        assertEquals(c.getOpacity(), 0x43);
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void noOpacityBiggerThan256() {
         new Color(0xFF, 0xFF, 0xFF, 256);
