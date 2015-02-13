@@ -1,7 +1,9 @@
 package org.obehave.model.modifier;
 
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 import org.obehave.exceptions.FactoryException;
+import org.obehave.persistence.impl.ModifierFactoryDaoImpl;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -11,6 +13,7 @@ import java.util.Locale;
 /**
  * @author Markus Möslinger
  */
+@DatabaseTable(tableName = ModifierFactory.ORM_TABLE, daoClass = ModifierFactoryDaoImpl.class)
 public class DecimalRangeModifierFactory extends ModifierFactory<DecimalRangeModifier> {
     @DatabaseField(columnName = "rangeFrom")
     private int from;

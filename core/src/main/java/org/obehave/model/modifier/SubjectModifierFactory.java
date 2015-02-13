@@ -1,14 +1,17 @@
 package org.obehave.model.modifier;
 
 import com.j256.ormlite.field.ForeignCollectionField;
+import com.j256.ormlite.table.DatabaseTable;
 import org.obehave.exceptions.FactoryException;
 import org.obehave.model.Subject;
+import org.obehave.persistence.impl.ModifierFactoryDaoImpl;
 
 import java.util.*;
 
 /**
  * Objects of this class can create
  */
+@DatabaseTable(tableName = ModifierFactory.ORM_TABLE, daoClass = ModifierFactoryDaoImpl.class)
 public class SubjectModifierFactory extends ModifierFactory<SubjectModifier> {
     @ForeignCollectionField(eager = false)
     private List<Subject> validSubjects = new ArrayList<>();

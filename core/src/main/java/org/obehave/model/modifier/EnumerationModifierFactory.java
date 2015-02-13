@@ -1,12 +1,15 @@
 package org.obehave.model.modifier;
 
+import com.j256.ormlite.table.DatabaseTable;
 import org.obehave.exceptions.FactoryException;
+import org.obehave.persistence.impl.ModifierFactoryDaoImpl;
 
 import java.util.*;
 
 /**
  * @author Markus Möslinger
  */
+@DatabaseTable(tableName = ModifierFactory.ORM_TABLE, daoClass = ModifierFactoryDaoImpl.class)
 public class EnumerationModifierFactory extends ModifierFactory<EnumerationModifier> {
     private List<String> validValues = new ArrayList<>();
 

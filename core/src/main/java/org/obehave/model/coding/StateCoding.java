@@ -24,6 +24,7 @@ public class StateCoding extends Coding {
         return endMs;
     }
 
+    @Deprecated
     public void setEndMs(long endMs) {
         this.endMs = endMs;
     }

@@ -92,6 +92,18 @@ public class Study extends BaseEntity {
         return added;
     }
 
+    public boolean addModifierFactory(ModifierFactory<?> modifierFactory) {
+        if (modifierFactories.contains(modifierFactory)) {
+            log.debug("Won't setData another {}", modifierFactory);
+            return false;
+        }
+
+        log.debug("Adding modifierFactory {}", modifierFactory);
+        final boolean added = modifierFactories.addChild(modifierFactory);
+        EventBusHolder.post(new ChangeEvent<>(modifierFactory, ChangeType.CREATE));
+        return added;
+    }
+
     public boolean removeObservation(Observation observation) {
         log.debug("Removing observation {}", observation);
         final boolean deleted = observations.remove(observation);
