@@ -4,6 +4,7 @@ import com.j256.ormlite.dao.DaoManager;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.obehave.model.Color;
 import org.obehave.model.Subject;
 
 import java.sql.SQLException;
@@ -25,6 +26,7 @@ public class SubjectDaoTest extends DaoTestBase {
     @Before
     public void prepareSubject() {
         subject = new Subject("Name1");
+        subject.setColor(new Color(255, 240, 230, 220));
     }
 
     @Test
@@ -35,6 +37,7 @@ public class SubjectDaoTest extends DaoTestBase {
         assertEquals(loadedSubject.getName(), "Name1");
 
         subject.setName("Name2");
+        subject.setColor(new Color(200, 190, 0));
         dao.update(subject);
 
         loadedSubject = dao.queryForSameId(subject);
