@@ -1,9 +1,11 @@
 package org.obehave.android.services;
 
 
+import org.obehave.android.ui.exceptions.UiException;
 import org.obehave.android.ui.util.DataHolder;
 import org.obehave.model.Action;
 import org.obehave.model.Subject;
+import org.obehave.model.modifier.ModifierFactory;
 
 import java.util.Collections;
 import java.util.List;
@@ -41,6 +43,20 @@ public class ApplicationService implements Service{
         }
     }
 
+    /**
+     *
+     * @returns ModifierFactory or Null
+     * @throws UiException
+     */
+    public static ModifierFactory getModifierFactoryOfSelectedActions() throws UiException {
+        Action action = ApplicationState.getInstance().getAction();
+        if(action == null){
+            throw new UiException("Es wurde keine Aktion gewählt");
+        }
+
+        return action.getModifierFactory();
+    }
+
     public static void selectItem(Subject subject){
         ApplicationState.getInstance().setSubject(subject);
     }
@@ -52,6 +68,11 @@ public class ApplicationService implements Service{
     // the class should not be instanceable
     private ApplicationService(){
 
+    }
+
+    public static void reset(){
+        actions = null;
+        subjects = null;
     }
 
 }

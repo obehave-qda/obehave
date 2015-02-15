@@ -7,9 +7,9 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import org.obehave.android.R;
+import org.obehave.android.services.ApplicationService;
 import org.obehave.android.ui.adapters.ActionAdapter;
 import org.obehave.android.ui.events.ActionSelectedEvent;
-import org.obehave.android.ui.util.DataHolder;
 import org.obehave.events.EventBusHolder;
 import org.obehave.model.Action;
 
@@ -33,7 +33,7 @@ public class ActionFragment extends MyListFragment {
                              Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_subject, container, false);
-        adapter = (ActionAdapter) new ActionAdapter(this.getActivity(), DataHolder.getInstance().getAllActions());
+        adapter = (ActionAdapter) new ActionAdapter(this.getActivity(), ApplicationService.getAllActions());
         setListAdapter(adapter);
 
         return rootView;
@@ -44,6 +44,5 @@ public class ActionFragment extends MyListFragment {
         super.onListItemClick(listView, view, position, id);
         Action action = (Action) adapter.getItem(position);
         EventBusHolder.post(new ActionSelectedEvent(action));
-
     }
 }

@@ -32,7 +32,7 @@ public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
                 return RunningCodingsFragment.newInstance(position + 1);
             case POSITION_CODING_FRAGMENT:
             default:
-                return SubjectFragment.newInstance(position +1 );
+                return SubjectFragment.newInstance(position + 1);
 
         }
     }
