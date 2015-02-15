@@ -1,6 +1,5 @@
 package org.obehave.android.ui.util;
 
-import org.obehave.android.ui.exceptions.UiException;
 import org.obehave.model.Action;
 import org.obehave.model.Color;
 import org.obehave.model.Subject;
@@ -27,7 +26,7 @@ public class DataHolder {
         return min + (int)(Math.random()*max);
     }
 
-    public List<Subject> getAllSubjects() throws UiException {
+    public List<Subject> getAllSubjects() {
         if(subjects == null) {
             generateSubjects();
         }
@@ -74,11 +73,9 @@ public class DataHolder {
         }
     }
 
-    public List<Action> getAllActions() throws UiException {
+    public List<Action> getAllActions() {
         if(actions == null) {
-            generateSubjectModifierFactoryActions();
-            generateEnumerationModifierActions();
-            generateNumberRangeActions();
+            generateActions();
         }
 
         return actions;

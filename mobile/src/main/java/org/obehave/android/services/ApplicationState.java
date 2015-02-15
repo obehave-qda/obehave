@@ -1,4 +1,4 @@
-package org.obehave.android.ui.util;
+package org.obehave.android.services;
 
 import org.obehave.model.Action;
 import org.obehave.model.Subject;
@@ -6,19 +6,19 @@ import org.obehave.model.coding.Coding;
 
 import java.util.List;
 
-public class AppState {
-    private static AppState ourInstance = new AppState();
+public class ApplicationState {
+    private static ApplicationState ourInstance = new ApplicationState();
 
     private Subject subject;
     private Action action;
     private List<Coding> runningCodings;
     private List<Coding> allCodings;
 
-    public static AppState getInstance() {
+    public static ApplicationState getInstance() {
         return ourInstance;
     }
 
-    private AppState() {
+    private ApplicationState() {
     }
 
     public void setSubject(Subject subject){

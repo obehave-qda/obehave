@@ -3,6 +3,7 @@ package org.obehave.android.ui.activities;
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -10,15 +11,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import com.google.common.eventbus.Subscribe;
 import org.obehave.android.R;
+import org.obehave.android.services.ApplicationService;
+import org.obehave.android.services.ApplicationState;
 import org.obehave.android.ui.adapters.SectionsPagerAdapter;
 import org.obehave.android.ui.events.ActionSelectedEvent;
+import org.obehave.android.ui.events.SubjectModifierSelectedEvent;
 import org.obehave.android.ui.events.SubjectSelectedEvent;
+import org.obehave.android.ui.exceptions.UiException;
 import org.obehave.android.ui.fragments.ActionFragment;
 import org.obehave.android.ui.fragments.SubjectModifierFragment;
-import org.obehave.android.ui.util.AppState;
+import org.obehave.android.ui.util.ErrorDialog;
 import org.obehave.events.EventBusHolder;
+import org.obehave.exceptions.FactoryException;
 import org.obehave.model.Action;
+import org.obehave.model.Subject;
 import org.obehave.model.modifier.SubjectModifierFactory;
+
+import java.util.List;
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
 
@@ -27,30 +36,65 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     private ViewPager mViewPager;
 
 
-
     @Subscribe
     public  void onSubjectSelected(SubjectSelectedEvent event){
+        Subject subject = event.getSubject();
         Log.d(LOG_TAG, "onSubjectSelected");
-        Log.d(LOG_TAG, event.getSubject().getDisplayString());
-        mSectionsPagerAdapter.setCodingFragment(new ActionFragment());
-        AppState.getInstance().setSubject(event.getSubject());
+        Log.d(LOG_TAG, subject.getDisplayString());
+        changeCodingFragment(new ActionFragment());
+        ApplicationService.selectItem(event.getSubject());
     }
 
     @Subscribe
     public  void onActionSelected(ActionSelectedEvent event){
-        Log.d(LOG_TAG, "onActionSelected");
         Action action = event.getAction();
+        Log.d(LOG_TAG, "onActionSelected");
         Log.d(LOG_TAG, action.getDisplayString());
-        mSectionsPagerAdapter.setCodingFragment(new ActionFragment());
-        AppState.getInstance().setAction(action);
+
+        changeCodingFragment(new ActionFragment());
+
+        ApplicationService.selectItem(action);
         if(action.getModifierFactory() == null){
             // save selection / jump back to subject selection
         }
         else if(action.getModifierFactory() instanceof SubjectModifierFactory){
-            mSectionsPagerAdapter.setCodingFragment(new SubjectModifierFragment());
+            changeCodingFragment(new SubjectModifierFragment());
         }
+        else {
+            // locale
+            ErrorDialog ed = new ErrorDialog("Ein schwerer Fehler ist aufgetreten", this);
+            ed.invoke();
+        }
+    }
 
+    private void changeCodingFragment(Fragment fragment){
+        Log.d(LOG_TAG, "Fragment - Change Coding Fragment");
+        android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.root_frame, fragment);
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
 
+    @Subscribe
+    public void onSubjectModifierSelected(SubjectModifierSelectedEvent event){
+        List<Subject> subjects =  event.getSubjects();
+        try {
+            if (subjects.isEmpty()) {
+                throw new UiException("Es muss mindestens ein Subjekt gewählt werden.");
+            }
+
+            SubjectModifierFactory subjectModifierFactory = (SubjectModifierFactory) ApplicationState.getInstance().getAction().getModifierFactory();
+            subjectModifierFactory.create(subjects.get(0).getName());
+        }
+        catch(UiException exception){
+            ErrorDialog ed = new ErrorDialog(exception, this);
+            ed.invoke();
+        } catch (FactoryException e) {
+            ErrorDialog ed = new ErrorDialog(e.getMessage(), this);
+            ed.invoke();
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -61,10 +105,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        EventBusHolder.register(this);
-
         super.onCreate(savedInstanceState);
+        EventBusHolder.register(this);
         setContentView(R.layout.activity_main);
 
         final ActionBar actionBar = getActionBar();
@@ -74,7 +116,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
@@ -83,9 +124,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         });
 
         for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
-
             String title = "";
-
             Integer resourceTitle = mSectionsPagerAdapter.getPageTitleResource(i);
             if(resourceTitle != null){
                 title = getString(resourceTitle);
@@ -96,8 +135,13 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                             .setText(title)
                             .setTabListener(this));
         }
-    }
 
+
+        // TODO: Change Filename;
+        ApplicationService.importFile("filename.txt");
+        // replacing Sub
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

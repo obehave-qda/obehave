@@ -16,7 +16,7 @@ final public class ErrorDialog {
             this.message = message;
             this.context = context;
         }
-    
+
         public void invoke() {
             AlertDialog alertDialog = new AlertDialog.Builder(context).create();
             alertDialog.setMessage(message);
