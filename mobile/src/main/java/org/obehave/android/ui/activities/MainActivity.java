@@ -25,12 +25,14 @@ import org.obehave.events.EventBusHolder;
 import org.obehave.exceptions.FactoryException;
 import org.obehave.model.Action;
 import org.obehave.model.Subject;
+import org.obehave.model.modifier.ModifierFactory;
 import org.obehave.model.modifier.SubjectModifierFactory;
 
 import java.util.List;
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
 
+    private static final String FRAGMENT_DATA_TAG ="data";
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
@@ -50,19 +52,16 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         Action action = event.getAction();
         Log.d(LOG_TAG, "onActionSelected");
         Log.d(LOG_TAG, action.getDisplayString());
-
-        changeCodingFragment(new ActionFragment());
-
-        ApplicationService.selectItem(action);
-        if(action.getModifierFactory() == null){
-            // save selection / jump back to subject selection
+        try {
+            ApplicationService.selectItem(action);
+            ModifierFactory modifierFactory = ApplicationService.getModifierFactoryOfSelectedActions();
+            if (modifierFactory == null) {
+            } else if (modifierFactory instanceof SubjectModifierFactory) {
+                changeCodingFragment(new SubjectModifierFragment());
+            }
         }
-        else if(action.getModifierFactory() instanceof SubjectModifierFactory){
-            changeCodingFragment(new SubjectModifierFragment());
-        }
-        else {
-            // locale
-            ErrorDialog ed = new ErrorDialog("Ein schwerer Fehler ist aufgetreten", this);
+        catch(UiException ex){
+            ErrorDialog ed = new ErrorDialog(ex.getMessage(), this);
             ed.invoke();
         }
     }
