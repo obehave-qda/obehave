@@ -43,6 +43,8 @@ public class SubjectModifierAdapter extends ArrayAdapter{
             holder.checkBox = (CheckBox) convertView.findViewById(R.id.lvCheckbox);
             holder.txtView = (TextView) convertView.findViewById(R.id.liListHeader);
             holder.circle = (Circle) convertView.findViewById(R.id.circle);
+
+
             // associate the holder with the view for later lookup
             convertView.setTag(holder);
         }

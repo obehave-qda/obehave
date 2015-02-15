@@ -9,9 +9,7 @@ import android.widget.ListView;
 import org.obehave.android.R;
 import org.obehave.android.ui.adapters.ActionAdapter;
 import org.obehave.android.ui.events.ActionSelectedEvent;
-import org.obehave.android.ui.exceptions.UiException;
 import org.obehave.android.ui.util.DataHolder;
-import org.obehave.android.ui.util.ErrorDialog;
 import org.obehave.events.EventBusHolder;
 import org.obehave.model.Action;
 
@@ -34,16 +32,9 @@ public class ActionFragment extends MyListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-
         View rootView = inflater.inflate(R.layout.fragment_subject, container, false);
-        try {
-            adapter = (ActionAdapter) new ActionAdapter(this.getActivity(), DataHolder.getInstance().getAllActions());
-            setListAdapter(adapter);
-        } catch (UiException e) {
-            new ErrorDialog(e, getActivity()).invoke();
-            e.printStackTrace();
-        }
-
+        adapter = (ActionAdapter) new ActionAdapter(this.getActivity(), DataHolder.getInstance().getAllActions());
+        setListAdapter(adapter);
 
         return rootView;
     }
