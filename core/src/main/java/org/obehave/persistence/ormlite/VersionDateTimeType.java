@@ -3,7 +3,6 @@ package org.obehave.persistence.ormlite;
 import com.j256.ormlite.field.FieldType;
 import com.j256.ormlite.field.SqlType;
 import com.j256.ormlite.field.types.BaseDataType;
-import com.j256.ormlite.field.types.DateTimeType;
 import com.j256.ormlite.support.DatabaseResults;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -15,6 +14,10 @@ import java.sql.Timestamp;
 /**
  * This class is mostly copied from {@link com.j256.ormlite.field.types.BaseDateType} and {@link com.j256.ormlite.field.types.DateType},
  * to get a persister for {@link org.joda.time.DateTime} that supports versioning
+ * <p />
+ * This is fixed in ormlite 4.49
+ *
+ * @see <a href="https://github.com/j256/ormlite-core/issues/47">https://github.com/j256/ormlite-core/issues/47</a>
  */
 public class VersionDateTimeType extends BaseDataType {
     private static final Logger log = LoggerFactory.getLogger(VersionDateTimeType.class);
