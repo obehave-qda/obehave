@@ -10,6 +10,7 @@ import org.obehave.persistence.impl.ObservationDaoImpl;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -71,6 +72,10 @@ public class Observation extends BaseEntity implements Displayable {
         Validate.isNotNull(coding);
 
         codings.add(coding);
+    }
+
+    public List<Coding> getCodings() {
+        return Collections.unmodifiableList(codings);
     }
 
     @Override

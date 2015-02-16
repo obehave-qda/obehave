@@ -5,8 +5,6 @@ import com.j256.ormlite.table.DatabaseTable;
 import org.obehave.model.BaseEntity;
 import org.obehave.model.Subject;
 import org.obehave.persistence.impl.ModifierDaoImpl;
-import org.obehave.persistence.impl.ModifierFactoryDaoImpl;
-import sun.plugin.dom.exception.InvalidStateException;
 
 import java.math.BigDecimal;
 
@@ -15,14 +13,17 @@ import java.math.BigDecimal;
  */
 @DatabaseTable(tableName = "Modifier", daoClass = ModifierDaoImpl.class)
 public class Modifier extends BaseEntity {
-    public static enum Type {
-        // this sucks. Due to ORMLite's incapability of handling inheritance strategies, ie. one table per class hierarchy,
-        // we are flattening the class hierarchy to only only class.
-        DECIMAL_MODIFIER, ENUMERATION_MODIFIER, SUBJECT_MODIFIER
-    }
-
     @DatabaseField(columnName = "type")
     private Type type;
+    // DECIMAL RANGE
+    @DatabaseField(columnName = "number")
+    private BigDecimal decimalValue;
+    // ENUMERATION
+    @DatabaseField(columnName = "enumerationValue")
+    private String enumerationValue;
+    // SUBJECT
+    @DatabaseField(columnName = "subject", foreign = true)
+    private Subject subject;
 
     public Modifier(BigDecimal value) {
         type = Type.DECIMAL_MODIFIER;
@@ -33,6 +34,7 @@ public class Modifier extends BaseEntity {
 
         decimalValue = value;
     }
+
 
     public Modifier(String value) {
         type = Type.ENUMERATION_MODIFIER;
@@ -54,9 +56,9 @@ public class Modifier extends BaseEntity {
         this.subject = subject;
     }
 
-
     /**
      * Returns the modifying class
+     *
      * @return the modifying class
      */
     public Object get() {
@@ -72,15 +74,9 @@ public class Modifier extends BaseEntity {
         }
     }
 
-    // DECIMAL RANGE
-    @DatabaseField(columnName = "number")
-    private BigDecimal decimalValue;
-
-    // ENUMERATION
-    @DatabaseField(columnName = "enumerationValue")
-    private String enumerationValue;
-
-    // SUBJECT
-    @DatabaseField(columnName = "subject", foreign = true)
-    private Subject subject;
+    public static enum Type {
+        // this sucks. Due to ORMLite's incapability of handling inheritance strategies, ie. one table per class hierarchy,
+        // we are flattening the class hierarchy to only only class.
+        DECIMAL_MODIFIER, ENUMERATION_MODIFIER, SUBJECT_MODIFIER
+    }
 }

@@ -10,37 +10,29 @@ import org.obehave.persistence.impl.ActionDaoImpl;
 /**
  * This class describes actions a subject is able to perform.
  * There are several types of actions:
- * <p />
+ * <p/>
  * Point and state actions
  * Single actions or interactions between different subjects
- * <p />
+ * <p/>
  * Actions can be modified in some way.
  */
 @DatabaseTable(tableName = "Action", daoClass = ActionDaoImpl.class)
 public class Action extends BaseEntity implements Displayable {
-    public static enum Type {
-        POINT, STATE
-    }
-
     @DatabaseField(columnName = "name")
     private String name;
-
     @DatabaseField(columnName = "alias")
     private String alias;
-
     @DatabaseField(columnName = "type")
     private Type type;
-
     @DatabaseField(columnName = "modifierFactory")
-    private ModifierFactory<?> modifierFactory;
-
+    private ModifierFactory modifierFactory;
     @DatabaseField(columnName = "recurring")
     private int recurring;
 
-
-    public Action(){
+    public Action() {
 
     }
+
 
     public Action(String name) {
         this.name = name;
@@ -70,24 +62,16 @@ public class Action extends BaseEntity implements Displayable {
         this.type = type;
     }
 
-    public ModifierFactory<?> getModifierFactory() {
+    public ModifierFactory getModifierFactory() {
         return modifierFactory;
     }
 
-    public void setModifierFactory(ModifierFactory<?> modifierFactory) {
+    public void setModifierFactory(ModifierFactory modifierFactory) {
         this.modifierFactory = modifierFactory;
     }
 
     public int getRecurring() {
         return recurring;
-    }
-
-    public void setRecurring(int recurring) {
-        if (recurring < 0) {
-            this.recurring = 0;
-        } else {
-            this.recurring = recurring;
-        }
     }
 
     @Override
@@ -118,5 +102,17 @@ public class Action extends BaseEntity implements Displayable {
 
     public boolean isRecurring() {
         return recurring != 0;
+    }
+
+    public void setRecurring(int recurring) {
+        if (recurring < 0) {
+            this.recurring = 0;
+        } else {
+            this.recurring = recurring;
+        }
+    }
+
+    public static enum Type {
+        POINT, STATE
     }
 }
