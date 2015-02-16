@@ -6,7 +6,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.joda.time.LocalDateTime;
 import org.obehave.exceptions.Validate;
-import org.obehave.model.coding.Coding;
 import org.obehave.persistence.impl.ObservationDaoImpl;
 
 import java.io.File;

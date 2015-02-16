@@ -4,7 +4,6 @@ import org.obehave.events.ChangeEvent;
 import org.obehave.events.ChangeType;
 import org.obehave.events.EventBusHolder;
 import org.obehave.model.modifier.ModifierFactory;
-import org.obehave.model.tree.Node;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

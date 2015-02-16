@@ -9,21 +9,21 @@ import static org.junit.Assert.assertEquals;
  * @author Markus Möslinger
  */
 public class EnumerationModifierTest {
-    private EnumerationModifier modifier;
+    private Modifier modifier;
 
     @Before
     public void prepare() {
-        modifier = new EnumerationModifier("NORTH");
+        modifier = new Modifier("NORTH");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void creationWithNullFails() {
-        new EnumerationModifier(null);
+        new Modifier((String) null);
     }
 
     @Test
     public void creationWithEmptyString() {
-        assertEquals(new EnumerationModifier("").get(), "");
+        assertEquals(new Modifier("").get(), "");
     }
 
     @Test
