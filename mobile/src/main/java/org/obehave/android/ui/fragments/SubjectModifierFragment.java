@@ -12,12 +12,8 @@ import android.widget.ListView;
 import org.obehave.android.R;
 import org.obehave.android.ui.adapters.SubjectModifierAdapter;
 import org.obehave.android.ui.events.SubjectModifierSelectedEvent;
-import org.obehave.android.ui.exceptions.UiException;
-import org.obehave.android.services.ApplicationState;
-import org.obehave.android.ui.util.ErrorDialog;
 import org.obehave.events.EventBusHolder;
 import org.obehave.model.Subject;
-import org.obehave.model.modifier.SubjectModifierFactory;
 
 import java.util.*;
 
@@ -28,17 +24,22 @@ public class SubjectModifierFragment extends MyListFragment {
 
     private ListAdapter adapter;
     private Map<Integer, Subject> selectedSubjects;
-
+    private List<Subject> subjects;
     private Button acceptButton;
 
-    public static SubjectModifierFragment newInstance(int sectionNumber) {
+    public static SubjectModifierFragment newInstance(int sectionNumber, List<Subject> subjects) {
         SubjectModifierFragment fragment = new SubjectModifierFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_SECTION_NUMBER, sectionNumber);
         fragment.setArguments(args);
+        fragment.setSubjects(subjects);
         /* which type of fragment should be loaded */
 
         return fragment;
+    }
+
+    public void setSubjects(List<Subject> subjects){
+        this.subjects = subjects;
     }
 
     @Override
@@ -58,33 +59,12 @@ public class SubjectModifierFragment extends MyListFragment {
             }
         });
 
-        try {
-            List<Subject> subjects = loadSubjectsForSelection();
-            adapter = (SubjectModifierAdapter) new SubjectModifierAdapter(this.getActivity(), subjects);
-            setListAdapter(adapter);
-        } catch (UiException e) {
-            new ErrorDialog(e, getActivity()).invoke();
-            e.printStackTrace();
-        }
+        adapter = (SubjectModifierAdapter) new SubjectModifierAdapter(this.getActivity(), subjects);
+        setListAdapter(adapter);
 
         return rootView;
     }
 
-    private List<Subject> loadSubjectsForSelection() throws UiException {
-        if(ApplicationState.getInstance().getAction() == null){
-            // FIXME: Error Message should be in resource file.
-            throw new UiException("Es wurde keine Aktion ausgewählt!");
-        }
-
-        if(ApplicationState.getInstance().getAction().getModifierFactory() == null){
-            // FIXME: Error Message should be in resource file.
-            throw new UiException("Es wurde keine ModifierFactory ausgewählt!");
-        }
-
-        SubjectModifierFactory subjectModifierFactory = (SubjectModifierFactory) ApplicationState.getInstance().getAction().getModifierFactory();
-
-        return subjectModifierFactory.getValidSubjects();
-    }
 
     @Override
     public void onListItemClick(ListView listView, View view, int position, long id) {

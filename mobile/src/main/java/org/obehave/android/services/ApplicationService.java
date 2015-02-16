@@ -5,6 +5,7 @@ import org.obehave.android.ui.exceptions.UiException;
 import org.obehave.android.ui.util.DataHolder;
 import org.obehave.model.Action;
 import org.obehave.model.Subject;
+import org.obehave.model.modifier.Modifier;
 import org.obehave.model.modifier.ModifierFactory;
 
 import java.util.Collections;
@@ -63,6 +64,26 @@ public class ApplicationService implements Service{
 
     public static void selectItem(Action action){
         ApplicationState.getInstance().setAction(action);
+    }
+
+    public static void selectItem(Modifier modifier){
+        ApplicationState.getInstance().setModifier(modifier);
+    }
+
+    public static Subject getSelectedSubject(){
+        return ApplicationState.getInstance().getSubject();
+    }
+
+    public static Action getSelectedAction(){
+        return ApplicationState.getInstance().getAction();
+    }
+
+    public static Modifier getSelectedModifer(){
+        return ApplicationState.getInstance().getModifier();
+    }
+
+    public static void createCoding() {
+
     }
 
     // the class should not be instanceable
