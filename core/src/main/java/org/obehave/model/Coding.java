@@ -1,27 +1,38 @@
-package org.obehave.model.coding;
+package org.obehave.model;
 
 import org.obehave.exceptions.FactoryException;
 import org.obehave.model.Action;
+import org.obehave.model.BaseEntity;
 import org.obehave.model.Subject;
 import org.obehave.model.modifier.Modifier;
 
 /**
  * @author Markus Möslinger
  */
-public class Coding {
+public class Coding extends BaseEntity {
     private Subject subject;
     private Action action;
     private Modifier modifier;
     private long startMs;
+    private long endMs = -1;
 
     public Coding(Subject subject, Action action, long startMs) {
+        this(subject, action, startMs, 0);
+    }
+
+    public Coding(Subject subject, Action action, long startMs, long endMs) {
         setSubject(subject);
         setAction(action);
         setStartMs(startMs);
+        setEndMs(endMs);
     }
 
     public Coding(Subject subject, Action action, String modifierInput, long startMs) throws FactoryException {
-        this(subject, action, startMs);
+        this(subject, action, modifierInput, startMs, 0);
+    }
+
+    public Coding(Subject subject, Action action, String modifierInput, long startMs, long endMs) throws FactoryException {
+        this(subject, action, startMs, endMs);
         setModifier(modifierInput);
     }
 
@@ -56,6 +67,9 @@ public class Coding {
         if (input == null) {
             throw new IllegalArgumentException("Input must not be null");
         }
+        if (action.getModifierFactory() == null) {
+            throw new FactoryException("This action has no modifier factory!");
+        }
 
         this.modifier = action.getModifierFactory().create(input);
     }
@@ -70,5 +84,29 @@ public class Coding {
         }
 
         this.startMs = startMs;
+    }
+
+    public long getEndMs() {
+        return endMs;
+    }
+
+    public void setEndMs(long endMs) {
+        this.endMs = endMs;
+    }
+
+    public long getDuration() {
+        validateStateCoding();
+
+        return endMs - startMs;
+    }
+
+    public boolean isStateCoding() {
+        return endMs > startMs;
+    }
+
+    private void validateStateCoding() {
+        if (!isStateCoding()) {
+            throw new IllegalStateException("Coding has to be a state coding!");
+        }
     }
 }

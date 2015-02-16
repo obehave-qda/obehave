@@ -5,6 +5,7 @@ import com.j256.ormlite.table.DatabaseTable;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.obehave.model.modifier.ModifierFactory;
+import org.obehave.persistence.impl.ActionDaoImpl;
 
 /**
  * This class describes actions a subject is able to perform.
@@ -15,7 +16,7 @@ import org.obehave.model.modifier.ModifierFactory;
  * <p />
  * Actions can be modified in some way.
  */
-@DatabaseTable(tableName = "Action")
+@DatabaseTable(tableName = "Action", daoClass = ActionDaoImpl.class)
 public class Action extends BaseEntity implements Displayable {
     public static enum Type {
         POINT, STATE

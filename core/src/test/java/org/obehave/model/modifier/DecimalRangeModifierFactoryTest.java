@@ -13,29 +13,16 @@ import static org.junit.Assert.assertEquals;
  * @author Markus Möslinger
  */
 public class DecimalRangeModifierFactoryTest {
-    private DecimalRangeModifierFactory factory;
+    private ModifierFactory factory;
 
     @Before
     public void prepare() {
-        factory = new DecimalRangeModifierFactory(-15, 15);
-    }
-
-    @Test
-    public void constructionWorks() {
-        DecimalRangeModifierFactory factory = new DecimalRangeModifierFactory();
-
-        assertEquals(factory.getFrom(), 0);
-        assertEquals(factory.getTo(), 0);
-
-        factory = new DecimalRangeModifierFactory(5, 10);
-
-        assertEquals(factory.getFrom(), 5);
-        assertEquals(factory.getTo(), 10);
+        factory = new ModifierFactory(-15, 15);
     }
 
     @Test
     public void constructorSwapsDecimalsIfNeeded() {
-        DecimalRangeModifierFactory factory = new DecimalRangeModifierFactory(10, 5);
+        ModifierFactory factory = new ModifierFactory(10, 5);
 
         assertEquals(factory.getFrom(), 5);
         assertEquals(factory.getTo(), 10);
@@ -43,7 +30,7 @@ public class DecimalRangeModifierFactoryTest {
 
     @Test
     public void constructorCreatesObjectsWithSameFromAndTo() {
-        DecimalRangeModifierFactory factory = new DecimalRangeModifierFactory(10, 10);
+        ModifierFactory factory = new ModifierFactory(10, 10);
 
         assertEquals(factory.getFrom(), 10);
         assertEquals(factory.getTo(), 10);
@@ -82,7 +69,7 @@ public class DecimalRangeModifierFactoryTest {
 
     @Test
     public void createModifierWithInteger() throws FactoryException {
-        DecimalRangeModifier modifier = factory.create("5");
+        Modifier modifier = factory.create("5");
 
         assertEquals(modifier.get(), BigDecimal.valueOf(5));
     }
@@ -112,7 +99,7 @@ public class DecimalRangeModifierFactoryTest {
         Locale.setDefault(locale);
 
         try {
-            DecimalRangeModifier modifier = factory.create(input);
+            Modifier modifier = factory.create(input);
 
             assertEquals(modifier.get(), BigDecimal.valueOf(expected));
         } finally {
@@ -122,7 +109,7 @@ public class DecimalRangeModifierFactoryTest {
 
     @Test
     public void createModifierWithNegativeNumber() throws FactoryException {
-        DecimalRangeModifier modifier = factory.create("-5");
+        Modifier modifier = factory.create("-5");
 
         assertEquals(modifier.get(), BigDecimal.valueOf(-5));
     }

@@ -17,16 +17,16 @@ import static org.junit.Assert.assertTrue;
 public class SubjectModifierFactoryTest {
     private static final Subject[] VALID_SUBJECTS = new Subject[]{new Subject("NORTH"), new Subject("EAST"), new Subject("WEST"), new Subject("SOUTH")};
 
-    private SubjectModifierFactory factory;
+    private ModifierFactory factory;
 
     @Before
     public void prepare() {
-        factory = new SubjectModifierFactory(VALID_SUBJECTS);
+        factory = new ModifierFactory(VALID_SUBJECTS);
     }
 
     @Test
     public void constructionWithoutSubjectsWorks() {
-        assertTrue(new SubjectModifierFactory().getValidSubjects().isEmpty());
+        assertTrue(new ModifierFactory((Subject[]) null).getValidSubjects().isEmpty());
     }
 
     @Test
@@ -36,7 +36,7 @@ public class SubjectModifierFactoryTest {
 
     @Test
     public void addingSubjectsWorks() {
-        SubjectModifierFactory factory = new SubjectModifierFactory();
+        ModifierFactory factory = new ModifierFactory((Subject[]) null);
         factory.addValidSubjects(VALID_SUBJECTS);
 
         assertEquals(factory.getValidSubjects(), new ArrayList<>(Arrays.asList(VALID_SUBJECTS)));
@@ -44,7 +44,7 @@ public class SubjectModifierFactoryTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void constructionWithNullDoesntWork() {
-        new SubjectModifierFactory((Subject[]) null);
+        new ModifierFactory((Subject[]) null);
     }
 
     @Test(expected = FactoryException.class)
@@ -54,7 +54,7 @@ public class SubjectModifierFactoryTest {
 
     @Test
     public void modifierWithValidSubject() throws FactoryException {
-        SubjectModifier modifier = factory.create(VALID_SUBJECTS[0].getName());
+        Modifier modifier = factory.create(VALID_SUBJECTS[0].getName());
 
         assertEquals(modifier.get(), VALID_SUBJECTS[0]);
     }

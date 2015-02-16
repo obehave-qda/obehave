@@ -15,18 +15,29 @@ dependencies {
         versionOrmlite = "4.48"
 
         versionJoda = "2.5"
+
+        versionGson = "2.3.1"
+
+        versionH2 = "1.4.184"
     }
 
     compile "org.apache.commons:commons-lang3:$versionCommonsLang"
     compile "com.google.guava:guava:$guavaVersion"
 
     compile "org.slf4j:slf4j-api:$versionSlf4j"
+    testCompile "org.apache.logging.log4j:log4j-slf4j-impl:$versionLog4j"
+    testCompile "org.apache.logging.log4j:log4j-core:$versionLog4j"
 
     testCompile "junit:junit:$versionJunit"
     testCompile "org.hamcrest:hamcrest-all:$versionHamcrest"
 
+    testCompile "com.h2database:h2:$versionH2"
+    compile "com.j256.ormlite:ormlite-jdbc:$versionOrmlite"
+
     compile "com.j256.ormlite:ormlite-core:$versionOrmlite"
 
     compile "joda-time:joda-time:$versionJoda"
+
+    compile "com.google.code.gson:gson:$versionGson"
 }
 

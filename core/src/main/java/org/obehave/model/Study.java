@@ -4,14 +4,13 @@ import org.obehave.events.ChangeEvent;
 import org.obehave.events.ChangeType;
 import org.obehave.events.EventBusHolder;
 import org.obehave.model.modifier.ModifierFactory;
-import org.obehave.model.tree.Node;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * A study contains multiple subjects, actions and observations.
  */
-public class Study extends BaseEntity {
+public class Study {
     private static final Logger log = LoggerFactory.getLogger(Study.class);
 
     private String name;
@@ -89,6 +88,18 @@ public class Study extends BaseEntity {
         log.debug("Adding observation {}", observation);
         final boolean added = observations.addChild(observation);
         EventBusHolder.post(new ChangeEvent<>(observation, ChangeType.CREATE));
+        return added;
+    }
+
+    public boolean addModifierFactory(ModifierFactory<?> modifierFactory) {
+        if (modifierFactories.contains(modifierFactory)) {
+            log.debug("Won't setData another {}", modifierFactory);
+            return false;
+        }
+
+        log.debug("Adding modifierFactory {}", modifierFactory);
+        final boolean added = modifierFactories.addChild(modifierFactory);
+        EventBusHolder.post(new ChangeEvent<>(modifierFactory, ChangeType.CREATE));
         return added;
     }
 

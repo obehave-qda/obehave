@@ -1,11 +1,12 @@
-package org.obehave.model.coding;
+package org.obehave.model;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.obehave.exceptions.FactoryException;
 import org.obehave.model.Action;
+import org.obehave.model.Coding;
 import org.obehave.model.Subject;
-import org.obehave.model.modifier.DecimalRangeModifierFactory;
+import org.obehave.model.modifier.ModifierFactory;
 
 import java.math.BigDecimal;
 
@@ -18,6 +19,7 @@ public class CodingTest {
     private final Subject subject = new Subject("Test subject");
     private final Action action = new Action("Test action");
     private final long millis = 500;
+    private final long endMillis = millis + 250;
 
     private Coding coding;
 
@@ -25,7 +27,7 @@ public class CodingTest {
     public void prepare() throws FactoryException {
         coding = new Coding(subject, action, millis);
 
-        action.setModifierFactory(new DecimalRangeModifierFactory(0, 10));
+        action.setModifierFactory(new ModifierFactory(0, 10));
 
         coding.setModifier("3");
     }
@@ -46,16 +48,26 @@ public class CodingTest {
     }
 
     @Test
-    public void accessingFieldsShouldWork() {
-        Coding coding = new Coding(new Subject("Dummy"), new Action("Dummy"), 300);
-
-        coding.setSubject(subject);
-        coding.setAction(action);
-        coding.setStartMs(millis);
-
+    public void accessingFieldsShouldWork() throws FactoryException {
         assertEquals(coding.getSubject(), subject);
         assertEquals(coding.getAction(), action);
         assertEquals(coding.getStartMs(), millis);
         assertEquals(coding.getModifier().get(), BigDecimal.valueOf(3));
+        assertEquals(coding.getDuration(), endMillis - millis);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void noCreationWithoutSubjectButMillis() {
+        new Coding(null, action, millis, endMillis);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void noCreationWithoutActionButMillis() {
+        new Coding(subject, null, millis, endMillis);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void noCreationWithNullAsModifierInputButMillis() throws FactoryException {
+        new Coding(subject, action, null, millis, endMillis);
     }
 }
