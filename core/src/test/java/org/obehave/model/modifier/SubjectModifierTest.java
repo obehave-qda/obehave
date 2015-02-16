@@ -1,5 +1,6 @@
 package org.obehave.model.modifier;
 
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,16 +11,16 @@ import org.obehave.model.Subject;
  */
 public class SubjectModifierTest {
     private static final Subject SUBJECT = new Subject("Sub");
-    private SubjectModifier modifier;
+    private Modifier modifier;
 
     @Before
     public void prepare() {
-        modifier = new SubjectModifier(SUBJECT);
+        modifier = new Modifier(SUBJECT);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void noConstructionWithNull() {
-        new SubjectModifier(null);
+        new Modifier((Subject) null);
     }
 
     @Test

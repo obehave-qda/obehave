@@ -14,7 +14,7 @@ public class ColorTest {
         assertEquals(c.getRed(), 10);
         assertEquals(c.getGreen(), 11);
         assertEquals(c.getBlue(), 12);
-        assertEquals(c.getOpacity(), 1.0, 0);
+        assertEquals(c.getOpacity(), 255);
     }
 
     @Test
@@ -23,21 +23,57 @@ public class ColorTest {
         assertEquals(c.getRed(), 10);
         assertEquals(c.getGreen(), 10);
         assertEquals(c.getBlue(), 10);
-        assertEquals(c.getOpacity(), 1.0, 0);
+        assertEquals(c.getOpacity(), 255);
     }
 
     @Test
     public void colorWithRGBOpacity() {
-        Color c = new Color(0xAF, 0xBF, 0xCF, 0.5);
+        Color c = new Color(0xAF, 0xBF, 0xCF, 0xAB);
         assertEquals(c.getRed(), 0xAF);
         assertEquals(c.getGreen(), 0xBF);
         assertEquals(c.getBlue(), 0xCF);
-        assertEquals(c.getOpacity(), 0.5, 0);
+        assertEquals(c.getOpacity(), 0xAB);
+    }
+
+    @Test
+    public void valueOfWith6Digits() {
+        Color c = Color.valueOf("FF1000");
+        assertEquals(c.getRed(), 0xFF);
+        assertEquals(c.getRed(), 0x10);
+        assertEquals(c.getRed(), 0x00);
+        assertEquals(c.getOpacity(), 0xFF);
+    }
+
+    @Test
+    public void valueOfWith8Digits() {
+        Color c = Color.valueOf("FF100043");
+        assertEquals(c.getRed(), 0xFF);
+        assertEquals(c.getRed(), 0x10);
+        assertEquals(c.getRed(), 0x00);
+        assertEquals(c.getOpacity(), 0x43);
+    }
+
+    @Test
+    public void valueOfWith6DigitsAndHash() {
+        Color c = Color.valueOf("#FF1000");
+        assertEquals(c.getRed(), 0xFF);
+        assertEquals(c.getRed(), 0x10);
+        assertEquals(c.getRed(), 0x00);
+        assertEquals(c.getOpacity(), 0xFF);
+    }
+
+    @Test
+    public void valueOfWith8DigitsAndHash() {
+        Color c = Color.valueOf("#FF100043");
+        assertEquals(c.getRed(), 0xFF);
+        assertEquals(c.getRed(), 0x10);
+        assertEquals(c.getRed(), 0x00);
+        assertEquals(c.getOpacity(), 0x43);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void noOpacityBiggerThan1() {
-        new Color(0xFF, 0xFF, 0xFF, 1.1);
+    public void noOpacityBiggerThan256() {
+        new Color(0xFF, 0xFF, 0xFF, 256);
     }
 
     @Test(expected = IllegalArgumentException.class)

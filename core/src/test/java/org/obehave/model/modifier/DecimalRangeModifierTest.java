@@ -11,16 +11,16 @@ import static org.junit.Assert.assertEquals;
  * @author Markus Möslinger
  */
 public class DecimalRangeModifierTest {
-    private DecimalRangeModifier modifier;
+    private Modifier modifier;
 
     @Before
     public void prepare() {
-        modifier = new DecimalRangeModifier(BigDecimal.valueOf(5.5));
+        modifier = new Modifier(BigDecimal.valueOf(5.5));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void cannotCreateModifierWithNull() {
-        new DecimalRangeModifier(null);
+        new Modifier((BigDecimal) null);
     }
 
     @Test
