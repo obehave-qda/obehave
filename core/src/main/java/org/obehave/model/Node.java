@@ -1,8 +1,7 @@
-package org.obehave.model.tree;
+package org.obehave.model;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-import org.obehave.model.Displayable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,6 +16,24 @@ import java.util.List;
  */
 @DatabaseTable(tableName = "Node")
 public class Node<T extends Displayable> implements Iterable<T>, Displayable {
+    public static enum Exclusivity {
+        /**
+         * Multiple state actions are allowed at the same time
+         */
+        NOT_EXCLUSIVE,
+        /**
+         * Not recursive - only one element (regardless if subgroup or action) is allowed to be/contain active state actions
+         */
+        EXCLUSIVE,
+        /**
+         * Recursive - only one element is allowed to be active
+         */
+        TOTAL_EXCLUSIVE
+    }
+
+    @DatabaseField(columnName = "actionType")
+    private Exclusivity exclusivity;
+
     private final ArrayList<Node<T>> children = new ArrayList<>();
 
     @DatabaseField(columnName = "type")
@@ -118,7 +135,7 @@ public class Node<T extends Displayable> implements Iterable<T>, Displayable {
     }
 
     public boolean remove(T data) {
-        return false;
+        throw new UnsupportedOperationException("Has to be implemented! Data was " + data);
     }
 
     /**
@@ -199,5 +216,27 @@ public class Node<T extends Displayable> implements Iterable<T>, Displayable {
     @Override
     public String getDisplayString() {
         return data != null ? data.getDisplayString() : getTitle();
+    }
+
+    private void validateActionNode() {
+        if (dataType != Action.class) {
+            throw new IllegalStateException("Exlusitivity can only be set for Action nodes!");
+        }
+    }
+
+    public Exclusivity getExclusivity() {
+        validateActionNode();
+
+        return exclusivity;
+    }
+
+    public void setExclusivity(Exclusivity exclusivity) {
+        validateActionNode();
+
+        if (exclusivity == null) {
+            throw new IllegalArgumentException("Exclusivity must not be null!");
+        }
+
+        this.exclusivity = exclusivity;
     }
 }

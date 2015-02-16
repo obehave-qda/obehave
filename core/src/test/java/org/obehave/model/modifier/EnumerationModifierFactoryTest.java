@@ -15,16 +15,16 @@ import static org.junit.Assert.*;
 public class EnumerationModifierFactoryTest {
     private static final String[] VALID_STRINGS = new String[]{"NORTH", "EAST", "WEST", "SOUTH"};
 
-    private EnumerationModifierFactory factory;
+    private ModifierFactory factory;
 
     @Before
     public void prepare() {
-        factory = new EnumerationModifierFactory(VALID_STRINGS);
+        factory = new ModifierFactory(VALID_STRINGS);
     }
 
     @Test
     public void constructionWorksWithNothing() {
-        assertTrue(new EnumerationModifierFactory().getValidValues().isEmpty());
+        assertTrue(new ModifierFactory((String[]) null).getValidValues().isEmpty());
     }
 
     @Test
@@ -34,7 +34,7 @@ public class EnumerationModifierFactoryTest {
 
     @Test
     public void addAllWorks() {
-        EnumerationModifierFactory factory = new EnumerationModifierFactory();
+        ModifierFactory factory = new ModifierFactory((String[]) null);
         factory.addValidValues(VALID_STRINGS);
 
         assertEquals(factory.getValidValues(), new ArrayList<>(Arrays.asList(VALID_STRINGS)));
@@ -42,7 +42,7 @@ public class EnumerationModifierFactoryTest {
 
     @Test
     public void creationOfModifierWithValidString() throws FactoryException {
-        EnumerationModifier modifier = factory.create("WEST");
+        Modifier modifier = factory.create("WEST");
 
         assertEquals(modifier.get(), "WEST");
     }

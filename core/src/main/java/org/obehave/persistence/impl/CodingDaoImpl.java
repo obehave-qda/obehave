@@ -2,7 +2,7 @@ package org.obehave.persistence.impl;
 
 import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.support.ConnectionSource;
-import org.obehave.model.coding.Coding;
+import org.obehave.model.Coding;
 import org.obehave.persistence.CodingDao;
 
 import java.sql.SQLException;

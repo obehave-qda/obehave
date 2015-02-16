@@ -13,13 +13,13 @@ public class ValidSubject {
     private Subject subject;
 
     @DatabaseField(columnName = "modifierFactory", foreign = true)
-    private ModifierFactory<?> modifierFactory;
+    private ModifierFactory modifierFactory;
 
     public ValidSubject() {
 
     }
 
-    public ValidSubject(Subject subject, ModifierFactory<?> modifierFactory) {
+    public ValidSubject(Subject subject, ModifierFactory modifierFactory) {
         this.subject = subject;
         this.modifierFactory = modifierFactory;
     }
