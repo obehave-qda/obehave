@@ -125,6 +125,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                 actionBar.setSelectedNavigationItem(position);
                 if(position == CODING_FRAGMENT_POSITION){ // CodingFragment
                     Log.i(LOG_TAG, ""+ ApplicationService.getAllSubjects().size());
+                    getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE); // drop placeholder fragment
                     changeCodingFragment(SubjectFragment.newInstance(CODING_FRAGMENT_POSITION, ApplicationService.getAllSubjects()));
                 }
             }
