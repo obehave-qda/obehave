@@ -7,9 +7,16 @@
                   android:orientation="vertical"
                   android:layout_width="match_parent"
                   android:layout_height="match_parent">
-        <LinearLayout android:layout_width="match_parent" android:layout_height="fill_parent" android:layout_weight="1" android:orientation="vertical">
-            <ListView android:layout_width="match_parent" android:layout_height="match_parent" android:id="@id/android:list" android:layout_weight="2">
-            </ListView>
+        <LinearLayout android:layout_width="match_parent" android:layout_marginLeft="10dp" android:layout_marginRight="10dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center_vertical" android:orientation="vertical">
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/labelValueTextfield" android:layout_gravity="center_horizontal" android:text="Your Value"/>
+            <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:id="@+id/txtValue"/>
         </LinearLayout>
         <Button android:id="@+id/accept" android:text="@string/accept" android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingTop="5dp" android:paddingBottom="5dp" android:layout_gravity="center_horizontal"></Button>
     </LinearLayout>
