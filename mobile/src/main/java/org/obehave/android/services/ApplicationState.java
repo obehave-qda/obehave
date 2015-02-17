@@ -1,8 +1,8 @@
 package org.obehave.android.services;
 
 import org.obehave.model.Action;
+import org.obehave.model.Coding;
 import org.obehave.model.Subject;
-import org.obehave.model.coding.Coding;
 import org.obehave.model.modifier.Modifier;
 
 import java.util.List;

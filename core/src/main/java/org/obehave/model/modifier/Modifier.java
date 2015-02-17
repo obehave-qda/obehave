@@ -5,8 +5,6 @@ import com.j256.ormlite.table.DatabaseTable;
 import org.obehave.model.BaseEntity;
 import org.obehave.model.Subject;
 import org.obehave.persistence.impl.ModifierDaoImpl;
-import org.obehave.persistence.impl.ModifierFactoryDaoImpl;
-import sun.plugin.dom.exception.InvalidStateException;
 
 import java.math.BigDecimal;
 

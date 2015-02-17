@@ -1,9 +1,6 @@
 package org.obehave.model;
 
 import org.obehave.exceptions.FactoryException;
-import org.obehave.model.Action;
-import org.obehave.model.BaseEntity;
-import org.obehave.model.Subject;
 import org.obehave.model.modifier.Modifier;
 
 /**

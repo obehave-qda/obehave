@@ -91,7 +91,7 @@ public class Study {
         return added;
     }
 
-    public boolean addModifierFactory(ModifierFactory<?> modifierFactory) {
+    public boolean addModifierFactory(ModifierFactory modifierFactory) {
         if (modifierFactories.contains(modifierFactory)) {
             log.debug("Won't setData another {}", modifierFactory);
             return false;

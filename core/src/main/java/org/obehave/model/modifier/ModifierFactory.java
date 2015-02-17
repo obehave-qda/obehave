@@ -8,7 +8,6 @@ import org.obehave.model.BaseEntity;
 import org.obehave.model.Displayable;
 import org.obehave.model.Subject;
 import org.obehave.persistence.impl.ModifierFactoryDaoImpl;
-import sun.plugin.dom.exception.InvalidStateException;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -106,7 +105,7 @@ public class ModifierFactory extends BaseEntity implements Displayable {
 
     private void validateType(Type type) {
         if (type != this.type) {
-            throw new InvalidStateException("Factory is of type " + this.type + "!");
+            throw new IllegalStateException("Factory is of type " + this.type + "!");
         }
     }
 

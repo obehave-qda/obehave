@@ -32,7 +32,7 @@ public class Action extends BaseEntity implements Displayable {
     private Type type;
 
     @DatabaseField(columnName = "modifierFactory")
-    private ModifierFactory<?> modifierFactory;
+    private ModifierFactory modifierFactory;
 
     @DatabaseField(columnName = "recurring")
     private int recurring;
@@ -70,11 +70,11 @@ public class Action extends BaseEntity implements Displayable {
         this.type = type;
     }
 
-    public ModifierFactory<?> getModifierFactory() {
+    public ModifierFactory getModifierFactory() {
         return modifierFactory;
     }
 
-    public void setModifierFactory(ModifierFactory<?> modifierFactory) {
+    public void setModifierFactory(ModifierFactory modifierFactory) {
         this.modifierFactory = modifierFactory;
     }
 
