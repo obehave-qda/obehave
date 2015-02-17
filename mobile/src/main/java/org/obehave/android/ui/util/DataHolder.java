@@ -3,9 +3,7 @@ package org.obehave.android.ui.util;
 import org.obehave.model.Action;
 import org.obehave.model.Color;
 import org.obehave.model.Subject;
-import org.obehave.model.modifier.DecimalRangeModifierFactory;
-import org.obehave.model.modifier.EnumerationModifierFactory;
-import org.obehave.model.modifier.SubjectModifierFactory;
+import org.obehave.model.modifier.ModifierFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -108,10 +106,9 @@ public class DataHolder {
             action.setType(Action.Type.POINT);
             action.setAlias(actionNames[i].substring(0,2));
             action.setRecurring(0);
-            SubjectModifierFactory subjectModifierFactory = new SubjectModifierFactory();
+            ModifierFactory subjectModifierFactory = new ModifierFactory(subjects.get(1), subjects.get(2), subjects.get(3));
             subjectModifierFactory.setName("Subject Modifier");
             subjectModifierFactory.setAlias("su");
-            subjectModifierFactory.addValidSubjects(subjects.get(1), subjects.get(2), subjects.get(3));
             action.setModifierFactory(subjectModifierFactory);
 
             actions.add(action);
@@ -119,8 +116,6 @@ public class DataHolder {
     }
 
     private void generateNumberRangeActions(){
-
-
         String actionNames[] = {
                 "number 1",
                 "number 2",
@@ -133,10 +128,9 @@ public class DataHolder {
             action.setType(Action.Type.POINT);
             action.setAlias(actionNames[i].substring(0,2));
             action.setRecurring(0);
-            DecimalRangeModifierFactory decimalRangeModifierFactory = new DecimalRangeModifierFactory();
+            ModifierFactory decimalRangeModifierFactory = new ModifierFactory(20,100);
             decimalRangeModifierFactory.setName("Decimal Modifier");
             decimalRangeModifierFactory.setAlias("su");
-            decimalRangeModifierFactory.setRange(20,100);
             action.setModifierFactory(decimalRangeModifierFactory);
 
             actions.add(action);
@@ -158,11 +152,9 @@ public class DataHolder {
             action.setType(Action.Type.POINT);
             action.setAlias(actionNames[i].substring(0,2));
             action.setRecurring(0);
-            EnumerationModifierFactory enumerationModifierFactory = new EnumerationModifierFactory();
+            ModifierFactory enumerationModifierFactory = new ModifierFactory("Value1", "Value 2", "Value 3", "Value4");
             enumerationModifierFactory.setName("Enumeration Modifier");
             enumerationModifierFactory.setAlias("enu");
-            enumerationModifierFactory.addValidValues("Value1", "Value 2", "Value 3", "Value4");
-
             action.setModifierFactory(enumerationModifierFactory);
 
             actions.add(action);

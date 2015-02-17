@@ -27,7 +27,6 @@ import org.obehave.exceptions.FactoryException;
 import org.obehave.model.Action;
 import org.obehave.model.Subject;
 import org.obehave.model.modifier.ModifierFactory;
-import org.obehave.model.modifier.SubjectModifierFactory;
 
 import java.util.List;
 
@@ -58,8 +57,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             ModifierFactory modifierFactory = ApplicationService.getModifierFactoryOfSelectedActions();
             if (modifierFactory == null) {
                 ApplicationService.createCoding();
-            } else if (modifierFactory instanceof SubjectModifierFactory) {
-                changeCodingFragment(SubjectModifierFragment.newInstance(CODING_FRAGMENT_POSITION, ((SubjectModifierFactory)modifierFactory).getValidSubjects()));
+            } else if (modifierFactory.getType() == ModifierFactory.Type.SUBJECT_MODIFIER_FACTORY) {
+                changeCodingFragment(SubjectModifierFragment.newInstance(CODING_FRAGMENT_POSITION, (modifierFactory).getValidSubjects()));
             }
         }
         catch(UiException ex){
@@ -76,7 +75,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                 throw new UiException("Es muss mindestens ein Subjekt gewählt werden.");
             }
 
-            SubjectModifierFactory subjectModifierFactory = (SubjectModifierFactory) ApplicationService.getSelectedAction().getModifierFactory();
+            ModifierFactory subjectModifierFactory = (ModifierFactory) ApplicationService.getSelectedAction().getModifierFactory();
             ApplicationService.selectItem(subjectModifierFactory.create(subjects.get(0).getName()));
             ApplicationService.createCoding();
             getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
@@ -126,7 +125,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                 actionBar.setSelectedNavigationItem(position);
                 if(position == CODING_FRAGMENT_POSITION){ // CodingFragment
                     Log.i(LOG_TAG, ""+ ApplicationService.getAllSubjects().size());
-                     changeCodingFragment(SubjectFragment.newInstance(CODING_FRAGMENT_POSITION, ApplicationService.getAllSubjects()));
+                    changeCodingFragment(SubjectFragment.newInstance(CODING_FRAGMENT_POSITION, ApplicationService.getAllSubjects()));
                 }
             }
         });
