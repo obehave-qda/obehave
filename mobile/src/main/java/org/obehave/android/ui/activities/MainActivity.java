@@ -15,10 +15,12 @@ import org.obehave.android.R;
 import org.obehave.android.services.ApplicationService;
 import org.obehave.android.ui.adapters.SectionsPagerAdapter;
 import org.obehave.android.ui.events.ActionSelectedEvent;
+import org.obehave.android.ui.events.EnumerationModifierSelectedEvent;
 import org.obehave.android.ui.events.SubjectModifierSelectedEvent;
 import org.obehave.android.ui.events.SubjectSelectedEvent;
 import org.obehave.android.ui.exceptions.UiException;
 import org.obehave.android.ui.fragments.ActionFragment;
+import org.obehave.android.ui.fragments.EnumerationModifierFragment;
 import org.obehave.android.ui.fragments.SubjectFragment;
 import org.obehave.android.ui.fragments.SubjectModifierFragment;
 import org.obehave.android.ui.util.ErrorDialog;
@@ -60,6 +62,9 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             } else if (modifierFactory.getType() == ModifierFactory.Type.SUBJECT_MODIFIER_FACTORY) {
                 changeCodingFragment(SubjectModifierFragment.newInstance(CODING_FRAGMENT_POSITION, (modifierFactory).getValidSubjects()));
             }
+            else if (modifierFactory.getType() == ModifierFactory.Type.ENUMERATION_MODIFIER_FACTORY) {
+                changeCodingFragment(EnumerationModifierFragment.newInstance(CODING_FRAGMENT_POSITION, (modifierFactory).getValidValues()));
+            }
         }
         catch(UiException ex){
             ErrorDialog ed = new ErrorDialog(ex.getMessage(), this);
@@ -77,6 +82,30 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
             ModifierFactory subjectModifierFactory = (ModifierFactory) ApplicationService.getSelectedAction().getModifierFactory();
             ApplicationService.selectItem(subjectModifierFactory.create(subjects.get(0).getName()));
+            ApplicationService.createCoding();
+            getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            changeCodingFragment(SubjectFragment.newInstance(CODING_FRAGMENT_POSITION, ApplicationService.getAllSubjects()));
+        }
+        catch(UiException exception){
+            ErrorDialog ed = new ErrorDialog(exception, this);
+            ed.invoke();
+        } catch (FactoryException e) {
+            ErrorDialog ed = new ErrorDialog(e.getMessage(), this);
+            ed.invoke();
+            e.printStackTrace();
+        }
+    }
+
+    @Subscribe
+    public void onEnumerationModifierSelected(EnumerationModifierSelectedEvent event){
+        List<String> values =  event.getValues();
+        try {
+            if (values.isEmpty()) {
+                throw new UiException("Es muss mindestens ein Wert gewählt werden.");
+            }
+
+            ModifierFactory subjectModifierFactory = ApplicationService.getSelectedAction().getModifierFactory();
+            ApplicationService.selectItem(subjectModifierFactory.create(values.get(0)));
             ApplicationService.createCoding();
             getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             changeCodingFragment(SubjectFragment.newInstance(CODING_FRAGMENT_POSITION, ApplicationService.getAllSubjects()));
