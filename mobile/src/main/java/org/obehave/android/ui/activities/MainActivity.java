@@ -14,15 +14,9 @@ import com.google.common.eventbus.Subscribe;
 import org.obehave.android.R;
 import org.obehave.android.services.ApplicationService;
 import org.obehave.android.ui.adapters.SectionsPagerAdapter;
-import org.obehave.android.ui.events.ActionSelectedEvent;
-import org.obehave.android.ui.events.EnumerationModifierSelectedEvent;
-import org.obehave.android.ui.events.SubjectModifierSelectedEvent;
-import org.obehave.android.ui.events.SubjectSelectedEvent;
+import org.obehave.android.ui.events.*;
 import org.obehave.android.ui.exceptions.UiException;
-import org.obehave.android.ui.fragments.ActionFragment;
-import org.obehave.android.ui.fragments.EnumerationModifierFragment;
-import org.obehave.android.ui.fragments.SubjectFragment;
-import org.obehave.android.ui.fragments.SubjectModifierFragment;
+import org.obehave.android.ui.fragments.*;
 import org.obehave.android.ui.util.ErrorDialog;
 import org.obehave.events.EventBusHolder;
 import org.obehave.exceptions.FactoryException;
@@ -65,6 +59,9 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             else if (modifierFactory.getType() == ModifierFactory.Type.ENUMERATION_MODIFIER_FACTORY) {
                 changeCodingFragment(EnumerationModifierFragment.newInstance(CODING_FRAGMENT_POSITION, (modifierFactory).getValidValues()));
             }
+            else if (modifierFactory.getType() == ModifierFactory.Type.DECIMAL_RANGE_MODIFIER_FACTORY) {
+                changeCodingFragment(DecimalRangeModifierFragment.newInstance(CODING_FRAGMENT_POSITION, modifierFactory.getFrom(), modifierFactory.getTo()));
+            }
         }
         catch(UiException ex){
             ErrorDialog ed = new ErrorDialog(ex.getMessage(), this);
@@ -97,15 +94,15 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     }
 
     @Subscribe
-    public void onEnumerationModifierSelected(EnumerationModifierSelectedEvent event){
+         public void onEnumerationModifierSelected(EnumerationModifierSelectedEvent event){
         List<String> values =  event.getValues();
         try {
             if (values.isEmpty()) {
                 throw new UiException("Es muss mindestens ein Wert gewählt werden.");
             }
 
-            ModifierFactory subjectModifierFactory = ApplicationService.getSelectedAction().getModifierFactory();
-            ApplicationService.selectItem(subjectModifierFactory.create(values.get(0)));
+            ModifierFactory enumerationModifierFactory = ApplicationService.getSelectedAction().getModifierFactory();
+            ApplicationService.selectItem(enumerationModifierFactory.create(values.get(0)));
             ApplicationService.createCoding();
             getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             changeCodingFragment(SubjectFragment.newInstance(CODING_FRAGMENT_POSITION, ApplicationService.getAllSubjects()));
@@ -113,6 +110,23 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         catch(UiException exception){
             ErrorDialog ed = new ErrorDialog(exception, this);
             ed.invoke();
+        } catch (FactoryException e) {
+            ErrorDialog ed = new ErrorDialog(e.getMessage(), this);
+            ed.invoke();
+            e.printStackTrace();
+        }
+    }
+
+    @Subscribe
+    public void onDecimalRangeModifierSelected(DecimalRangeModifierSelectedEvent event){
+        String value = event.getValue();
+        try {
+
+            ModifierFactory modifierFactory = ApplicationService.getSelectedAction().getModifierFactory();
+            ApplicationService.selectItem(modifierFactory.create(value));
+            ApplicationService.createCoding();
+            getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            changeCodingFragment(SubjectFragment.newInstance(CODING_FRAGMENT_POSITION, ApplicationService.getAllSubjects()));
         } catch (FactoryException e) {
             ErrorDialog ed = new ErrorDialog(e.getMessage(), this);
             ed.invoke();
@@ -131,7 +145,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
     @Override
     public void onBackPressed() {
-
         super.onBackPressed();
     }
 
@@ -153,7 +166,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             public void onPageSelected(int position) {
                 actionBar.setSelectedNavigationItem(position);
                 if(position == CODING_FRAGMENT_POSITION){ // CodingFragment
-                    Log.i(LOG_TAG, ""+ ApplicationService.getAllSubjects().size());
+                    Log.i(LOG_TAG, "" + ApplicationService.getAllSubjects().size());
                     getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE); // drop placeholder fragment
                     changeCodingFragment(SubjectFragment.newInstance(CODING_FRAGMENT_POSITION, ApplicationService.getAllSubjects()));
                 }
