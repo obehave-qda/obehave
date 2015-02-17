@@ -49,7 +49,7 @@ public class ApplicationService implements Service{
      * @returns ModifierFactory or Null
      * @throws UiException
      */
-    public static ModifierFactory getModifierFactoryOfSelectedActions() throws UiException {
+    public static ModifierFactory getModifierFactoryOfSelectedAction() throws UiException {
         Action action = ApplicationState.getInstance().getAction();
         if(action == null){
             throw new UiException("Es wurde keine Aktion gewählt");

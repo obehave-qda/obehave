@@ -54,7 +54,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         Log.d(LOG_TAG, action.getDisplayString());
         try {
             ApplicationService.selectItem(action);
-            ModifierFactory modifierFactory = ApplicationService.getModifierFactoryOfSelectedActions();
+            ModifierFactory modifierFactory = ApplicationService.getModifierFactoryOfSelectedAction();
             if (modifierFactory == null) {
                 ApplicationService.createCoding();
             } else if (modifierFactory.getType() == ModifierFactory.Type.SUBJECT_MODIFIER_FACTORY) {
