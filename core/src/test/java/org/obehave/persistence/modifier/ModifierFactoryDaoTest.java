@@ -60,7 +60,7 @@ public class ModifierFactoryDaoTest extends DaoTestBase {
         }
 
         if (modifierFactory.getType() == ModifierFactory.Type.SUBJECT_MODIFIER_FACTORY) {
-            assertEquals(validValues, modifierFactory.getValidSubjects());
+            assertEquals(validSubjects, modifierFactory.getValidSubjects());
         } else {
             try {
                 modifierFactory.getValidSubjects();
