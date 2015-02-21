@@ -31,7 +31,7 @@ public class Action extends BaseEntity implements Displayable {
     @DatabaseField(columnName = "type")
     private Type type;
 
-    @DatabaseField(columnName = "modifierFactory", foreign = true)
+    @DatabaseField(columnName = "modifierFactory", foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
     private ModifierFactory modifierFactory;
 
     @DatabaseField(columnName = "recurring")
@@ -118,9 +118,5 @@ public class Action extends BaseEntity implements Displayable {
         } else {
             this.recurring = recurring;
         }
-    }
-
-    public static enum Type {
-        POINT, STATE
     }
 }

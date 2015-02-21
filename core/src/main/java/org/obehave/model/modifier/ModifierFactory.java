@@ -121,8 +121,13 @@ public class ModifierFactory extends BaseEntity implements Displayable {
     private int to;
 
     public void setRange(int from, int to) {
-        this.from = from;
-        this.to = to;
+        if (from < to) {
+            this.from = from;
+            this.to = to;
+        } else {
+            this.from = to;
+            this.to = from;
+        }
     }
 
     public int getFrom() {
@@ -174,7 +179,7 @@ public class ModifierFactory extends BaseEntity implements Displayable {
     public boolean addValidValues(String... values) {
         validateType(Type.ENUMERATION_MODIFIER_FACTORY);
 
-        return validValues.addAll(Arrays.asList(values));
+        return values != null && validValues.addAll(Arrays.asList(values));
     }
 
 
@@ -218,11 +223,7 @@ public class ModifierFactory extends BaseEntity implements Displayable {
     public boolean addValidSubjects(Subject... subjects) {
         validateType(Type.SUBJECT_MODIFIER_FACTORY);
 
-        if (subjects == null) {
-            throw new IllegalArgumentException("Subjects must not be null");
-        }
-
-        return validSubjects.addAll(Arrays.asList(subjects));
+        return subjects != null && validSubjects.addAll(Arrays.asList(subjects));
     }
 
     public List<Subject> getValidSubjects() {

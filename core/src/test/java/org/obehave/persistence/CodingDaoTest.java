@@ -41,11 +41,11 @@ public class CodingDaoTest extends DaoTestBase {
 
     @Test
     public void readAndWrite() throws SQLException {
-        // subjectDao.create(subject);
+        subjectDao.create(subject);
         dao.create(coding);
 
         Coding loadedCoding = dao.queryForSameId(coding);
-        assertEquals(loadedCoding.getSubject(), subject);
-        assertEquals(loadedCoding.getAction(), action);
+        assertEquals(subject, loadedCoding.getSubject());
+        assertEquals(action, loadedCoding.getAction());
     }
 }
