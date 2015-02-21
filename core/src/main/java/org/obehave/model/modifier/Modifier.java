@@ -2,6 +2,7 @@ package org.obehave.model.modifier;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import org.obehave.exceptions.Validate;
 import org.obehave.model.BaseEntity;
 import org.obehave.model.Subject;
 import org.obehave.persistence.impl.ModifierDaoImpl;
@@ -13,8 +14,12 @@ import java.math.BigDecimal;
  */
 @DatabaseTable(tableName = "Modifier", daoClass = ModifierDaoImpl.class)
 public class Modifier extends BaseEntity {
-    @DatabaseField(columnName = "type")
+    public static final String COLUMN_TYPE = "type";
+
+    @DatabaseField(columnName = COLUMN_TYPE)
     private Type type;
+    @DatabaseField(columnName = "modifierFactory", foreign = true, foreignAutoRefresh = true)
+    private ModifierFactory modifierFactory;
     // DECIMAL RANGE
     @DatabaseField(columnName = "number")
     private BigDecimal decimalValue;
@@ -22,41 +27,35 @@ public class Modifier extends BaseEntity {
     @DatabaseField(columnName = "enumerationValue")
     private String enumerationValue;
     // SUBJECT
-    @DatabaseField(columnName = "subject", foreign = true)
+    @DatabaseField(columnName = "subject", foreign = true, foreignAutoRefresh = true)
     private Subject subject;
 
     private Modifier() {
-
+        // for frameworks
     }
 
-    public Modifier(BigDecimal value) {
+    public Modifier(ModifierFactory modifierFactory, BigDecimal value) {
         type = Type.DECIMAL_MODIFIER;
+        setModifierFactory(modifierFactory);
 
-        if (value == null) {
-            throw new IllegalArgumentException("value must not be null!");
-        }
-
+        Validate.isNotNull(value);
         decimalValue = value;
     }
 
 
-    public Modifier(String value) {
+    public Modifier(ModifierFactory modifierFactory, String value) {
         type = Type.ENUMERATION_MODIFIER;
+        setModifierFactory(modifierFactory);
 
-        if (value == null) {
-            throw new IllegalArgumentException("value must not be null");
-        }
-
+        Validate.isNotNull(value);
         this.enumerationValue = value;
     }
 
-    public Modifier(Subject subject) {
+    public Modifier(ModifierFactory modifierFactory, Subject subject) {
         type = Type.SUBJECT_MODIFIER;
+        setModifierFactory(modifierFactory);
 
-        if (subject == null) {
-            throw new IllegalArgumentException("subject must not be null!");
-        }
-
+        Validate.isNotNull(subject);
         this.subject = subject;
     }
 
@@ -76,6 +75,16 @@ public class Modifier extends BaseEntity {
             default:
                 throw new IllegalStateException("Object is in an invalid state");
         }
+    }
+
+    public ModifierFactory getModifierFactory() {
+        return modifierFactory;
+    }
+
+    private void setModifierFactory(ModifierFactory modifierFactory) {
+        Validate.isNotNull(modifierFactory);
+
+        this.modifierFactory = modifierFactory;
     }
 
     public static enum Type {

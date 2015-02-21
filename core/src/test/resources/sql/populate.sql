@@ -1,3 +1,8 @@
+------------------------------------------------------------------------------------------------------------------------
+-- Data in this file is most likely used in tests. So be careful when you change/delete something in it!
+-- To be sure, run all tests afterwards.
+------------------------------------------------------------------------------------------------------------------------
+
 -- SUBJECTs
 INSERT INTO PUBLIC.SUBJECT (MODIFIED, NAME, ALIAS, COLOR) VALUES (sysdate, 'Subject1', NULL, NULL);
 INSERT INTO PUBLIC.SUBJECT (MODIFIED, NAME, ALIAS, COLOR) VALUES (sysdate, 'Subject2', NULL, 'FF0000FF');
@@ -21,7 +26,7 @@ INSERT INTO PUBLIC.MODIFIER (MODIFIED, TYPE, MODIFIERFACTORY, NUMBER) VALUES (sy
 
 -- -- SUBJECT_MODIFIER
 INSERT INTO PUBLIC.MODIFIERFACTORY (MODIFIED, TYPE, NAME, ALIAS, RANGEFROM, RANGETO)
-VALUES (sysdate, 'SUBJECT_MODIFIER_FACTORY', 'SUBJECT One Or Two', NULL, NULL, NULL);
+VALUES (sysdate, 'SUBJECT_MODIFIER_FACTORY', 'Subject One Or Two', NULL, NULL, NULL);
 INSERT INTO PUBLIC.VALIDSUBJECT (MODIFIED, SUBJECT, MODIFIERFACTORY) VALUES (sysdate, (SELECT ID
                                                                                        FROM PUBLIC.SUBJECT
                                                                                        WHERE NAME = 'Subject1'),
@@ -46,7 +51,7 @@ INSERT INTO PUBLIC.MODIFIER (MODIFIED, TYPE, MODIFIERFACTORY, SUBJECT) VALUES (s
 
 -- -- ENUMERATION_MODIFIER
 INSERT INTO PUBLIC.MODIFIERFACTORY (MODIFIED, TYPE, NAME, RANGEFROM, RANGETO)
-VALUES (sysdate, 'SUBJECT_MODIFIER_FACTORY', 'Slow Or Fast', NULL, NULL);
+VALUES (sysdate, 'ENUMERATION_MODIFIER_FACTORY', 'Slow Or Fast', NULL, NULL);
 INSERT INTO PUBLIC.EnumerationItem (MODIFIED, value, MODIFIERFACTORY) VALUES (sysdate, 'Slow', (SELECT ID
                                                                                                 FROM
                                                                                                   PUBLIC.MODIFIERFACTORY
@@ -57,19 +62,19 @@ INSERT INTO PUBLIC.EnumerationItem (MODIFIED, value, MODIFIERFACTORY) VALUES (sy
                                                                                                   PUBLIC.MODIFIERFACTORY
                                                                                                 WHERE NAME =
                                                                                                       'Slow Or Fast'));
-INSERT INTO PUBLIC.MODIFIER (MODIFIERFACTORY, TYPE, MODIFIERFACTORY, ENUMERATIONVALUE)
+INSERT INTO PUBLIC.MODIFIER (MODIFIED, TYPE, MODIFIERFACTORY, ENUMERATIONVALUE)
 VALUES (sysdate, 'ENUMERATION_MODIFIER', (SELECT ID
                                           FROM MODIFIERFACTORY
                                           WHERE NAME = 'Slow Or Fast'), 'Slow');
 
 -- ACTIONs
-INSERT INTO PUBLIC.ACTION (MODIFIED, NAME, ALIAS, recurring, MODIFIERFACTORY, TYPE)
+INSERT INTO PUBLIC.ACTION (MODIFIED, NAME, ALIAS, RECURRING, MODIFIERFACTORY, TYPE)
 VALUES (sysdate, 'Howling', NULL, NULL, NULL, 'POINT');
-INSERT INTO PUBLIC.ACTION (MODIFIED, NAME, ALIAS, recurring, MODIFIERFACTORY, TYPE)
+INSERT INTO PUBLIC.ACTION (MODIFIED, NAME, ALIAS, RECURRING, MODIFIERFACTORY, TYPE)
 VALUES (sysdate, 'Fighting', NULL, 0, NULL, 'STATE');
-INSERT INTO PUBLIC.ACTION (MODIFIED, NAME, ALIAS, recurring, MODIFIERFACTORY, TYPE)
+INSERT INTO PUBLIC.ACTION (MODIFIED, NAME, ALIAS, RECURRING, MODIFIERFACTORY, TYPE)
 VALUES (sysdate, 'Scratching', 'Scr', 5, NULL, 'STATE');
-INSERT INTO PUBLIC.ACTION (MODIFIED, NAME, ALIAS, recurring, MODIFIERFACTORY, TYPE)
+INSERT INTO PUBLIC.ACTION (MODIFIED, NAME, ALIAS, RECURRING, MODIFIERFACTORY, TYPE)
 VALUES (sysdate, 'Running', 'Ru', 5, (SELECT ID
                                       FROM
                                         PUBLIC.MODIFIERFACTORY
@@ -77,7 +82,7 @@ VALUES (sysdate, 'Running', 'Ru', 5, (SELECT ID
                                             'Slow Or Fast'), 'STATE');
 
 -- Coding
-INSERT INTO PUBLIC.Coding (MODIFIED, SUBJECT, ACTION, modifier, observation, start, end) VALUES (sysdate, (SELECT ID
+INSERT INTO PUBLIC.Coding (MODIFIED, SUBJECT, ACTION, MODIFIER, OBSERVATION, START, END) VALUES (sysdate, (SELECT ID
                                                                                                            FROM
                                                                                                              PUBLIC.SUBJECT
                                                                                                            WHERE NAME =
@@ -88,9 +93,29 @@ INSERT INTO PUBLIC.Coding (MODIFIED, SUBJECT, ACTION, modifier, observation, sta
                                                                                                     NAME = 'Howling'),
                                                                                                  NULL, (SELECT ID
                                                                                                         FROM
-                                                                                                          PUBLIC.Observation
+                                                                                                          PUBLIC.OBSERVATION
                                                                                                         WHERE NAME =
                                                                                                               'Observation1'),
                                                                                                  300, NULL);
+INSERT INTO PUBLIC.Coding (MODIFIED, SUBJECT, ACTION, MODIFIER, OBSERVATION, START, END) VALUES (sysdate, (SELECT ID
+                                                                                                           FROM
+                                                                                                             PUBLIC.SUBJECT
+                                                                                                           WHERE NAME =
+                                                                                                                 'Subject1'),
+                                                                                                 (SELECT ID
+                                                                                                  FROM PUBLIC.ACTION
+                                                                                                  WHERE
+                                                                                                    NAME = 'Running'),
+                                                                                                 (SELECT ID
+                                                                                                  FROM PUBLIC.MODIFIER
+                                                                                                  WHERE
+                                                                                                    ENUMERATIONVALUE =
+                                                                                                    'Slow'), (SELECT ID
+                                                                                                              FROM
+                                                                                                                PUBLIC.OBSERVATION
+                                                                                                              WHERE
+                                                                                                                NAME =
+                                                                                                                'Observation1'),
+                                                                                                 500, 700);
 
 COMMIT;

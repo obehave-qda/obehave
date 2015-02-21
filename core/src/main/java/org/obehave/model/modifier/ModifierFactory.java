@@ -1,7 +1,9 @@
 package org.obehave.model.modifier;
 
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.obehave.exceptions.FactoryException;
 import org.obehave.model.BaseEntity;
 import org.obehave.model.Displayable;
@@ -36,7 +38,7 @@ public class ModifierFactory extends BaseEntity implements Displayable {
     private String alias;
 
     private ModifierFactory() {
-
+        // for frameworks
     }
 
     public ModifierFactory(int from, int to) {
@@ -154,7 +156,7 @@ public class ModifierFactory extends BaseEntity implements Displayable {
         try {
             value = stringToBigDecimal(input);
             if (value.compareTo(BigDecimal.valueOf(from)) >= 0 && value.compareTo(BigDecimal.valueOf(to)) <= 0) {
-                return new Modifier(value);
+                return new Modifier(this, value);
             } else {
                 throw new FactoryException("Value not in range");
             }
@@ -175,29 +177,42 @@ public class ModifierFactory extends BaseEntity implements Displayable {
     }
 
     // ENUMERATION
-    private List<String> validValues = new ArrayList<>();
+    @ForeignCollectionField(eager = true)
+    private Collection<EnumerationItem> validValues = new ArrayList<>();
 
     public boolean addValidValues(String... values) {
         validateType(Type.ENUMERATION_MODIFIER_FACTORY);
 
-        return values != null && validValues.addAll(Arrays.asList(values));
+        for (String value : values) {
+            validValues.add(new EnumerationItem(value, this));
+        }
+
+        return true;
     }
 
 
     private Modifier createEnumerationModifier(String input) throws FactoryException {
         validateType(Type.ENUMERATION_MODIFIER_FACTORY);
 
-        if (validValues.contains(input)) {
-            return new Modifier(input);
-        } else {
-            throw new FactoryException("This isn't an allowed value");
+        // check if input is in validValues
+        for (EnumerationItem item : validValues) {
+            if (item.getValue().equals(input)) {
+                return new Modifier(this, input);
+            }
         }
+
+        throw new FactoryException("This isn't an allowed value");
     }
 
     public List<String> getValidValues() {
         validateType(Type.ENUMERATION_MODIFIER_FACTORY);
 
-        return Collections.unmodifiableList(validValues);
+        List<String> items = new ArrayList<>();
+        for (EnumerationItem item : validValues) {
+            items.add(item.getValue());
+        }
+
+        return Collections.unmodifiableList(items);
     }
 
     // SUBJECT
@@ -214,7 +229,7 @@ public class ModifierFactory extends BaseEntity implements Displayable {
 
         for (Subject subject : validSubjects) {
             if (subjectName.equals(subject.getName()) || subjectName.equals(subject.getAlias())) {
-                return new Modifier(subject);
+                return new Modifier(this, subject);
             }
         }
 
@@ -227,9 +242,29 @@ public class ModifierFactory extends BaseEntity implements Displayable {
         return subjects != null && validSubjects.addAll(Arrays.asList(subjects));
     }
 
+    @SuppressWarnings("unchecked")
     public List<Subject> getValidSubjects() {
         validateType(Type.SUBJECT_MODIFIER_FACTORY);
 
         return Collections.unmodifiableList(new ArrayList(validSubjects));
+    }
+
+    @Override
+    public String toString() {
+        ToStringBuilder b = new ToStringBuilder(this).appendSuper(super.toString()).append("name", name).append("alias", alias).append("type", type);
+
+        switch (type) {
+            case SUBJECT_MODIFIER_FACTORY:
+                b.append("validSubjects", validSubjects);
+                break;
+            case ENUMERATION_MODIFIER_FACTORY:
+                b.append("validValues", validValues);
+                break;
+            case DECIMAL_RANGE_MODIFIER_FACTORY:
+                b.append("from", from).append("to", to);
+                break;
+        }
+
+        return b.toString();
     }
 }

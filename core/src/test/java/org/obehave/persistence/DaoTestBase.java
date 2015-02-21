@@ -25,7 +25,7 @@ public class DaoTestBase {
     private static Server tcpServer;
     private static Server webServer;
 
-    protected static ConnectionSource connectionSource;
+    private static ConnectionSource connectionSource;
 
     @BeforeClass
     public static void setUp() throws SQLException {
@@ -35,6 +35,8 @@ public class DaoTestBase {
         }
 
         connectionSource = new JdbcConnectionSource("jdbc:h2:mem:obehave;INIT=runscript from 'classpath:sql/create.sql'\\;RUNSCRIPT FROM 'classpath:sql/populate.sql'");
+        Daos.setConnectionSource(connectionSource);
+
         if (DEBUG_DATABASE) {
             log.debug("Started Webserver at {}", webServer.getURL());
             log.debug("Connection URL: jdbc:h2:{}/mem:obehave", tcpServer.getURL());
@@ -46,11 +48,12 @@ public class DaoTestBase {
     }
 
     @AfterClass
-    public static void tearDown() {
+    public static void tearDown() throws SQLException {
         if (DEBUG_DATABASE) {
             webServer.stop();
             tcpServer.stop();
         }
-        connectionSource.closeQuietly();
+        connectionSource.close();
+        Daos.setConnectionSource(null);
     }
 }

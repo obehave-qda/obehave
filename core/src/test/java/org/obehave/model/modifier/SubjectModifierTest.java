@@ -11,15 +11,17 @@ import org.obehave.model.Subject;
 public class SubjectModifierTest {
     private static final Subject SUBJECT = new Subject("Sub");
     private Modifier modifier;
+    private ModifierFactory modifierFactory;
 
     @Before
     public void prepare() {
-        modifier = new Modifier(SUBJECT);
+        modifierFactory = new ModifierFactory(SUBJECT);
+        modifier = new Modifier(modifierFactory, SUBJECT);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void noConstructionWithNull() {
-        new Modifier((Subject) null);
+        new Modifier(modifierFactory, (Subject) null);
     }
 
     @Test

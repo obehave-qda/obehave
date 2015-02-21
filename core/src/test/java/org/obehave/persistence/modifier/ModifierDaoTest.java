@@ -1,12 +1,16 @@
 package org.obehave.persistence.modifier;
 
-import com.j256.ormlite.dao.DaoManager;
 import org.junit.BeforeClass;
 import org.obehave.model.modifier.Modifier;
+import org.obehave.model.modifier.ModifierFactory;
 import org.obehave.persistence.DaoTestBase;
+import org.obehave.persistence.Daos;
 import org.obehave.persistence.ModifierDao;
+import org.obehave.persistence.ModifierFactoryDao;
 
 import java.sql.SQLException;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Markus Möslinger
@@ -14,8 +18,20 @@ import java.sql.SQLException;
 public class ModifierDaoTest extends DaoTestBase {
     protected static ModifierDao dao;
 
+    private static ModifierFactoryDao modifierFactoryDao;
+
     @BeforeClass
     public static void prepare() throws SQLException {
-        dao = DaoManager.createDao(connectionSource, Modifier.class);
+        dao = Daos.modifier();
+        modifierFactoryDao = Daos.modifierFactory();
+    }
+
+    protected static void assertModifier(Modifier modifier, ModifierFactory modifierFactory, Object object) {
+        assertEquals(modifierFactory, modifier.getModifierFactory());
+        assertEquals(object, modifier.get());
+    }
+
+    protected ModifierFactory queryModifierFactory(String name) throws SQLException {
+        return modifierFactoryDao.queryForName(name);
     }
 }
