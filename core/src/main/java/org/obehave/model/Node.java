@@ -5,6 +5,7 @@ import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.obehave.model.modifier.ModifierFactory;
 import org.obehave.persistence.impl.NodeDaoImpl;
 
@@ -113,13 +114,13 @@ public class Node extends BaseEntity implements Iterable<Displayable>, Displayab
     }
 
     public void setData(Displayable data) {
-        if (dataType == Subject.class && data instanceof Subject) {
+        if (dataType == Subject.class) {
             subject = (Subject) data;
-        } else if (dataType == ModifierFactory.class && data instanceof ModifierFactory) {
+        } else if (dataType == ModifierFactory.class) {
             modifierFactory = (ModifierFactory) data;
-        } else if (dataType == Action.class && data instanceof Action) {
+        } else if (dataType == Action.class) {
             action = (Action) data;
-        } else if (dataType == Observation.class && data instanceof Observation) {
+        } else if (dataType == Observation.class) {
             observation = (Observation) data;
         } else {
             throw new IllegalArgumentException("Can't set data for " + data);
@@ -163,8 +164,9 @@ public class Node extends BaseEntity implements Iterable<Displayable>, Displayab
 
     public void makeToParent() {
         if (getData() != null) {
-            addChild(getData());
+            Displayable data = getData();
             setData(null);
+            addChild(data);
         }
     }
 
@@ -283,5 +285,11 @@ public class Node extends BaseEntity implements Iterable<Displayable>, Displayab
     @Override
     public int hashCode() {
         return new HashCodeBuilder().append(title).append(dataType).append(getData()).build();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).appendSuper(super.toString()).append("title", title).append("data", getData())
+                .append("dataType", dataType).toString();
     }
 }

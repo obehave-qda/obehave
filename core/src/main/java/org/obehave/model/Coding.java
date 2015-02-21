@@ -21,6 +21,8 @@ public class Coding extends BaseEntity {
     private long startMs;
     @DatabaseField(columnName = "end")
     private long endMs = -1;
+    @DatabaseField(columnName = "observation", foreign = true, foreignAutoRefresh = true)
+    private Observation observation;
 
     public Coding() {
         // framework
@@ -118,5 +120,13 @@ public class Coding extends BaseEntity {
         if (!isStateCoding()) {
             throw new IllegalStateException("Coding has to be a state coding!");
         }
+    }
+
+    public Observation getObservation() {
+        return observation;
+    }
+
+    public void setObservation(Observation observation) {
+        this.observation = observation;
     }
 }

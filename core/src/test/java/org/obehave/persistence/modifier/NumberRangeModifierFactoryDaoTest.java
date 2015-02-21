@@ -18,7 +18,7 @@ public class NumberRangeModifierFactoryDaoTest extends ModifierFactoryDaoTest {
 
         ModifierFactory loadedModifierFactory = dao.queryForName(mf.getName());
         assertModifierFactory(loadedModifierFactory, mf.getType(), mf.getName(), mf.getFrom(),
-                mf.getTo(), mf.getAlias(), mf.getValidValues(), mf.getValidSubjects());
+                mf.getTo(), mf.getAlias(), null, null);
     }
 
     @Test

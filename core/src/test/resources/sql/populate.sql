@@ -80,6 +80,18 @@ VALUES (sysdate, 'Running', 'Ru', 5, (SELECT ID
                                         PUBLIC.MODIFIERFACTORY
                                       WHERE NAME =
                                             'Slow Or Fast'), 'STATE');
+INSERT INTO PUBLIC.ACTION (MODIFIED, NAME, ALIAS, RECURRING, MODIFIERFACTORY, TYPE)
+VALUES (sysdate, 'Crouching', 'Cro', 0, (SELECT ID
+                                      FROM
+                                        PUBLIC.MODIFIERFACTORY
+                                      WHERE NAME =
+                                            'One To Five'), 'STATE');
+INSERT INTO PUBLIC.ACTION (MODIFIED, NAME, ALIAS, RECURRING, MODIFIERFACTORY, TYPE)
+VALUES (sysdate, 'Looking', 'Look', 0, (SELECT ID
+                                        FROM
+                                          PUBLIC.MODIFIERFACTORY
+                                        WHERE NAME =
+                                              'Subject One Or Two'), 'POINT');
 
 -- Coding
 INSERT INTO PUBLIC.Coding (MODIFIED, SUBJECT, ACTION, MODIFIER, OBSERVATION, START, END) VALUES (sysdate, (SELECT ID

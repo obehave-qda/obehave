@@ -19,7 +19,9 @@ import org.obehave.persistence.impl.ActionDaoImpl;
  */
 @DatabaseTable(tableName = "Action", daoClass = ActionDaoImpl.class)
 public class Action extends BaseEntity implements Displayable {
-    @DatabaseField(columnName = "name")
+    public static final String COLUMN_NAME = "name";
+
+    @DatabaseField(columnName = COLUMN_NAME)
     private String name;
     @DatabaseField(columnName = "alias")
     private String alias;
@@ -34,13 +36,17 @@ public class Action extends BaseEntity implements Displayable {
         // for frameworks
     }
 
+    /**
+     * Creates a point action
+     * @param name the name of the action
+     */
     public Action(String name) {
         this(name, Type.POINT);
     }
 
     public Action(String name, Type type) {
         setName(name);
-        setType(Type.POINT);
+        setType(type);
     }
 
     public String getName() {
