@@ -34,13 +34,13 @@ public class SubjectDaoTest extends DaoTestBase {
         dao.create(subject);
 
         Subject loadedSubject = dao.queryForSameId(subject);
-        assertEquals(loadedSubject.getName(), "Name1");
+        assertEquals("Name1", loadedSubject.getName());
 
         subject.setName("Name2");
         subject.setColor(new Color(200, 190, 0));
         dao.update(subject);
 
         loadedSubject = dao.queryForSameId(subject);
-        assertEquals(loadedSubject.getName(), "Name2");
+        assertEquals("Name2", loadedSubject.getName());
     }
 }
