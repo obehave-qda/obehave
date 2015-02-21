@@ -6,6 +6,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import org.h2.tools.Server;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.obehave.persistence.ormlite.ClassType;
 import org.obehave.persistence.ormlite.ColorType;
 import org.obehave.persistence.ormlite.VersionDateTimeType;
 import org.obehave.util.Property;
@@ -45,6 +46,7 @@ public class DaoTestBase {
 
         DataPersisterManager.registerDataPersisters(ColorType.getInstance());
         DataPersisterManager.registerDataPersisters(VersionDateTimeType.getInstance());
+        DataPersisterManager.registerDataPersisters(ClassType.getInstance());
     }
 
     @AfterClass
