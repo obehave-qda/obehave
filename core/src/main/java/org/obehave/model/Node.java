@@ -14,10 +14,9 @@ import java.util.*;
  * A {@code Group} contains children of the type {@code T} and other groups of the same type. No duplicates are allowed, regardless if it's in the same group or in one of the subgroups.
  * <p/>
  * {@code Group} is {@see Iterable}, so using a for each loop will return every item contained in this group or one of it's subgroups.
- * @param <T> the type of the children to store in this {@code Group}
  */
 @DatabaseTable(tableName = "Node", daoClass = NodeDaoImpl.class)
-public class Node<T extends Displayable> extends BaseEntity implements Iterable<T>, Displayable {
+public class Node extends BaseEntity implements Iterable<Displayable>, Displayable {
     public static enum Exclusivity {
         /**
          * Multiple state actions are allowed at the same time
@@ -37,12 +36,12 @@ public class Node<T extends Displayable> extends BaseEntity implements Iterable<
     private Exclusivity exclusivity;
 
     @ForeignCollectionField(eager = true)
-    private final Collection<Node<T>> children = new ArrayList<>();
+    private Collection<Node> children = new ArrayList<>();
 
     // Fields to store the actual data. Don't call them direcetly, use getData() and setData()!
     // We could have just one generic field "T data", but then there would be problems with ORMLite. This. Sucks.
     @DatabaseField(columnName = "type")
-    private Class<T> dataType;
+    private Class<?> dataType;
 
     @DatabaseField(columnName = "subject", foreign = true, foreignAutoRefresh = true)
     private Subject subject;
@@ -53,7 +52,7 @@ public class Node<T extends Displayable> extends BaseEntity implements Iterable<
     @DatabaseField(columnName = "observation", foreign = true, foreignAutoRefresh = true)
     private Observation observation;
     @DatabaseField(columnName = "parent", foreign = true, foreignAutoRefresh = true)
-    private Node<T> parent;
+    private Node parent;
 
     @DatabaseField(columnName = "title")
     private String title;
@@ -62,11 +61,11 @@ public class Node<T extends Displayable> extends BaseEntity implements Iterable<
         // for frameworks
     }
 
-    public Node(Class<T> dataType) {
+    public Node(Class<?> dataType) {
         this.dataType = dataType;
     }
 
-    public Node(T data, Class<T> dataType) {
+    public Node(Displayable data, Class<?> dataType) {
         this(dataType);
         setData(data);
     }
@@ -76,7 +75,7 @@ public class Node<T extends Displayable> extends BaseEntity implements Iterable<
      * @param element the element to look for
      * @return true, if the element is found either within this group itself, or in one of it's subgroups
      */
-    public boolean contains(T element) {
+    public boolean contains(Displayable element) {
         if (element == null) {
             return false;
         }
@@ -85,7 +84,7 @@ public class Node<T extends Displayable> extends BaseEntity implements Iterable<
             return true;
         }
 
-        for(Node<T> node : children) {
+        for(Node node : children) {
             if (node.contains(element)) {
                 return true;
             }
@@ -99,12 +98,12 @@ public class Node<T extends Displayable> extends BaseEntity implements Iterable<
      * @param child the child to look for
      * @return true, if the subgroup is found either within this group itself, or in one of it's subgroups
      */
-    public boolean contains(Node<T> child) {
+    public boolean contains(Node child) {
         if (children.contains(child)) {
             return true;
         }
 
-        for(Node<T> node : children) {
+        for(Node node : children) {
             if (node.contains(child)) {
                 return true;
             }
@@ -113,7 +112,7 @@ public class Node<T extends Displayable> extends BaseEntity implements Iterable<
         return false;
     }
 
-    public void setData(T data) {
+    public void setData(Displayable data) {
         if (dataType == Subject.class && data instanceof Subject) {
             subject = (Subject) data;
         } else if (dataType == ModifierFactory.class && data instanceof ModifierFactory) {
@@ -129,29 +128,28 @@ public class Node<T extends Displayable> extends BaseEntity implements Iterable<
         title = null;
     }
 
-    @SuppressWarnings("unchecked")
-    public T getData() {
+    public Displayable getData() {
         if (dataType == Subject.class) {
-            return (T) subject;
+            return subject;
         } else if (dataType == ModifierFactory.class) {
-            return (T) modifierFactory;
+            return modifierFactory;
         } else if (dataType == Action.class) {
-            return (T) action;
+            return action;
         } else if (dataType == Observation.class) {
-            return (T) observation;
+            return observation;
         }
 
         throw new IllegalArgumentException("Can't get data - dataType isn't set correctly!");
     }
 
-    public Node<T> addChild(T data) {
-        final Node<T> node = new Node<>(data, dataType);
+    public Node addChild(Displayable data) {
+        final Node node = new Node(data, dataType);
         addChild(node);
 
         return node;
     }
 
-    public boolean addChild(Node<T> node) {
+    public boolean addChild(Node node) {
         if (contains(node.getData())) {
             throw new IllegalArgumentException("node " + node.toString() + " already there");
         }
@@ -182,11 +180,11 @@ public class Node<T extends Displayable> extends BaseEntity implements Iterable<
         this.title = title;
     }
 
-    public Node<T> getParent() {
+    public Node getParent() {
         return parent;
     }
 
-    public void setParent(Node<T> parent) {
+    public void setParent(Node parent) {
         if (this == parent) {
             throw new IllegalArgumentException("Cannot make the node itself as a parent");
         }
@@ -194,15 +192,15 @@ public class Node<T extends Displayable> extends BaseEntity implements Iterable<
         this.parent = parent;
     }
 
-    public boolean remove(Node<T> node) {
+    public boolean remove(Node node) {
         return children.remove(node);
     }
 
-    public boolean remove(T data) {
+    public boolean remove(Displayable data) {
         throw new UnsupportedOperationException("Has to be implemented! Data was " + data);
     }
 
-    public Node<T> getChildren(int i) {
+    public Node getChildren(int i) {
         return getChildren().get(i);
     }
 
@@ -211,7 +209,7 @@ public class Node<T extends Displayable> extends BaseEntity implements Iterable<
      * @return an unmodifiable list of all the children in this group
      * @see java.util.Collections#unmodifiableList(java.util.List)
      */
-    public List<Node<T>> getChildren() {
+    public List<Node> getChildren() {
         return Collections.unmodifiableList(new ArrayList<>(children));
     }
 
@@ -219,10 +217,10 @@ public class Node<T extends Displayable> extends BaseEntity implements Iterable<
      * This method resolves all nested groups to one flattened list.
      * @return a flattened, unmodifiable list, containing first all children of each subgroup, and then the own children
      */
-    public List<T> flatten() {
-        List<T> flattened = new ArrayList<>();
+    public List<Displayable> flatten() {
+        List<Displayable> flattened = new ArrayList<>();
 
-        for (Node<T> child : children) {
+        for (Node child : children) {
             flattened.addAll(child.flatten());
         }
 
@@ -234,7 +232,7 @@ public class Node<T extends Displayable> extends BaseEntity implements Iterable<
     }
 
     @Override
-    public Iterator<T> iterator() {
+    public Iterator<Displayable> iterator() {
         // there could be a better way than to flatten the group first. But I don't want to implement a new Iterator...
         return flatten().iterator();
     }
@@ -277,7 +275,7 @@ public class Node<T extends Displayable> extends BaseEntity implements Iterable<
         if (obj.getClass() != getClass()) {
             return false;
         }
-        Node<?> rhs = (Node<?>) obj;
+        Node rhs = (Node) obj;
 
         return new EqualsBuilder().append(title, rhs.title).append(dataType, rhs.dataType).append(getData(), rhs.getData()).isEquals();
     }

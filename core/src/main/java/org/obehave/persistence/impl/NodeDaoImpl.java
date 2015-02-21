@@ -34,11 +34,12 @@ public class NodeDaoImpl extends BaseDaoImpl<Node, Long> implements NodeDao {
     private void autoCreateChildren(Node data) throws SQLException {
         try {
             Field childrenField = data.getClass().getDeclaredField("children");
+            childrenField.setAccessible(true);
             Collection<Node> children = (Collection<Node>) childrenField.get(data);
 
-            for (Node<?> child : children) {
+            for (Node child : children) {
                 Daos.node().create(child);
-                log.trace("Created {}" + child);
+                log.trace("Created {}", child);
             }
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new SQLException("Couldn't create children", e);

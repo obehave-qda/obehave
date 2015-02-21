@@ -8,6 +8,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.obehave.persistence.ormlite.ClassType;
 import org.obehave.persistence.ormlite.ColorType;
+import org.obehave.persistence.ormlite.FileType;
 import org.obehave.persistence.ormlite.VersionDateTimeType;
 import org.obehave.util.Property;
 import org.slf4j.Logger;
@@ -47,6 +48,7 @@ public class DaoTestBase {
         DataPersisterManager.registerDataPersisters(ColorType.getInstance());
         DataPersisterManager.registerDataPersisters(VersionDateTimeType.getInstance());
         DataPersisterManager.registerDataPersisters(ClassType.getInstance());
+        DataPersisterManager.registerDataPersisters(FileType.getInstance());
     }
 
     @AfterClass
