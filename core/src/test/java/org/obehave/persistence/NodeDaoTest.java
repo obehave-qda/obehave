@@ -23,13 +23,13 @@ public class NodeDaoTest extends DaoTestBase {
         Daos.subject().create(s3);
         Daos.subject().create(s4);
 
-        Node<Subject> node1 = new Node<>(Subject.class);
-        Node<Subject> node2 = new Node<>(Subject.class);
-        Node<Subject> node3 = new Node<>(Subject.class);
-        Node<Subject> node4 = new Node<>(Subject.class);
-        Node<Subject> node5 = new Node<>(Subject.class);
-        Node<Subject> node6 = new Node<>(Subject.class);
-        Node<Subject> node7 = new Node<>(Subject.class);
+        Node node1 = new Node(Subject.class);
+        Node node2 = new Node(Subject.class);
+        Node node3 = new Node(Subject.class);
+        Node node4 = new Node(Subject.class);
+        Node node5 = new Node(Subject.class);
+        Node node6 = new Node(Subject.class);
+        Node node7 = new Node(Subject.class);
 
         node1.addChild(node2);
         node1.addChild(node3);
@@ -49,13 +49,13 @@ public class NodeDaoTest extends DaoTestBase {
 
         Daos.node().create(node1);
 
-        Node<Subject> loadedNode1 = Daos.node().queryForSameId(node1);
-        Node<Subject> loadedNode2 = loadedNode1.getChildren(0);
-        Node<Subject> loadedNode3 = loadedNode1.getChildren(1);
-        Node<Subject> loadedNode4 = loadedNode3.getChildren(0);
-        Node<Subject> loadedNode5 = loadedNode4.getChildren(0);
-        Node<Subject> loadedNode6 = loadedNode4.getChildren(1);
-        Node<Subject> loadedNode7 = loadedNode3.getChildren(1);
+        Node loadedNode1 = Daos.node().queryForSameId(node1);
+        Node loadedNode2 = loadedNode1.getChildren(0);
+        Node loadedNode3 = loadedNode1.getChildren(1);
+        Node loadedNode4 = loadedNode3.getChildren(0);
+        Node loadedNode5 = loadedNode4.getChildren(0);
+        Node loadedNode6 = loadedNode4.getChildren(1);
+        Node loadedNode7 = loadedNode3.getChildren(1);
 
         assertEquals(node1, loadedNode1);
         assertEquals(node2, loadedNode2);

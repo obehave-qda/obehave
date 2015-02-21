@@ -15,10 +15,10 @@ public class Study {
 
     private String name;
 
-    private Node<Subject> subjects = new Node<>(Subject.class);
-    private Node<Action> actions = new Node<>(Action.class);
-    private Node<Observation> observations = new Node<>(Observation.class);
-    private Node<ModifierFactory> modifierFactories = new Node<>(ModifierFactory.class);
+    private Node subjects = new Node(Subject.class);
+    private Node actions = new Node(Action.class);
+    private Node observations = new Node(Observation.class);
+    private Node modifierFactories = new Node(ModifierFactory.class);
 
     public Study(){
 
@@ -28,7 +28,7 @@ public class Study {
         this.name = name;
     }
 
-    public Node<Subject> getSubjects() {
+    public Node getSubjects() {
         return subjects;
     }
 
@@ -52,7 +52,7 @@ public class Study {
         return deleted;
     }
 
-    public Node<Action> getActions() {
+    public Node getActions() {
         return actions;
     }
 
@@ -75,7 +75,7 @@ public class Study {
         return deleted;
     }
 
-    public Node<Observation> getObservations() {
+    public Node getObservations() {
         return observations;
     }
 

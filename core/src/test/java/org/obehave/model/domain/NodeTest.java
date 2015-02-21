@@ -17,11 +17,11 @@ public class NodeTest {
     private static final Subject SUBJECT2 = new Subject("Testname2");
     private static final Subject SUBJECT3 = new Subject("Testname3");
     private static final Subject SUBJECT4 = new Subject("Testname4");
-    private Node<Subject> rootNode;
+    private Node rootNode;
 
     @Before
     public void prepare() {
-        rootNode = new Node<>(Subject.class);
+        rootNode = new Node(Subject.class);
     }
 
     @Test
@@ -32,7 +32,7 @@ public class NodeTest {
 
     @Test
     public void singleNodeDoesntHaveChildren() {
-        Node<Subject> node = new Node<>(SUBJECT1, Subject.class);
+        Node node = new Node(SUBJECT1, Subject.class);
 
         assertTrue(node.getChildren().isEmpty());
         assertEquals(SUBJECT1, node.getData());
@@ -40,7 +40,7 @@ public class NodeTest {
 
     @Test
     public void addingChildToSingleNodeMakesToChildren() {
-        Node<Subject> node = new Node<>(SUBJECT1, Subject.class);
+        Node node = new Node(SUBJECT1, Subject.class);
 
         assertTrue(node.getChildren().isEmpty());
 
@@ -82,19 +82,19 @@ public class NodeTest {
         rootNode.addChild(SUBJECT1);
         rootNode.addChild(SUBJECT2);
 
-        rootNode.getChildren().add(new Node<>(SUBJECT3, Subject.class));
+        rootNode.getChildren().add(new Node(SUBJECT3, Subject.class));
     }
 
     @Test
     public void iteratingWorks() {
         rootNode.addChild(SUBJECT1);
-        Node<Subject> nodeOfSubject2 = rootNode.addChild(SUBJECT2);
+        Node nodeOfSubject2 = rootNode.addChild(SUBJECT2);
         nodeOfSubject2.addChild(SUBJECT4);
         nodeOfSubject2.getChildren().get(0).addChild(SUBJECT3);
 
         assertEquals(4, rootNode.flatten().size());
 
-        Iterator<Subject> iter = rootNode.iterator();
+        Iterator iter = rootNode.iterator();
         assertEquals(SUBJECT1, iter.next());
         assertEquals(SUBJECT2, iter.next());
         assertEquals(SUBJECT3, iter.next());
@@ -105,7 +105,7 @@ public class NodeTest {
     @Test(expected = IllegalArgumentException.class)
     public void onlyOneEqualItem() {
         rootNode.addChild(SUBJECT1);
-        Node<Subject> nodeOfSubject2 = rootNode.addChild(SUBJECT2);
+        Node nodeOfSubject2 = rootNode.addChild(SUBJECT2);
         nodeOfSubject2.addChild(SUBJECT4);
         nodeOfSubject2.getChildren().get(0).addChild(SUBJECT3);
 
