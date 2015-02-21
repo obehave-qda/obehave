@@ -1,20 +1,30 @@
 package org.obehave.model;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 import org.obehave.exceptions.FactoryException;
-import org.obehave.model.Action;
-import org.obehave.model.BaseEntity;
-import org.obehave.model.Subject;
 import org.obehave.model.modifier.Modifier;
+import org.obehave.persistence.impl.CodingDaoImpl;
 
 /**
  * @author Markus Möslinger
  */
+@DatabaseTable(tableName = "Coding", daoClass = CodingDaoImpl.class)
 public class Coding extends BaseEntity {
+    @DatabaseField(columnName = "subject", foreign = true, foreignAutoCreate = true)
     private Subject subject;
+    @DatabaseField(columnName = "action", foreign = true, foreignAutoCreate = true)
     private Action action;
+    @DatabaseField(columnName = "modifier", foreign = true, foreignAutoCreate = true)
     private Modifier modifier;
+    @DatabaseField(columnName = "start")
     private long startMs;
+    @DatabaseField(columnName = "end")
     private long endMs = -1;
+
+    public Coding() {
+        // framework
+    }
 
     public Coding(Subject subject, Action action, long startMs) {
         this(subject, action, startMs, 0);
