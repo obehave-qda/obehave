@@ -32,9 +32,6 @@ public class Daos {
 
     public static void setConnectionSource(ConnectionSource connectionSource) throws SQLException {
         if (Daos.connectionSource == null || !Daos.connectionSource.equals(connectionSource)) {
-            if (Daos.connectionSource != null) {
-                Daos.connectionSource.close();
-            }
             Daos.connectionSource = connectionSource;
 
             actionDao = null;
