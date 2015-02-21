@@ -1,15 +1,10 @@
 package org.obehave.persistence;
 
-import com.j256.ormlite.field.DataPersisterManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import org.h2.tools.Server;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.obehave.persistence.ormlite.ClassType;
-import org.obehave.persistence.ormlite.ColorType;
-import org.obehave.persistence.ormlite.FileType;
-import org.obehave.persistence.ormlite.VersionDateTimeType;
 import org.obehave.util.Property;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,11 +39,6 @@ public class DaoTestBase {
             log.debug("Connection URL: jdbc:h2:{}/mem:obehave", tcpServer.getURL());
             log.debug("Make sure to use thread-only breakpoints when debugging tests!");
         }
-
-        DataPersisterManager.registerDataPersisters(ColorType.getInstance());
-        DataPersisterManager.registerDataPersisters(VersionDateTimeType.getInstance());
-        DataPersisterManager.registerDataPersisters(ClassType.getInstance());
-        DataPersisterManager.registerDataPersisters(FileType.getInstance());
     }
 
     @AfterClass
