@@ -34,7 +34,7 @@ public class DaoTestBase {
             tcpServer = Server.createTcpServer("-tcp", "-tcpAllowOthers", "-tcpPort", "9092").start();
         }
 
-        connectionSource = new JdbcConnectionSource("jdbc:h2:mem:obehave;INIT=runscript from 'classpath:sql/create.sql';RUNSCRIPT FROM 'classpath:sql/populate.sql'");
+        connectionSource = new JdbcConnectionSource("jdbc:h2:mem:obehave;INIT=runscript from 'classpath:sql/create.sql'\\;RUNSCRIPT FROM 'classpath:sql/populate.sql'");
         if (DEBUG_DATABASE) {
             log.debug("Started Webserver at {}", webServer.getURL());
             log.debug("Connection URL: jdbc:h2:{}/mem:obehave", tcpServer.getURL());
