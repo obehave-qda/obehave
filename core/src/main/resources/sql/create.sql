@@ -24,6 +24,7 @@ CREATE TABLE PUBLIC.ModifierFactory
   modified TIMESTAMP NOT NULL,
   type VARCHAR2(100) NOT NULL,
   name VARCHAR2(255),
+  alias VARCHAR2(255),
   rangeFrom INT,
   rangeTo INT
 );

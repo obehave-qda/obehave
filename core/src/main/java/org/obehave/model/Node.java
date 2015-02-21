@@ -43,13 +43,13 @@ public class Node<T extends Displayable> implements Iterable<T>, Displayable {
     @DatabaseField(columnName = "type")
     private Class<T> dataType;
 
-    @DatabaseField(columnName = "subject")
+    @DatabaseField(columnName = "subject", foreign = true, foreignAutoRefresh = true)
     private Subject subject;
-    @DatabaseField(columnName = "action")
+    @DatabaseField(columnName = "action", foreign = true, foreignAutoRefresh = true)
     private Action action;
-    @DatabaseField(columnName = "modifierFactory")
+    @DatabaseField(columnName = "modifierFactory", foreign = true, foreignAutoRefresh = true)
     private ModifierFactory modifierFactory;
-    @DatabaseField(columnName = "observation")
+    @DatabaseField(columnName = "observation", foreign = true, foreignAutoRefresh = true)
     private Observation observation;
 
     @DatabaseField(columnName = "title")

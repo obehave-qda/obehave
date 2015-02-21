@@ -1,7 +1,6 @@
 package org.obehave.model.modifier;
 
 import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 import org.obehave.exceptions.FactoryException;
 import org.obehave.model.BaseEntity;
@@ -19,6 +18,8 @@ import java.util.*;
  */
 @DatabaseTable(tableName = "ModifierFactory", daoClass = ModifierFactoryDaoImpl.class)
 public class ModifierFactory extends BaseEntity implements Displayable {
+    public static final String COLUMN_NAME = "name";
+
     public static enum Type {
         // this sucks. Due to ORMLite's incapability of handling inheritance strategies, ie. one table per class hierarchy,
         // we are flattening the class hierarchy to only only class.
@@ -28,7 +29,7 @@ public class ModifierFactory extends BaseEntity implements Displayable {
     @DatabaseField(columnName = "type")
     private Type type;
 
-    @DatabaseField(columnName = "name")
+    @DatabaseField(columnName = COLUMN_NAME)
     private String name;
 
     @DatabaseField(columnName = "alias")
