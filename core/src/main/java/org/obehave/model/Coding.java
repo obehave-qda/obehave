@@ -11,11 +11,11 @@ import org.obehave.persistence.impl.CodingDaoImpl;
  */
 @DatabaseTable(tableName = "Coding", daoClass = CodingDaoImpl.class)
 public class Coding extends BaseEntity {
-    @DatabaseField(columnName = "subject", foreign = true, foreignAutoCreate = true)
+    @DatabaseField(columnName = "subject", foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
     private Subject subject;
-    @DatabaseField(columnName = "action", foreign = true, foreignAutoCreate = true)
+    @DatabaseField(columnName = "action", foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
     private Action action;
-    @DatabaseField(columnName = "modifier", foreign = true, foreignAutoCreate = true)
+    @DatabaseField(columnName = "modifier", foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
     private Modifier modifier;
     @DatabaseField(columnName = "start")
     private long startMs;

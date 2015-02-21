@@ -42,9 +42,9 @@ public class SubjectModifierFactoryTest {
         assertEquals(factory.getValidSubjects(), new ArrayList<>(Arrays.asList(VALID_SUBJECTS)));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void constructionWithNullDoesntWork() {
-        new ModifierFactory((Subject[]) null);
+    @Test
+    public void constructionWithNullDoesWork() {
+        assertTrue(new ModifierFactory((Subject[]) null).getValidSubjects().isEmpty());
     }
 
     @Test(expected = FactoryException.class)

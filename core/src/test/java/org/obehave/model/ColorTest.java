@@ -39,8 +39,8 @@ public class ColorTest {
     public void valueOfWith6Digits() {
         Color c = Color.valueOf("FF1000");
         assertEquals(c.getRed(), 0xFF);
-        assertEquals(c.getRed(), 0x10);
-        assertEquals(c.getRed(), 0x00);
+        assertEquals(c.getGreen(), 0x10);
+        assertEquals(c.getBlue(), 0x00);
         assertEquals(c.getOpacity(), 0xFF);
     }
 
@@ -48,8 +48,8 @@ public class ColorTest {
     public void valueOfWith8Digits() {
         Color c = Color.valueOf("FF100043");
         assertEquals(c.getRed(), 0xFF);
-        assertEquals(c.getRed(), 0x10);
-        assertEquals(c.getRed(), 0x00);
+        assertEquals(c.getGreen(), 0x10);
+        assertEquals(c.getBlue(), 0x00);
         assertEquals(c.getOpacity(), 0x43);
     }
 
@@ -57,8 +57,8 @@ public class ColorTest {
     public void valueOfWith6DigitsAndHash() {
         Color c = Color.valueOf("#FF1000");
         assertEquals(c.getRed(), 0xFF);
-        assertEquals(c.getRed(), 0x10);
-        assertEquals(c.getRed(), 0x00);
+        assertEquals(c.getGreen(), 0x10);
+        assertEquals(c.getBlue(), 0x00);
         assertEquals(c.getOpacity(), 0xFF);
     }
 
@@ -66,8 +66,8 @@ public class ColorTest {
     public void valueOfWith8DigitsAndHash() {
         Color c = Color.valueOf("#FF100043");
         assertEquals(c.getRed(), 0xFF);
-        assertEquals(c.getRed(), 0x10);
-        assertEquals(c.getRed(), 0x00);
+        assertEquals(c.getGreen(), 0x10);
+        assertEquals(c.getBlue(), 0x00);
         assertEquals(c.getOpacity(), 0x43);
     }
 

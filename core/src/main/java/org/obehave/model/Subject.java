@@ -4,6 +4,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.obehave.persistence.impl.SubjectDaoImpl;
 
 /**
@@ -84,5 +85,10 @@ public class Subject extends BaseEntity implements Displayable {
     @Override
     public int hashCode() {
         return new HashCodeBuilder().append(name).build();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).appendSuper(super.toString()).append("name", name).append("alias", alias).append("color", color).toString();
     }
 }
