@@ -14,4 +14,9 @@ public class ModifierFactoryDaoImpl extends BaseDaoImpl<ModifierFactory, Long> i
     public ModifierFactoryDaoImpl(ConnectionSource connectionSource) throws SQLException {
         super(connectionSource, ModifierFactory.class);
     }
+
+    @Override
+    public ModifierFactory queryForName(String name) throws SQLException {
+        return queryBuilder().where().eq(ModifierFactory.COLUMN_NAME, name).queryForFirst();
+    }
 }

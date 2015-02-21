@@ -1,13 +1,13 @@
-package org.obehave.persistence;
+package org.obehave.persistence.modifier;
 
 import org.junit.Test;
 
 /**
  * @author Markus Möslinger
  */
-public class ActionDaoTest extends DaoTestBase {
+public class SubjectModifierDaoTest extends ModifierDaoTest {
     @Test
-    public void persistingAction() {
+    public void persistingModifier() {
         throw new UnsupportedOperationException("Not yet implemented");
     }
 }
