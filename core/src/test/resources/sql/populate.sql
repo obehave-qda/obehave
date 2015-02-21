@@ -1,76 +1,95 @@
--- Subjects
-INSERT INTO PUBLIC.Subject (modified, name, alias, color) VALUES (sysdate, 'Subject1', NULL, NULL);
-INSERT INTO PUBLIC.Subject (modified, name, alias, color) VALUES (sysdate, 'Subject2', NULL, 'FF0000FF');
-INSERT INTO PUBLIC.Subject (modified, name, alias, color) VALUES (sysdate, 'Subject3', 'Sub3', NULL);
-INSERT INTO PUBLIC.Subject (modified, name, alias, color) VALUES (sysdate, 'Subject4', 'Sub4', '00FFFFFF');
+-- SUBJECTs
+INSERT INTO PUBLIC.SUBJECT (MODIFIED, NAME, ALIAS, COLOR) VALUES (sysdate, 'Subject1', NULL, NULL);
+INSERT INTO PUBLIC.SUBJECT (MODIFIED, NAME, ALIAS, COLOR) VALUES (sysdate, 'Subject2', NULL, 'FF0000FF');
+INSERT INTO PUBLIC.SUBJECT (MODIFIED, NAME, ALIAS, COLOR) VALUES (sysdate, 'Subject3', 'Sub3', NULL);
+INSERT INTO PUBLIC.SUBJECT (MODIFIED, NAME, ALIAS, COLOR) VALUES (sysdate, 'Subject4', 'Sub4', '00FFFFFF');
 
 -- Observations
-INSERT INTO PUBLIC.Observation (modified, name, video, date) VALUES (sysdate, 'Observation1', NULL, NULL);
-INSERT INTO PUBLIC.Observation (modified, name, video, date) VALUES (sysdate, 'Observation2', NULL, sysdate);
+INSERT INTO PUBLIC.OBSERVATION (MODIFIED, NAME, VIDEO, DATE) VALUES (sysdate, 'Observation1', NULL, NULL);
+INSERT INTO PUBLIC.OBSERVATION (MODIFIED, NAME, VIDEO, DATE) VALUES (sysdate, 'Observation2', NULL, sysdate);
 
--- ModifierFactories
--- -- DECIMAL_RANGE_MODIFIER_FACTORY
-INSERT INTO PUBLIC.ModifierFactory (modified, type, name, rangeFrom, rangeTo)
+-- Modifier(Factories)
+-- -- DECIMAL_RANGE_MODIFIER
+INSERT INTO PUBLIC.MODIFIERFACTORY (MODIFIED, TYPE, NAME, RANGEFROM, RANGETO)
 VALUES (sysdate, 'DECIMAL_RANGE_MODIFIER_FACTORY', 'One To Five', 1, 5);
+INSERT INTO PUBLIC.MODIFIER (MODIFIED, TYPE, MODIFIERFACTORY, NUMBER) VALUES (sysdate, 'DECIMAL_MODIFIER', (SELECT ID
+                                                                                                            FROM
+                                                                                                              MODIFIERFACTORY
+                                                                                                            WHERE NAME =
+                                                                                                                  'One To Five'),
+                                                                              2);
 
--- -- SUBJECT_MODIFIER_FACTORY
-INSERT INTO PUBLIC.ModifierFactory (modified, type, name, rangeFrom, rangeTo)
-VALUES (sysdate, 'SUBJECT_MODIFIER_FACTORY', 'Subject One Or Two', NULL, NULL);
-INSERT INTO PUBLIC.ValidSubject (modified, subject, modifierFactory) VALUES (sysdate, (SELECT id
-                                                                                       FROM PUBLIC.Subject
-                                                                                       WHERE name = 'Subject1'),
-                                                                             (SELECT id
-                                                                              FROM PUBLIC.ModifierFactory
-                                                                              WHERE name = 'Subject One Or Two'));
-INSERT INTO PUBLIC.ValidSubject (modified, subject, modifierFactory) VALUES (sysdate, (SELECT id
-                                                                                       FROM PUBLIC.Subject
-                                                                                       WHERE name = 'Subject2'),
-                                                                             (SELECT id
-                                                                              FROM PUBLIC.ModifierFactory
-                                                                              WHERE name = 'Subject One Or Two'));
+-- -- SUBJECT_MODIFIER
+INSERT INTO PUBLIC.MODIFIERFACTORY (MODIFIED, TYPE, NAME, ALIAS, RANGEFROM, RANGETO)
+VALUES (sysdate, 'SUBJECT_MODIFIER_FACTORY', 'SUBJECT One Or Two', NULL, NULL, NULL);
+INSERT INTO PUBLIC.VALIDSUBJECT (MODIFIED, SUBJECT, MODIFIERFACTORY) VALUES (sysdate, (SELECT ID
+                                                                                       FROM PUBLIC.SUBJECT
+                                                                                       WHERE NAME = 'Subject1'),
+                                                                             (SELECT ID
+                                                                              FROM PUBLIC.MODIFIERFACTORY
+                                                                              WHERE NAME = 'Subject One Or Two'));
+INSERT INTO PUBLIC.VALIDSUBJECT (MODIFIED, SUBJECT, MODIFIERFACTORY) VALUES (sysdate, (SELECT ID
+                                                                                       FROM PUBLIC.SUBJECT
+                                                                                       WHERE NAME = 'Subject2'),
+                                                                             (SELECT ID
+                                                                              FROM PUBLIC.MODIFIERFACTORY
+                                                                              WHERE NAME = 'Subject One Or Two'));
+INSERT INTO PUBLIC.MODIFIER (MODIFIED, TYPE, MODIFIERFACTORY, SUBJECT) VALUES (sysdate, 'SUBJECT_MODIFIER', (SELECT ID
+                                                                                                             FROM
+                                                                                                               MODIFIERFACTORY
+                                                                                                             WHERE
+                                                                                                               NAME =
+                                                                                                               'Subject One Or Two'),
+                                                                               (SELECT ID
+                                                                                FROM SUBJECT
+                                                                                WHERE NAME = 'Subject1'));
 
--- -- ENUMERATION_MODIFIER_FACTORY
-INSERT INTO PUBLIC.ModifierFactory (modified, type, name, rangeFrom, rangeTo)
+-- -- ENUMERATION_MODIFIER
+INSERT INTO PUBLIC.MODIFIERFACTORY (MODIFIED, TYPE, NAME, RANGEFROM, RANGETO)
 VALUES (sysdate, 'SUBJECT_MODIFIER_FACTORY', 'Slow Or Fast', NULL, NULL);
-INSERT INTO PUBLIC.EnumerationItem (modified, value, modifierFactory) VALUES (sysdate, 'Slow', (SELECT id
+INSERT INTO PUBLIC.EnumerationItem (MODIFIED, value, MODIFIERFACTORY) VALUES (sysdate, 'Slow', (SELECT ID
                                                                                                 FROM
-                                                                                                  PUBLIC.ModifierFactory
-                                                                                                WHERE name =
+                                                                                                  PUBLIC.MODIFIERFACTORY
+                                                                                                WHERE NAME =
                                                                                                       'Slow Or Fast'));
-INSERT INTO PUBLIC.EnumerationItem (modified, value, modifierFactory) VALUES (sysdate, 'Fast', (SELECT id
+INSERT INTO PUBLIC.EnumerationItem (MODIFIED, value, MODIFIERFACTORY) VALUES (sysdate, 'Fast', (SELECT ID
                                                                                                 FROM
-                                                                                                  PUBLIC.ModifierFactory
-                                                                                                WHERE name =
+                                                                                                  PUBLIC.MODIFIERFACTORY
+                                                                                                WHERE NAME =
                                                                                                       'Slow Or Fast'));
+INSERT INTO PUBLIC.MODIFIER (MODIFIERFACTORY, TYPE, MODIFIERFACTORY, ENUMERATIONVALUE)
+VALUES (sysdate, 'ENUMERATION_MODIFIER', (SELECT ID
+                                          FROM MODIFIERFACTORY
+                                          WHERE NAME = 'Slow Or Fast'), 'Slow');
 
--- Actions
-INSERT INTO PUBLIC.Action (modified, name, alias, recurring, modifierFactory, type)
+-- ACTIONs
+INSERT INTO PUBLIC.ACTION (MODIFIED, NAME, ALIAS, recurring, MODIFIERFACTORY, TYPE)
 VALUES (sysdate, 'Howling', NULL, NULL, NULL, 'POINT');
-INSERT INTO PUBLIC.Action (modified, name, alias, recurring, modifierFactory, type)
+INSERT INTO PUBLIC.ACTION (MODIFIED, NAME, ALIAS, recurring, MODIFIERFACTORY, TYPE)
 VALUES (sysdate, 'Fighting', NULL, 0, NULL, 'STATE');
-INSERT INTO PUBLIC.Action (modified, name, alias, recurring, modifierFactory, type)
+INSERT INTO PUBLIC.ACTION (MODIFIED, NAME, ALIAS, recurring, MODIFIERFACTORY, TYPE)
 VALUES (sysdate, 'Scratching', 'Scr', 5, NULL, 'STATE');
-INSERT INTO PUBLIC.Action (modified, name, alias, recurring, modifierFactory, type)
-VALUES (sysdate, 'Running', 'Ru', 5, (SELECT id
+INSERT INTO PUBLIC.ACTION (MODIFIED, NAME, ALIAS, recurring, MODIFIERFACTORY, TYPE)
+VALUES (sysdate, 'Running', 'Ru', 5, (SELECT ID
                                       FROM
-                                        PUBLIC.ModifierFactory
-                                      WHERE name =
+                                        PUBLIC.MODIFIERFACTORY
+                                      WHERE NAME =
                                             'Slow Or Fast'), 'STATE');
 
 -- Coding
-INSERT INTO PUBLIC.Coding (modified, subject, action, modifier, observation, start, end) VALUES (sysdate, (SELECT id
+INSERT INTO PUBLIC.Coding (MODIFIED, SUBJECT, ACTION, modifier, observation, start, end) VALUES (sysdate, (SELECT ID
                                                                                                            FROM
-                                                                                                             PUBLIC.Subject
-                                                                                                           WHERE name =
+                                                                                                             PUBLIC.SUBJECT
+                                                                                                           WHERE NAME =
                                                                                                                  'Subject1'),
-                                                                                                 (SELECT id
-                                                                                                  FROM PUBLIC.Action
+                                                                                                 (SELECT ID
+                                                                                                  FROM PUBLIC.ACTION
                                                                                                   WHERE
-                                                                                                    name = 'Howling'),
-                                                                                                 NULL, (SELECT id
+                                                                                                    NAME = 'Howling'),
+                                                                                                 NULL, (SELECT ID
                                                                                                         FROM
                                                                                                           PUBLIC.Observation
-                                                                                                        WHERE name =
+                                                                                                        WHERE NAME =
                                                                                                               'Observation1'),
                                                                                                  300, NULL);
 
