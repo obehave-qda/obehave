@@ -34,6 +34,10 @@ public class ModifierFactory extends BaseEntity implements Displayable {
     @DatabaseField(columnName = "alias")
     private String alias;
 
+    private ModifierFactory() {
+
+    }
+
     public ModifierFactory(int from, int to) {
         type = Type.DECIMAL_RANGE_MODIFIER_FACTORY;
         setRange(from, to);
@@ -191,8 +195,8 @@ public class ModifierFactory extends BaseEntity implements Displayable {
     }
 
     // SUBJECT
-    @ForeignCollectionField(eager = false)
-    private List<Subject> validSubjects = new ArrayList<>();
+    // @ForeignCollectionField(eager = false)
+    private Collection<Subject> validSubjects = new ArrayList<>();
 
     /**
      * If {@code subjectName} is parsable to a valid {@code Subject} stored in this factory, return a new {@code SubjectModifier} containing the parsed {@code Subject}
@@ -224,6 +228,6 @@ public class ModifierFactory extends BaseEntity implements Displayable {
     public List<Subject> getValidSubjects() {
         validateType(Type.SUBJECT_MODIFIER_FACTORY);
 
-        return Collections.unmodifiableList(validSubjects);
+        return Collections.unmodifiableList(new ArrayList(validSubjects));
     }
 }

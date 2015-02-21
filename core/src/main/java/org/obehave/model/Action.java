@@ -18,14 +18,22 @@ import org.obehave.persistence.impl.ActionDaoImpl;
  */
 @DatabaseTable(tableName = "Action", daoClass = ActionDaoImpl.class)
 public class Action extends BaseEntity implements Displayable {
+    public static enum Type {
+        POINT, STATE
+    }
+
     @DatabaseField(columnName = "name")
     private String name;
+
     @DatabaseField(columnName = "alias")
     private String alias;
+    
     @DatabaseField(columnName = "type")
     private Type type;
-    @DatabaseField(columnName = "modifierFactory")
+
+    @DatabaseField(columnName = "modifierFactory", foreign = true)
     private ModifierFactory modifierFactory;
+
     @DatabaseField(columnName = "recurring")
     private int recurring;
 
