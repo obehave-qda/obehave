@@ -25,6 +25,10 @@ public class Modifier extends BaseEntity {
     @DatabaseField(columnName = "subject", foreign = true)
     private Subject subject;
 
+    private Modifier() {
+
+    }
+
     public Modifier(BigDecimal value) {
         type = Type.DECIMAL_MODIFIER;
 
