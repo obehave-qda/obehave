@@ -2,6 +2,7 @@ package org.obehave.model.modifier;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.obehave.model.BaseEntity;
 import org.obehave.persistence.impl.EnumerationItemDaoImpl;
 
@@ -27,5 +28,10 @@ public class EnumerationItem extends BaseEntity {
 
     public String getValue() {
         return value;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).appendSuper(super.toString()).append("modifierFactory", modifierFactory).append("value", value).toString();
     }
 }
