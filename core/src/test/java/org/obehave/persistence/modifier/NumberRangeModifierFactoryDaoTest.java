@@ -5,35 +5,26 @@ import org.obehave.model.modifier.ModifierFactory;
 
 import java.sql.SQLException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
 /**
  * @author Markus Möslinger
  */
 public class NumberRangeModifierFactoryDaoTest extends ModifierFactoryDaoTest {
     @Test
     public void persistingModifierFactory() throws SQLException {
-        ModifierFactory modifierFactory = new ModifierFactory(2, 7);
-        modifierFactory.setName("Two To Seven");
+        ModifierFactory mf = new ModifierFactory(2, 7);
+        mf.setName("Two To Seven");
 
-        dao.create(modifierFactory);
+        dao.create(mf);
 
-        ModifierFactory loadedModifierFactory = dao.queryForName(modifierFactory.getName());
-        assertNumberRangeModifier(loadedModifierFactory, modifierFactory.getName(), modifierFactory.getFrom(), modifierFactory.getTo());
+        ModifierFactory loadedModifierFactory = dao.queryForName(mf.getName());
+        assertModifierFactory(loadedModifierFactory, mf.getType(), mf.getName(), mf.getFrom(),
+                mf.getTo(), mf.getAlias(), mf.getValidValues(), mf.getValidSubjects());
     }
 
     @Test
     public void loadPersistedModifierFactory() throws SQLException {
         ModifierFactory modifierFactory = dao.queryForName("One To Five");
 
-        assertNumberRangeModifier(modifierFactory, "One To Five", 1, 5);
-    }
-
-    private void assertNumberRangeModifier(ModifierFactory modifierFactory, String name, int from, int to) {
-        assertEquals(name, modifierFactory.getName());
-        assertEquals(from, modifierFactory.getFrom());
-        assertEquals(to, modifierFactory.getTo());
-        assertNull(modifierFactory.getAlias());
+        assertModifierFactory(modifierFactory, ModifierFactory.Type.DECIMAL_RANGE_MODIFIER_FACTORY, "One To Five", 1, 5, null, null, null);
     }
 }

@@ -6,6 +6,7 @@ import org.obehave.model.modifier.Modifier;
 import org.obehave.persistence.ModifierDao;
 
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * @author Markus Möslinger
@@ -13,5 +14,10 @@ import java.sql.SQLException;
 public class ModifierDaoImpl extends BaseDaoImpl<Modifier, Long> implements ModifierDao {
     public ModifierDaoImpl(ConnectionSource connectionSource) throws SQLException {
         super(connectionSource, Modifier.class);
+    }
+
+    @Override
+    public List<Modifier> queryForType(Modifier.Type type) throws SQLException {
+        return queryBuilder().where().eq(Modifier.COLUMN_TYPE, type).query();
     }
 }

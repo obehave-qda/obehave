@@ -1,6 +1,5 @@
 package org.obehave.persistence;
 
-import com.j256.ormlite.dao.DaoManager;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -20,7 +19,7 @@ public class SubjectDaoTest extends DaoTestBase {
 
     @BeforeClass
     public static void prepare() throws SQLException {
-        dao = DaoManager.createDao(connectionSource, Subject.class);
+        dao = Daos.subject();
     }
 
     @Before
