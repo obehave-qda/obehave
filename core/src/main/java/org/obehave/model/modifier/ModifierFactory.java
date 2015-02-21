@@ -8,7 +8,6 @@ import org.obehave.model.BaseEntity;
 import org.obehave.model.Displayable;
 import org.obehave.model.Subject;
 import org.obehave.persistence.impl.ModifierFactoryDaoImpl;
-import sun.plugin.dom.exception.InvalidStateException;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -34,6 +33,10 @@ public class ModifierFactory extends BaseEntity implements Displayable {
 
     @DatabaseField(columnName = "alias")
     private String alias;
+
+    private ModifierFactory() {
+
+    }
 
     public ModifierFactory(int from, int to) {
         type = Type.DECIMAL_RANGE_MODIFIER_FACTORY;
@@ -106,7 +109,7 @@ public class ModifierFactory extends BaseEntity implements Displayable {
 
     private void validateType(Type type) {
         if (type != this.type) {
-            throw new InvalidStateException("Factory is of type " + this.type + "!");
+            throw new IllegalStateException("Factory is of type " + this.type + "!");
         }
     }
 
@@ -192,8 +195,8 @@ public class ModifierFactory extends BaseEntity implements Displayable {
     }
 
     // SUBJECT
-    @ForeignCollectionField(eager = false)
-    private List<Subject> validSubjects = new ArrayList<>();
+    // @ForeignCollectionField(eager = false)
+    private Collection<Subject> validSubjects = new ArrayList<>();
 
     /**
      * If {@code subjectName} is parsable to a valid {@code Subject} stored in this factory, return a new {@code SubjectModifier} containing the parsed {@code Subject}
@@ -225,6 +228,6 @@ public class ModifierFactory extends BaseEntity implements Displayable {
     public List<Subject> getValidSubjects() {
         validateType(Type.SUBJECT_MODIFIER_FACTORY);
 
-        return Collections.unmodifiableList(validSubjects);
+        return Collections.unmodifiableList(new ArrayList(validSubjects));
     }
 }
