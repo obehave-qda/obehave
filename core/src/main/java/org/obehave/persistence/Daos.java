@@ -6,6 +6,7 @@ import org.obehave.model.*;
 import org.obehave.model.modifier.EnumerationItem;
 import org.obehave.model.modifier.Modifier;
 import org.obehave.model.modifier.ModifierFactory;
+import org.obehave.model.modifier.ValidSubject;
 
 import java.sql.SQLException;
 
@@ -23,6 +24,7 @@ public class Daos {
     private static ObservationDao observationDao;
     private static SubjectDao subjectDao;
     private static EnumerationItemDao enumerationItemDao;
+    private static ValidSubjectDao validSubjectDao;
 
     private Daos() {
         throw new AssertionError("Utility class");
@@ -42,6 +44,8 @@ public class Daos {
             nodeDao = null;
             observationDao = null;
             subjectDao = null;
+            enumerationItemDao = null;
+            validSubjectDao = null;
         }
     }
 
@@ -107,5 +111,13 @@ public class Daos {
         }
 
         return enumerationItemDao;
+    }
+
+    public static ValidSubjectDao validSubject() throws SQLException {
+        if (validSubjectDao == null) {
+            validSubjectDao = DaoManager.createDao(connectionSource, ValidSubject.class);
+        }
+
+        return validSubjectDao;
     }
 }
