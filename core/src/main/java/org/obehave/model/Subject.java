@@ -21,12 +21,12 @@ public class Subject extends BaseEntity implements Displayable {
     @DatabaseField(columnName = "color")
     private Color color;
 
-    public Subject() {
-
+    private Subject() {
+        // used by frameworks
     }
 
     public Subject(String name) {
-        this.name = name;
+        setName(name);
     }
 
     public String getName() {
