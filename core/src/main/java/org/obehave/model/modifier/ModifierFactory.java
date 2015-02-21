@@ -216,8 +216,8 @@ public class ModifierFactory extends BaseEntity implements Displayable {
     }
 
     // SUBJECT
-    // @ForeignCollectionField(eager = false)
-    private Collection<Subject> validSubjects = new ArrayList<>();
+    @ForeignCollectionField(eager = false)
+    private Collection<ValidSubject> validSubjects = new ArrayList<>();
 
     /**
      * If {@code subjectName} is parsable to a valid {@code Subject} stored in this factory, return a new {@code SubjectModifier} containing the parsed {@code Subject}
@@ -227,9 +227,9 @@ public class ModifierFactory extends BaseEntity implements Displayable {
     private Modifier createSubjectModifier(String subjectName) throws FactoryException {
         validateType(Type.SUBJECT_MODIFIER_FACTORY);
 
-        for (Subject subject : validSubjects) {
-            if (subjectName.equals(subject.getName()) || subjectName.equals(subject.getAlias())) {
-                return new Modifier(this, subject);
+        for (ValidSubject validSubject : validSubjects) {
+            if (subjectName.equals(validSubject.getSubject().getName()) || subjectName.equals(validSubject.getSubject().getAlias())) {
+                return new Modifier(this, validSubject.getSubject());
             }
         }
 
@@ -239,14 +239,22 @@ public class ModifierFactory extends BaseEntity implements Displayable {
     public boolean addValidSubjects(Subject... subjects) {
         validateType(Type.SUBJECT_MODIFIER_FACTORY);
 
-        return subjects != null && validSubjects.addAll(Arrays.asList(subjects));
+        for (Subject subject : subjects) {
+            validSubjects.add(new ValidSubject(subject, this));
+        }
+
+        return true;
     }
 
-    @SuppressWarnings("unchecked")
     public List<Subject> getValidSubjects() {
         validateType(Type.SUBJECT_MODIFIER_FACTORY);
 
-        return Collections.unmodifiableList(new ArrayList(validSubjects));
+        List<Subject> subjects = new ArrayList<>();
+        for (ValidSubject validSubject : validSubjects) {
+            subjects.add(validSubject.getSubject());
+        }
+
+        return Collections.unmodifiableList(subjects);
     }
 
     @Override

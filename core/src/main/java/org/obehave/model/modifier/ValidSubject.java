@@ -27,6 +27,14 @@ public class ValidSubject extends BaseEntity {
         this.modifierFactory = modifierFactory;
     }
 
+    public Subject getSubject() {
+        return subject;
+    }
+
+    public ModifierFactory getModifierFactory() {
+        return modifierFactory;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this).appendSuper(super.toString()).append("modifierFactory", modifierFactory.getDisplayString())

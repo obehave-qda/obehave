@@ -10,7 +10,6 @@ import java.util.Arrays;
  * @author Markus Möslinger
  */
 public class EnumerationModifierFactoryDaoTest extends ModifierFactoryDaoTest {
-
     @Test
     public void persistingModifierFactory() throws SQLException {
         ModifierFactory mf = new ModifierFactory("West", "East");
