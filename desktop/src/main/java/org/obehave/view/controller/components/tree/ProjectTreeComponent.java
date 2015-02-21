@@ -8,10 +8,6 @@ import org.obehave.events.ChangeEvent;
 import org.obehave.events.ChangeType;
 import org.obehave.events.EventBusHolder;
 import org.obehave.model.*;
-import org.obehave.model.Action;
-import org.obehave.model.Observation;
-import org.obehave.model.Study;
-import org.obehave.model.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +19,7 @@ public class ProjectTreeComponent extends TreeView<String> {
     private TreeItem root;
     private TreeItem subjectNode = new TreeItem<>("Subjects");
     private TreeItem actionNode = new TreeItem<>("Actions");
+    private TreeItem modifierFactoryNode = new TreeItem<>("Modifier");
     private TreeItem observationsNode = new TreeItem<>("Observations");
 
     public ProjectTreeComponent() {
@@ -57,7 +54,7 @@ public class ProjectTreeComponent extends TreeView<String> {
         this.study = study;
 
         root = new TreeItem<>(study.getName());
-        root.getChildren().addAll(subjectNode, actionNode, observationsNode);
+        root.getChildren().addAll(subjectNode, actionNode, modifierFactoryNode, observationsNode);
         root.setExpanded(true);
 
         setRoot(root);
