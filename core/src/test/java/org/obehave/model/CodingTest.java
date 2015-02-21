@@ -52,11 +52,11 @@ public class CodingTest {
 
     @Test
     public void accessingFieldsShouldWork() throws FactoryException {
-        assertEquals(stateCoding.getSubject(), subject);
-        assertEquals(stateCoding.getAction(), action);
-        assertEquals(stateCoding.getStartMs(), millis);
-        assertEquals(stateCoding.getModifier().get(), BigDecimal.valueOf(3));
-        assertEquals(stateCoding.getDuration(), endMillis - millis);
+        assertEquals(subject, stateCoding.getSubject());
+        assertEquals(action, stateCoding.getAction());
+        assertEquals(millis, stateCoding.getStartMs());
+        assertEquals(BigDecimal.valueOf(3), stateCoding.getModifier().get());
+        assertEquals(endMillis - millis, stateCoding.getDuration());
     }
 
     @Test(expected = IllegalArgumentException.class)

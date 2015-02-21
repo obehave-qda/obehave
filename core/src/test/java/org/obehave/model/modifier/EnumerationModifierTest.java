@@ -23,11 +23,11 @@ public class EnumerationModifierTest {
 
     @Test
     public void creationWithEmptyString() {
-        assertEquals(new Modifier("").get(), "");
+        assertEquals("", new Modifier("").get());
     }
 
     @Test
     public void getWorks() {
-        assertEquals(modifier.get(), "NORTH");
+        assertEquals("NORTH", modifier.get());
     }
 }

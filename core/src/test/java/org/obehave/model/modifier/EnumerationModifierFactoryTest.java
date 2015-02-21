@@ -29,7 +29,7 @@ public class EnumerationModifierFactoryTest {
 
     @Test
     public void constructionWorksWithValidStringsGiven() {
-        assertArrayEquals(factory.getValidValues().toArray(), VALID_STRINGS);
+        assertArrayEquals(VALID_STRINGS, factory.getValidValues().toArray());
     }
 
     @Test
@@ -37,7 +37,7 @@ public class EnumerationModifierFactoryTest {
         ModifierFactory factory = new ModifierFactory((String[]) null);
         factory.addValidValues(VALID_STRINGS);
 
-        assertEquals(factory.getValidValues(), new ArrayList<>(Arrays.asList(VALID_STRINGS)));
+        assertEquals(new ArrayList<>(Arrays.asList(VALID_STRINGS)), factory.getValidValues());
     }
 
     @Test
@@ -55,13 +55,13 @@ public class EnumerationModifierFactoryTest {
     @Test
     public void factoryNameAndDisplayString() {
         factory.setName("Random name");
-        assertEquals(factory.getName(), "Random name");
-        assertEquals(factory.getDisplayString(), "Random name");
+        assertEquals("Random name", factory.getName());
+        assertEquals("Random name", factory.getDisplayString());
     }
 
     @Test
     public void factoryAlias() {
         factory.setAlias("Random alias");
-        assertEquals(factory.getAlias(), "Random alias");
+        assertEquals("Random alias", factory.getAlias());
     }
 }

@@ -24,6 +24,6 @@ public class SubjectModifierTest {
 
     @Test
     public void getGetsValue() {
-        Assert.assertEquals(modifier.get(), SUBJECT);
+        Assert.assertEquals(SUBJECT, modifier.get());
     }
 }
