@@ -3,6 +3,8 @@ package org.obehave.model;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.obehave.model.modifier.ModifierFactory;
 import org.obehave.persistence.impl.NodeDaoImpl;
 
@@ -50,6 +52,8 @@ public class Node<T extends Displayable> extends BaseEntity implements Iterable<
     private ModifierFactory modifierFactory;
     @DatabaseField(columnName = "observation", foreign = true, foreignAutoRefresh = true)
     private Observation observation;
+    @DatabaseField(columnName = "parent", foreign = true, foreignAutoRefresh = true)
+    private Node<T> parent;
 
     @DatabaseField(columnName = "title")
     private String title;
@@ -73,6 +77,10 @@ public class Node<T extends Displayable> extends BaseEntity implements Iterable<
      * @return true, if the element is found either within this group itself, or in one of it's subgroups
      */
     public boolean contains(T element) {
+        if (element == null) {
+            return false;
+        }
+
         if (element.equals(getData())) {
             return true;
         }
@@ -150,12 +158,14 @@ public class Node<T extends Displayable> extends BaseEntity implements Iterable<
 
         makeToParent();
 
-        return children.add(node);
+        final boolean add = children.add(node);
+        node.setParent(this);
+        return add;
     }
 
     public void makeToParent() {
         if (getData() != null) {
-            children.add(new Node<>(getData(), dataType));
+            addChild(getData());
             setData(null);
         }
     }
@@ -170,6 +180,18 @@ public class Node<T extends Displayable> extends BaseEntity implements Iterable<
         }
 
         this.title = title;
+    }
+
+    public Node<T> getParent() {
+        return parent;
+    }
+
+    public void setParent(Node<T> parent) {
+        if (this == parent) {
+            throw new IllegalArgumentException("Cannot make the node itself as a parent");
+        }
+
+        this.parent = parent;
     }
 
     public boolean remove(Node<T> node) {
@@ -242,5 +264,26 @@ public class Node<T extends Displayable> extends BaseEntity implements Iterable<
         }
 
         this.exclusivity = exclusivity;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+        if (obj.getClass() != getClass()) {
+            return false;
+        }
+        Node<?> rhs = (Node<?>) obj;
+
+        return new EqualsBuilder().append(title, rhs.title).append(dataType, rhs.dataType).append(getData(), rhs.getData()).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder().append(title).append(dataType).append(getData()).build();
     }
 }
