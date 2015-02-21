@@ -15,10 +15,10 @@ public class Study {
 
     private String name;
 
-    private Node<Subject> subjects = new Node<>();
-    private Node<Action> actions = new Node<>();
-    private Node<Observation> observations = new Node<>();
-    private Node<ModifierFactory> modifierFactories = new Node<>();
+    private Node<Subject> subjects = new Node<>(Subject.class);
+    private Node<Action> actions = new Node<>(Action.class);
+    private Node<Observation> observations = new Node<>(Observation.class);
+    private Node<ModifierFactory> modifierFactories = new Node<>(ModifierFactory.class);
 
     public Study(){
 
@@ -40,9 +40,9 @@ public class Study {
 
         log.debug("Adding subject {}", subject);
 
-        final boolean added = subjects.addChild(subject);
+        subjects.addChild(subject);
         EventBusHolder.post(new ChangeEvent<>(subject, ChangeType.CREATE));
-        return added;
+        return true;
     }
 
     public boolean removeSubject(Subject subject) {
@@ -63,9 +63,9 @@ public class Study {
         }
 
         log.debug("Adding action {}", action);
-        final boolean added = actions.addChild(action);
+        actions.addChild(action);
         EventBusHolder.post(new ChangeEvent<>(action, ChangeType.CREATE));
-        return added;
+        return true;
     }
 
     public boolean removeAction(Action action) {
@@ -86,9 +86,9 @@ public class Study {
         }
 
         log.debug("Adding observation {}", observation);
-        final boolean added = observations.addChild(observation);
+        observations.addChild(observation);
         EventBusHolder.post(new ChangeEvent<>(observation, ChangeType.CREATE));
-        return added;
+        return true;
     }
 
     public boolean addModifierFactory(ModifierFactory modifierFactory) {
@@ -98,9 +98,9 @@ public class Study {
         }
 
         log.debug("Adding modifierFactory {}", modifierFactory);
-        final boolean added = modifierFactories.addChild(modifierFactory);
+        modifierFactories.addChild(modifierFactory);
         EventBusHolder.post(new ChangeEvent<>(modifierFactory, ChangeType.CREATE));
-        return added;
+        return true;
     }
 
     public boolean removeObservation(Observation observation) {

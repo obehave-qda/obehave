@@ -43,10 +43,10 @@ public class Node<T extends Displayable> implements Iterable<T>, Displayable {
     private T data;
 
     @DatabaseField(columnName = "title")
-    private String title = "";
+    private String title;
 
-    public Node() {
-
+    private Node() {
+        // for frameworks
     }
 
     public Node(Class<T> dataType) {
@@ -105,10 +105,21 @@ public class Node<T extends Displayable> implements Iterable<T>, Displayable {
         return data;
     }
 
-    public boolean addChild(T data) {
+    public Node<T> addChild(T data) {
+        final Node<T> node = new Node<>(data, dataType);
+        addChild(node);
+
+        return node;
+    }
+
+    public boolean addChild(Node<T> node) {
+        if (contains(node.getData())) {
+            throw new IllegalArgumentException("node " + node.toString() + " already there");
+        }
+
         makeToParent();
 
-        return children.add(new Node<>(data, dataType));
+        return children.add(node);
     }
 
     public void makeToParent() {
@@ -124,7 +135,7 @@ public class Node<T extends Displayable> implements Iterable<T>, Displayable {
 
     public void setTitle(String title) {
         if (data != null) {
-            throw new IllegalStateException("Can't set title if there is data");
+            makeToParent();
         }
 
         this.title = title;
@@ -136,6 +147,10 @@ public class Node<T extends Displayable> implements Iterable<T>, Displayable {
 
     public boolean remove(T data) {
         throw new UnsupportedOperationException("Has to be implemented! Data was " + data);
+    }
+
+    public Node<T> getChildren(int i) {
+        return children.get(i);
     }
 
     /**
