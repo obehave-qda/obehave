@@ -15,7 +15,7 @@ import java.util.*;
  * @param <T> the type of the children to store in this {@code Group}
  */
 @DatabaseTable(tableName = "Node", daoClass = NodeDaoImpl.class)
-public class Node<T extends Displayable> implements Iterable<T>, Displayable {
+public class Node<T extends Displayable> extends BaseEntity implements Iterable<T>, Displayable {
     public static enum Exclusivity {
         /**
          * Multiple state actions are allowed at the same time
