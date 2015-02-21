@@ -14,4 +14,9 @@ public class ActionDaoImpl extends BaseDaoImpl<Action, Long> implements ActionDa
     public ActionDaoImpl(ConnectionSource connectionSource) throws SQLException {
         super(connectionSource, Action.class);
     }
+
+    @Override
+    public Action queryForName(String name) throws SQLException {
+        return queryBuilder().where().eq(Action.COLUMN_NAME, name).queryForFirst();
+    }
 }

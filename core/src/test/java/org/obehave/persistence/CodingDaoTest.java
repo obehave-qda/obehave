@@ -3,10 +3,9 @@ package org.obehave.persistence;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.obehave.model.Action;
-import org.obehave.model.Coding;
-import org.obehave.model.Color;
-import org.obehave.model.Subject;
+import org.obehave.exceptions.FactoryException;
+import org.obehave.model.*;
+import org.obehave.model.modifier.Modifier;
 
 import java.sql.SQLException;
 
@@ -49,17 +48,44 @@ public class CodingDaoTest extends DaoTestBase {
     }
 
     @Test
-    public void persistingEnumerationModifiedCoding() {
-        throw new UnsupportedOperationException("Not yet implemented");
+    public void persistingEnumerationModifiedCoding() throws SQLException, FactoryException {
+        createCodingWithLoadedActionAndInput("Running", "Slow", true);
     }
 
     @Test
-    public void persistingSubjectModifiedCoding() {
-        throw new UnsupportedOperationException("Not yet implemented");
+    public void persistingSubjectModifiedCoding() throws SQLException, FactoryException {
+        createCodingWithLoadedActionAndInput("Looking", "Subject1", false);
     }
 
     @Test
-    public void persistingNumberModifiedCoding() {
-        throw new UnsupportedOperationException("Not yet implemented");
+    public void persistingNumberModifiedCoding() throws SQLException, FactoryException {
+        createCodingWithLoadedActionAndInput("Crouching", "3", true);
+    }
+
+    private void createCodingWithLoadedActionAndInput(String actionName, String modifierInput, boolean state) throws SQLException, FactoryException {
+        Subject s1 = Daos.subject().queryForName("Subject1");
+        Action a1 = Daos.action().queryForName(actionName);
+        Observation o1 = Daos.observation().queryForName("Observation1");
+
+        Coding c;
+        if (!state) {
+            c = new Coding(s1, a1, modifierInput, 100);
+        } else {
+            c = new Coding(s1, a1, modifierInput, 100, 200);
+        }
+
+        o1.addCoding(c);
+
+        Daos.coding().create(c);
+        assertCoding(Daos.coding().queryForSameId(c), c.getSubject(), c.getAction(), c.getModifier(), c.getObservation(), c.getStartMs(), c.getEndMs());
+    }
+
+    private void assertCoding(Coding c, Subject subject, Action action, Modifier modifier, Observation observation, long start, long end) {
+        assertEquals(subject, c.getSubject());
+        assertEquals(action, c.getAction());
+        assertEquals(modifier, c.getModifier());
+        assertEquals(observation, c.getObservation());
+        assertEquals(start, c.getStartMs());
+        assertEquals(end, c.getEndMs());
     }
 }

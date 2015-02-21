@@ -12,7 +12,9 @@ import org.obehave.persistence.impl.SubjectDaoImpl;
  */
 @DatabaseTable(tableName = "Subject", daoClass = SubjectDaoImpl.class)
 public class Subject extends BaseEntity implements Displayable {
-    @DatabaseField(columnName = "name")
+    public static final String COLUMN_NAME = "name";
+
+    @DatabaseField(columnName = COLUMN_NAME)
     private String name;
 
     @DatabaseField(columnName = "alias")

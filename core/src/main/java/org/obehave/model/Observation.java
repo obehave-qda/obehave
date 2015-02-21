@@ -1,6 +1,7 @@
 package org.obehave.model;
 
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -11,6 +12,7 @@ import org.obehave.persistence.impl.ObservationDaoImpl;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,7 +21,9 @@ import java.util.List;
  */
 @DatabaseTable(tableName = "Observation", daoClass = ObservationDaoImpl.class)
 public class Observation extends BaseEntity implements Displayable {
-    @DatabaseField(columnName = "name")
+    public static final String COLUMN_NAME = "name";
+
+    @DatabaseField(columnName = COLUMN_NAME)
     private String name;
 
     @DatabaseField(columnName = "video")
@@ -28,10 +32,11 @@ public class Observation extends BaseEntity implements Displayable {
     @DatabaseField(columnName = "date")
     private DateTime dateTime;
 
-    private List<Coding> codings = new ArrayList<>();
+    @ForeignCollectionField
+    private Collection<Coding> codings = new ArrayList<>();
 
-    public Observation() {
-
+    private Observation() {
+        // for frameworks
     }
 
     public Observation(String name) {
@@ -73,10 +78,11 @@ public class Observation extends BaseEntity implements Displayable {
         Validate.isNotNull(coding);
 
         codings.add(coding);
+        coding.setObservation(this);
     }
 
     public List<Coding> getCodings() {
-        return Collections.unmodifiableList(codings);
+        return Collections.unmodifiableList(new ArrayList<Coding>(codings));
     }
 
     @Override
