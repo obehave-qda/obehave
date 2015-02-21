@@ -13,10 +13,10 @@ public class Property {
     private static final Logger log = LoggerFactory.getLogger(Property.class);
     private final static Properties properties = new Properties();
 
-    {
+    static {
         try {
             log.debug("Loading properties");
-            properties.load(getClass().getClassLoader().getResourceAsStream("obehave.properties"));
+            properties.load(Property.class.getClassLoader().getResourceAsStream("obehave.properties"));
         } catch (IOException e) {
             throw new RuntimeException("Couldn't load property file");
         }
