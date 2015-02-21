@@ -1,12 +1,17 @@
 package org.obehave.persistence;
 
 import com.j256.ormlite.dao.DaoManager;
+import com.j256.ormlite.field.DataPersisterManager;
 import com.j256.ormlite.support.ConnectionSource;
 import org.obehave.model.*;
 import org.obehave.model.modifier.EnumerationItem;
 import org.obehave.model.modifier.Modifier;
 import org.obehave.model.modifier.ModifierFactory;
 import org.obehave.model.modifier.ValidSubject;
+import org.obehave.persistence.ormlite.ClassType;
+import org.obehave.persistence.ormlite.ColorType;
+import org.obehave.persistence.ormlite.FileType;
+import org.obehave.persistence.ormlite.VersionDateTimeType;
 
 import java.sql.SQLException;
 
@@ -28,6 +33,13 @@ public class Daos {
 
     private Daos() {
         throw new AssertionError("Utility class");
+    }
+
+    static {
+        DataPersisterManager.registerDataPersisters(ColorType.getInstance());
+        DataPersisterManager.registerDataPersisters(VersionDateTimeType.getInstance());
+        DataPersisterManager.registerDataPersisters(ClassType.getInstance());
+        DataPersisterManager.registerDataPersisters(FileType.getInstance());
     }
 
     public static void setConnectionSource(ConnectionSource connectionSource) throws SQLException {
