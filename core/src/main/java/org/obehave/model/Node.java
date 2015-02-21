@@ -2,6 +2,8 @@ package org.obehave.model;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import org.obehave.model.modifier.ModifierFactory;
+import org.obehave.persistence.impl.NodeDaoImpl;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,7 +16,7 @@ import java.util.List;
  * {@code Group} is {@see Iterable}, so using a for each loop will return every item contained in this group or one of it's subgroups.
  * @param <T> the type of the children to store in this {@code Group}
  */
-@DatabaseTable(tableName = "Node")
+@DatabaseTable(tableName = "Node", daoClass = NodeDaoImpl.class)
 public class Node<T extends Displayable> implements Iterable<T>, Displayable {
     public static enum Exclusivity {
         /**
@@ -36,11 +38,19 @@ public class Node<T extends Displayable> implements Iterable<T>, Displayable {
 
     private final ArrayList<Node<T>> children = new ArrayList<>();
 
+    // Fields to store the actual data. Don't call them direcetly, use getData() and setData()!
+    // We could have just one generic field "T data", but then there would be problems with ORMLite. This. Sucks.
     @DatabaseField(columnName = "type")
     private Class<T> dataType;
 
-    @DatabaseField
-    private T data;
+    @DatabaseField(columnName = "subject")
+    private Subject subject;
+    @DatabaseField(columnName = "action")
+    private Action action;
+    @DatabaseField(columnName = "modifierFactory")
+    private ModifierFactory modifierFactory;
+    @DatabaseField(columnName = "observation")
+    private Observation observation;
 
     @DatabaseField(columnName = "title")
     private String title;
@@ -55,7 +65,7 @@ public class Node<T extends Displayable> implements Iterable<T>, Displayable {
 
     public Node(T data, Class<T> dataType) {
         this(dataType);
-        this.data = data;
+        setData(data);
     }
 
     /**
@@ -64,7 +74,7 @@ public class Node<T extends Displayable> implements Iterable<T>, Displayable {
      * @return true, if the element is found either within this group itself, or in one of it's subgroups
      */
     public boolean contains(T element) {
-        if (element.equals(data)) {
+        if (element.equals(getData())) {
             return true;
         }
 
@@ -97,12 +107,34 @@ public class Node<T extends Displayable> implements Iterable<T>, Displayable {
     }
 
     public void setData(T data) {
-        title = "";
-        this.data = data;
+        if (dataType == Subject.class && data instanceof Subject) {
+            subject = (Subject) data;
+        } else if (dataType == ModifierFactory.class && data instanceof ModifierFactory) {
+            modifierFactory = (ModifierFactory) data;
+        } else if (dataType == Action.class && data instanceof Action) {
+            action = (Action) data;
+        } else if (dataType == Observation.class && data instanceof Observation) {
+            observation = (Observation) data;
+        } else {
+            throw new IllegalArgumentException("Can't set data for " + data);
+        }
+
+        title = null;
     }
 
+    @SuppressWarnings("unchecked")
     public T getData() {
-        return data;
+        if (dataType == Subject.class) {
+            return (T) subject;
+        } else if (dataType == ModifierFactory.class) {
+            return (T) modifierFactory;
+        } else if (dataType == Action.class) {
+            return (T) action;
+        } else if (dataType == Observation.class) {
+            return (T) observation;
+        }
+
+        throw new IllegalArgumentException("Can't get data - dataType isn't set correctly!");
     }
 
     public Node<T> addChild(T data) {
@@ -123,9 +155,9 @@ public class Node<T extends Displayable> implements Iterable<T>, Displayable {
     }
 
     public void makeToParent() {
-        if (data != null) {
-            children.add(new Node<>(data, dataType));
-            data = null;
+        if (getData() != null) {
+            children.add(new Node<>(getData(), dataType));
+            setData(null);
         }
     }
 
@@ -134,7 +166,7 @@ public class Node<T extends Displayable> implements Iterable<T>, Displayable {
     }
 
     public void setTitle(String title) {
-        if (data != null) {
+        if (getData() != null) {
             makeToParent();
         }
 
@@ -215,8 +247,8 @@ public class Node<T extends Displayable> implements Iterable<T>, Displayable {
             flattened.addAll(child.flatten());
         }
 
-        if (data != null) {
-            flattened.add(data);
+        if (getData() != null) {
+            flattened.add(getData());
         }
 
         return Collections.unmodifiableList(flattened);
@@ -230,7 +262,7 @@ public class Node<T extends Displayable> implements Iterable<T>, Displayable {
 
     @Override
     public String getDisplayString() {
-        return data != null ? data.getDisplayString() : getTitle();
+        return getData() != null ? getData().getDisplayString() : getTitle();
     }
 
     private void validateActionNode() {

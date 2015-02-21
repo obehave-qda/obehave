@@ -48,4 +48,19 @@ public class CodingDaoTest extends DaoTestBase {
         assertEquals(subject, loadedCoding.getSubject());
         assertEquals(action, loadedCoding.getAction());
     }
+
+    @Test
+    public void persistingEnumerationModifiedCoding() {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    @Test
+    public void persistingSubjectModifiedCoding() {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    @Test
+    public void persistingNumberModifiedCoding() {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
 }
