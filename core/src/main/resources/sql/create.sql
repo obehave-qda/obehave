@@ -23,6 +23,7 @@ CREATE TABLE PUBLIC.ModifierFactory
   id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
   modified TIMESTAMP NOT NULL,
   type VARCHAR2(100) NOT NULL,
+  name VARCHAR2(255),
   rangeFrom INT,
   rangeTo INT
 );
