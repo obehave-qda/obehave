@@ -27,7 +27,15 @@ public class Property {
     }
 
     public static boolean isDatabaseDebug() {
-        return trySystemPropertyFirst("debugDatabase").equals("true");
+        return trySystemPropertyFirst("database.debug").equals("true");
+    }
+
+    public static String getDatabaseDebugPortWeb() {
+        return trySystemPropertyFirst("database.debug.port.web");
+    }
+
+    public static String getDatabaseDebugPortTcp() {
+        return trySystemPropertyFirst("database.debug.port.tcp");
     }
 
     private static String trySystemPropertyFirst(String key) {

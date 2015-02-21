@@ -30,8 +30,8 @@ public class DaoTestBase {
     @BeforeClass
     public static void setUp() throws SQLException {
         if (DEBUG_DATABASE) {
-            webServer = Server.createWebServer("-web", "-webAllowOthers", "-webPort", "8092").start();
-            tcpServer = Server.createTcpServer("-tcp", "-tcpAllowOthers", "-tcpPort", "9092").start();
+            webServer = Server.createWebServer("-web", "-webAllowOthers", "-webPort", Property.getDatabaseDebugPortWeb()).start();
+            tcpServer = Server.createTcpServer("-tcp", "-tcpAllowOthers", "-tcpPort", Property.getDatabaseDebugPortTcp()).start();
         }
 
         connectionSource = new JdbcConnectionSource("jdbc:h2:mem:obehave;INIT=runscript from 'classpath:sql/create.sql'\\;RUNSCRIPT FROM 'classpath:sql/populate.sql'");
