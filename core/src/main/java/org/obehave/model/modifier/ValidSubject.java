@@ -2,13 +2,14 @@ package org.obehave.model.modifier;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import org.obehave.model.BaseEntity;
 import org.obehave.model.Subject;
 
 /**
  * @author Markus Möslinger
  */
-@DatabaseTable(tableName = "validSubjects")
-public class ValidSubject {
+@DatabaseTable(tableName = "ValidSubjects")
+public class ValidSubject extends BaseEntity {
     @DatabaseField(columnName = "subject", foreign = true)
     private Subject subject;
 
