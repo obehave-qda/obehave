@@ -1,14 +1,12 @@
 package org.obehave.model;
 
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 import org.obehave.model.modifier.ModifierFactory;
 import org.obehave.persistence.impl.NodeDaoImpl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * A {@code Group} contains children of the type {@code T} and other groups of the same type. No duplicates are allowed, regardless if it's in the same group or in one of the subgroups.
@@ -36,7 +34,8 @@ public class Node<T extends Displayable> implements Iterable<T>, Displayable {
     @DatabaseField(columnName = "actionType")
     private Exclusivity exclusivity;
 
-    private final ArrayList<Node<T>> children = new ArrayList<>();
+    @ForeignCollectionField(eager = true)
+    private final Collection<Node<T>> children = new ArrayList<>();
 
     // Fields to store the actual data. Don't call them direcetly, use getData() and setData()!
     // We could have just one generic field "T data", but then there would be problems with ORMLite. This. Sucks.
@@ -182,7 +181,7 @@ public class Node<T extends Displayable> implements Iterable<T>, Displayable {
     }
 
     public Node<T> getChildren(int i) {
-        return children.get(i);
+        return getChildren().get(i);
     }
 
     /**
@@ -191,49 +190,7 @@ public class Node<T extends Displayable> implements Iterable<T>, Displayable {
      * @see java.util.Collections#unmodifiableList(java.util.List)
      */
     public List<Node<T>> getChildren() {
-        return Collections.unmodifiableList(children);
-    }
-
-    /**
-     * Moves a subgroup to a new position within it's list
-     * @param subgroup the subgroup to move
-     * @param position the position to move the element to
-     * @throws IllegalArgumentException if the subgroup isn't in this group
-     * @throws IndexOutOfBoundsException if the new position isn't a valid list index
-     */
-    public void move(Node<T> subgroup, int position) {
-        move(children, subgroup, position);
-    }
-
-    /**
-     * Moves an element of a list to a new position.
-     * @param list the list containing the element to move
-     * @param element the element to move
-     * @param position the position to move the element to
-     * @param <L> the type of the element to move
-     * @throws IllegalArgumentException if the element isn't in the given list
-     * @throws IndexOutOfBoundsException if the new position isn't a valid list index
-     */
-    private <L> void move(List<L> list, L element, int position) {
-        final int oldIndex = list.indexOf(element);
-        if (oldIndex == -1) {
-            throw new IllegalArgumentException("Could not find element in list");
-        }
-
-        if (position == oldIndex) {
-            return;
-        }
-
-        if (position < 0 && position >= list.size()) {
-            throw new IndexOutOfBoundsException("Position isn't valid");
-        }
-
-        children.remove(oldIndex);
-
-        // if we have to move the element more to the end of the list, we have to decrease the index by one, because of element's removal
-        final int newIndex = position > oldIndex ? position - 1 : position;
-
-        list.add(newIndex, element);
+        return Collections.unmodifiableList(new ArrayList<>(children));
     }
 
     /**
