@@ -109,4 +109,20 @@ public class NodeTest {
 
         rootNode.addChild(SUBJECT3);
     }
+
+    @Test
+    public void settingExlusitivityForActionNodeWorks() {
+        final Action action = new Action("Testaction");
+        Node n = new Node(action, Action.class);
+        n.setExclusivity(Node.Exclusivity.TOTAL_EXCLUSIVE);
+
+        assertEquals(action, n.getData());
+        assertEquals(Node.Exclusivity.TOTAL_EXCLUSIVE, n.getExclusivity());
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void settingExlusitivityForSubjectNodeThrowsException() {
+        Node n = new Node(SUBJECT1, Subject.class);
+        n.setExclusivity(Node.Exclusivity.TOTAL_EXCLUSIVE);
+    }
 }

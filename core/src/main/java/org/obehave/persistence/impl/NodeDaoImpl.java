@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Markus Möslinger
@@ -38,11 +39,17 @@ public class NodeDaoImpl extends BaseDaoImpl<Node, Long> implements NodeDao {
             Collection<Node> children = (Collection<Node>) childrenField.get(data);
 
             for (Node child : children) {
+                // a createOrUpdate could be more appropriate
                 Daos.node().create(child);
                 log.trace("Created {}", child);
             }
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new SQLException("Couldn't create children", e);
         }
+    }
+
+    @Override
+    public List<Node> getRoot(Class<?> contentType) throws SQLException {
+        return queryBuilder().where().eq(Node.COLUMN_TYPE, contentType).and().isNull(Node.COLUMN_PARENT).query();
     }
 }
