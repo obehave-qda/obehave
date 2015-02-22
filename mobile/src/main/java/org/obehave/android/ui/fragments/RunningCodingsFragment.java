@@ -10,12 +10,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import com.google.common.eventbus.Subscribe;
 import org.joda.time.DateTime;
-import org.joda.time.Duration;
-import org.joda.time.Period;
 import org.obehave.android.R;
 import org.obehave.android.ui.events.TimerStartEvent;
 import org.obehave.android.ui.events.TimerStopEvent;
 import org.obehave.android.ui.events.TimerTaskEvent;
+import org.obehave.android.ui.util.DateTimeHelper;
 import org.obehave.events.EventBusHolder;
 
 public class RunningCodingsFragment extends CodingListBaseFragment {
@@ -100,11 +99,6 @@ public class RunningCodingsFragment extends CodingListBaseFragment {
 
     @Override
     public void updateTimer(DateTime startTime) {
-        Period period = new Period(startTime, DateTime.now());
-        Duration duration = period.toStandardDuration();
-        long seconds = duration.getStandardSeconds();
-        long minutes = duration.getStandardMinutes();
-        minutes -= Math.round(seconds / 60);
-        txtTimer.setText("" + ((minutes > 9)?minutes:"0" + minutes) + ":" + ((seconds > 9)?seconds:"0" + seconds));
+        txtTimer.setText(DateTimeHelper.formatToTimer(startTime, DateTime.now()));
     }
 }
