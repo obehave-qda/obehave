@@ -3,7 +3,9 @@ package org.obehave.model.modifier;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.obehave.exceptions.FactoryException;
+import org.obehave.exceptions.Validate;
 import org.obehave.model.BaseEntity;
 import org.obehave.model.Displayable;
 import org.obehave.model.Subject;
@@ -19,6 +21,8 @@ import java.util.*;
  */
 @DatabaseTable(tableName = "ModifierFactory", daoClass = ModifierFactoryDaoImpl.class)
 public class ModifierFactory extends BaseEntity implements Displayable {
+    public static final String COLUMN_NAME = "name";
+
     public static enum Type {
         // this sucks. Due to ORMLite's incapability of handling inheritance strategies, ie. one table per class hierarchy,
         // we are flattening the class hierarchy to only only class.
@@ -28,11 +32,15 @@ public class ModifierFactory extends BaseEntity implements Displayable {
     @DatabaseField(columnName = "type")
     private Type type;
 
-    @DatabaseField(columnName = "name")
+    @DatabaseField(columnName = COLUMN_NAME)
     private String name;
 
     @DatabaseField(columnName = "alias")
     private String alias;
+
+    private ModifierFactory() {
+        // for frameworks
+    }
 
     public ModifierFactory(int from, int to) {
         type = Type.DECIMAL_RANGE_MODIFIER_FACTORY;
@@ -117,8 +125,13 @@ public class ModifierFactory extends BaseEntity implements Displayable {
     private int to;
 
     public void setRange(int from, int to) {
-        this.from = from;
-        this.to = to;
+        if (from < to) {
+            this.from = from;
+            this.to = to;
+        } else {
+            this.from = to;
+            this.to = from;
+        }
     }
 
     public int getFrom() {
@@ -135,16 +148,13 @@ public class ModifierFactory extends BaseEntity implements Displayable {
 
     private Modifier createDecimalRangeModifier(String input) throws FactoryException {
         validateType(Type.DECIMAL_RANGE_MODIFIER_FACTORY);
-
-        if (input == null || input.equals("")) {
-            throw new FactoryException("input must be a non empty string");
-        }
+        Validate.isNotEmpty(input, "Input");
 
         BigDecimal value;
         try {
             value = stringToBigDecimal(input);
             if (value.compareTo(BigDecimal.valueOf(from)) >= 0 && value.compareTo(BigDecimal.valueOf(to)) <= 0) {
-                return new Modifier(value);
+                return new Modifier(this, value);
             } else {
                 throw new FactoryException("Value not in range");
             }
@@ -165,34 +175,49 @@ public class ModifierFactory extends BaseEntity implements Displayable {
     }
 
     // ENUMERATION
-    private List<String> validValues = new ArrayList<>();
+    @ForeignCollectionField(eager = true)
+    private Collection<EnumerationItem> validValues = new ArrayList<>();
 
     public boolean addValidValues(String... values) {
         validateType(Type.ENUMERATION_MODIFIER_FACTORY);
 
-        return validValues.addAll(Arrays.asList(values));
+        if (values != null) {
+            for (String value : values) {
+                validValues.add(new EnumerationItem(value, this));
+            }
+        }
+
+        return true;
     }
 
 
     private Modifier createEnumerationModifier(String input) throws FactoryException {
         validateType(Type.ENUMERATION_MODIFIER_FACTORY);
 
-        if (validValues.contains(input)) {
-            return new Modifier(input);
-        } else {
-            throw new FactoryException("This isn't an allowed value");
+        // check if input is in validValues
+        for (EnumerationItem item : validValues) {
+            if (item.getValue().equals(input)) {
+                return new Modifier(this, input);
+            }
         }
+
+        throw new FactoryException("This isn't an allowed value");
     }
 
     public List<String> getValidValues() {
         validateType(Type.ENUMERATION_MODIFIER_FACTORY);
 
-        return Collections.unmodifiableList(validValues);
+        List<String> items = new ArrayList<>();
+        for (EnumerationItem item : validValues) {
+            items.add(item.getValue());
+        }
+
+        return Collections.unmodifiableList(items);
     }
 
     // SUBJECT
     @ForeignCollectionField(eager = false)
-    private List<Subject> validSubjects = new ArrayList<>();
+    private Collection<ValidSubject> validSubjects = new ArrayList<>();
 
     /**
      * If {@code subjectName} is parsable to a valid {@code Subject} stored in this factory, return a new {@code SubjectModifier} containing the parsed {@code Subject}
@@ -202,9 +227,9 @@ public class ModifierFactory extends BaseEntity implements Displayable {
     private Modifier createSubjectModifier(String subjectName) throws FactoryException {
         validateType(Type.SUBJECT_MODIFIER_FACTORY);
 
-        for (Subject subject : validSubjects) {
-            if (subjectName.equals(subject.getName()) || subjectName.equals(subject.getAlias())) {
-                return new Modifier(subject);
+        for (ValidSubject validSubject : validSubjects) {
+            if (subjectName.equals(validSubject.getSubject().getName()) || subjectName.equals(validSubject.getSubject().getAlias())) {
+                return new Modifier(this, validSubject.getSubject());
             }
         }
 
@@ -214,16 +239,42 @@ public class ModifierFactory extends BaseEntity implements Displayable {
     public boolean addValidSubjects(Subject... subjects) {
         validateType(Type.SUBJECT_MODIFIER_FACTORY);
 
-        if (subjects == null) {
-            throw new IllegalArgumentException("Subjects must not be null");
+        if (subjects != null) {
+            for (Subject subject : subjects) {
+                validSubjects.add(new ValidSubject(subject, this));
+            }
         }
 
-        return validSubjects.addAll(Arrays.asList(subjects));
+        return true;
     }
 
     public List<Subject> getValidSubjects() {
         validateType(Type.SUBJECT_MODIFIER_FACTORY);
 
-        return Collections.unmodifiableList(validSubjects);
+        List<Subject> subjects = new ArrayList<>();
+        for (ValidSubject validSubject : validSubjects) {
+            subjects.add(validSubject.getSubject());
+        }
+
+        return Collections.unmodifiableList(subjects);
+    }
+
+    @Override
+    public String toString() {
+        ToStringBuilder b = new ToStringBuilder(this).appendSuper(super.toString()).append("name", name).append("alias", alias).append("type", type);
+
+        switch (type) {
+            case SUBJECT_MODIFIER_FACTORY:
+                b.append("validSubjects", validSubjects);
+                break;
+            case ENUMERATION_MODIFIER_FACTORY:
+                b.append("validValues", validValues);
+                break;
+            case DECIMAL_RANGE_MODIFIER_FACTORY:
+                b.append("from", from).append("to", to);
+                break;
+        }
+
+        return b.toString();
     }
 }

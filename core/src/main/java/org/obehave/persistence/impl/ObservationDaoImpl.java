@@ -14,4 +14,9 @@ public class ObservationDaoImpl extends BaseDaoImpl<Observation, Long> implement
     public ObservationDaoImpl(ConnectionSource connectionSource) throws SQLException {
         super(connectionSource, Observation.class);
     }
+
+    @Override
+    public Observation queryForName(String name) throws SQLException {
+        return queryBuilder().where().eq(Observation.COLUMN_NAME, name).queryForFirst();
+    }
 }

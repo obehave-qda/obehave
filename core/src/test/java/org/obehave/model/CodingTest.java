@@ -22,14 +22,17 @@ public class CodingTest {
     private final long endMillis = millis + 250;
 
     private Coding coding;
+    private Coding stateCoding;
 
     @Before
     public void prepare() throws FactoryException {
         coding = new Coding(subject, action, millis);
+        stateCoding = new Coding(subject, action, millis, endMillis);
 
         action.setModifierFactory(new ModifierFactory(0, 10));
 
         coding.setModifier("3");
+        stateCoding.setModifier("3");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -49,11 +52,11 @@ public class CodingTest {
 
     @Test
     public void accessingFieldsShouldWork() throws FactoryException {
-        assertEquals(coding.getSubject(), subject);
-        assertEquals(coding.getAction(), action);
-        assertEquals(coding.getStartMs(), millis);
-        assertEquals(coding.getModifier().get(), BigDecimal.valueOf(3));
-        assertEquals(coding.getDuration(), endMillis - millis);
+        assertEquals(subject, stateCoding.getSubject());
+        assertEquals(action, stateCoding.getAction());
+        assertEquals(millis, stateCoding.getStartMs());
+        assertEquals(BigDecimal.valueOf(3), stateCoding.getModifier().get());
+        assertEquals(endMillis - millis, stateCoding.getDuration());
     }
 
     @Test(expected = IllegalArgumentException.class)

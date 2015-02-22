@@ -23,6 +23,8 @@ CREATE TABLE PUBLIC.ModifierFactory
   id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
   modified TIMESTAMP NOT NULL,
   type VARCHAR2(100) NOT NULL,
+  name VARCHAR2(255),
+  alias VARCHAR2(255),
   rangeFrom INT,
   rangeTo INT
 );
@@ -35,6 +37,7 @@ CREATE TABLE PUBLIC.Action
   alias VARCHAR2(255),
   recurring INT,
   modifierFactory INT,
+  type VARCHAR2(255),
   FOREIGN KEY (modifierFactory) REFERENCES Public.ModifierFactory(id)
 );
 
@@ -74,11 +77,12 @@ CREATE TABLE PUBLIC.Coding
 (
   id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
   modified TIMESTAMP NOT NULL,
-  subject INT NOT NULL,
-  action INT NOT NULL,
-  modifier INT NOT NULL,
-  observation INT NOT NULL,
-  time INT NOT NULL,
+  subject INT,
+  action INT,
+  modifier INT,
+  observation INT,
+  start INT NOT NULL,
+  end INT,
   FOREIGN KEY (subject) REFERENCES Public.Subject(id),
   FOREIGN KEY (action) REFERENCES Public.Action(id),
   FOREIGN KEY (modifier) REFERENCES Public.Modifier(id),
@@ -103,3 +107,11 @@ CREATE TABLE PUBLIC.Node
   FOREIGN KEY (modifierFactory) REFERENCES Public.ModifierFactory(id),
   FOREIGN KEY (observation) REFERENCES Public.Observation(id)
 );
+
+CREATE TABLE PUBLIC.Property
+(
+  id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+  modified TIMESTAMP NOT NULL,
+  key VARCHAR2(255) NOT NULL,
+  value VARCHAR2(255) NOT NULL
+)

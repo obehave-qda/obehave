@@ -12,15 +12,17 @@ import static org.junit.Assert.assertEquals;
  */
 public class DecimalRangeModifierTest {
     private Modifier modifier;
+    private ModifierFactory modifierFactory;
 
     @Before
     public void prepare() {
-        modifier = new Modifier(BigDecimal.valueOf(5.5));
+        modifierFactory = new ModifierFactory(0, 10);
+        modifier = new Modifier(modifierFactory, BigDecimal.valueOf(5.5));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void cannotCreateModifierWithNull() {
-        new Modifier((BigDecimal) null);
+        new Modifier(modifierFactory, (BigDecimal) null);
     }
 
     @Test

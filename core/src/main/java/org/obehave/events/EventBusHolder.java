@@ -1,6 +1,7 @@
 package org.obehave.events;
 
 import com.google.common.eventbus.EventBus;
+import org.obehave.util.I18n;
 
 /**
  * Holds a singleton instance of an EventBus
@@ -9,7 +10,7 @@ public class EventBusHolder {
     private static final EventBus INSTANCE = new EventBus();
 
     private EventBusHolder() {
-        throw new AssertionError("This class must not be instantiated");
+        throw new AssertionError(I18n.getString("exception.constructor.utility"));
     }
 
     /**

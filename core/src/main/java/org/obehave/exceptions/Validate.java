@@ -1,31 +1,38 @@
 package org.obehave.exceptions;
 
+import org.obehave.util.I18n;
+
 import java.util.Arrays;
-import java.util.Collections;
 
 /**
  * @author Markus Möslinger
  */
 public class Validate {
     private Validate() {
-        throw new AssertionError("No instantiation!");
+        throw new AssertionError(I18n.getString("exception.constructor.utility"));
     }
 
-    public static void isNotNull(Object o) {
+    public static void isNotNull(Object o, String name) {
         if (o == null) {
-            throw new ValidationException("Object " + o + " must not be null.");
+            throw new ValidationException(I18n.getString("exception.validate.isnotnull", name));
+        }
+    }
+
+    public static void isNotEmpty(String s, String name) {
+        if (s == null || s.isEmpty()) {
+            throw new ValidationException(I18n.getString("exception.validate.isnotempty", name, s));
         }
     }
 
     public static void isBetween(int n, int min, int max) {
         if (n < min || n > max) {
-            throw new ValidationException("Integer " + n + " has to be between " + min + " and " + max);
+            throw new ValidationException(I18n.getString("exception.validate.isbetween", n, min, max));
         }
     }
 
-    public static <T> void isOneOf(T n, T... numbers) {
-        if (!Arrays.asList(numbers).contains(n)) {
-            throw new ValidationException("Object " + n + " has to be in " + numbers);
+    public static <T> void isOneOf(T element, T... elements) {
+        if (!Arrays.asList(elements).contains(element)) {
+            throw new ValidationException(I18n.getString("exception.validate.isoneof", element, elements));
         }
     }
 }

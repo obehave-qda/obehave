@@ -1,15 +1,19 @@
 package org.obehave.model;
 
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.joda.time.LocalDateTime;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.joda.time.DateTime;
 import org.obehave.exceptions.Validate;
 import org.obehave.persistence.impl.ObservationDaoImpl;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -17,19 +21,22 @@ import java.util.List;
  */
 @DatabaseTable(tableName = "Observation", daoClass = ObservationDaoImpl.class)
 public class Observation extends BaseEntity implements Displayable {
-    @DatabaseField(columnName = "name")
+    public static final String COLUMN_NAME = "name";
+
+    @DatabaseField(columnName = COLUMN_NAME)
     private String name;
 
     @DatabaseField(columnName = "video")
     private File video;
 
     @DatabaseField(columnName = "date")
-    private LocalDateTime dateTime;
+    private DateTime dateTime;
 
-    private List<Coding> codings = new ArrayList<>();
+    @ForeignCollectionField
+    private Collection<Coding> codings = new ArrayList<>();
 
-    public Observation() {
-
+    private Observation() {
+        // for frameworks
     }
 
     public Observation(String name) {
@@ -55,11 +62,11 @@ public class Observation extends BaseEntity implements Displayable {
         this.video = video;
     }
 
-    public LocalDateTime getDateTime() {
+    public DateTime getDateTime() {
         return dateTime;
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
+    public void setDateTime(DateTime dateTime) {
         if (dateTime == null) {
             throw new IllegalArgumentException("dateTime must not be null!");
         }
@@ -68,9 +75,14 @@ public class Observation extends BaseEntity implements Displayable {
     }
 
     public void addCoding(Coding coding) {
-        Validate.isNotNull(coding);
+        Validate.isNotNull(coding, "Coding");
 
         codings.add(coding);
+        coding.setObservation(this);
+    }
+
+    public List<Coding> getCodings() {
+        return Collections.unmodifiableList(new ArrayList<Coding>(codings));
     }
 
     @Override
@@ -97,5 +109,10 @@ public class Observation extends BaseEntity implements Displayable {
     @Override
     public int hashCode() {
         return new HashCodeBuilder().append(name).build();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).append(super.toString()).append("name", name).append("dateTime", dateTime).append("video", video).toString();
     }
 }

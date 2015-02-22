@@ -1,21 +1,23 @@
 package org.obehave.model;
 
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.obehave.model.modifier.ModifierFactory;
+import org.obehave.persistence.impl.NodeDaoImpl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * A {@code Group} contains children of the type {@code T} and other groups of the same type. No duplicates are allowed, regardless if it's in the same group or in one of the subgroups.
  * <p/>
  * {@code Group} is {@see Iterable}, so using a for each loop will return every item contained in this group or one of it's subgroups.
- * @param <T> the type of the children to store in this {@code Group}
  */
-@DatabaseTable(tableName = "Node")
-public class Node<T extends Displayable> implements Iterable<T>, Displayable {
+@DatabaseTable(tableName = "Node", daoClass = NodeDaoImpl.class)
+public class Node extends BaseEntity implements Iterable<Displayable>, Displayable {
     public static enum Exclusivity {
         /**
          * Multiple state actions are allowed at the same time
@@ -34,28 +36,39 @@ public class Node<T extends Displayable> implements Iterable<T>, Displayable {
     @DatabaseField(columnName = "actionType")
     private Exclusivity exclusivity;
 
-    private final ArrayList<Node<T>> children = new ArrayList<>();
+    @ForeignCollectionField(eager = true)
+    private Collection<Node> children = new ArrayList<>();
 
+    // Fields to store the actual data. Don't call them direcetly, use getData() and setData()!
+    // We could have just one generic field "T data", but then there would be problems with ORMLite. This. Sucks.
     @DatabaseField(columnName = "type")
-    private Class<T> dataType;
+    private Class<?> dataType;
 
-    @DatabaseField
-    private T data;
+    @DatabaseField(columnName = "subject", foreign = true, foreignAutoRefresh = true)
+    private Subject subject;
+    @DatabaseField(columnName = "action", foreign = true, foreignAutoRefresh = true)
+    private Action action;
+    @DatabaseField(columnName = "modifierFactory", foreign = true, foreignAutoRefresh = true)
+    private ModifierFactory modifierFactory;
+    @DatabaseField(columnName = "observation", foreign = true, foreignAutoRefresh = true)
+    private Observation observation;
+    @DatabaseField(columnName = "parent", foreign = true, foreignAutoRefresh = true)
+    private Node parent;
 
     @DatabaseField(columnName = "title")
-    private String title = "";
+    private String title;
 
-    public Node() {
-
+    private Node() {
+        // for frameworks
     }
 
-    public Node(Class<T> dataType) {
+    public Node(Class<?> dataType) {
         this.dataType = dataType;
     }
 
-    public Node(T data, Class<T> dataType) {
+    public Node(Displayable data, Class<?> dataType) {
         this(dataType);
-        this.data = data;
+        setData(data);
     }
 
     /**
@@ -63,12 +76,16 @@ public class Node<T extends Displayable> implements Iterable<T>, Displayable {
      * @param element the element to look for
      * @return true, if the element is found either within this group itself, or in one of it's subgroups
      */
-    public boolean contains(T element) {
-        if (element.equals(data)) {
+    public boolean contains(Displayable element) {
+        if (element == null) {
+            return false;
+        }
+
+        if (element.equals(getData())) {
             return true;
         }
 
-        for(Node<T> node : children) {
+        for(Node node : children) {
             if (node.contains(element)) {
                 return true;
             }
@@ -82,12 +99,12 @@ public class Node<T extends Displayable> implements Iterable<T>, Displayable {
      * @param child the child to look for
      * @return true, if the subgroup is found either within this group itself, or in one of it's subgroups
      */
-    public boolean contains(Node<T> child) {
+    public boolean contains(Node child) {
         if (children.contains(child)) {
             return true;
         }
 
-        for(Node<T> node : children) {
+        for(Node node : children) {
             if (node.contains(child)) {
                 return true;
             }
@@ -96,25 +113,60 @@ public class Node<T extends Displayable> implements Iterable<T>, Displayable {
         return false;
     }
 
-    public void setData(T data) {
-        title = "";
-        this.data = data;
+    public void setData(Displayable data) {
+        if (dataType == Subject.class) {
+            subject = (Subject) data;
+        } else if (dataType == ModifierFactory.class) {
+            modifierFactory = (ModifierFactory) data;
+        } else if (dataType == Action.class) {
+            action = (Action) data;
+        } else if (dataType == Observation.class) {
+            observation = (Observation) data;
+        } else {
+            throw new IllegalArgumentException("Can't set data for " + data);
+        }
+
+        title = null;
     }
 
-    public T getData() {
-        return data;
+    public Displayable getData() {
+        if (dataType == Subject.class) {
+            return subject;
+        } else if (dataType == ModifierFactory.class) {
+            return modifierFactory;
+        } else if (dataType == Action.class) {
+            return action;
+        } else if (dataType == Observation.class) {
+            return observation;
+        }
+
+        throw new IllegalArgumentException("Can't get data - dataType isn't set correctly!");
     }
 
-    public boolean addChild(T data) {
+    public Node addChild(Displayable data) {
+        final Node node = new Node(data, dataType);
+        addChild(node);
+
+        return node;
+    }
+
+    public boolean addChild(Node node) {
+        if (contains(node.getData())) {
+            throw new IllegalArgumentException("node " + node.toString() + " already there");
+        }
+
         makeToParent();
 
-        return children.add(new Node<>(data, dataType));
+        final boolean add = children.add(node);
+        node.setParent(this);
+        return add;
     }
 
     public void makeToParent() {
-        if (data != null) {
-            children.add(new Node<>(data, dataType));
-            data = null;
+        if (getData() != null) {
+            Displayable data = getData();
+            setData(null);
+            addChild(data);
         }
     }
 
@@ -123,19 +175,35 @@ public class Node<T extends Displayable> implements Iterable<T>, Displayable {
     }
 
     public void setTitle(String title) {
-        if (data != null) {
-            throw new IllegalStateException("Can't set title if there is data");
+        if (getData() != null) {
+            makeToParent();
         }
 
         this.title = title;
     }
 
-    public boolean remove(Node<T> node) {
+    public Node getParent() {
+        return parent;
+    }
+
+    public void setParent(Node parent) {
+        if (this == parent) {
+            throw new IllegalArgumentException("Cannot make the node itself as a parent");
+        }
+
+        this.parent = parent;
+    }
+
+    public boolean remove(Node node) {
         return children.remove(node);
     }
 
-    public boolean remove(T data) {
+    public boolean remove(Displayable data) {
         throw new UnsupportedOperationException("Has to be implemented! Data was " + data);
+    }
+
+    public Node getChildren(int i) {
+        return getChildren().get(i);
     }
 
     /**
@@ -143,79 +211,37 @@ public class Node<T extends Displayable> implements Iterable<T>, Displayable {
      * @return an unmodifiable list of all the children in this group
      * @see java.util.Collections#unmodifiableList(java.util.List)
      */
-    public List<Node<T>> getChildren() {
-        return Collections.unmodifiableList(children);
-    }
-
-    /**
-     * Moves a subgroup to a new position within it's list
-     * @param subgroup the subgroup to move
-     * @param position the position to move the element to
-     * @throws IllegalArgumentException if the subgroup isn't in this group
-     * @throws IndexOutOfBoundsException if the new position isn't a valid list index
-     */
-    public void move(Node<T> subgroup, int position) {
-        move(children, subgroup, position);
-    }
-
-    /**
-     * Moves an element of a list to a new position.
-     * @param list the list containing the element to move
-     * @param element the element to move
-     * @param position the position to move the element to
-     * @param <L> the type of the element to move
-     * @throws IllegalArgumentException if the element isn't in the given list
-     * @throws IndexOutOfBoundsException if the new position isn't a valid list index
-     */
-    private <L> void move(List<L> list, L element, int position) {
-        final int oldIndex = list.indexOf(element);
-        if (oldIndex == -1) {
-            throw new IllegalArgumentException("Could not find element in list");
-        }
-
-        if (position == oldIndex) {
-            return;
-        }
-
-        if (position < 0 && position >= list.size()) {
-            throw new IndexOutOfBoundsException("Position isn't valid");
-        }
-
-        children.remove(oldIndex);
-
-        // if we have to move the element more to the end of the list, we have to decrease the index by one, because of element's removal
-        final int newIndex = position > oldIndex ? position - 1 : position;
-
-        list.add(newIndex, element);
+    public List<Node> getChildren() {
+        return Collections.unmodifiableList(new ArrayList<>(children));
     }
 
     /**
      * This method resolves all nested groups to one flattened list.
      * @return a flattened, unmodifiable list, containing first all children of each subgroup, and then the own children
      */
-    public List<T> flatten() {
-        List<T> flattened = new ArrayList<>();
+    public List<Displayable> flatten() {
+        List<Displayable> flattened = new ArrayList<>();
 
-        for (Node<T> child : children) {
+        for (Node child : children) {
             flattened.addAll(child.flatten());
         }
 
-        if (data != null) {
-            flattened.add(data);
+        if (getData() != null) {
+            flattened.add(getData());
         }
 
         return Collections.unmodifiableList(flattened);
     }
 
     @Override
-    public Iterator<T> iterator() {
+    public Iterator<Displayable> iterator() {
         // there could be a better way than to flatten the group first. But I don't want to implement a new Iterator...
         return flatten().iterator();
     }
 
     @Override
     public String getDisplayString() {
-        return data != null ? data.getDisplayString() : getTitle();
+        return getData() != null ? getData().getDisplayString() : getTitle();
     }
 
     private void validateActionNode() {
@@ -238,5 +264,32 @@ public class Node<T extends Displayable> implements Iterable<T>, Displayable {
         }
 
         this.exclusivity = exclusivity;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+        if (obj.getClass() != getClass()) {
+            return false;
+        }
+        Node rhs = (Node) obj;
+
+        return new EqualsBuilder().append(title, rhs.title).append(dataType, rhs.dataType).append(getData(), rhs.getData()).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder().append(title).append(dataType).append(getData()).build();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).appendSuper(super.toString()).append("title", title).append("data", getData())
+                .append("dataType", dataType).toString();
     }
 }

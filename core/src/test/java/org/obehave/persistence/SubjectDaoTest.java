@@ -1,6 +1,5 @@
 package org.obehave.persistence;
 
-import com.j256.ormlite.dao.DaoManager;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -14,13 +13,13 @@ import static org.junit.Assert.assertEquals;
 /**
  * @author Markus Möslinger
  */
-public class SubjectDaoTest extends DaoTestBase {
+public class SubjectDaoTest extends DatabaseTest {
     private static SubjectDao dao;
     private Subject subject;
 
     @BeforeClass
     public static void prepare() throws SQLException {
-        dao = DaoManager.createDao(connectionSource, Subject.class);
+        dao = Daos.subject();
     }
 
     @Before
@@ -34,13 +33,13 @@ public class SubjectDaoTest extends DaoTestBase {
         dao.create(subject);
 
         Subject loadedSubject = dao.queryForSameId(subject);
-        assertEquals(loadedSubject.getName(), "Name1");
+        assertEquals("Name1", loadedSubject.getName());
 
         subject.setName("Name2");
         subject.setColor(new Color(200, 190, 0));
         dao.update(subject);
 
         loadedSubject = dao.queryForSameId(subject);
-        assertEquals(loadedSubject.getName(), "Name2");
+        assertEquals("Name2", loadedSubject.getName());
     }
 }

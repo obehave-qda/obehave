@@ -7,11 +7,12 @@ import javafx.scene.input.KeyEvent;
 import org.obehave.events.ChangeEvent;
 import org.obehave.events.ChangeType;
 import org.obehave.events.EventBusHolder;
-import org.obehave.model.*;
 import org.obehave.model.Action;
+import org.obehave.model.Displayable;
 import org.obehave.model.Observation;
-import org.obehave.model.Study;
 import org.obehave.model.Subject;
+import org.obehave.service.Study;
+import org.obehave.util.I18n;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,9 +22,10 @@ public class ProjectTreeComponent extends TreeView<String> {
     private Study study;
 
     private TreeItem root;
-    private TreeItem subjectNode = new TreeItem<>("Subjects");
-    private TreeItem actionNode = new TreeItem<>("Actions");
-    private TreeItem observationsNode = new TreeItem<>("Observations");
+    private TreeItem subjectNode = new TreeItem<>(I18n.getString("ui.subject.plural"));
+    private TreeItem actionNode = new TreeItem<>(I18n.getString("ui.action.plural"));
+    private TreeItem modifierFactoryNode = new TreeItem<>(I18n.getString("ui.modifierfactory.plural"));
+    private TreeItem observationsNode = new TreeItem<>(I18n.getString("ui.observation.plural"));
 
     public ProjectTreeComponent() {
         super();
@@ -57,7 +59,7 @@ public class ProjectTreeComponent extends TreeView<String> {
         this.study = study;
 
         root = new TreeItem<>(study.getName());
-        root.getChildren().addAll(subjectNode, actionNode, observationsNode);
+        root.getChildren().addAll(subjectNode, actionNode, modifierFactoryNode, observationsNode);
         root.setExpanded(true);
 
         setRoot(root);
