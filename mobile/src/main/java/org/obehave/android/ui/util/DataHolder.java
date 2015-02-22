@@ -62,11 +62,10 @@ public class DataHolder {
 
         };
 
-        for(int i = 0; i < subjectNamens.length; i++){
-            Subject subject = new Subject();
-            subject.setName(subjectNamens[i]);
-            subject.setAlias(subjectNamens[i].substring(0,2));
-            subject.setColor(new Color(randomNumber(0,255), randomNumber(0,255), randomNumber(0,255)));
+        for (String name : subjectNamens) {
+            Subject subject = new Subject(name);
+            subject.setAlias(name.substring(0, 2));
+            subject.setColor(new Color(randomNumber(0, 255), randomNumber(0, 255), randomNumber(0, 255)));
             subjects.add(subject);
         }
     }
@@ -91,8 +90,6 @@ public class DataHolder {
     }
 
     private void generateSubjectModifierFactoryActions(){
-
-
         String actionNames[] = {
                 "spielen",
                 "beißen",
@@ -100,11 +97,10 @@ public class DataHolder {
                 "heulen"
         };
 
-        for(int i=0; i < actionNames.length; i++){
-            Action action = new Action();
-            action.setName(actionNames[i]);
+        for (String actionName : actionNames) {
+            Action action = new Action(actionName);
             action.setType(Action.Type.POINT);
-            action.setAlias(actionNames[i].substring(0,2));
+            action.setAlias(actionName.substring(0, 2));
             action.setRecurring(0);
             ModifierFactory subjectModifierFactory = new ModifierFactory(subjects.get(1), subjects.get(2), subjects.get(3));
             subjectModifierFactory.setName("Subject Modifier");
@@ -122,13 +118,12 @@ public class DataHolder {
                 "number 3"
         };
 
-        for(int i=0; i < actionNames.length; i++){
-            Action action = new Action();
-            action.setName(actionNames[i]);
+        for (String actionName : actionNames) {
+            Action action = new Action(actionName);
             action.setType(Action.Type.POINT);
-            action.setAlias(actionNames[i].substring(0,2));
+            action.setAlias(actionName.substring(0, 2));
             action.setRecurring(0);
-            ModifierFactory decimalRangeModifierFactory = new ModifierFactory(20,100);
+            ModifierFactory decimalRangeModifierFactory = new ModifierFactory(20, 100);
             decimalRangeModifierFactory.setName("Decimal Modifier");
             decimalRangeModifierFactory.setAlias("su");
             action.setModifierFactory(decimalRangeModifierFactory);
@@ -138,19 +133,16 @@ public class DataHolder {
     }
 
     private void generateEnumerationModifierActions(){
-
-
         String actionNames[] = {
                 "enum 1",
                 "enum 2",
                 "enum 3"
         };
 
-        for(int i=0; i < actionNames.length; i++){
-            Action action = new Action();
-            action.setName(actionNames[i]);
+        for (String actionName : actionNames) {
+            Action action = new Action(actionName);
             action.setType(Action.Type.POINT);
-            action.setAlias(actionNames[i].substring(0,2));
+            action.setAlias(actionName.substring(0, 2));
             action.setRecurring(0);
             ModifierFactory enumerationModifierFactory = new ModifierFactory("Value1", "Value 2", "Value 3", "Value4");
             enumerationModifierFactory.setName("Enumeration Modifier");
