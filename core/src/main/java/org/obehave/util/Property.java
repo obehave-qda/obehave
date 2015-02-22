@@ -26,6 +26,10 @@ public class Property {
         throw new AssertionError("Can't instantiate utility classes");
     }
 
+    public static String getLanguage() {
+        return trySystemPropertyFirst("language");
+    }
+
     public static boolean isDatabaseDebug() {
         return trySystemPropertyFirst("database.debug").equals("true");
     }
