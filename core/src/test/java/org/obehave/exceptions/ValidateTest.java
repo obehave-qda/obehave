@@ -1,11 +1,19 @@
 package org.obehave.exceptions;
 
 import org.junit.Test;
+import org.obehave.util.TestUtil;
+
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * @author Markus Möslinger
  */
 public class ValidateTest {
+    @Test(expected = InvocationTargetException.class)
+    public void cannotConstruct() throws ReflectiveOperationException {
+        TestUtil.tryToCreateInstance(Validate.class);
+    }
+
     @Test(expected = ValidationException.class)
     public void isNotNullThrowsExceptionIfNull() {
         Validate.isNotNull(null, "Test");
