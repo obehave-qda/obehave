@@ -74,7 +74,7 @@ public class Modifier extends BaseEntity {
             case SUBJECT_MODIFIER:
                 return subject;
             default:
-                throw new IllegalStateException(I18n.getString("exception.illegalstate", this));
+                throw new IllegalStateException(I18n.get("exception.illegalstate", this));
         }
     }
 

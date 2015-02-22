@@ -20,7 +20,7 @@ public class Validate {
      */
     public static void isNotNull(Object o, String name) {
         if (o == null) {
-            throw new ValidationException(I18n.getString("exception.validate.isnotnull", name));
+            throw new ValidationException(I18n.get("exception.validate.isnotnull", name));
         }
     }
 
@@ -32,7 +32,7 @@ public class Validate {
      */
     public static void isNotEmpty(String s, String name) {
         if (s == null || s.isEmpty()) {
-            throw new ValidationException(I18n.getString("exception.validate.isnotempty", name, s));
+            throw new ValidationException(I18n.get("exception.validate.isnotempty", name, s));
         }
     }
 
@@ -47,7 +47,7 @@ public class Validate {
      */
     public static void isBetween(int n, int min, int max) {
         if (n < min || n > max) {
-            throw new ValidationException(I18n.getString("exception.validate.isbetween", n, min, max));
+            throw new ValidationException(I18n.get("exception.validate.isbetween", n, min, max));
         }
     }
 
@@ -60,7 +60,7 @@ public class Validate {
      */
     public static void isOneOf(Object element, Object... elements) {
         if (!Arrays.asList(elements).contains(element)) {
-            throw new ValidationException(I18n.getString("exception.validate.isoneof", element, elements));
+            throw new ValidationException(I18n.get("exception.validate.isoneof", element, elements));
         }
     }
 }
