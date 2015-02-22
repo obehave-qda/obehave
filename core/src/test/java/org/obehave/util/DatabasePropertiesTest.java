@@ -3,6 +3,8 @@ package org.obehave.util;
 import org.junit.Test;
 import org.obehave.persistence.DatabaseTest;
 
+import java.lang.reflect.InvocationTargetException;
+
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -13,6 +15,11 @@ public class DatabasePropertiesTest extends DatabaseTest {
     private static final String KEY_EXISTING = "existingkey";
     private static final String VALUE_BEFORE = "valuebefore";
     private static final String VALUE_AFTER = "valueafter";
+
+    @Test(expected = InvocationTargetException.class)
+    public void cannotConstruct() throws ReflectiveOperationException {
+        TestUtil.tryToCreateInstance(DatabaseProperties.class);
+    }
 
     @Test
     public void readAndWriteProperty() {
