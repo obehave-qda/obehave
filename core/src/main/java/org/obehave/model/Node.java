@@ -18,6 +18,9 @@ import java.util.*;
  */
 @DatabaseTable(tableName = "Node", daoClass = NodeDaoImpl.class)
 public class Node extends BaseEntity implements Iterable<Displayable>, Displayable {
+    public static final String COLUMN_PARENT = "parent";
+    public static final String COLUMN_TYPE = "type";
+
     public static enum Exclusivity {
         /**
          * Multiple state actions are allowed at the same time
@@ -41,7 +44,7 @@ public class Node extends BaseEntity implements Iterable<Displayable>, Displayab
 
     // Fields to store the actual data. Don't call them direcetly, use getData() and setData()!
     // We could have just one generic field "T data", but then there would be problems with ORMLite. This. Sucks.
-    @DatabaseField(columnName = "type")
+    @DatabaseField(columnName = COLUMN_TYPE)
     private Class<?> dataType;
 
     @DatabaseField(columnName = "subject", foreign = true, foreignAutoRefresh = true)
@@ -52,7 +55,7 @@ public class Node extends BaseEntity implements Iterable<Displayable>, Displayab
     private ModifierFactory modifierFactory;
     @DatabaseField(columnName = "observation", foreign = true, foreignAutoRefresh = true)
     private Observation observation;
-    @DatabaseField(columnName = "parent", foreign = true, foreignAutoRefresh = true)
+    @DatabaseField(columnName = COLUMN_PARENT, foreign = true, foreignAutoRefresh = true)
     private Node parent;
 
     @DatabaseField(columnName = "title")
