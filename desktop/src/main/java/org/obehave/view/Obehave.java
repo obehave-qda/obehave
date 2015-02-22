@@ -23,7 +23,6 @@ public class Obehave extends Application {
         loader.setResources(I18n.bundle());
         Parent root = loader.load();
         ((MainController) loader.getController()).setStage(stage);
-        ((MainController) loader.getController()).chooseStudy();
 
         Scene scene = new Scene(root);
 
@@ -38,6 +37,7 @@ public class Obehave extends Application {
                 new Image(getClass().getClassLoader().getResourceAsStream("icons/icon_144x144.png")),
                 new Image(getClass().getClassLoader().getResourceAsStream("icons/icon_256x256.png")));
 
+        ((MainController) loader.getController()).chooseStudy();
         stage.show();
     }
 
