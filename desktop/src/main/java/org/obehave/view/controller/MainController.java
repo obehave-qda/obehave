@@ -11,9 +11,11 @@ import javafx.stage.Stage;
 import org.controlsfx.dialog.CommandLinksDialog;
 import org.obehave.model.Study;
 import org.obehave.util.I18n;
+import org.obehave.util.Property;
 import org.obehave.view.controller.components.VideoComponent;
 import org.obehave.view.controller.components.coding.CodingComponent;
 import org.obehave.view.controller.components.tree.ProjectTreeComponent;
+import org.obehave.view.util.AlertUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -89,22 +91,42 @@ public class MainController {
         // Find out if creating or opening a new study
         final String createNewOne = I18n.getString("ui.study.create.title");
         final String openExistingOne = I18n.getString("ui.study.open.title");
+        final String closeApplication = I18n.getString("ui.study.close");
         List<CommandLinksDialog.CommandLinksButtonType> links = Arrays.asList(
-                        new CommandLinksDialog.CommandLinksButtonType(createNewOne, I18n.getString("ui.study.create.description"), false),
-                new CommandLinksDialog.CommandLinksButtonType(openExistingOne, I18n.getString("ui.study.open.description"), true));
+                new CommandLinksDialog.CommandLinksButtonType(createNewOne, I18n.getString("ui.study.create.description"), false),
+                new CommandLinksDialog.CommandLinksButtonType(openExistingOne, I18n.getString("ui.study.open.description"), false),
+                new CommandLinksDialog.CommandLinksButtonType(closeApplication, false));
 
         CommandLinksDialog commandLinksDialog = new CommandLinksDialog(links);
         commandLinksDialog.setTitle(I18n.getString("ui.study.dialog"));
-        String selectedButtonTitle = commandLinksDialog.showAndWait().get().getText();
-
-        final boolean create = selectedButtonTitle.equals(createNewOne);
-
-        // configuring file chooser and show until a file was selected
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle(create ? createNewOne : openExistingOne);
 
         File chosenFile;
+        boolean create;
+
         do {
+            String selectedButtonTitle = commandLinksDialog.showAndWait().get().getText();
+
+            if (selectedButtonTitle.equals(closeApplication)) {
+                close(null);
+            }
+            // at this point, selectedButtonTitle can either be createNewOne or openExistingOne
+            create = selectedButtonTitle.equals(createNewOne);
+
+            // configuring file chooser and show until a file was selected
+            final File defaultSaveFolder = Property.getSaveFolder();
+
+            FileChooser fileChooser = new FileChooser();
+            if (!defaultSaveFolder.exists()) {
+                if (defaultSaveFolder.mkdirs()) {
+                    fileChooser.setInitialDirectory(defaultSaveFolder);
+                } else {
+                    AlertUtil.showError(I18n.getString("ui.study.error.defaultsavefolder.title"),
+                            I18n.getString("ui.study.error.defaultsavefolder.description", defaultSaveFolder));
+                }
+            }
+            fileChooser.setTitle(selectedButtonTitle);
+
+
             chosenFile = create ? fileChooser.showSaveDialog(stage) : fileChooser.showOpenDialog(stage);
         } while (chosenFile == null);
 

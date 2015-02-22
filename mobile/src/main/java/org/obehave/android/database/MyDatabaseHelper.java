@@ -124,7 +124,7 @@ public class MyDatabaseHelper extends OrmLiteSqliteOpenHelper{
     */
 
     private void createTestEntries() throws SQLException {
-            Study study = new Study();
+            Study study = Study.create(null);
             study.setName("Test Study");
           //  generateTestEntries(study);
             getStudyDao().create(study);

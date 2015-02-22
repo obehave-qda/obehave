@@ -3,6 +3,7 @@ package org.obehave.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -29,6 +30,10 @@ public class Property {
 
     public static String getLanguage() {
         return trySystemPropertyFirst("language");
+    }
+
+    public static File getSaveFolder() {
+        return new File(trySystemPropertyFirst("defaultsavefolder"));
     }
 
     public static boolean isDatabaseDebug() {
