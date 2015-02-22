@@ -6,6 +6,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import org.obehave.util.I18n;
+import org.obehave.view.controller.MainController;
 
 import java.net.URL;
 
@@ -17,7 +19,11 @@ public class Obehave extends Application {
             throw new IllegalStateException("Couldn't load main.fxml!");
         }
 
-        Parent root = FXMLLoader.load(mainFxml);
+        FXMLLoader loader = new FXMLLoader(mainFxml);
+        loader.setResources(I18n.bundle());
+        Parent root = loader.load();
+        ((MainController) loader.getController()).setStage(stage);
+        ((MainController) loader.getController()).chooseStudy();
 
         Scene scene = new Scene(root);
 

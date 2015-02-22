@@ -7,6 +7,8 @@ import org.obehave.model.modifier.ModifierFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+
 /**
  * A study contains multiple subjects, actions and observations.
  */
@@ -19,6 +21,8 @@ public class Study {
     private Node actions = new Node(Action.class);
     private Node observations = new Node(Observation.class);
     private Node modifierFactories = new Node(ModifierFactory.class);
+
+    private File savePath;
 
     public Study(){
 
@@ -134,5 +138,13 @@ public class Study {
     private static String getRandomString(String prefix) {
         int number = (int) (Math.random() * 5);
         return prefix + " " + number;
+    }
+
+    public File getSavePath() {
+        return savePath;
+    }
+
+    public void setSavePath(File savePath) {
+        this.savePath = savePath;
     }
 }
