@@ -8,6 +8,7 @@ import org.obehave.model.Action;
 import org.obehave.model.Observation;
 import org.obehave.model.Study;
 import org.obehave.model.Subject;
+import org.obehave.util.I18n;
 
 
 public class ContextMenuTreeCell extends TextFieldTreeCell<String> {
@@ -22,12 +23,12 @@ public class ContextMenuTreeCell extends TextFieldTreeCell<String> {
         super();
 
 
-        MenuItem addSubjectItem = new MenuItem("Add subject");
-        MenuItem addActionItem = new MenuItem("Add action");
-        MenuItem addObservationItem = new MenuItem("Add observation");
-        MenuItem removeSubjectItem = new MenuItem("Remove subject");
-        MenuItem removeActionItem = new MenuItem("Remove action");
-        MenuItem removeObservationItem = new MenuItem("Remove observation");
+        MenuItem addSubjectItem = new MenuItem(I18n.getString("ui.subject.add"));
+        MenuItem addActionItem = new MenuItem(I18n.getString("ui.action.add"));
+        MenuItem addObservationItem = new MenuItem(I18n.getString("ui.observation.add"));
+        MenuItem removeSubjectItem = new MenuItem(I18n.getString("ui.subject.remove"));
+        MenuItem removeActionItem = new MenuItem(I18n.getString("ui.action.remove"));
+        MenuItem removeObservationItem = new MenuItem(I18n.getString("ui.observation.remove"));
 
         addSubject.getItems().add(addSubjectItem);
         addAction.getItems().add(addActionItem);
@@ -56,23 +57,19 @@ public class ContextMenuTreeCell extends TextFieldTreeCell<String> {
             if (parent != null) {
                 // second level
                 if (parent.getParent() == null) {
-                    switch (item) {
-                        case "Subjects":
-                            setContextMenu(addSubject);
-                            break;
-                        case "Actions":
-                            setContextMenu(addAction);
-                            break;
-                        case "Observations":
-                            setContextMenu(addObservation);
-                            break;
+                    if (item.equals(I18n.getString("ui.subject.plural"))) {
+                        setContextMenu(addSubject);
+                    } else if (item.equals(I18n.getString("ui.action.plural"))) {
+                        setContextMenu(addAction);
+                    } else if (item.equals(I18n.getString("ui.observation.plural"))) {
+                        setContextMenu(addObservation);
                     }
                 } else {
-                    if (parent.getValue().equals("Subjects")) {
+                    if (parent.getValue().equals(I18n.getString("ui.subject.plural"))) {
                         setContextMenu(removeSubject);
-                    } else if (parent.getValue().equals("Actions")) {
+                    } else if (parent.getValue().equals(I18n.getString("ui.action.plural"))) {
                         setContextMenu(removeAction);
-                    } else if (parent.getValue().equals("Observations")) {
+                    } else if (parent.getValue().equals(I18n.getString("ui.observation.plural"))) {
                         setContextMenu(removeObservation);
                     }
                 }

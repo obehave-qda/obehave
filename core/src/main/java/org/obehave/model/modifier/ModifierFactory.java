@@ -5,6 +5,7 @@ import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.obehave.exceptions.FactoryException;
+import org.obehave.exceptions.Validate;
 import org.obehave.model.BaseEntity;
 import org.obehave.model.Displayable;
 import org.obehave.model.Subject;
@@ -147,10 +148,7 @@ public class ModifierFactory extends BaseEntity implements Displayable {
 
     private Modifier createDecimalRangeModifier(String input) throws FactoryException {
         validateType(Type.DECIMAL_RANGE_MODIFIER_FACTORY);
-
-        if (input == null || input.equals("")) {
-            throw new FactoryException("input must be a non empty string");
-        }
+        Validate.isNotEmpty(input, "Input");
 
         BigDecimal value;
         try {

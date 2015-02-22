@@ -8,6 +8,7 @@ import org.obehave.events.ChangeEvent;
 import org.obehave.events.ChangeType;
 import org.obehave.events.EventBusHolder;
 import org.obehave.model.*;
+import org.obehave.util.I18n;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,10 +18,10 @@ public class ProjectTreeComponent extends TreeView<String> {
     private Study study;
 
     private TreeItem root;
-    private TreeItem subjectNode = new TreeItem<>("Subjects");
-    private TreeItem actionNode = new TreeItem<>("Actions");
-    private TreeItem modifierFactoryNode = new TreeItem<>("Modifier");
-    private TreeItem observationsNode = new TreeItem<>("Observations");
+    private TreeItem subjectNode = new TreeItem<>(I18n.getString("ui.subject.plural"));
+    private TreeItem actionNode = new TreeItem<>(I18n.getString("ui.action.plural"));
+    private TreeItem modifierFactoryNode = new TreeItem<>(I18n.getString("ui.modifierfactory.plural"));
+    private TreeItem observationsNode = new TreeItem<>(I18n.getString("ui.observation.plural"));
 
     public ProjectTreeComponent() {
         super();

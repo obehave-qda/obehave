@@ -1,5 +1,6 @@
 package org.obehave.util;
 
+import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -10,7 +11,7 @@ public class I18n {
     private static final Locale configuredLocale = new Locale(Property.getLanguage());
 
     private I18n() {
-        throw new AssertionError("Utility class");
+        throw new AssertionError(I18n.getString("exception.constructor.utility"));
     }
 
     public static ResourceBundle bundle() {
@@ -23,5 +24,9 @@ public class I18n {
 
     public static String getString(String key) {
         return bundle().getString(key);
+    }
+
+    public static String getString(String key, Object... substitutions) {
+        return MessageFormat.format(getString(key), substitutions);
     }
 }

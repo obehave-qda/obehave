@@ -14,16 +14,17 @@ public class Property {
     private final static Properties properties = new Properties();
 
     static {
+        final String propertyFile = "obehave.properties";
         try {
             log.debug("Loading properties");
-            properties.load(Property.class.getClassLoader().getResourceAsStream("obehave.properties"));
+            properties.load(Property.class.getClassLoader().getResourceAsStream(propertyFile));
         } catch (IOException e) {
-            throw new RuntimeException("Couldn't load property file");
+            throw new RuntimeException("Couldn't load property file: " + propertyFile);
         }
     }
 
     private Property() {
-        throw new AssertionError("Can't instantiate utility classes");
+        throw new AssertionError(I18n.getString("exception.constructor.utility"));
     }
 
     public static String getLanguage() {

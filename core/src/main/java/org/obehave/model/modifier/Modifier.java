@@ -6,6 +6,7 @@ import org.obehave.exceptions.Validate;
 import org.obehave.model.BaseEntity;
 import org.obehave.model.Subject;
 import org.obehave.persistence.impl.ModifierDaoImpl;
+import org.obehave.util.I18n;
 
 import java.math.BigDecimal;
 
@@ -38,7 +39,7 @@ public class Modifier extends BaseEntity {
         type = Type.DECIMAL_MODIFIER;
         setModifierFactory(modifierFactory);
 
-        Validate.isNotNull(value);
+        Validate.isNotNull(value, I18n.getString("validate.modifier.bigdecimal"));
         decimalValue = value;
     }
 
@@ -47,7 +48,7 @@ public class Modifier extends BaseEntity {
         type = Type.ENUMERATION_MODIFIER;
         setModifierFactory(modifierFactory);
 
-        Validate.isNotNull(value);
+        Validate.isNotNull(value, I18n.getString("validate.modifier.string"));
         this.enumerationValue = value;
     }
 
@@ -55,7 +56,7 @@ public class Modifier extends BaseEntity {
         type = Type.SUBJECT_MODIFIER;
         setModifierFactory(modifierFactory);
 
-        Validate.isNotNull(subject);
+        Validate.isNotNull(subject, I18n.getString("validate.modifier.subject"));
         this.subject = subject;
     }
 
@@ -73,7 +74,7 @@ public class Modifier extends BaseEntity {
             case SUBJECT_MODIFIER:
                 return subject;
             default:
-                throw new IllegalStateException("Object is in an invalid state");
+                throw new IllegalStateException(I18n.getString("exception.illegalstate", this));
         }
     }
 
@@ -82,7 +83,7 @@ public class Modifier extends BaseEntity {
     }
 
     private void setModifierFactory(ModifierFactory modifierFactory) {
-        Validate.isNotNull(modifierFactory);
+        Validate.isNotNull(modifierFactory, I18n.getString("validate.modifier.modifierfactory"));
 
         this.modifierFactory = modifierFactory;
     }

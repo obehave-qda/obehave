@@ -75,7 +75,7 @@ public class Observation extends BaseEntity implements Displayable {
     }
 
     public void addCoding(Coding coding) {
-        Validate.isNotNull(coding);
+        Validate.isNotNull(coding, "Coding");
 
         codings.add(coding);
         coding.setObservation(this);

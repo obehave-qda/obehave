@@ -12,6 +12,7 @@ import org.obehave.persistence.ormlite.ClassType;
 import org.obehave.persistence.ormlite.ColorType;
 import org.obehave.persistence.ormlite.FileType;
 import org.obehave.persistence.ormlite.VersionDateTimeType;
+import org.obehave.util.I18n;
 
 import java.sql.SQLException;
 
@@ -32,7 +33,7 @@ public class Daos {
     private static ValidSubjectDao validSubjectDao;
 
     private Daos() {
-        throw new AssertionError("Utility class");
+        throw new AssertionError(I18n.getString("exception.constructor.utility"));
     }
 
     static {

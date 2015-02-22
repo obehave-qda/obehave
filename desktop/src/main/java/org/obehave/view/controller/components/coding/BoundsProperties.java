@@ -2,13 +2,14 @@ package org.obehave.view.controller.components.coding;
 
 import javafx.beans.binding.DoubleBinding;
 import javafx.scene.control.ScrollPane;
+import org.obehave.util.I18n;
 
 /**
  * This class provides bindings for viewportBounds of a {@link javafx.scene.control.ScrollPane}
  */
 public class BoundsProperties {
     private BoundsProperties() {
-        throw new AssertionError("This class shouldn't be instantiated");
+        throw new AssertionError(I18n.getString("exception.constructor.utility"));
     }
 
     public static class ScrollPaneViewPortHeightBinding extends DoubleBinding {
