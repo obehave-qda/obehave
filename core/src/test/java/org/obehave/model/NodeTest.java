@@ -1,9 +1,7 @@
-package org.obehave.model.domain;
+package org.obehave.model;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.obehave.model.Node;
-import org.obehave.model.Subject;
 
 import java.util.Iterator;
 

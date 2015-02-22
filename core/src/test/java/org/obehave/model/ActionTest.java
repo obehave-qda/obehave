@@ -1,12 +1,9 @@
-package org.obehave.model.domain;
+package org.obehave.model;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.obehave.model.Action;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * @author Markus Möslinger
