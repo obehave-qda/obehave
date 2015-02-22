@@ -11,16 +11,16 @@
     tools:context=".MainActivity$CodingTableFragment">
     <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_gravity="center_horizontal">
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginRight="25dp"
-                android:text="00:00" android:id="@+id/tvCounter" android:textColor="@color/highlight"
+                android:text="00:00" android:id="@+id/tvTimer" android:textColor="@color/highlight"
                 android:textSize="48dp"
                 />
         <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginRight="25dp"
-                 android:text="start" android:textColor="#fff" android:layout_gravity="center_vertical"/>
+                android:text="start" android:textColor="#fff" android:layout_gravity="center_vertical" android:id="@+id/btnStartTimer"/>
 
         <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginRight="25dp" android:layout_gravity="center_vertical"
-                android:background="@color/btn_disabled_background" android:text="stop"/>
+                android:background="@color/btn_disabled_background" android:text="stop" android:id="@+id/btnStopTimer"/>
     </LinearLayout>
-    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="40dp">
+    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="40dp" android:orientation="horizontal">
         <ListView android:layout_width="match_parent" android:layout_height="match_parent" android:id="@id/android:list">
         </ListView>
         <TextView android:id="@id/android:empty"

@@ -33,7 +33,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
 
-
     @Subscribe
     public  void onSubjectSelected(SubjectSelectedEvent event){
         Subject subject = event.getSubject();
@@ -118,10 +117,33 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     }
 
     @Subscribe
+    public void onTimerStartEvent(TimerStartEvent event){
+        Log.d(LOG_TAG, "onTimerStartEvent");
+        ApplicationService.startTimer();
+    }
+
+    @Subscribe
+    public void onTimerStopEvent(TimerStopEvent event){
+        Log.d(LOG_TAG, "onTimerStopEvent");
+        ApplicationService.stopTimer();
+    }
+/*
+    @Subscribe
+    public void runIntervalTasks(TimerTaskEvent event){
+        List<Fragment> fragments = getSupportFragmentManager().getFragments();
+        for(Fragment fragment : fragments){
+            if(fragment instanceof CodingListBaseFragment){
+                Log.d(LOG_TAG, fragment.getClass().getSimpleName());
+                ((CodingListBaseFragment)fragment).updateTimer(event.getStartTime());
+            }
+        }
+    }
+    */
+
+    @Subscribe
     public void onDecimalRangeModifierSelected(DecimalRangeModifierSelectedEvent event){
         String value = event.getValue();
         try {
-
             ModifierFactory modifierFactory = ApplicationService.getSelectedAction().getModifierFactory();
             ApplicationService.selectItem(modifierFactory.create(value));
             ApplicationService.createCoding();
@@ -234,5 +256,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        /* TODO: Check if timer is stopped  */
+        ApplicationService.onDestroy();
     }
 }
