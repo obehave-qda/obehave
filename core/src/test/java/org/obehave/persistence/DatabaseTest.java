@@ -5,7 +5,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import org.h2.tools.Server;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.obehave.util.Property;
+import org.obehave.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,10 +14,10 @@ import java.sql.SQLException;
 /**
  * @author Markus Möslinger
  */
-public class DaoTestBase {
-    private static final boolean DEBUG_DATABASE = Property.isDatabaseDebug();
+public class DatabaseTest {
+    private static final boolean DEBUG_DATABASE = Properties.isDatabaseDebug();
 
-    private static final Logger log = LoggerFactory.getLogger(DaoTestBase.class);
+    private static final Logger log = LoggerFactory.getLogger(DatabaseTest.class);
 
     private static Server tcpServer;
     private static Server webServer;
@@ -27,8 +27,8 @@ public class DaoTestBase {
     @BeforeClass
     public static void setUp() throws SQLException {
         if (DEBUG_DATABASE) {
-            webServer = Server.createWebServer("-web", "-webAllowOthers", "-webPort", Property.getDatabaseDebugPortWeb()).start();
-            tcpServer = Server.createTcpServer("-tcp", "-tcpAllowOthers", "-tcpPort", Property.getDatabaseDebugPortTcp()).start();
+            webServer = Server.createWebServer("-web", "-webAllowOthers", "-webPort", Properties.getDatabaseDebugPortWeb()).start();
+            tcpServer = Server.createTcpServer("-tcp", "-tcpAllowOthers", "-tcpPort", Properties.getDatabaseDebugPortTcp()).start();
         }
 
         connectionSource = new JdbcConnectionSource("jdbc:h2:mem:obehave;INIT=runscript from 'classpath:sql/create.sql'\\;RUNSCRIPT FROM 'classpath:sql/populate.sql'");

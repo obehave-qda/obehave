@@ -9,8 +9,8 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import org.obehave.model.Action;
 import org.obehave.model.Observation;
-import org.obehave.model.Study;
 import org.obehave.model.Subject;
+import org.obehave.service.Study;
 
 import java.sql.SQLException;
 

@@ -130,4 +130,7 @@ INSERT INTO PUBLIC.Coding (MODIFIED, SUBJECT, ACTION, MODIFIER, OBSERVATION, STA
                                                                                                                 'Observation1'),
                                                                                                  500, 700);
 
+-- Property
+INSERT INTO PUBLIC.PROPERTY (MODIFIED, KEY, VALUE) VALUES (sysdate, 'existingkey', 'existingvalue');
+
 COMMIT;

@@ -107,3 +107,11 @@ CREATE TABLE PUBLIC.Node
   FOREIGN KEY (modifierFactory) REFERENCES Public.ModifierFactory(id),
   FOREIGN KEY (observation) REFERENCES Public.Observation(id)
 );
+
+CREATE TABLE PUBLIC.Property
+(
+  id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+  modified TIMESTAMP NOT NULL,
+  key VARCHAR2(255) NOT NULL,
+  value VARCHAR2(255) NOT NULL
+)

@@ -14,7 +14,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by Markus.Moeslinger on 17.02.2015.
  */
-public class CodingDaoTest extends DaoTestBase {
+public class CodingDaoTest extends DatabaseTest {
     private static CodingDao dao;
     private static SubjectDao subjectDao;
     private Coding coding;

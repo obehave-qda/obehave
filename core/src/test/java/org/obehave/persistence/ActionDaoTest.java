@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * @author Markus Möslinger
  */
-public class ActionDaoTest extends DaoTestBase {
+public class ActionDaoTest extends DatabaseTest {
     @Test
     public void persistingAction() throws SQLException {
         Action a1 = new Action("Jumping");
