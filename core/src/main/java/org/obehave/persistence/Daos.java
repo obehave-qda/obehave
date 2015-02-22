@@ -31,6 +31,7 @@ public class Daos {
     private static SubjectDao subjectDao;
     private static EnumerationItemDao enumerationItemDao;
     private static ValidSubjectDao validSubjectDao;
+    private static PropertyDao propertyDao;
 
     private Daos() {
         throw new AssertionError(I18n.getString("exception.constructor.utility"));
@@ -43,7 +44,7 @@ public class Daos {
         DataPersisterManager.registerDataPersisters(FileType.getInstance());
     }
 
-    public static void setConnectionSource(ConnectionSource connectionSource) throws SQLException {
+    public static void setConnectionSource(ConnectionSource connectionSource) {
         if (Daos.connectionSource == null || !Daos.connectionSource.equals(connectionSource)) {
             Daos.connectionSource = connectionSource;
 
@@ -56,6 +57,7 @@ public class Daos {
             subjectDao = null;
             enumerationItemDao = null;
             validSubjectDao = null;
+            propertyDao = null;
         }
     }
 
@@ -129,5 +131,13 @@ public class Daos {
         }
 
         return validSubjectDao;
+    }
+
+    public static PropertyDao property() throws SQLException {
+        if (propertyDao == null) {
+            propertyDao = DaoManager.createDao(connectionSource, Property.class);
+        }
+
+        return propertyDao;
     }
 }

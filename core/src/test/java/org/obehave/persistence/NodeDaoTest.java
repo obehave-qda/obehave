@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * @author Markus Möslinger
  */
-public class NodeDaoTest extends DaoTestBase {
+public class NodeDaoTest extends DatabaseTest {
     @Test
     public void persistingNode() throws SQLException {
         Subject s1 = new Subject("First Subject");

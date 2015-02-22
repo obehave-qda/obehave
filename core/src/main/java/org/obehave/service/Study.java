@@ -1,13 +1,23 @@
-package org.obehave.model;
+package org.obehave.service;
 
+import com.j256.ormlite.jdbc.JdbcConnectionSource;
+import com.j256.ormlite.support.ConnectionSource;
 import org.obehave.events.ChangeEvent;
 import org.obehave.events.ChangeType;
 import org.obehave.events.EventBusHolder;
+import org.obehave.model.Action;
+import org.obehave.model.Node;
+import org.obehave.model.Observation;
+import org.obehave.model.Subject;
 import org.obehave.model.modifier.ModifierFactory;
+import org.obehave.persistence.Daos;
+import org.obehave.util.DatabaseProperties;
+import org.obehave.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.sql.SQLException;
 
 /**
  * A study contains multiple subjects, actions and observations.
@@ -21,11 +31,16 @@ public class Study {
     private Node actions = new Node(Action.class);
     private Node observations = new Node(Observation.class);
     private Node modifierFactories = new Node(ModifierFactory.class);
+    private ConnectionSource connectionSource;
 
     private File savePath;
 
-    private Study(){
+    private Study() {
 
+    }
+
+    private Study(File savePath) {
+        setSavePath(savePath);
     }
 
     @Deprecated
@@ -33,18 +48,28 @@ public class Study {
         this.name = name;
     }
 
-    public static Study create(File savePath) {
+    @Deprecated
+    public static Study create() {
+        log.info("Creating empty study");
+
+        return new Study();
+    }
+
+    public static Study create(File savePath) throws SQLException {
         log.info("Creating new study at {}", savePath);
-        final Study study = new Study();
-        study.setSavePath(savePath);
+
+        final Study study = new Study(savePath);
+        study.setConnectionSource(new JdbcConnectionSource(Properties.getDatabaseConnectionString(savePath) +
+                Properties.getDatabaseConnectionStringInitSuffix()));
         return study;
     }
 
-    public static Study load(File savePath) {
+    public static Study load(File savePath) throws SQLException {
         log.info("Loading existing study from {}", savePath);
-        final Study study = new Study();
-        study.setSavePath(savePath);
-        // TODO loading magic with daos and stuff
+
+        final Study study = new Study(savePath);
+        study.setConnectionSource(new JdbcConnectionSource(Properties.getDatabaseConnectionString(savePath)));
+        StudyLoader.load(study);
         return study;
     }
 
@@ -135,7 +160,9 @@ public class Study {
     }
 
     public void setName(String name) {
+        log.debug("Setting study name to {}", name);
         this.name = name;
+        DatabaseProperties.set(DatabaseProperties.STUDY_NAME, name);
     }
 
     // ONLY FOR TEMPORARILY TESTING!
@@ -162,5 +189,14 @@ public class Study {
 
     public void setSavePath(File savePath) {
         this.savePath = savePath;
+    }
+
+    public ConnectionSource getConnectionSource() {
+        return connectionSource;
+    }
+
+    public void setConnectionSource(ConnectionSource connectionSource) {
+        this.connectionSource = connectionSource;
+        Daos.setConnectionSource(connectionSource);
     }
 }

@@ -6,8 +6,8 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.cell.TextFieldTreeCell;
 import org.obehave.model.Action;
 import org.obehave.model.Observation;
-import org.obehave.model.Study;
 import org.obehave.model.Subject;
+import org.obehave.service.Study;
 import org.obehave.util.I18n;
 
 

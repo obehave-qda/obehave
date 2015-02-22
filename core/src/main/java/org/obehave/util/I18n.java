@@ -8,7 +8,7 @@ import java.util.ResourceBundle;
  * @author Markus Möslinger
  */
 public class I18n {
-    private static final Locale configuredLocale = new Locale(Property.getLanguage());
+    private static final Locale configuredLocale = new Locale(Properties.getLanguage());
 
     private I18n() {
         throw new AssertionError(I18n.getString("exception.constructor.utility"));

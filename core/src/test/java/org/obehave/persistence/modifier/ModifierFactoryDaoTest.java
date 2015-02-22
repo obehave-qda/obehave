@@ -3,8 +3,8 @@ package org.obehave.persistence.modifier;
 import org.junit.BeforeClass;
 import org.obehave.model.Subject;
 import org.obehave.model.modifier.ModifierFactory;
-import org.obehave.persistence.DaoTestBase;
 import org.obehave.persistence.Daos;
+import org.obehave.persistence.DatabaseTest;
 import org.obehave.persistence.ModifierFactoryDao;
 
 import java.sql.SQLException;
@@ -16,7 +16,7 @@ import static org.junit.Assert.fail;
 /**
  * @author Markus Möslinger
  */
-public class ModifierFactoryDaoTest extends DaoTestBase {
+public class ModifierFactoryDaoTest extends DatabaseTest {
     protected static ModifierFactoryDao dao;
 
     @BeforeClass

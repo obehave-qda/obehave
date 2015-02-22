@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * @author Markus Möslinger
  */
-public class SubjectDaoTest extends DaoTestBase {
+public class SubjectDaoTest extends DatabaseTest {
     private static SubjectDao dao;
     private Subject subject;
 

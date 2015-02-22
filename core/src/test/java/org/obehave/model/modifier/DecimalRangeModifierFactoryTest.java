@@ -3,6 +3,7 @@ package org.obehave.model.modifier;
 import org.junit.Before;
 import org.junit.Test;
 import org.obehave.exceptions.FactoryException;
+import org.obehave.exceptions.ValidationException;
 
 import java.math.BigDecimal;
 import java.util.Locale;
@@ -57,12 +58,12 @@ public class DecimalRangeModifierFactoryTest {
         assertEquals(-10, factory.getTo());
     }
 
-    @Test(expected = FactoryException.class)
+    @Test(expected = ValidationException.class)
     public void cannotCreateModifierWithNullInput() throws FactoryException {
         factory.create(null);
     }
 
-    @Test(expected = FactoryException.class)
+    @Test(expected = ValidationException.class)
     public void cannotCreateModifierWithEmptyString() throws FactoryException {
         factory.create("");
     }
