@@ -1,5 +1,7 @@
 package org.obehave.model;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.obehave.exceptions.Validate;
 
 /**
@@ -72,4 +74,24 @@ public class Color {
         return new Color(red, green, blue, opacity);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+        if (obj.getClass() != getClass()) {
+            return false;
+        }
+        Color rhs = (Color) obj;
+
+        return new EqualsBuilder().append(red, rhs.red).append(green, rhs.green).append(blue, rhs.blue).append(opacity, rhs.opacity).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder().append(red).append(green).append(blue).append(opacity).build();
+    }
 }

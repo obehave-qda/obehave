@@ -3,6 +3,7 @@ package org.obehave.model.modifier;
 import org.junit.Before;
 import org.junit.Test;
 import org.obehave.exceptions.FactoryException;
+import org.obehave.exceptions.ValidationException;
 
 import java.math.BigDecimal;
 import java.util.Locale;
@@ -24,45 +25,45 @@ public class DecimalRangeModifierFactoryTest {
     public void constructorSwapsDecimalsIfNeeded() {
         ModifierFactory factory = new ModifierFactory(10, 5);
 
-        assertEquals(factory.getFrom(), 5);
-        assertEquals(factory.getTo(), 10);
+        assertEquals(5, factory.getFrom());
+        assertEquals(10, factory.getTo());
     }
 
     @Test
     public void constructorCreatesObjectsWithSameFromAndTo() {
         ModifierFactory factory = new ModifierFactory(10, 10);
 
-        assertEquals(factory.getFrom(), 10);
-        assertEquals(factory.getTo(), 10);
+        assertEquals(10, factory.getFrom());
+        assertEquals(10, factory.getTo());
     }
 
     public void setRangeWorks() {
         factory.setRange(-5, 5);
 
-        assertEquals(factory.getFrom(), -5);
-        assertEquals(factory.getTo(), 5);
+        assertEquals(-5, factory.getFrom());
+        assertEquals(5, factory.getTo());
     }
 
     public void setRangeWorksWithSwappingOfFromAndTo() {
         factory.setRange(10, 5);
 
-        assertEquals(factory.getFrom(), 5);
-        assertEquals(factory.getTo(), 10);
+        assertEquals(5, factory.getFrom());
+        assertEquals(10, factory.getTo());
     }
 
     public void setRangeWorksWithSameFromAndTo() {
         factory.setRange(-10, -10);
 
-        assertEquals(factory.getFrom(), -10);
-        assertEquals(factory.getTo(), -10);
+        assertEquals(-10, factory.getFrom());
+        assertEquals(-10, factory.getTo());
     }
 
-    @Test(expected = FactoryException.class)
+    @Test(expected = ValidationException.class)
     public void cannotCreateModifierWithNullInput() throws FactoryException {
         factory.create(null);
     }
 
-    @Test(expected = FactoryException.class)
+    @Test(expected = ValidationException.class)
     public void cannotCreateModifierWithEmptyString() throws FactoryException {
         factory.create("");
     }
@@ -71,30 +72,30 @@ public class DecimalRangeModifierFactoryTest {
     public void createModifierWithInteger() throws FactoryException {
         Modifier modifier = factory.create("5");
 
-        assertEquals(modifier.get(), BigDecimal.valueOf(5));
+        assertEquals(BigDecimal.valueOf(5), modifier.get());
     }
 
     @Test
     public void createModifierWithFloatDotAndGermanLocale() throws FactoryException {
-        checkCreationWithLocale("5.5", 5.5, Locale.GERMANY);
+        checkCreationWithLocale(5.5, "5.5", Locale.GERMANY);
     }
 
     @Test
     public void createModifierWithFloatDotAndEnglishLocale() throws FactoryException {
-        checkCreationWithLocale("5.5", 5.5, Locale.US);
+        checkCreationWithLocale(5.5, "5.5", Locale.US);
     }
 
     @Test(expected = FactoryException.class)
     public void cannotCreateModifierWithFloatCommaAndGermanLocale() throws FactoryException {
-        checkCreationWithLocale("5,5", 5.5, Locale.GERMANY);
+        checkCreationWithLocale(5.5, "5,5", Locale.GERMANY);
     }
 
     @Test(expected = FactoryException.class)
     public void cannotCreateModifierWithFloatCommaAndEnglishLocale() throws FactoryException {
-        checkCreationWithLocale("5,5", 5.5, Locale.US);
+        checkCreationWithLocale(5.5, "5,5", Locale.US);
     }
 
-    private void checkCreationWithLocale(String input, double expected, Locale locale) throws FactoryException {
+    private void checkCreationWithLocale(double expected, String input, Locale locale) throws FactoryException {
         Locale defaultLocale = Locale.getDefault();
         Locale.setDefault(locale);
 
@@ -111,7 +112,7 @@ public class DecimalRangeModifierFactoryTest {
     public void createModifierWithNegativeNumber() throws FactoryException {
         Modifier modifier = factory.create("-5");
 
-        assertEquals(modifier.get(), BigDecimal.valueOf(-5));
+        assertEquals(BigDecimal.valueOf(-5), modifier.get());
     }
 
     @Test(expected = FactoryException.class)
@@ -122,13 +123,13 @@ public class DecimalRangeModifierFactoryTest {
     @Test
     public void factoryNameAndDisplayString() {
         factory.setName("Random name");
-        assertEquals(factory.getName(), "Random name");
-        assertEquals(factory.getDisplayString(), "Random name");
+        assertEquals("Random name", factory.getName());
+        assertEquals("Random name", factory.getDisplayString());
     }
 
     @Test
     public void factoryAlias() {
         factory.setAlias("Random alias");
-        assertEquals(factory.getAlias(), "Random alias");
+        assertEquals("Random alias", factory.getAlias());
     }
 }

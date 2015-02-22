@@ -31,7 +31,7 @@ public class SubjectModifierFactoryTest {
 
     @Test
     public void constructionWithSubjectsWorks() {
-        assertEquals(factory.getValidSubjects(), new ArrayList<>(Arrays.asList(VALID_SUBJECTS)));
+        assertEquals(new ArrayList<>(Arrays.asList(VALID_SUBJECTS)), factory.getValidSubjects());
     }
 
     @Test
@@ -39,12 +39,12 @@ public class SubjectModifierFactoryTest {
         ModifierFactory factory = new ModifierFactory((Subject[]) null);
         factory.addValidSubjects(VALID_SUBJECTS);
 
-        assertEquals(factory.getValidSubjects(), new ArrayList<>(Arrays.asList(VALID_SUBJECTS)));
+        assertEquals(new ArrayList<>(Arrays.asList(VALID_SUBJECTS)), factory.getValidSubjects());
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void constructionWithNullDoesntWork() {
-        new ModifierFactory((Subject[]) null);
+    @Test
+    public void constructionWithNullDoesWork() {
+        assertTrue(new ModifierFactory((Subject[]) null).getValidSubjects().isEmpty());
     }
 
     @Test(expected = FactoryException.class)
@@ -62,13 +62,13 @@ public class SubjectModifierFactoryTest {
     @Test
     public void factoryNameAndDisplayString() {
         factory.setName("Random name");
-        assertEquals(factory.getName(), "Random name");
-        assertEquals(factory.getDisplayString(), "Random name");
+        assertEquals("Random name", factory.getName());
+        assertEquals("Random name", factory.getDisplayString());
     }
 
     @Test
     public void factoryAlias() {
         factory.setAlias("Random alias");
-        assertEquals(factory.getAlias(), "Random alias");
+        assertEquals("Random alias", factory.getAlias());
     }
 }

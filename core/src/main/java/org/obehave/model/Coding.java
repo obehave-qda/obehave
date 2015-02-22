@@ -1,17 +1,32 @@
 package org.obehave.model;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 import org.obehave.exceptions.FactoryException;
 import org.obehave.model.modifier.Modifier;
+import org.obehave.persistence.impl.CodingDaoImpl;
 
 /**
  * @author Markus Möslinger
  */
+@DatabaseTable(tableName = "Coding", daoClass = CodingDaoImpl.class)
 public class Coding extends BaseEntity {
+    @DatabaseField(columnName = "subject", foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
     private Subject subject;
+    @DatabaseField(columnName = "action", foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
     private Action action;
+    @DatabaseField(columnName = "modifier", foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
     private Modifier modifier;
+    @DatabaseField(columnName = "start")
     private long startMs;
+    @DatabaseField(columnName = "end")
     private long endMs = -1;
+    @DatabaseField(columnName = "observation", foreign = true, foreignAutoRefresh = true)
+    private Observation observation;
+
+    public Coding() {
+        // framework
+    }
 
     public Coding(Subject subject, Action action, long startMs) {
         this(subject, action, startMs, 0);
@@ -105,5 +120,13 @@ public class Coding extends BaseEntity {
         if (!isStateCoding()) {
             throw new IllegalStateException("Coding has to be a state coding!");
         }
+    }
+
+    public Observation getObservation() {
+        return observation;
+    }
+
+    public void setObservation(Observation observation) {
+        this.observation = observation;
     }
 }

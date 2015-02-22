@@ -2,9 +2,11 @@ package org.obehave.model.modifier;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import org.obehave.exceptions.Validate;
 import org.obehave.model.BaseEntity;
 import org.obehave.model.Subject;
 import org.obehave.persistence.impl.ModifierDaoImpl;
+import org.obehave.util.I18n;
 
 import java.math.BigDecimal;
 
@@ -13,48 +15,54 @@ import java.math.BigDecimal;
  */
 @DatabaseTable(tableName = "Modifier", daoClass = ModifierDaoImpl.class)
 public class Modifier extends BaseEntity {
-    public static enum Type {
-        // this sucks. Due to ORMLite's incapability of handling inheritance strategies, ie. one table per class hierarchy,
-        // we are flattening the class hierarchy to only only class.
-        DECIMAL_MODIFIER, ENUMERATION_MODIFIER, SUBJECT_MODIFIER
+    public static final String COLUMN_TYPE = "type";
+
+    @DatabaseField(columnName = COLUMN_TYPE)
+    private Type type;
+    @DatabaseField(columnName = "modifierFactory", foreign = true, foreignAutoRefresh = true)
+    private ModifierFactory modifierFactory;
+    // DECIMAL RANGE
+    @DatabaseField(columnName = "number")
+    private BigDecimal decimalValue;
+    // ENUMERATION
+    @DatabaseField(columnName = "enumerationValue")
+    private String enumerationValue;
+    // SUBJECT
+    @DatabaseField(columnName = "subject", foreign = true, foreignAutoRefresh = true)
+    private Subject subject;
+
+    private Modifier() {
+        // for frameworks
     }
 
-    @DatabaseField(columnName = "type")
-    private Type type;
-
-    public Modifier(BigDecimal value) {
+    public Modifier(ModifierFactory modifierFactory, BigDecimal value) {
         type = Type.DECIMAL_MODIFIER;
+        setModifierFactory(modifierFactory);
 
-        if (value == null) {
-            throw new IllegalArgumentException("value must not be null!");
-        }
-
+        Validate.isNotNull(value, I18n.getString("validate.modifier.bigdecimal"));
         decimalValue = value;
     }
 
-    public Modifier(String value) {
+
+    public Modifier(ModifierFactory modifierFactory, String value) {
         type = Type.ENUMERATION_MODIFIER;
+        setModifierFactory(modifierFactory);
 
-        if (value == null) {
-            throw new IllegalArgumentException("value must not be null");
-        }
-
+        Validate.isNotNull(value, I18n.getString("validate.modifier.string"));
         this.enumerationValue = value;
     }
 
-    public Modifier(Subject subject) {
+    public Modifier(ModifierFactory modifierFactory, Subject subject) {
         type = Type.SUBJECT_MODIFIER;
+        setModifierFactory(modifierFactory);
 
-        if (subject == null) {
-            throw new IllegalArgumentException("subject must not be null!");
-        }
-
+        Validate.isNotNull(subject, I18n.getString("validate.modifier.subject"));
         this.subject = subject;
     }
 
-
     /**
      * Returns the modifying class
+     *
      * @return the modifying class
      */
     public Object get() {
@@ -66,19 +74,23 @@ public class Modifier extends BaseEntity {
             case SUBJECT_MODIFIER:
                 return subject;
             default:
-                throw new IllegalStateException("Object is in an invalid state");
+                throw new IllegalStateException(I18n.getString("exception.illegalstate", this));
         }
     }
 
-    // DECIMAL RANGE
-    @DatabaseField(columnName = "number")
-    private BigDecimal decimalValue;
+    public ModifierFactory getModifierFactory() {
+        return modifierFactory;
+    }
 
-    // ENUMERATION
-    @DatabaseField(columnName = "enumerationValue")
-    private String enumerationValue;
+    private void setModifierFactory(ModifierFactory modifierFactory) {
+        Validate.isNotNull(modifierFactory, I18n.getString("validate.modifier.modifierfactory"));
 
-    // SUBJECT
-    @DatabaseField(columnName = "subject", foreign = true)
-    private Subject subject;
+        this.modifierFactory = modifierFactory;
+    }
+
+    public static enum Type {
+        // this sucks. Due to ORMLite's incapability of handling inheritance strategies, ie. one table per class hierarchy,
+        // we are flattening the class hierarchy to only only class.
+        DECIMAL_MODIFIER, ENUMERATION_MODIFIER, SUBJECT_MODIFIER
+    }
 }

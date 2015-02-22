@@ -11,64 +11,64 @@ public class ColorTest {
     @Test
     public void colorWithRGB() {
         Color c = new Color(10, 11, 12);
-        assertEquals(c.getRed(), 10);
-        assertEquals(c.getGreen(), 11);
-        assertEquals(c.getBlue(), 12);
-        assertEquals(c.getOpacity(), 255);
+        assertEquals(10, c.getRed());
+        assertEquals(11, c.getGreen());
+        assertEquals(12, c.getBlue());
+        assertEquals(255, c.getOpacity());
     }
 
     @Test
     public void colorWithGray() {
         Color c = new Color(10);
-        assertEquals(c.getRed(), 10);
-        assertEquals(c.getGreen(), 10);
-        assertEquals(c.getBlue(), 10);
-        assertEquals(c.getOpacity(), 255);
+        assertEquals(10, c.getRed());
+        assertEquals(10, c.getGreen());
+        assertEquals(10, c.getBlue());
+        assertEquals(255, c.getOpacity());
     }
 
     @Test
     public void colorWithRGBOpacity() {
         Color c = new Color(0xAF, 0xBF, 0xCF, 0xAB);
-        assertEquals(c.getRed(), 0xAF);
-        assertEquals(c.getGreen(), 0xBF);
-        assertEquals(c.getBlue(), 0xCF);
-        assertEquals(c.getOpacity(), 0xAB);
+        assertEquals(0xAF, c.getRed());
+        assertEquals(0xBF, c.getGreen());
+        assertEquals(0xCF, c.getBlue());
+        assertEquals(0xAB, c.getOpacity());
     }
 
     @Test
     public void valueOfWith6Digits() {
         Color c = Color.valueOf("FF1000");
-        assertEquals(c.getRed(), 0xFF);
-        assertEquals(c.getRed(), 0x10);
-        assertEquals(c.getRed(), 0x00);
-        assertEquals(c.getOpacity(), 0xFF);
+        assertEquals(0xFF, c.getRed());
+        assertEquals(0x10, c.getGreen());
+        assertEquals(0x00, c.getBlue());
+        assertEquals(0xFF, c.getOpacity());
     }
 
     @Test
     public void valueOfWith8Digits() {
         Color c = Color.valueOf("FF100043");
-        assertEquals(c.getRed(), 0xFF);
-        assertEquals(c.getRed(), 0x10);
-        assertEquals(c.getRed(), 0x00);
-        assertEquals(c.getOpacity(), 0x43);
+        assertEquals(0xFF, c.getRed());
+        assertEquals(0x10, c.getGreen());
+        assertEquals(0x00, c.getBlue());
+        assertEquals(0x43, c.getOpacity());
     }
 
     @Test
     public void valueOfWith6DigitsAndHash() {
         Color c = Color.valueOf("#FF1000");
-        assertEquals(c.getRed(), 0xFF);
-        assertEquals(c.getRed(), 0x10);
-        assertEquals(c.getRed(), 0x00);
-        assertEquals(c.getOpacity(), 0xFF);
+        assertEquals(0xFF, c.getRed());
+        assertEquals(0x10, c.getGreen());
+        assertEquals(0x00, c.getBlue());
+        assertEquals(0xFF, c.getOpacity());
     }
 
     @Test
     public void valueOfWith8DigitsAndHash() {
         Color c = Color.valueOf("#FF100043");
-        assertEquals(c.getRed(), 0xFF);
-        assertEquals(c.getRed(), 0x10);
-        assertEquals(c.getRed(), 0x00);
-        assertEquals(c.getOpacity(), 0x43);
+        assertEquals(0xFF, c.getRed());
+        assertEquals(0x10, c.getGreen());
+        assertEquals(0x00, c.getBlue());
+        assertEquals(0x43, c.getOpacity());
     }
 
     @Test(expected = IllegalArgumentException.class)

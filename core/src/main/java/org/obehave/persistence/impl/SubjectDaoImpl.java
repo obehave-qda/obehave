@@ -14,4 +14,9 @@ public class SubjectDaoImpl extends BaseDaoImpl<Subject, Long> implements Subjec
     public SubjectDaoImpl(ConnectionSource connectionSource) throws SQLException {
         super(connectionSource, Subject.class);
     }
+
+    @Override
+    public Subject queryForName(String name) throws SQLException {
+        return queryBuilder().where().eq(Subject.COLUMN_NAME, name).queryForFirst();
+    }
 }

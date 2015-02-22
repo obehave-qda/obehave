@@ -6,8 +6,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.joda.time.DateTime;
 
-import java.util.Date;
-
 
 /**
  * Serves as a base class for all entities, which will be persisted into sql databases.
@@ -63,7 +61,6 @@ public abstract class BaseEntity {
     public String toString() {
         return new ToStringBuilder(this)
                 .append("id", id)
-                .append("modified", modified)
                 .toString();
     }
 }

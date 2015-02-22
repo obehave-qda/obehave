@@ -1,11 +1,23 @@
-package org.obehave.model;
+package org.obehave.service;
 
+import com.j256.ormlite.jdbc.JdbcConnectionSource;
+import com.j256.ormlite.support.ConnectionSource;
 import org.obehave.events.ChangeEvent;
 import org.obehave.events.ChangeType;
 import org.obehave.events.EventBusHolder;
+import org.obehave.model.Action;
+import org.obehave.model.Node;
+import org.obehave.model.Observation;
+import org.obehave.model.Subject;
 import org.obehave.model.modifier.ModifierFactory;
+import org.obehave.persistence.Daos;
+import org.obehave.util.DatabaseProperties;
+import org.obehave.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.sql.SQLException;
 
 /**
  * A study contains multiple subjects, actions and observations.
@@ -15,20 +27,53 @@ public class Study {
 
     private String name;
 
-    private Node<Subject> subjects = new Node<>();
-    private Node<Action> actions = new Node<>();
-    private Node<Observation> observations = new Node<>();
-    private Node<ModifierFactory> modifierFactories = new Node<>();
+    private Node subjects = new Node(Subject.class);
+    private Node actions = new Node(Action.class);
+    private Node observations = new Node(Observation.class);
+    private Node modifierFactories = new Node(ModifierFactory.class);
+    private ConnectionSource connectionSource;
 
-    public Study(){
+    private File savePath;
+
+    private Study() {
 
     }
 
+    private Study(File savePath) {
+        setSavePath(savePath);
+    }
+
+    @Deprecated
     public Study(String name) {
         this.name = name;
     }
 
-    public Node<Subject> getSubjects() {
+    @Deprecated
+    public static Study create() {
+        log.info("Creating empty study");
+
+        return new Study();
+    }
+
+    public static Study create(File savePath) throws SQLException {
+        log.info("Creating new study at {}", savePath);
+
+        final Study study = new Study(savePath);
+        study.setConnectionSource(new JdbcConnectionSource(Properties.getDatabaseConnectionString(savePath) +
+                Properties.getDatabaseConnectionStringInitSuffix()));
+        return study;
+    }
+
+    public static Study load(File savePath) throws SQLException {
+        log.info("Loading existing study from {}", savePath);
+
+        final Study study = new Study(savePath);
+        study.setConnectionSource(new JdbcConnectionSource(Properties.getDatabaseConnectionString(savePath)));
+        StudyLoader.load(study);
+        return study;
+    }
+
+    public Node getSubjects() {
         return subjects;
     }
 
@@ -40,9 +85,9 @@ public class Study {
 
         log.debug("Adding subject {}", subject);
 
-        final boolean added = subjects.addChild(subject);
+        subjects.addChild(subject);
         EventBusHolder.post(new ChangeEvent<>(subject, ChangeType.CREATE));
-        return added;
+        return true;
     }
 
     public boolean removeSubject(Subject subject) {
@@ -52,7 +97,7 @@ public class Study {
         return deleted;
     }
 
-    public Node<Action> getActions() {
+    public Node getActions() {
         return actions;
     }
 
@@ -63,9 +108,9 @@ public class Study {
         }
 
         log.debug("Adding action {}", action);
-        final boolean added = actions.addChild(action);
+        actions.addChild(action);
         EventBusHolder.post(new ChangeEvent<>(action, ChangeType.CREATE));
-        return added;
+        return true;
     }
 
     public boolean removeAction(Action action) {
@@ -75,7 +120,7 @@ public class Study {
         return deleted;
     }
 
-    public Node<Observation> getObservations() {
+    public Node getObservations() {
         return observations;
     }
 
@@ -86,9 +131,9 @@ public class Study {
         }
 
         log.debug("Adding observation {}", observation);
-        final boolean added = observations.addChild(observation);
+        observations.addChild(observation);
         EventBusHolder.post(new ChangeEvent<>(observation, ChangeType.CREATE));
-        return added;
+        return true;
     }
 
     public boolean addModifierFactory(ModifierFactory modifierFactory) {
@@ -98,9 +143,9 @@ public class Study {
         }
 
         log.debug("Adding modifierFactory {}", modifierFactory);
-        final boolean added = modifierFactories.addChild(modifierFactory);
+        modifierFactories.addChild(modifierFactory);
         EventBusHolder.post(new ChangeEvent<>(modifierFactory, ChangeType.CREATE));
-        return added;
+        return true;
     }
 
     public boolean removeObservation(Observation observation) {
@@ -115,7 +160,9 @@ public class Study {
     }
 
     public void setName(String name) {
+        log.debug("Setting study name to {}", name);
         this.name = name;
+        DatabaseProperties.set(DatabaseProperties.STUDY_NAME, name);
     }
 
     // ONLY FOR TEMPORARILY TESTING!
@@ -134,5 +181,22 @@ public class Study {
     private static String getRandomString(String prefix) {
         int number = (int) (Math.random() * 5);
         return prefix + " " + number;
+    }
+
+    public File getSavePath() {
+        return savePath;
+    }
+
+    public void setSavePath(File savePath) {
+        this.savePath = savePath;
+    }
+
+    public ConnectionSource getConnectionSource() {
+        return connectionSource;
+    }
+
+    public void setConnectionSource(ConnectionSource connectionSource) {
+        this.connectionSource = connectionSource;
+        Daos.setConnectionSource(connectionSource);
     }
 }
