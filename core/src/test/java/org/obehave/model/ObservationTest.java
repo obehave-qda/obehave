@@ -1,12 +1,8 @@
-package org.obehave.model.domain;
+package org.obehave.model;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
-import org.obehave.model.Action;
-import org.obehave.model.Coding;
-import org.obehave.model.Observation;
-import org.obehave.model.Subject;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
