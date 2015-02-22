@@ -9,6 +9,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.obehave.model.Study;
+import org.obehave.util.I18n;
 import org.obehave.view.controller.components.VideoComponent;
 import org.obehave.view.controller.components.coding.CodingComponent;
 import org.obehave.view.controller.components.tree.ProjectTreeComponent;
@@ -55,10 +56,10 @@ public class MainController {
     @FXML
     void loadVideo(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open Media File");
+        fileChooser.setTitle(I18n.getString("ui.video.open.title"));
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Media Files", "*.mp4"),
-                new FileChooser.ExtensionFilter("All Files", "*.*"));
+                new FileChooser.ExtensionFilter(I18n.getString("ui.filefilter.video"), "*.mp4"),
+                new FileChooser.ExtensionFilter(I18n.getString("ui.filefilter.all"), "*.*"));
 
         videoComponent.loadFile(fileChooser.showOpenDialog(null));
     }
@@ -83,7 +84,7 @@ public class MainController {
 
     public void chooseStudy() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle(resources.getString("dialog.title.openfile"));
+        fileChooser.setTitle(resources.getString("ui.dialog.title.openfile"));
 
         File chosenFile;
         do {

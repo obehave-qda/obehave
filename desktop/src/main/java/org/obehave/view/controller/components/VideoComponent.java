@@ -8,6 +8,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import org.obehave.exceptions.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,9 +49,7 @@ public class VideoComponent extends BorderPane {
     }
 
     private Media toMedia(File file) {
-        if (file == null) {
-            throw new IllegalArgumentException("File must not be null");
-        }
+        Validate.isNotNull(file, "File");
 
         log.debug("Converting {} to Media", file);
         return new Media(file.toURI().toString());
