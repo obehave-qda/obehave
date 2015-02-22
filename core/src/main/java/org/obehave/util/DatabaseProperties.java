@@ -25,7 +25,7 @@ public class DatabaseProperties {
             final Property property = Daos.property().getProperty(key);
             return property == null ? null : property.getValue();
         } catch (SQLException e) {
-            throw new DatabaseUnavailableException(I18n.getString("exception.database.property.read", key), e);
+            throw new DatabaseUnavailableException(I18n.get("exception.database.property.read", key), e);
         }
     }
 
@@ -33,7 +33,7 @@ public class DatabaseProperties {
         try {
             Daos.property().setOrUpdateProperty(key, value);
         } catch (SQLException e) {
-            throw new DatabaseUnavailableException(I18n.getString("exception.database.property.write", key, value), e);
+            throw new DatabaseUnavailableException(I18n.get("exception.database.property.write", key, value), e);
         }
     }
 }

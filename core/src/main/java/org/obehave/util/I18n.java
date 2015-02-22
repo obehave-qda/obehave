@@ -26,7 +26,7 @@ public class I18n {
         return bundle().getString(key);
     }
 
-    public static String getString(String key, Object... substitutions) {
+    public static String get(String key, Object... substitutions) {
         return MessageFormat.format(getString(key), substitutions);
     }
 }

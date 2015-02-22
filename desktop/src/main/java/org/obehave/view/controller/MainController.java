@@ -125,7 +125,7 @@ public class MainController {
                     fileChooser.setInitialDirectory(defaultSaveFolder);
                 } else {
                     AlertUtil.showError(I18n.getString("ui.study.error.defaultsavefolder.title"),
-                            I18n.getString("ui.study.error.defaultsavefolder.description", defaultSaveFolder));
+                            I18n.get("ui.study.error.defaultsavefolder.description", defaultSaveFolder));
                 }
             }
             fileChooser.setTitle(selectedButtonTitle);
@@ -143,7 +143,7 @@ public class MainController {
                 }
             } catch (SQLException e) {
                 AlertUtil.showError(I18n.getString("ui.study.error.database.title"),
-                        I18n.getString("ui.study.error.database.description", e.getMessage()), e);
+                        I18n.get("ui.study.error.database.description", e.getMessage()), e);
             }
         } while (study == null);
 
