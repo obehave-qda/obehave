@@ -72,7 +72,7 @@ public class MainController {
     @FXML
     void close(ActionEvent event) {
         log.info("Closing application");
-        ((Stage) videoComponent.getScene().getWindow()).close();
+        System.exit(0);
     }
 
     @FXML
