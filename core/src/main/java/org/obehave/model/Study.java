@@ -24,12 +24,28 @@ public class Study {
 
     private File savePath;
 
-    public Study(){
+    private Study(){
 
     }
 
+    @Deprecated
     public Study(String name) {
         this.name = name;
+    }
+
+    public static Study create(File savePath) {
+        log.info("Creating new study at {}", savePath);
+        final Study study = new Study();
+        study.setSavePath(savePath);
+        return study;
+    }
+
+    public static Study load(File savePath) {
+        log.info("Loading existing study from {}", savePath);
+        final Study study = new Study();
+        study.setSavePath(savePath);
+        // TODO loading magic with daos and stuff
+        return study;
     }
 
     public Node getSubjects() {
