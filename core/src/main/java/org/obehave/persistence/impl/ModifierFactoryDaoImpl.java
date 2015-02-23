@@ -40,8 +40,6 @@ public class ModifierFactoryDaoImpl extends BaseDaoImpl<ModifierFactory, Long> i
 
     @SuppressWarnings("unchecked")
     private void createCollections(ModifierFactory modifierFactory) throws SQLException {
-        Daos.setConnectionSource(connectionSource);
-
         try {
             switch (modifierFactory.getType()) {
                 case ENUMERATION_MODIFIER_FACTORY:
@@ -66,7 +64,7 @@ public class ModifierFactoryDaoImpl extends BaseDaoImpl<ModifierFactory, Long> i
     }
 
     private void createValidEnumerationValues(Collection<EnumerationItem> enumerationItems) throws SQLException {
-        EnumerationItemDao enumerationItemDao = Daos.enumerationItem();
+        EnumerationItemDao enumerationItemDao = Daos.get(getConnectionSource()).enumerationItem();
 
         for (EnumerationItem enumerationItem : enumerationItems) {
             enumerationItemDao.create(enumerationItem);
@@ -75,7 +73,7 @@ public class ModifierFactoryDaoImpl extends BaseDaoImpl<ModifierFactory, Long> i
     }
 
     private void createValidSubjectValues(Collection<ValidSubject> validSubjects) throws SQLException {
-        ValidSubjectDao validSubjectDao = Daos.validSubject();
+        ValidSubjectDao validSubjectDao = Daos.get(getConnectionSource()).validSubject();
 
         for (ValidSubject validSubject : validSubjects) {
             validSubjectDao.create(validSubject);

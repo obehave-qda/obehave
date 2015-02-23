@@ -22,28 +22,28 @@ public class StudyLoader {
         long start = System.currentTimeMillis();
 
         int subjects = 0;
-        for (Subject s : Daos.subject().queryForAll()) {
+        for (Subject s : Daos.get().subject().queryForAll()) {
             log.trace("Loaded subject: {}", s);
             study.addSubject(s);
             subjects++;
         }
 
         int actions = 0;
-        for (Action a : Daos.action().queryForAll()) {
+        for (Action a : Daos.get().action().queryForAll()) {
             log.trace("Loaded action: {}", a);
             study.addAction(a);
             actions++;
         }
 
         int modifierFactories = 0;
-        for (ModifierFactory m : Daos.modifierFactory().queryForAll()) {
+        for (ModifierFactory m : Daos.get().modifierFactory().queryForAll()) {
             log.trace("Loaded modifierFactory: {}", m);
             study.addModifierFactory(m);
             modifierFactories++;
         }
 
         int observations = 0;
-        for (Observation o : Daos.observation().queryForAll()) {
+        for (Observation o : Daos.get().observation().queryForAll()) {
             log.trace("Loaded observation: {}", o);
             study.addObservation(o);
             observations++;

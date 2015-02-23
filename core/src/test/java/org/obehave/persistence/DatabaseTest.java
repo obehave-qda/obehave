@@ -32,7 +32,7 @@ public class DatabaseTest {
         }
 
         connectionSource = new JdbcConnectionSource("jdbc:h2:mem:obehave;INIT=runscript from 'classpath:sql/create.sql'\\;RUNSCRIPT FROM 'classpath:sql/populate.sql'");
-        Daos.setConnectionSource(connectionSource);
+        Daos.asDefault(connectionSource);
 
         if (DEBUG_DATABASE) {
             log.debug("Started Webserver at {}", webServer.getURL());
@@ -48,6 +48,6 @@ public class DatabaseTest {
             tcpServer.stop();
         }
         connectionSource.close();
-        Daos.setConnectionSource(null);
+        Daos.get().close();
     }
 }

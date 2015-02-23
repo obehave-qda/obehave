@@ -19,14 +19,14 @@ public class ActionDaoTest extends DatabaseTest {
         Action a2 = new Action("Flying", Action.Type.STATE);
 
         a1.setRecurring(5);
-        final ModifierFactory modifierFactory = Daos.modifierFactory().queryForName("Slow Or Fast");
+        final ModifierFactory modifierFactory = Daos.get().modifierFactory().queryForName("Slow Or Fast");
         a2.setModifierFactory(modifierFactory);
 
-        Daos.action().create(a1);
-        Daos.action().create(a2);
+        Daos.get().action().create(a1);
+        Daos.get().action().create(a2);
 
-        assertAction(Daos.action().queryForSameId(a1), "Jumping", "Ho", 5, null, Action.Type.POINT);
-        assertAction(Daos.action().queryForSameId(a2), "Flying", null, 0, modifierFactory, Action.Type.STATE);
+        assertAction(Daos.get().action().queryForSameId(a1), "Jumping", "Ho", 5, null, Action.Type.POINT);
+        assertAction(Daos.get().action().queryForSameId(a2), "Flying", null, 0, modifierFactory, Action.Type.STATE);
     }
 
     private void assertAction(Action a, String name, String alias, int recurring, ModifierFactory modifierFactory, Action.Type type) {

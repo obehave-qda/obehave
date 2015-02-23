@@ -22,7 +22,7 @@ public class DatabaseProperties {
 
     public static String get(String key) {
         try {
-            final Property property = Daos.property().getProperty(key);
+            final Property property = Daos.get().property().getProperty(key);
             return property == null ? null : property.getValue();
         } catch (SQLException e) {
             throw new DatabaseUnavailableException(I18n.get("exception.database.property.read", key), e);
@@ -31,7 +31,7 @@ public class DatabaseProperties {
 
     public static void set(String key, String value) {
         try {
-            Daos.property().setOrUpdateProperty(key, value);
+            Daos.get().property().setOrUpdateProperty(key, value);
         } catch (SQLException e) {
             throw new DatabaseUnavailableException(I18n.get("exception.database.property.write", key, value), e);
         }

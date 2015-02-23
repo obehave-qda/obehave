@@ -23,10 +23,10 @@ public class NodeDaoTest extends DatabaseTest {
         Subject s2 = new Subject("Second Subject");
         Subject s3 = new Subject("Third Subject");
         Subject s4 = new Subject("Fourth Subject");
-        Daos.subject().create(s1);
-        Daos.subject().create(s2);
-        Daos.subject().create(s3);
-        Daos.subject().create(s4);
+        Daos.get().subject().create(s1);
+        Daos.get().subject().create(s2);
+        Daos.get().subject().create(s3);
+        Daos.get().subject().create(s4);
 
         Node node1 = new Node(Subject.class);
         Node node2 = new Node(Subject.class);
@@ -52,9 +52,9 @@ public class NodeDaoTest extends DatabaseTest {
         node7.setData(s4);
 
 
-        Daos.node().create(node1);
+        Daos.get().node().create(node1);
 
-        Node loadedNode1 = Daos.node().queryForSameId(node1);
+        Node loadedNode1 = Daos.get().node().queryForSameId(node1);
         Node loadedNode2 = loadedNode1.getChildren(0);
         Node loadedNode3 = loadedNode1.getChildren(1);
         Node loadedNode4 = loadedNode3.getChildren(0);
@@ -78,11 +78,11 @@ public class NodeDaoTest extends DatabaseTest {
         Observation observation1 = new Observation("Observation1");
         Observation observation2 = new Observation("Observation2");
 
-        Daos.subject().create(subject);
-        Daos.action().create(action);
-        Daos.modifierFactory().create(modifierFactory);
-        Daos.observation().create(observation1);
-        Daos.observation().create(observation2);
+        Daos.get().subject().create(subject);
+        Daos.get().action().create(action);
+        Daos.get().modifierFactory().create(modifierFactory);
+        Daos.get().observation().create(observation1);
+        Daos.get().observation().create(observation2);
 
         Node s1 = new Node(Subject.class);
         Node a1 = new Node(Action.class);
@@ -105,34 +105,34 @@ public class NodeDaoTest extends DatabaseTest {
         o1.setData(observation1);
         o2.setData(observation2);
 
-        Daos.node().create(s1);
-        Daos.node().create(a1);
-        Daos.node().create(a2);
-        Daos.node().create(m1);
-        Daos.node().create(m2);
-        Daos.node().create(o1);
-        Daos.node().create(o2);
+        Daos.get().node().create(s1);
+        Daos.get().node().create(a1);
+        Daos.get().node().create(a2);
+        Daos.get().node().create(m1);
+        Daos.get().node().create(m2);
+        Daos.get().node().create(o1);
+        Daos.get().node().create(o2);
 
         // s1, a1 and m1 should be the only roots, but o1 and o2 are both ones
-        List<Node> rootSubject = Daos.node().getRoot(Subject.class);
+        List<Node> rootSubject = Daos.get().node().getRoot(Subject.class);
         assertEquals(1, rootSubject.size());
         assertEquals("Parent of subject", rootSubject.get(0).getTitle());
         assertNull(rootSubject.get(0).getData());
         assertEquals(subject, rootSubject.get(0).getChildren(0).getData());
 
-        List<Node> rootAction = Daos.node().getRoot(Action.class);
+        List<Node> rootAction = Daos.get().node().getRoot(Action.class);
         assertEquals(1, rootAction.size());
         assertNull(rootAction.get(0).getTitle());
         assertNull(rootAction.get(0).getData());
         assertEquals(action, rootAction.get(0).getChildren(0).getData());
 
-        List<Node> rootModifierFactory = Daos.node().getRoot(ModifierFactory.class);
+        List<Node> rootModifierFactory = Daos.get().node().getRoot(ModifierFactory.class);
         assertEquals(1, rootModifierFactory.size());
         assertEquals("Parent of Modifier", rootModifierFactory.get(0).getTitle());
         assertNull(rootModifierFactory.get(0).getData());
         assertEquals(modifierFactory, rootModifierFactory.get(0).getChildren(0).getData());
 
-        List<Node> rootObservation = Daos.node().getRoot(Observation.class);
+        List<Node> rootObservation = Daos.get().node().getRoot(Observation.class);
         assertEquals(2, rootObservation.size());
         assertNull(rootObservation.get(0).getTitle(), rootObservation.get(1).getTitle());
         assertEquals(observation1, rootObservation.get(0).getData());

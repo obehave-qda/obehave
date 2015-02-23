@@ -22,8 +22,8 @@ public class ModifierDaoTest extends DatabaseTest {
 
     @BeforeClass
     public static void prepare() throws SQLException {
-        dao = Daos.modifier();
-        modifierFactoryDao = Daos.modifierFactory();
+        dao = Daos.get().modifier();
+        modifierFactoryDao = Daos.get().modifierFactory();
     }
 
     protected static void assertModifier(Modifier modifier, ModifierFactory modifierFactory, Object object) {

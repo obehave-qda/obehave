@@ -19,7 +19,7 @@ public class SubjectDaoTest extends DatabaseTest {
 
     @BeforeClass
     public static void prepare() throws SQLException {
-        dao = Daos.subject();
+        dao = Daos.get().subject();
     }
 
     @Before

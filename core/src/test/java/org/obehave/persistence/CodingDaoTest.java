@@ -23,8 +23,8 @@ public class CodingDaoTest extends DatabaseTest {
 
     @BeforeClass
     public static void prepare() throws SQLException {
-        dao = Daos.coding();
-        subjectDao = Daos.subject();
+        dao = Daos.get().coding();
+        subjectDao = Daos.get().subject();
     }
 
     @Before
@@ -63,9 +63,9 @@ public class CodingDaoTest extends DatabaseTest {
     }
 
     private void createCodingWithLoadedActionAndInput(String actionName, String modifierInput, boolean state) throws SQLException, FactoryException {
-        Subject s1 = Daos.subject().queryForName("Subject1");
-        Action a1 = Daos.action().queryForName(actionName);
-        Observation o1 = Daos.observation().queryForName("Observation1");
+        Subject s1 = Daos.get().subject().queryForName("Subject1");
+        Action a1 = Daos.get().action().queryForName(actionName);
+        Observation o1 = Daos.get().observation().queryForName("Observation1");
 
         Coding c;
         if (!state) {
@@ -76,8 +76,8 @@ public class CodingDaoTest extends DatabaseTest {
 
         o1.addCoding(c);
 
-        Daos.coding().create(c);
-        assertCoding(Daos.coding().queryForSameId(c), c.getSubject(), c.getAction(), c.getModifier(), c.getObservation(), c.getStartMs(), c.getEndMs());
+        Daos.get().coding().create(c);
+        assertCoding(Daos.get().coding().queryForSameId(c), c.getSubject(), c.getAction(), c.getModifier(), c.getObservation(), c.getStartMs(), c.getEndMs());
     }
 
     private void assertCoding(Coding c, Subject subject, Action action, Modifier modifier, Observation observation, long start, long end) {
