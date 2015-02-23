@@ -66,8 +66,7 @@ public class Study {
         log.info("Loading existing study from {}", savePath);
 
         final Study study = new Study(savePath);
-        Daos.asDefault(new JdbcConnectionSource(Properties.getDatabaseConnectionString(savePath) +
-                Properties.getDatabaseConnectionStringInitSuffix()));
+        Daos.asDefault(new JdbcConnectionSource(Properties.getDatabaseConnectionString(savePath)));
         StudyLoader.load(study);
         return study;
     }
