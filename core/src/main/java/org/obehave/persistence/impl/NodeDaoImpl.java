@@ -40,7 +40,7 @@ public class NodeDaoImpl extends BaseDaoImpl<Node, Long> implements NodeDao {
 
             for (Node child : children) {
                 // a createOrUpdate could be more appropriate
-                Daos.node().create(child);
+                Daos.get(getConnectionSource()).node().create(child);
                 log.trace("Created {}", child);
             }
         } catch (NoSuchFieldException | IllegalAccessException e) {

@@ -15,7 +15,7 @@ import java.util.Arrays;
 public class SubjectModifierFactoryDaoTest extends ModifierFactoryDaoTest {
     @Test
     public void persistingModifierFactory() throws SQLException {
-        SubjectDao subjectDao = Daos.subject();
+        SubjectDao subjectDao = Daos.get().subject();
 
         Subject s1 = new Subject("Hans");
         Subject s2 = new Subject("Kurt");

@@ -1,7 +1,6 @@
 package org.obehave.service;
 
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
-import com.j256.ormlite.support.ConnectionSource;
 import org.obehave.events.ChangeEvent;
 import org.obehave.events.ChangeType;
 import org.obehave.events.EventBusHolder;
@@ -31,7 +30,6 @@ public class Study {
     private Node actions = new Node(Action.class);
     private Node observations = new Node(Observation.class);
     private Node modifierFactories = new Node(ModifierFactory.class);
-    private ConnectionSource connectionSource;
 
     private File savePath;
 
@@ -59,7 +57,7 @@ public class Study {
         log.info("Creating new study at {}", savePath);
 
         final Study study = new Study(savePath);
-        study.setConnectionSource(new JdbcConnectionSource(Properties.getDatabaseConnectionString(savePath) +
+        Daos.asDefault(new JdbcConnectionSource(Properties.getDatabaseConnectionString(savePath) +
                 Properties.getDatabaseConnectionStringInitSuffix()));
         return study;
     }
@@ -68,7 +66,8 @@ public class Study {
         log.info("Loading existing study from {}", savePath);
 
         final Study study = new Study(savePath);
-        study.setConnectionSource(new JdbcConnectionSource(Properties.getDatabaseConnectionString(savePath)));
+        Daos.asDefault(new JdbcConnectionSource(Properties.getDatabaseConnectionString(savePath) +
+                Properties.getDatabaseConnectionStringInitSuffix()));
         StudyLoader.load(study);
         return study;
     }
@@ -189,14 +188,5 @@ public class Study {
 
     public void setSavePath(File savePath) {
         this.savePath = savePath;
-    }
-
-    public ConnectionSource getConnectionSource() {
-        return connectionSource;
-    }
-
-    public void setConnectionSource(ConnectionSource connectionSource) {
-        this.connectionSource = connectionSource;
-        Daos.setConnectionSource(connectionSource);
     }
 }

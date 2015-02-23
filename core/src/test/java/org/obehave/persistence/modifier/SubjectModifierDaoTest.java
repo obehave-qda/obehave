@@ -17,7 +17,7 @@ public class SubjectModifierDaoTest extends ModifierDaoTest {
 
     @BeforeClass
     public static void prepareSubjectDao() throws SQLException {
-        subjectDao = Daos.subject();
+        subjectDao = Daos.get().subject();
     }
 
     @Test
