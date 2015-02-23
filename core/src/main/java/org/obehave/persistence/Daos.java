@@ -13,16 +13,18 @@ import org.obehave.persistence.ormlite.ClassType;
 import org.obehave.persistence.ormlite.ColorType;
 import org.obehave.persistence.ormlite.FileType;
 import org.obehave.persistence.ormlite.VersionDateTimeType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Utility class for retrieving DAOs. Not sure if thread safe. Probably not.
  */
 public class Daos {
+    private static final Logger log = LoggerFactory.getLogger(Daos.class);
+
     private static Map<ConnectionSource, Daos> daos = new HashMap<>();
     private static Daos defaultInstance;
 
@@ -44,6 +46,7 @@ public class Daos {
     }
 
     static {
+        log.debug("Register custom data persisters");
         DataPersisterManager.registerDataPersisters(ColorType.getInstance());
         DataPersisterManager.registerDataPersisters(VersionDateTimeType.getInstance());
         DataPersisterManager.registerDataPersisters(ClassType.getInstance());
@@ -129,11 +132,26 @@ public class Daos {
         daos.remove(connectionSource);
     }
 
+    /**
+     * Closing all registered ConnectionSources. In case of an exception, the other connections will be closed
+     * and the last exception will be thrown afterwards
+     * @throws SQLException the last {@link java.sql.SQLException} that was thrown
+     */
     public static void closeAll() throws SQLException {
-        Iterator<Daos> iter = daos.values().iterator();
+        SQLException lastException = null;
 
-        while (iter.hasNext()) {
-            iter.next().close();
+        // avoiding ConcurrentModificationExceptions
+        for (Daos daoToClose : new ArrayList<>(daos.values())) {
+            try {
+                daoToClose.close();
+            } catch (SQLException e) {
+                lastException = e;
+                log.error("Error while closing connection", e);
+            }
+        }
+
+        if (lastException != null) {
+            throw lastException;
         }
     }
 

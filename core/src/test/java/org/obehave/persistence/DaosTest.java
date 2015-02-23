@@ -81,4 +81,15 @@ public class DaosTest {
         Daos.asDefault(connectionSource).close();
         Daos.get(secondConnectionSource).asDefault();
     }
+
+    @Test
+    public void closeAll() throws SQLException {
+        assertTrue(Daos.get(connectionSource).getConnectionSource().isOpen());
+        assertTrue(Daos.get(secondConnectionSource).getConnectionSource().isOpen());
+
+        Daos.closeAll();
+
+        assertFalse(connectionSource.isOpen());
+        assertFalse(secondConnectionSource.isOpen());
+    }
 }
