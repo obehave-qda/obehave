@@ -3,52 +3,151 @@ package org.obehave.android.ui.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.TextView;
 import org.obehave.android.R;
 import org.obehave.android.ui.views.Circle;
+import org.obehave.model.Node;
 import org.obehave.model.Subject;
 
 import java.util.List;
 
 
-public class SubjectAdapter extends ArrayAdapter{
+public class SubjectAdapter extends BaseAdapter{
 
-    static class ViewHolder{
+
+    static class ViewHolderSubject {
         public Circle circle;
         public TextView txtView;
     }
 
-    private Context mContext;
+    static class ViewHolderNode {
+        public TextView txtView;
+    }
 
-    public SubjectAdapter(Context context, List<Subject> subjects) {
-        super(context, 0, subjects);
+    private Context mContext;
+    private LayoutInflater inflater;
+    private List<Subject> subjects;
+    private List<Node> nodes;
+
+    private static final int TYPE_NODE = 0;
+    private static final int TYPE_SUBJECT = 1;
+    private static final int TYPE_MAX_COUNT = 2;
+
+    @Override
+    public int getItemViewType(int position) {
+        if(position < nodes.size()){
+            return TYPE_NODE;
+        }
+        else {
+            return TYPE_SUBJECT;
+        }
+    }
+
+    @Override
+    public int getViewTypeCount() {
+        return TYPE_MAX_COUNT;
+    }
+
+    public SubjectAdapter(Context context, List<Subject> subjects, List<Node> nodes) {
+        super();
         mContext = context;
+        setSubjects(subjects);
+        setNodes(nodes);
+        Log.d("Adapter", "Node COUNT"+  nodes.size());
+        Log.d("Adapter", "SUBJECT COUNT: "+  subjects.size());
+    }
+
+    private void setSubjects(List<Subject> subjects) {
+        this.subjects = subjects;
+    }
+
+    private void setNodes(List<Node> nodes) {
+        this.nodes = nodes;
+    }
+
+    @Override
+    public int getCount() {
+        return (subjects.size() + nodes.size());
+    }
+
+    @Override
+    public Object getItem(int position) {
+
+        if(position < nodes.size()){
+            return nodes.get(position);
+        }
+        else {
+            return subjects.get(position -(nodes.size()));
+        }
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder; // to reference the child views for later actions
 
+        Log.d("Adapter", "COUNT: " + getCount());
+        Log.d("Adapter", "POSITION: " + position);
+        int type = getItemViewType(position);
+        Object item = getItem(position);
+        if(type == TYPE_NODE){
+            convertView = getView((Node) item, convertView, parent);
+            fillViewHolder((ViewHolderNode)convertView.getTag(), (Node) item);
+        }
+        else if(type == TYPE_SUBJECT){
+            convertView = getView((Subject) item, convertView, parent);
+            Object data = convertView.getTag();
+            fillViewHolder((ViewHolderSubject)convertView.getTag(), (Subject) item);
+        }
+
+        return convertView;
+    }
+
+
+    private View getView(Node item, View convertView, ViewGroup parent){
+        inflater = ((Activity)mContext).getLayoutInflater();
         if (convertView == null) {
-            LayoutInflater inflater = ((Activity)mContext).getLayoutInflater();
+            convertView = inflater.inflate(R.layout.list_item_node, null);
+            // cache view fields into the holder
+            ViewHolderNode holder = new ViewHolderNode();
+            holder.txtView = (TextView) convertView.findViewById(R.id.liListHeader);
+            // associate the holder with the view for later lookup
+            convertView.setTag(holder);
+        }
+
+        return convertView;
+    }
+
+    private void fillViewHolder(ViewHolderNode holder, Node node){
+        if(node != null){
+            holder.txtView.setText(node.getDisplayString());
+        }
+    }
+
+    private View getView(Subject item, View convertView, ViewGroup parent){
+        inflater = ((Activity)mContext).getLayoutInflater();
+        if (convertView == null) {
             convertView = inflater.inflate(R.layout.list_item_subject, null);
             // cache view fields into the holder
-            holder = new ViewHolder();
+            ViewHolderSubject holder = new ViewHolderSubject();
             holder.txtView = (TextView) convertView.findViewById(R.id.liListHeader);
             holder.circle = (Circle) convertView.findViewById(R.id.circle);
             // associate the holder with the view for later lookup
             convertView.setTag(holder);
         }
-        else {
-            // view already exists, get the holder instance from the view
-            holder = (ViewHolder) convertView.getTag();
-        }
 
-        Subject subject = (Subject) getItem(position);
+        return convertView;
+    }
+
+    private void fillViewHolder(ViewHolderSubject holder, Subject subject){
         if(subject != null){
             int red = subject.getColor().getRed();
             int blue = subject.getColor().getBlue();
@@ -57,6 +156,6 @@ public class SubjectAdapter extends ArrayAdapter{
             holder.txtView.setText(subject.getDisplayString());
             holder.circle.setCircleColor(Color.rgb(red, green, blue));
         }
-        return convertView;
     }
+
 }

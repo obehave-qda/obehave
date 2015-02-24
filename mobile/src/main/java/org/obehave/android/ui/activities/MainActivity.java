@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import com.google.common.eventbus.Subscribe;
 import org.obehave.android.R;
+import org.obehave.android.events.NodeSelectedEvent;
 import org.obehave.android.services.ApplicationService;
 import org.obehave.android.ui.adapters.SectionsPagerAdapter;
 import org.obehave.android.ui.events.*;
@@ -21,6 +22,7 @@ import org.obehave.android.ui.util.ErrorDialog;
 import org.obehave.events.EventBusHolder;
 import org.obehave.exceptions.FactoryException;
 import org.obehave.model.Action;
+import org.obehave.model.Node;
 import org.obehave.model.Subject;
 import org.obehave.model.modifier.ModifierFactory;
 
@@ -80,7 +82,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             ApplicationService.selectItem(subjectModifierFactory.create(subjects.get(0).getName()));
             ApplicationService.createCoding();
             getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            changeCodingFragment(SubjectFragment.newInstance(CODING_FRAGMENT_POSITION, ApplicationService.getAllSubjects()));
+            changeToSubjectFragment(null);
         }
         catch(UiException exception){
             ErrorDialog ed = new ErrorDialog(exception, this);
@@ -104,8 +106,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             ApplicationService.selectItem(enumerationModifierFactory.create(values.get(0)));
             ApplicationService.createCoding();
             getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            changeCodingFragment(SubjectFragment.newInstance(CODING_FRAGMENT_POSITION, ApplicationService.getAllSubjects()));
-        }
+            changeToSubjectFragment(null);
+       }
         catch(UiException exception){
             ErrorDialog ed = new ErrorDialog(exception, this);
             ed.invoke();
@@ -127,18 +129,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         Log.d(LOG_TAG, "onTimerStopEvent");
         ApplicationService.stopTimer();
     }
-/*
-    @Subscribe
-    public void runIntervalTasks(TimerTaskEvent event){
-        List<Fragment> fragments = getSupportFragmentManager().getFragments();
-        for(Fragment fragment : fragments){
-            if(fragment instanceof CodingListBaseFragment){
-                Log.d(LOG_TAG, fragment.getClass().getSimpleName());
-                ((CodingListBaseFragment)fragment).updateTimer(event.getStartTime());
-            }
-        }
-    }
-    */
 
     @Subscribe
     public void onDecimalRangeModifierSelected(DecimalRangeModifierSelectedEvent event){
@@ -148,16 +138,34 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             ApplicationService.selectItem(modifierFactory.create(value));
             ApplicationService.createCoding();
             getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            changeCodingFragment(SubjectFragment.newInstance(CODING_FRAGMENT_POSITION, ApplicationService.getAllSubjects()));
-        } catch (FactoryException e) {
+            changeToSubjectFragment(null);
+       } catch (FactoryException e) {
             ErrorDialog ed = new ErrorDialog(e.getMessage(), this);
             ed.invoke();
             e.printStackTrace();
         }
     }
 
+    @Subscribe
+    public void onNodeSelected(NodeSelectedEvent event){
+        if(event.getNodeType() == NodeSelectedEvent.NodeType.SUBJECT) {
+            changeToSubjectFragment(event.getNode());
+        }
+    }
+
     private void changeCodingFragment(Fragment fragment){
         Log.d(LOG_TAG, "Fragment - Change Coding Fragment");
+        android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.root_frame, fragment);
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+    private void changeToSubjectFragment(Node node){
+
+        Log.d(LOG_TAG, "changeToSubjectFragment");
+        Fragment fragment = SubjectFragment.newInstance(CODING_FRAGMENT_POSITION, ApplicationService.getSubjectByNode(node), ApplicationService.getSubjectNodesByNode(node));
         android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.root_frame, fragment);
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
@@ -189,8 +197,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                 actionBar.setSelectedNavigationItem(position);
                 if(position == CODING_FRAGMENT_POSITION){ // CodingFragment
                     Log.i(LOG_TAG, "" + ApplicationService.getAllSubjects().size());
-                    getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE); // drop placeholder fragment
-                    changeCodingFragment(SubjectFragment.newInstance(CODING_FRAGMENT_POSITION, ApplicationService.getAllSubjects()));
+                    getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    changeToSubjectFragment(null);
                 }
             }
         });

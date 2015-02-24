@@ -5,6 +5,7 @@ import org.obehave.model.Subject;
 public class SubjectSelectedEvent extends GuiEvent {
     private final Subject subject;
 
+
     public SubjectSelectedEvent(Subject subject) {
         this.subject = subject;
     }
@@ -12,7 +13,4 @@ public class SubjectSelectedEvent extends GuiEvent {
     public Subject getSubject(){
         return subject;
     }
-
-
-
 }

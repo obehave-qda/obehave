@@ -14,9 +14,9 @@
     <string name="uncategorized">uncategorized</string>
     <string name="title_activity_open_observation">OpenObservationActivity</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="title_section1">All Codings</string>
-    <string name="title_section2">Running Codings</string>
-    <string name="title_section3">Create Coding</string>
+    <string name="title_section1">All</string>
+    <string name="title_section2">Running</string>
+    <string name="title_section3">Create</string>
     <string name="action_example">Example action</string>
     <string name="title_load_coding_schema">Load Coding Schema</string>
     <string name="title_activity_open_coding_schema">OpenCodingSchemaActivity</string>
