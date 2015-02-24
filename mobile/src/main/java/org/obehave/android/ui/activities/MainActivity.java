@@ -1,73 +1,228 @@
 package org.obehave.android.ui.activities;
 
-import android.app.*;
+import android.app.ActionBar;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.support.v13.app.FragmentPagerAdapter;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.view.*;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import com.google.common.eventbus.Subscribe;
 import org.obehave.android.R;
+import org.obehave.android.events.NodeSelectedEvent;
+import org.obehave.android.services.ApplicationService;
+import org.obehave.android.ui.adapters.SectionsPagerAdapter;
+import org.obehave.android.ui.events.*;
+import org.obehave.android.ui.exceptions.UiException;
+import org.obehave.android.ui.fragments.*;
+import org.obehave.android.ui.util.ErrorDialog;
+import org.obehave.events.EventBusHolder;
+import org.obehave.exceptions.FactoryException;
+import org.obehave.model.Action;
+import org.obehave.model.Node;
+import org.obehave.model.Subject;
+import org.obehave.model.modifier.ModifierFactory;
 
-import java.util.Locale;
+import java.util.List;
 
-public class MainActivity extends Activity implements ActionBar.TabListener {
+public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
 
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v13.app.FragmentStatePagerAdapter}.
-     */
-    SectionsPagerAdapter mSectionsPagerAdapter;
+    private static final int CODING_FRAGMENT_POSITION = 2;
+    private static final String LOG_TAG = MainActivity.class.getSimpleName();
+    private SectionsPagerAdapter mSectionsPagerAdapter;
+    private ViewPager mViewPager;
 
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
-    ViewPager mViewPager;
+    @Subscribe
+    public  void onSubjectSelected(SubjectSelectedEvent event){
+        Subject subject = event.getSubject();
+        Log.d(LOG_TAG, "onSubjectSelected");
+        Log.d(LOG_TAG, subject.getDisplayString());
+        changeCodingFragment(ActionFragment.newInstance(CODING_FRAGMENT_POSITION, ApplicationService.getAllActions()));
+        ApplicationService.selectItem(event.getSubject());
+    }
+
+    @Subscribe
+    public  void onActionSelected(ActionSelectedEvent event){
+        Action action = event.getAction();
+        Log.d(LOG_TAG, "onActionSelected");
+        Log.d(LOG_TAG, action.getDisplayString());
+        try {
+            ApplicationService.selectItem(action);
+            ModifierFactory modifierFactory = ApplicationService.getModifierFactoryOfSelectedAction();
+            if (modifierFactory == null) {
+                ApplicationService.createCoding();
+            } else if (modifierFactory.getType() == ModifierFactory.Type.SUBJECT_MODIFIER_FACTORY) {
+                changeCodingFragment(SubjectModifierFragment.newInstance(CODING_FRAGMENT_POSITION, (modifierFactory).getValidSubjects()));
+            }
+            else if (modifierFactory.getType() == ModifierFactory.Type.ENUMERATION_MODIFIER_FACTORY) {
+                changeCodingFragment(EnumerationModifierFragment.newInstance(CODING_FRAGMENT_POSITION, (modifierFactory).getValidValues()));
+            }
+            else if (modifierFactory.getType() == ModifierFactory.Type.DECIMAL_RANGE_MODIFIER_FACTORY) {
+                changeCodingFragment(DecimalRangeModifierFragment.newInstance(CODING_FRAGMENT_POSITION, modifierFactory.getFrom(), modifierFactory.getTo()));
+            }
+        }
+        catch(UiException ex){
+            ErrorDialog ed = new ErrorDialog(ex.getMessage(), this);
+            ed.invoke();
+        }
+    }
+
+    @Subscribe
+    public void onSubjectModifierSelected(SubjectModifierSelectedEvent event){
+        List<Subject> subjects =  event.getSubjects();
+        try {
+            if (subjects.isEmpty()) {
+                throw new UiException("Es muss mindestens ein Subjekt gewählt werden.");
+            }
+
+            ModifierFactory subjectModifierFactory = (ModifierFactory) ApplicationService.getSelectedAction().getModifierFactory();
+            ApplicationService.selectItem(subjectModifierFactory.create(subjects.get(0).getName()));
+            ApplicationService.createCoding();
+            getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            changeToSubjectFragment(null);
+        }
+        catch(UiException exception){
+            ErrorDialog ed = new ErrorDialog(exception, this);
+            ed.invoke();
+        } catch (FactoryException e) {
+            ErrorDialog ed = new ErrorDialog(e.getMessage(), this);
+            ed.invoke();
+            e.printStackTrace();
+        }
+    }
+
+    @Subscribe
+         public void onEnumerationModifierSelected(EnumerationModifierSelectedEvent event){
+        List<String> values =  event.getValues();
+        try {
+            if (values.isEmpty()) {
+                throw new UiException("Es muss mindestens ein Wert gewählt werden.");
+            }
+
+            ModifierFactory enumerationModifierFactory = ApplicationService.getSelectedAction().getModifierFactory();
+            ApplicationService.selectItem(enumerationModifierFactory.create(values.get(0)));
+            ApplicationService.createCoding();
+            getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            changeToSubjectFragment(null);
+       }
+        catch(UiException exception){
+            ErrorDialog ed = new ErrorDialog(exception, this);
+            ed.invoke();
+        } catch (FactoryException e) {
+            ErrorDialog ed = new ErrorDialog(e.getMessage(), this);
+            ed.invoke();
+            e.printStackTrace();
+        }
+    }
+
+    @Subscribe
+    public void onTimerStartEvent(TimerStartEvent event){
+        Log.d(LOG_TAG, "onTimerStartEvent");
+        ApplicationService.startTimer();
+    }
+
+    @Subscribe
+    public void onTimerStopEvent(TimerStopEvent event){
+        Log.d(LOG_TAG, "onTimerStopEvent");
+        ApplicationService.stopTimer();
+    }
+
+    @Subscribe
+    public void onDecimalRangeModifierSelected(DecimalRangeModifierSelectedEvent event){
+        String value = event.getValue();
+        try {
+            ModifierFactory modifierFactory = ApplicationService.getSelectedAction().getModifierFactory();
+            ApplicationService.selectItem(modifierFactory.create(value));
+            ApplicationService.createCoding();
+            getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            changeToSubjectFragment(null);
+       } catch (FactoryException e) {
+            ErrorDialog ed = new ErrorDialog(e.getMessage(), this);
+            ed.invoke();
+            e.printStackTrace();
+        }
+    }
+
+    @Subscribe
+    public void onNodeSelected(NodeSelectedEvent event){
+        if(event.getNodeType() == NodeSelectedEvent.NodeType.SUBJECT) {
+            changeToSubjectFragment(event.getNode());
+        }
+    }
+
+    private void changeCodingFragment(Fragment fragment){
+        Log.d(LOG_TAG, "Fragment - Change Coding Fragment");
+        android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.root_frame, fragment);
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+    private void changeToSubjectFragment(Node node){
+
+        Log.d(LOG_TAG, "changeToSubjectFragment");
+        Fragment fragment = SubjectFragment.newInstance(CODING_FRAGMENT_POSITION, ApplicationService.getSubjectByNode(node), ApplicationService.getSubjectNodesByNode(node));
+        android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.root_frame, fragment);
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBusHolder.register(this);
         setContentView(R.layout.activity_main);
 
-        // Set up the action bar.
         final ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-
-        // When swiping between different sections, select the corresponding
-        // tab. We can also use ActionBar.Tab#select() to do this if we have
-        // a reference to the Tab.
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 actionBar.setSelectedNavigationItem(position);
+                if(position == CODING_FRAGMENT_POSITION){ // CodingFragment
+                    Log.i(LOG_TAG, "" + ApplicationService.getAllSubjects().size());
+                    getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    changeToSubjectFragment(null);
+                }
             }
         });
 
-        // For each of the sections in the app, add a tab to the action bar.
         for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
-            // Create a tab with text corresponding to the page title defined by
-            // the adapter. Also specify this Activity object, which implements
-            // the TabListener interface, as the callback (listener) for when
-            // this tab is selected.
+            String title = "";
+            Integer resourceTitle = mSectionsPagerAdapter.getPageTitleResource(i);
+            if(resourceTitle != null){
+                title = getString(resourceTitle);
+            }
+
             actionBar.addTab(
                     actionBar.newTab()
-                            .setText(mSectionsPagerAdapter.getPageTitle(i))
+                            .setText(title)
                             .setTabListener(this));
         }
-    }
 
+
+        // TODO: Change Filename;
+        ApplicationService.importFile("filename.txt");
+       // changeCodingFragment(SubjectFragment.newInstance(1, ApplicationService.getAllSubjects()));
+        // replacing Sub
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -106,86 +261,10 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
     }
 
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
-        }
-
-        @Override
-        public int getCount() {
-            // Show 3 total pages.
-            return 3;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            Locale l = Locale.getDefault();
-            switch (position) {
-                case 0:
-                    return getString(R.string.title_section1).toUpperCase(l);
-                case 1:
-                    return getString(R.string.title_section2).toUpperCase(l);
-                case 2:
-                    return getString(R.string.title_section3).toUpperCase(l);
-            }
-            return null;
-        }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        /* TODO: Check if timer is stopped  */
+        ApplicationService.onDestroy();
     }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-
-
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
-            ListView lvSimple = (ListView) rootView.findViewById(R.id.lvRunning);
-
-            String[] values = new String[] { "Amarok - spielt - Peter", "Amarok - markiert",  "Lessie - frisst"};
-
-
-            ArrayAdapter adapter = new ArrayAdapter(this.getActivity(),
-                    R.layout.list_item_running,R.id.liListHeader, values);
-            lvSimple.setAdapter(adapter);
-            return rootView;
-        }
-    }
-
 }
