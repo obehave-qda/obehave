@@ -10,6 +10,7 @@ import org.obehave.android.ui.exceptions.UiException;
 import org.obehave.android.ui.util.DataHolder;
 import org.obehave.events.EventBusHolder;
 import org.obehave.model.Action;
+import org.obehave.model.Node;
 import org.obehave.model.Subject;
 import org.obehave.model.modifier.Modifier;
 import org.obehave.model.modifier.ModifierFactory;
@@ -84,6 +85,14 @@ public class ApplicationService implements Service{
         else {
             return subjects;
         }
+    }
+
+    public static List<Subject> getSubjectByNode(Node node){
+        return DataHolder.getInstance().getSubjectsByNode(node);
+    }
+
+    public static List<Node> getSubjectNodesByNode(Node node){
+        return DataHolder.getInstance().getChildrenOfNode(node);
     }
 
     public static  List<Action> getAllActions(){
