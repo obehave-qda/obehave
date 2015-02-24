@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">obehave</string>
     <string name="action_settings">Settings</string>
-
     <!-- Main Activity -->
     <string name="start_button">Start</string>
     <string name="stop_button">Stop</string>
@@ -16,11 +14,17 @@
     <string name="uncategorized">uncategorized</string>
     <string name="title_activity_open_observation">OpenObservationActivity</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="title_section1">All Codings</string>
-    <string name="title_section2">Running Codings</string>
-    <string name="title_section3">Create Coding</string>
+    <string name="title_section1">All</string>
+    <string name="title_section2">Running</string>
+    <string name="title_section3">Create</string>
     <string name="action_example">Example action</string>
     <string name="title_load_coding_schema">Load Coding Schema</string>
     <string name="title_activity_open_coding_schema">OpenCodingSchemaActivity</string>
-
+    <string name="label_sort">Sort</string>
+    <string name="sort_prompt">Choose sort order</string>
+    <string-array name="sort_entries">
+        <item>Wie am Desktop</item>
+        <item>Alphabetisch A-Z</item>
+        <item>Alphabetisch Z-A</item>
+    </string-array>
 </resources>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:custom="http://schemas.android.com/apk/res-auto"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center_vertical">
+    <ImageView android:layout_width="30dp" android:layout_height="30dp" android:src="@drawable/folder" android:layout_margin="10dp"/>
+    <TextView
+            android:id="@+id/liListHeader"
+            android:text="test"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:textSize="@dimen/headline_listview"
+            android:textColor="#555555"
+            />
+</LinearLayout>

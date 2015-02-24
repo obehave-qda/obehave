@@ -5,7 +5,6 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import org.obehave.android.R;
 
@@ -22,8 +21,6 @@ public class Circle extends View{
 
 
     private void init(Context context, AttributeSet attrs){
-
-        Log.d("init", "init");
 
         circlePaint = new Paint();
         //get the attributes specified in attrs.xml using the name we included
@@ -43,7 +40,7 @@ public class Circle extends View{
 
     public void setCircleColor(int newColor){
         //update the instance variable
-        circleColor=newColor;
+        circleColor = newColor;
         //redraw the view
         invalidate();
         requestLayout();
@@ -51,20 +48,16 @@ public class Circle extends View{
 
     @Override
     protected void onDraw(Canvas canvas) {
-        Log.d("init", "drawsss");
+
         int viewWidthHalf = this.getMeasuredWidth()/2;
         int viewHeightHalf = this.getMeasuredHeight()/2;
 
-        Log.d("viewHeightHalf","" + viewHeightHalf);
-        Log.d("viewWidthHalf","" + viewWidthHalf);
-
         int radius = 0;
+
         if(viewWidthHalf>viewHeightHalf)
             radius=viewHeightHalf;
         else
             radius=viewWidthHalf;
-
-        Log.d("","" + radius);
 
         circlePaint.setStyle(Paint.Style.FILL);
         circlePaint.setAntiAlias(true);

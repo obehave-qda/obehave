@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:id="@+id/root_frame">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:orientation="vertical"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent">
+        <LinearLayout android:layout_width="match_parent" android:layout_marginLeft="10dp" android:layout_marginRight="10dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center_vertical" android:orientation="vertical">
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/labelValueTextfield" android:layout_gravity="center_horizontal" android:text="Your Value"/>
+            <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:id="@+id/txtValue"/>
+        </LinearLayout>
+        <Button android:id="@+id/accept" android:text="@string/accept" android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingTop="5dp" android:paddingBottom="5dp" android:layout_gravity="center_horizontal"></Button>
+    </LinearLayout>
+</FrameLayout>
