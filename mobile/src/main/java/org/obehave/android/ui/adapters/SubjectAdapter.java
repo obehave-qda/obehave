@@ -11,9 +11,13 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import org.obehave.android.R;
 import org.obehave.android.ui.views.Circle;
+import org.obehave.model.Displayable;
 import org.obehave.model.Node;
 import org.obehave.model.Subject;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -32,6 +36,7 @@ public class SubjectAdapter extends BaseAdapter{
     private Context mContext;
     private LayoutInflater inflater;
     private List<Subject> subjects;
+    private List<Subject> defaultOrder;
     private List<Node> nodes;
 
     private static final int TYPE_NODE = 0;
@@ -58,12 +63,13 @@ public class SubjectAdapter extends BaseAdapter{
         mContext = context;
         setSubjects(subjects);
         setNodes(nodes);
-        Log.d("Adapter", "Node COUNT"+  nodes.size());
-        Log.d("Adapter", "SUBJECT COUNT: "+  subjects.size());
     }
 
     private void setSubjects(List<Subject> subjects) {
-        this.subjects = subjects;
+        this.subjects =  new ArrayList<Subject>();
+        this.subjects.addAll(subjects);
+        defaultOrder = new ArrayList<Subject>();
+        defaultOrder.addAll(subjects);
     }
 
     private void setNodes(List<Node> nodes) {
@@ -104,7 +110,6 @@ public class SubjectAdapter extends BaseAdapter{
         }
         else if(type == TYPE_SUBJECT){
             convertView = getView((Subject) item, convertView, parent);
-            Object data = convertView.getTag();
             fillViewHolder((ViewHolderSubject)convertView.getTag(), (Subject) item);
         }
 
@@ -122,6 +127,7 @@ public class SubjectAdapter extends BaseAdapter{
             // associate the holder with the view for later lookup
             convertView.setTag(holder);
         }
+
 
         return convertView;
     }
@@ -157,5 +163,21 @@ public class SubjectAdapter extends BaseAdapter{
             holder.circle.setCircleColor(Color.rgb(red, green, blue));
         }
     }
+
+    public void sortByName(Comparator<Displayable> comparator){
+        Collections.sort(this.subjects, comparator);
+        this.notifyDataSetChanged();
+    }
+
+    public void sortDefault(){
+        if(defaultOrder != null && !defaultOrder.isEmpty()){
+           this.subjects.clear();
+           this.subjects.addAll(defaultOrder);
+        }
+
+        this.notifyDataSetChanged();
+    }
+
+
 
 }
