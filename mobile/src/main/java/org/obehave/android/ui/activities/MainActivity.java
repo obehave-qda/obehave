@@ -83,6 +83,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             ApplicationService.createCoding();
             getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             changeToSubjectFragment(null);
+
         }
         catch(UiException exception){
             ErrorDialog ed = new ErrorDialog(exception, this);
@@ -139,6 +140,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             ApplicationService.createCoding();
             getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             changeToSubjectFragment(null);
+
        } catch (FactoryException e) {
             ErrorDialog ed = new ErrorDialog(e.getMessage(), this);
             ed.invoke();
@@ -163,7 +165,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     }
 
     private void changeToSubjectFragment(Node node){
-
         Log.d(LOG_TAG, "changeToSubjectFragment");
         Fragment fragment = SubjectFragment.newInstance(CODING_FRAGMENT_POSITION, ApplicationService.getSubjectByNode(node), ApplicationService.getSubjectNodesByNode(node));
         android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -199,6 +200,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                     Log.i(LOG_TAG, "" + ApplicationService.getAllSubjects().size());
                     getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     changeToSubjectFragment(null);
+
                 }
             }
         });
@@ -211,15 +213,15 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             }
 
             actionBar.addTab(
-                    actionBar.newTab()
-                            .setText(title)
-                            .setTabListener(this));
+                actionBar.newTab()
+                    .setText(title)
+                    .setTabListener(this));
         }
 
 
         // TODO: Change Filename;
         ApplicationService.importFile("filename.txt");
-       // changeCodingFragment(SubjectFragment.newInstance(1, ApplicationService.getAllSubjects()));
+        // changeCodingFragment(SubjectFragment.newInstance(1, ApplicationService.getAllSubjects()));
         // replacing Sub
 
     }
@@ -264,7 +266,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        /* TODO: Check if timer is stopped  */
+        /* TODO: Check if timer is stopped  */changeToSubjectFragment(null);
         ApplicationService.onDestroy();
     }
 }
