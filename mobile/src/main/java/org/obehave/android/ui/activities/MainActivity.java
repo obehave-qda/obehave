@@ -40,7 +40,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         Subject subject = event.getSubject();
         Log.d(LOG_TAG, "onSubjectSelected");
         Log.d(LOG_TAG, subject.getDisplayString());
-        changeCodingFragment(ActionFragment.newInstance(CODING_FRAGMENT_POSITION, ApplicationService.getAllActions()));
+        changeCodingFragment(ActionFragment.newInstance(CODING_FRAGMENT_POSITION, ApplicationService.getActionByNode(null), ApplicationService.getActionNodesByNode(null)));
         ApplicationService.selectItem(event.getSubject());
     }
 
@@ -152,6 +152,9 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     public void onNodeSelected(NodeSelectedEvent event){
         if(event.getNodeType() == NodeSelectedEvent.NodeType.SUBJECT) {
             changeToSubjectFragment(event.getNode());
+        }
+        else if(event.getNodeType() == NodeSelectedEvent.NodeType.ACTION){
+            changeCodingFragment(ActionFragment.newInstance(CODING_FRAGMENT_POSITION, ApplicationService.getActionByNode(event.getNode()), ApplicationService.getActionNodesByNode(event.getNode())));
         }
     }
 
