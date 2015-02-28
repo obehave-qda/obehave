@@ -93,7 +93,6 @@ public class SubjectFragment extends MyListFragment {
     @Override
     public void onListItemClick(ListView listView, View view, int position, long id) {
         super.onListItemClick(listView, view, position, id);
-
         Object object = adapter.getItem(position);
 
         if(object instanceof Subject){

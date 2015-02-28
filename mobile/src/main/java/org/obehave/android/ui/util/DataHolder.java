@@ -14,10 +14,17 @@ public class DataHolder {
     private static DataHolder instance = new DataHolder();
     private List<Subject> subjects;
     private List<Action> actions;
-    private Node root;
-    private Node rudel1;
-    private Node rudel2;
-    private Node rudel2_1;
+    private Node subjectRoot;
+    private Node subjectNode1;
+    private Node subjectNode2;
+    private Node subjectNode2_1;
+
+    private Node actionRoot;
+    private Node actionNode1;
+    private Node actionNode2;
+    private Node actionNode2_1;
+
+    private int actionIndex = 0;
 
     public static DataHolder getInstance() {
         return instance;
@@ -45,19 +52,37 @@ public class DataHolder {
     private void buildSubjectNode(){
         //this.buildSubjectNode();
 
-        root = new Node(Subject.class);
-        root.setTitle("Root");
+        subjectRoot = new Node(Subject.class);
+        subjectRoot.setTitle("Root");
 
-        rudel1 = new Node(Subject.class);
-        rudel2 = new Node(Subject.class);
-        rudel2_1 = new Node(Subject.class);
-        rudel1.setTitle("Rudel 1");
-        rudel2.setTitle("Rudel 2");
-        rudel2_1.setTitle("Rudel 21");
+        subjectNode1 = new Node(Subject.class);
+        subjectNode2 = new Node(Subject.class);
+        subjectNode2_1 = new Node(Subject.class);
+        subjectNode1.setTitle("Rudel 1");
+        subjectNode2.setTitle("Rudel 2");
+        subjectNode2_1.setTitle("Rudel 21");
 
-        root.addChild(rudel1);
-        root.addChild(rudel2);
-        rudel2.addChild(rudel2_1);
+        subjectRoot.addChild(subjectNode1);
+        subjectRoot.addChild(subjectNode2);
+        subjectNode2.addChild(subjectNode2_1);
+    }
+
+    private void buildActionNode(){
+        //this.buildSubjectNode();
+
+        actionRoot = new Node(Action.class);
+        actionRoot.setTitle("Root");
+
+        actionNode1 = new Node(Action.class);
+        actionNode2 = new Node(Action.class);
+        actionNode2_1 = new Node(Action.class);
+        actionNode1.setTitle("ActionNode 1");
+        actionNode2.setTitle("ActionNode 2");
+        actionNode2_1.setTitle("ActionNode 2_1");
+
+        actionRoot.addChild(actionNode1);
+        actionRoot.addChild(actionNode2);
+        actionNode2.addChild(actionNode2_1);
     }
 
     /**
@@ -65,7 +90,7 @@ public class DataHolder {
      */
     private void generateSubjects(){
         buildSubjectNode();
-        //root = new Node();
+        //subjectRoot = new Node();
         subjects = new ArrayList<Subject>();
 
         String subjectNamens[] = {
@@ -99,15 +124,15 @@ public class DataHolder {
             subject.setColor(new Color(randomNumber(0, 255), randomNumber(0, 255), randomNumber(0, 255)));
             subjects.add(subject);
 
-            Node parentNode = root;
+            Node parentNode = subjectRoot;
             if( (i%4) == 0) {
-                parentNode = rudel1;
+                parentNode = subjectNode1;
             }
             else if( (i%3) == 0) {
-                parentNode = rudel2_1;
+                parentNode = subjectNode2_1;
             }
             else if( (i%2) == 0) {
-                parentNode = rudel2;
+                parentNode = subjectNode2;
             }
 
             Node node = new Node(Subject.class);
@@ -130,6 +155,8 @@ public class DataHolder {
 
     private void generateActions(){
         actions = new ArrayList<Action>();
+        actionIndex = 0;
+        buildActionNode();
         generateNumberRangeActions();
         generateSubjectModifierFactoryActions();
         generateEnumerationModifierActions();
@@ -153,6 +180,8 @@ public class DataHolder {
             subjectModifierFactory.setAlias("su");
             action.setModifierFactory(subjectModifierFactory);
 
+            addActionToNode(action);
+
             actions.add(action);
         }
     }
@@ -173,7 +202,7 @@ public class DataHolder {
             decimalRangeModifierFactory.setName("Decimal Modifier");
             decimalRangeModifierFactory.setAlias("su");
             action.setModifierFactory(decimalRangeModifierFactory);
-
+            addActionToNode(action);
             actions.add(action);
         }
     }
@@ -194,16 +223,46 @@ public class DataHolder {
             enumerationModifierFactory.setName("Enumeration Modifier");
             enumerationModifierFactory.setAlias("enu");
             action.setModifierFactory(enumerationModifierFactory);
-
+            addActionToNode(action);
             actions.add(action);
         }
     }
 
-    public List<Node> getChildrenOfNode(Node node){
-        if(node == null){
-            node = root;
+    private void addActionToNode(Action action){
+        Node parentNode = actionRoot;
+        actionIndex++;
+        if( (actionIndex%4) == 0) {
+            parentNode = actionNode1;
+        }
+        else if( (actionIndex%3) == 0) {
+            parentNode = actionNode2_1;
+        }
+        else if( (actionIndex%2) == 0) {
+            parentNode = actionNode2;
         }
 
+        Node node = new Node(Action.class);
+        node.setData(action);
+        parentNode.addChild(node);
+    }
+
+    public List<Node> getChildrenOfSubjectNode(Node node){
+        if(node == null){
+            node = subjectRoot;
+        }
+
+        return getChildrenOfNode(node);
+    }
+
+    public List<Node> getChildrenOfActionNode(Node node){
+        if(node == null){
+            node = actionRoot;
+        }
+
+        return getChildrenOfNode(node);
+    }
+
+    private List<Node> getChildrenOfNode(Node node){
         List<Node> nodes = new ArrayList<Node>();
 
         for(Node currentNode: node.getChildren()){
@@ -217,11 +276,10 @@ public class DataHolder {
 
     public List<Subject> getSubjectsByNode(Node node){
         if(node == null){
-            node = root;
+            node = subjectRoot;
         }
 
         List<Subject> subjects = new ArrayList<Subject>();
-
 
         for(Node currentNode: node.getChildren()){
             if(currentNode.getData() != null){
@@ -231,6 +289,22 @@ public class DataHolder {
         }
 
         return Collections.unmodifiableList(subjects);
+    }
 
+    public List<Action> getActionsByNode(Node node){
+        if(node == null){
+            node = actionRoot;
+        }
+
+        List<Action> actions = new ArrayList<Action>();
+
+        for(Node currentNode: node.getChildren()){
+            if(currentNode.getData() != null){
+                Action action = (Action) currentNode.getData();
+                actions.add(action);
+            }
+        }
+
+        return Collections.unmodifiableList(actions);
     }
 }

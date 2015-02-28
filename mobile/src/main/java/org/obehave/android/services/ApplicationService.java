@@ -91,8 +91,16 @@ public class ApplicationService implements Service{
         return DataHolder.getInstance().getSubjectsByNode(node);
     }
 
+    public static List<Node> getActionNodesByNode(Node node){
+        return DataHolder.getInstance().getChildrenOfActionNode(node);
+    }
+
+    public static List<Action> getActionByNode(Node node){
+        return DataHolder.getInstance().getActionsByNode(node);
+    }
+
     public static List<Node> getSubjectNodesByNode(Node node){
-        return DataHolder.getInstance().getChildrenOfNode(node);
+        return DataHolder.getInstance().getChildrenOfSubjectNode(node);
     }
 
     public static  List<Action> getAllActions(){
