@@ -4,6 +4,8 @@ import org.junit.Test;
 import org.obehave.util.TestUtil;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * @author Markus Möslinger
@@ -82,5 +84,25 @@ public class ValidateTest {
     @Test
     public void isOneOfDoesntThrowExceptionIfItsOneOf() {
         Validate.isOneOf("a", "a", "b", "c", "d");
+    }
+
+    @Test
+    public void hasOnlyOneElementDoesntThrowExceptionWhenOnlyOneElement() {
+        Validate.hasOnlyOneElement(Collections.singletonList("Only Element"));
+    }
+
+    @Test(expected = ValidationException.class)
+    public void hasOnlyOneElementDoesThrowExceptionWhenMoreThanOneElement() {
+        Validate.hasOnlyOneElement(Arrays.asList("First", "Second"));
+    }
+
+    @Test(expected = ValidationException.class)
+    public void hasOnlyOneElementDoesThrowExceptionWhenNoElement() {
+        Validate.hasOnlyOneElement(Collections.emptyList());
+    }
+
+    @Test(expected = ValidationException.class)
+    public void hasOnlyOneElementDoesThrowExceptionWhenNullPassed() {
+        Validate.hasOnlyOneElement(null);
     }
 }
