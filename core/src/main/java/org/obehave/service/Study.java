@@ -4,6 +4,7 @@ import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import org.obehave.events.ChangeEvent;
 import org.obehave.events.ChangeType;
 import org.obehave.events.EventBusHolder;
+import org.obehave.exceptions.Validate;
 import org.obehave.model.Action;
 import org.obehave.model.Node;
 import org.obehave.model.Observation;
@@ -66,10 +67,25 @@ public class Study {
         log.info("Loading existing study from {}", savePath);
 
         final Study study = new Study(savePath);
-        Daos.asDefault(new JdbcConnectionSource(Properties.getDatabaseConnectionString(savePath) +
-                Properties.getDatabaseConnectionStringInitSuffix()));
-        StudyLoader.load(study);
+        Daos.asDefault(new JdbcConnectionSource(Properties.getDatabaseConnectionString(savePath)));
+        study.load();
         return study;
+    }
+
+    private void load() throws SQLException {
+        log.info("Starting loading of entities");
+        long start = System.currentTimeMillis();
+
+        subjects = Validate.hasOnlyOneElement(Daos.get().node().getRoot(Subject.class)).get(0);
+        actions = Validate.hasOnlyOneElement(Daos.get().node().getRoot(Action.class)).get(0);
+        modifierFactories = Validate.hasOnlyOneElement(Daos.get().node().getRoot(ModifierFactory.class)).get(0);
+        observations = Validate.hasOnlyOneElement(Daos.get().node().getRoot(Observation.class)).get(0);
+
+        final String studyName = DatabaseProperties.get(DatabaseProperties.STUDY_NAME);
+        setName(studyName);
+
+        long duration = System.currentTimeMillis() - start;
+        log.info("Took {}ms for loading of entities", duration);
     }
 
     public Node getSubjects() {
