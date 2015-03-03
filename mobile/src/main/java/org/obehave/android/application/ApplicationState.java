@@ -1,20 +1,19 @@
-package org.obehave.android.services;
+package org.obehave.android.application;
 
 import org.obehave.model.Action;
-import org.obehave.model.Coding;
 import org.obehave.model.Subject;
 import org.obehave.model.modifier.Modifier;
-
-import java.util.List;
+import org.obehave.service.Study;
 
 public class ApplicationState {
     private static ApplicationState ourInstance = new ApplicationState();
 
+    private Study loadedStudy;
+
     private Subject subject;
     private Action action;
     private Modifier modifier;
-    private List<Coding> runningCodings;
-    private List<Coding> allCodings;
+
 
     public static ApplicationState getInstance() {
         return ourInstance;

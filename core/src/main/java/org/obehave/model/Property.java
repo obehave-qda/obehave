@@ -7,11 +7,14 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.obehave.exceptions.Validate;
 import org.obehave.persistence.impl.PropertyDaoImpl;
 
+import java.io.Serializable;
+
 /**
  * @author Markus Möslinger
  */
 @DatabaseTable(tableName = "Property", daoClass = PropertyDaoImpl.class)
-public class Property extends BaseEntity {
+public class Property extends BaseEntity implements Serializable {
+    private static final long serialVersionUID = 1L;
     public static final String COLUMN_KEY = "key";
     public static final String COLUMN_VALUE = "value";
 
