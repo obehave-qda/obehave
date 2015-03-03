@@ -3,6 +3,7 @@ package org.obehave.exceptions;
 import org.obehave.util.I18n;
 
 import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * Simple utility class to gather common validations for arguments
@@ -62,5 +63,22 @@ public class Validate {
         if (!Arrays.asList(elements).contains(element)) {
             throw new ValidationException(I18n.get("exception.validate.isoneof", element, elements));
         }
+    }
+
+    /**
+     * Validates if a collection has exactly one element.
+     * @param collection the collection to validate
+     * @param <T> a collection or any of it's subtypes
+     * @return the collection itself
+     * @throws org.obehave.exceptions.ValidationException if there are no or more than one elements in the collection
+     */
+    public static <T extends Collection> T hasOnlyOneElement(T collection) {
+        isNotNull(collection, "Collection");
+
+        if (collection.size() != 1) {
+            throw new ValidationException(I18n.get("exception.validate.onlyoneelement", collection.size()));
+        }
+
+        return collection;
     }
 }
