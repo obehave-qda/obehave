@@ -2,6 +2,7 @@ package org.obehave.android.ui.activities;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -12,13 +13,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import com.google.common.eventbus.Subscribe;
 import org.obehave.android.R;
+import org.obehave.android.application.Application;
 import org.obehave.android.events.NodeSelectedEvent;
-import org.obehave.android.services.ApplicationService;
 import org.obehave.android.ui.adapters.SectionsPagerAdapter;
 import org.obehave.android.ui.events.*;
 import org.obehave.android.ui.exceptions.UiException;
 import org.obehave.android.ui.fragments.*;
-import org.obehave.android.ui.util.ErrorDialog;
+import org.obehave.android.util.DataHolder;
+import org.obehave.android.util.ErrorDialog;
 import org.obehave.events.EventBusHolder;
 import org.obehave.exceptions.FactoryException;
 import org.obehave.model.Action;
@@ -26,66 +28,68 @@ import org.obehave.model.Node;
 import org.obehave.model.Subject;
 import org.obehave.model.modifier.ModifierFactory;
 
+import java.io.File;
 import java.util.List;
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
 
     private static final int CODING_FRAGMENT_POSITION = 2;
+    private static final String ARG_CURRENT_SUBJECT_NODE = "subject_node";
+    private static final String ARG_FILENAME = "filename";
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
+    private Node currentSubjectNode;
+
+    private String activeFragmentTag = "SubjectFragment";
 
     @Subscribe
-    public  void onSubjectSelected(SubjectSelectedEvent event){
+    public void onSubjectSelected(SubjectSelectedEvent event) {
         Subject subject = event.getSubject();
         Log.d(LOG_TAG, "onSubjectSelected");
         Log.d(LOG_TAG, subject.getDisplayString());
-        changeCodingFragment(ActionFragment.newInstance(CODING_FRAGMENT_POSITION, ApplicationService.getActionByNode(null), ApplicationService.getActionNodesByNode(null)));
-        ApplicationService.selectItem(event.getSubject());
+        changeCodingFragment(ActionFragment.newInstance(CODING_FRAGMENT_POSITION, Application.getActionByNode(null), Application.getActionNodesByNode(null)));
+        Application.selectItem(event.getSubject());
     }
 
     @Subscribe
-    public  void onActionSelected(ActionSelectedEvent event){
+    public void onActionSelected(ActionSelectedEvent event) {
         Action action = event.getAction();
         Log.d(LOG_TAG, "onActionSelected");
         Log.d(LOG_TAG, action.getDisplayString());
         try {
-            ApplicationService.selectItem(action);
-            ModifierFactory modifierFactory = ApplicationService.getModifierFactoryOfSelectedAction();
+            Application.selectItem(action);
+            ModifierFactory modifierFactory = Application.getModifierFactoryOfSelectedAction();
             if (modifierFactory == null) {
-                ApplicationService.createCoding();
+                Application.createCoding();
             } else if (modifierFactory.getType() == ModifierFactory.Type.SUBJECT_MODIFIER_FACTORY) {
                 changeCodingFragment(SubjectModifierFragment.newInstance(CODING_FRAGMENT_POSITION, (modifierFactory).getValidSubjects()));
-            }
-            else if (modifierFactory.getType() == ModifierFactory.Type.ENUMERATION_MODIFIER_FACTORY) {
+            } else if (modifierFactory.getType() == ModifierFactory.Type.ENUMERATION_MODIFIER_FACTORY) {
                 changeCodingFragment(EnumerationModifierFragment.newInstance(CODING_FRAGMENT_POSITION, (modifierFactory).getValidValues()));
-            }
-            else if (modifierFactory.getType() == ModifierFactory.Type.DECIMAL_RANGE_MODIFIER_FACTORY) {
+            } else if (modifierFactory.getType() == ModifierFactory.Type.DECIMAL_RANGE_MODIFIER_FACTORY) {
                 changeCodingFragment(DecimalRangeModifierFragment.newInstance(CODING_FRAGMENT_POSITION, modifierFactory.getFrom(), modifierFactory.getTo()));
             }
-        }
-        catch(UiException ex){
+        } catch (UiException ex) {
             ErrorDialog ed = new ErrorDialog(ex.getMessage(), this);
             ed.invoke();
         }
     }
 
     @Subscribe
-    public void onSubjectModifierSelected(SubjectModifierSelectedEvent event){
-        List<Subject> subjects =  event.getSubjects();
+    public void onSubjectModifierSelected(SubjectModifierSelectedEvent event) {
+        List<Subject> subjects = event.getSubjects();
         try {
             if (subjects.isEmpty()) {
                 throw new UiException("Es muss mindestens ein Subjekt gewählt werden.");
             }
 
-            ModifierFactory subjectModifierFactory = (ModifierFactory) ApplicationService.getSelectedAction().getModifierFactory();
-            ApplicationService.selectItem(subjectModifierFactory.create(subjects.get(0).getName()));
-            ApplicationService.createCoding();
+            ModifierFactory subjectModifierFactory = (ModifierFactory) Application.getSelectedAction().getModifierFactory();
+            Application.selectItem(subjectModifierFactory.create(subjects.get(0).getName()));
+            Application.createCoding();
             getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             changeToSubjectFragment(null);
 
-        }
-        catch(UiException exception){
+        } catch (UiException exception) {
             ErrorDialog ed = new ErrorDialog(exception, this);
             ed.invoke();
         } catch (FactoryException e) {
@@ -96,20 +100,19 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     }
 
     @Subscribe
-         public void onEnumerationModifierSelected(EnumerationModifierSelectedEvent event){
-        List<String> values =  event.getValues();
+    public void onEnumerationModifierSelected(EnumerationModifierSelectedEvent event) {
+        List<String> values = event.getValues();
         try {
             if (values.isEmpty()) {
                 throw new UiException("Es muss mindestens ein Wert gewählt werden.");
             }
 
-            ModifierFactory enumerationModifierFactory = ApplicationService.getSelectedAction().getModifierFactory();
-            ApplicationService.selectItem(enumerationModifierFactory.create(values.get(0)));
-            ApplicationService.createCoding();
+            ModifierFactory enumerationModifierFactory = Application.getSelectedAction().getModifierFactory();
+            Application.selectItem(enumerationModifierFactory.create(values.get(0)));
+            Application.createCoding();
             getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             changeToSubjectFragment(null);
-       }
-        catch(UiException exception){
+        } catch (UiException exception) {
             ErrorDialog ed = new ErrorDialog(exception, this);
             ed.invoke();
         } catch (FactoryException e) {
@@ -120,28 +123,28 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     }
 
     @Subscribe
-    public void onTimerStartEvent(TimerStartEvent event){
+    public void onTimerStartEvent(TimerStartEvent event) {
         Log.d(LOG_TAG, "onTimerStartEvent");
-        ApplicationService.startTimer();
+        Application.startTimer();
     }
 
     @Subscribe
-    public void onTimerStopEvent(TimerStopEvent event){
+    public void onTimerStopEvent(TimerStopEvent event) {
         Log.d(LOG_TAG, "onTimerStopEvent");
-        ApplicationService.stopTimer();
+        Application.stopTimer();
     }
 
     @Subscribe
-    public void onDecimalRangeModifierSelected(DecimalRangeModifierSelectedEvent event){
+    public void onDecimalRangeModifierSelected(DecimalRangeModifierSelectedEvent event) {
         String value = event.getValue();
         try {
-            ModifierFactory modifierFactory = ApplicationService.getSelectedAction().getModifierFactory();
-            ApplicationService.selectItem(modifierFactory.create(value));
-            ApplicationService.createCoding();
+            ModifierFactory modifierFactory = Application.getSelectedAction().getModifierFactory();
+            Application.selectItem(modifierFactory.create(value));
+            Application.createCoding();
             getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             changeToSubjectFragment(null);
 
-       } catch (FactoryException e) {
+        } catch (FactoryException e) {
             ErrorDialog ed = new ErrorDialog(e.getMessage(), this);
             ed.invoke();
             e.printStackTrace();
@@ -149,16 +152,15 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     }
 
     @Subscribe
-    public void onNodeSelected(NodeSelectedEvent event){
-        if(event.getNodeType() == NodeSelectedEvent.NodeType.SUBJECT) {
+    public void onNodeSelected(NodeSelectedEvent event) {
+        if (event.getNodeType() == NodeSelectedEvent.NodeType.SUBJECT) {
             changeToSubjectFragment(event.getNode());
-        }
-        else if(event.getNodeType() == NodeSelectedEvent.NodeType.ACTION){
-            changeCodingFragment(ActionFragment.newInstance(CODING_FRAGMENT_POSITION, ApplicationService.getActionByNode(event.getNode()), ApplicationService.getActionNodesByNode(event.getNode())));
+        } else if (event.getNodeType() == NodeSelectedEvent.NodeType.ACTION) {
+            changeCodingFragment(ActionFragment.newInstance(CODING_FRAGMENT_POSITION, Application.getActionByNode(event.getNode()), Application.getActionNodesByNode(event.getNode())));
         }
     }
 
-    private void changeCodingFragment(Fragment fragment){
+    private void changeCodingFragment(Fragment fragment) {
         Log.d(LOG_TAG, "Fragment - Change Coding Fragment");
         android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.root_frame, fragment);
@@ -167,9 +169,13 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         fragmentTransaction.commit();
     }
 
-    private void changeToSubjectFragment(Node node){
+    private void changeToSubjectFragment(Node node) {
         Log.d(LOG_TAG, "changeToSubjectFragment");
-        Fragment fragment = SubjectFragment.newInstance(CODING_FRAGMENT_POSITION, ApplicationService.getSubjectByNode(node), ApplicationService.getSubjectNodesByNode(node));
+        if (node == null) {
+            node = DataHolder.getInstance().getSubjectRootNode();
+        }
+        currentSubjectNode = node;
+        Fragment fragment = SubjectFragment.newInstance(CODING_FRAGMENT_POSITION, node);
         android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.root_frame, fragment);
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
@@ -185,6 +191,22 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (savedInstanceState == null) {
+            currentSubjectNode = DataHolder.getInstance().getSubjectRootNode();
+        }
+        else {
+            currentSubjectNode = (Node) savedInstanceState.getSerializable(ARG_CURRENT_SUBJECT_NODE);
+        }
+
+        Intent intent = getIntent();
+        String filename = intent.getStringExtra(ARG_FILENAME);
+        Application.loadFile(filename);
+
+        Log.d(LOG_TAG, "filename: " + filename);
+
+        File file = new File(filename);
+
         EventBusHolder.register(this);
         setContentView(R.layout.activity_main);
 
@@ -199,10 +221,9 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             @Override
             public void onPageSelected(int position) {
                 actionBar.setSelectedNavigationItem(position);
-                if(position == CODING_FRAGMENT_POSITION){ // CodingFragment
-                    Log.i(LOG_TAG, "" + ApplicationService.getAllSubjects().size());
+                if (position == CODING_FRAGMENT_POSITION) { // CodingFragment
                     getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                    changeToSubjectFragment(null);
+                    changeToSubjectFragment(currentSubjectNode);
 
                 }
             }
@@ -211,19 +232,20 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
             String title = "";
             Integer resourceTitle = mSectionsPagerAdapter.getPageTitleResource(i);
-            if(resourceTitle != null){
+            if (resourceTitle != null) {
                 title = getString(resourceTitle);
             }
 
             actionBar.addTab(
-                actionBar.newTab()
-                    .setText(title)
-                    .setTabListener(this));
+                    actionBar.newTab()
+                            .setText(title)
+                            .setTabListener(this));
         }
 
 
         // TODO: Change Filename;
-        ApplicationService.importFile("filename.txt");
+
+
         // changeCodingFragment(SubjectFragment.newInstance(1, ApplicationService.getAllSubjects()));
         // replacing Sub
 
@@ -269,7 +291,14 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        /* TODO: Check if timer is stopped  */changeToSubjectFragment(null);
-        ApplicationService.onDestroy();
+        /* TODO: Check if timer is stopped  */
+        Application.onDestroy();
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(ARG_CURRENT_SUBJECT_NODE, currentSubjectNode);
+    }
+
 }

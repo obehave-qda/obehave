@@ -1,4 +1,4 @@
-package org.obehave.android.ui.util;
+package org.obehave.android.util;
 
 import android.app.AlertDialog;
 import android.content.Context;

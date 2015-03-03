@@ -1,4 +1,4 @@
-package org.obehave.android.ui.util;
+package org.obehave.android.util;
 
 import org.joda.time.DateTime;
 import org.joda.time.Duration;

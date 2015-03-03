@@ -1,4 +1,4 @@
-package org.obehave.android.ui.util;
+package org.obehave.android.util;
 
 import org.obehave.model.Action;
 import org.obehave.model.Color;
@@ -272,6 +272,10 @@ public class DataHolder {
         }
 
         return Collections.unmodifiableList(nodes);
+    }
+
+    public Node getSubjectRootNode(){
+        return subjectRoot;
     }
 
     public List<Subject> getSubjectsByNode(Node node){

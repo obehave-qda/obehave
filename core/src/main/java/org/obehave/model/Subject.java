@@ -7,11 +7,14 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.obehave.persistence.impl.SubjectDaoImpl;
 
+import java.io.Serializable;
+
 /**
  * This class describes the observed subjects of a study
  */
 @DatabaseTable(tableName = "Subject", daoClass = SubjectDaoImpl.class)
-public class Subject extends BaseEntity implements Displayable {
+public class Subject extends BaseEntity implements Displayable, Serializable {
+    private static final long serialVersionUID = 1L;
     public static final String COLUMN_NAME = "name";
 
     @DatabaseField(columnName = COLUMN_NAME)
