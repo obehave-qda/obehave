@@ -1,5 +1,6 @@
 package org.obehave.persistence;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.obehave.model.Action;
 import org.obehave.model.Node;
@@ -17,6 +18,12 @@ import static org.junit.Assert.assertNull;
  * @author Markus Möslinger
  */
 public class NodeDaoTest extends DatabaseTest {
+    @Before
+    public void prepare() throws SQLException {
+        Daos.get().node().executeRawNoArgs("DELETE FROM Node");
+    }
+
+
     @Test
     public void persistingNode() throws SQLException {
         Subject s1 = new Subject("First Subject");
@@ -71,6 +78,7 @@ public class NodeDaoTest extends DatabaseTest {
         assertEquals(node7, loadedNode7);
     }
 
+    @Test
     public void getRootWorks() throws SQLException {
         Subject subject = new Subject("Subject");
         Action action = new Action("Action");
