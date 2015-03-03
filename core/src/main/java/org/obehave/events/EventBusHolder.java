@@ -10,7 +10,7 @@ public class EventBusHolder {
     private static final EventBus INSTANCE = new EventBus();
 
     private EventBusHolder() {
-        throw new AssertionError(I18n.getString("exception.constructor.utility"));
+        throw new AssertionError(I18n.get("exception.constructor.utility"));
     }
 
     /**

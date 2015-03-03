@@ -10,7 +10,7 @@ import static org.junit.Assert.assertFalse;
  */
 public class TestUtil {
     private TestUtil() {
-        throw new AssertionError(I18n.getString("exception.constructor.utility"));
+        throw new AssertionError(I18n.get("exception.constructor.utility"));
     }
 
     /**

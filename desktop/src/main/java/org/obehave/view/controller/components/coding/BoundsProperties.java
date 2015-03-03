@@ -9,7 +9,7 @@ import org.obehave.util.I18n;
  */
 public class BoundsProperties {
     private BoundsProperties() {
-        throw new AssertionError(I18n.getString("exception.constructor.utility"));
+        throw new AssertionError(I18n.get("exception.constructor.utility"));
     }
 
     public static class ScrollPaneViewPortHeightBinding extends DoubleBinding {
