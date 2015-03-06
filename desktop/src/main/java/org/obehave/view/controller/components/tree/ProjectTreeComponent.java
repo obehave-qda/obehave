@@ -3,13 +3,12 @@ package org.obehave.view.controller.components.tree;
 import com.google.common.eventbus.Subscribe;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.input.KeyEvent;
 import org.obehave.events.ChangeEvent;
 import org.obehave.events.ChangeType;
 import org.obehave.events.EventBusHolder;
 import org.obehave.model.*;
 import org.obehave.service.Study;
-import org.obehave.util.I18n;
+import org.obehave.util.DisplayWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,43 +20,25 @@ public class ProjectTreeComponent extends TreeView<String> {
     private Study study;
 
     private TreeItem root;
-    private TreeItem subjectNode = new TreeItem<>(I18n.get("ui.subject.plural"));
-    private TreeItem actionNode = new TreeItem<>(I18n.get("ui.action.plural"));
-    private TreeItem modifierFactoryNode = new TreeItem<>(I18n.get("ui.modifierfactory.plural"));
-    private TreeItem observationsNode = new TreeItem<>(I18n.get("ui.observation.plural"));
+    private TreeItem<DisplayWrapper<Node>> subjectNode;
+    private TreeItem<DisplayWrapper<Node>> actionNode;
+    private TreeItem<DisplayWrapper<Node>> modifierFactoryNode;
+    private TreeItem<DisplayWrapper<Node>> observationsNode;
 
     public ProjectTreeComponent() {
         super();
-        subjectNode.setExpanded(true);
-        actionNode.setExpanded(true);
-        observationsNode.setExpanded(true);
 
         EventBusHolder.register(this);
-
-        addEventHandler(KeyEvent.KEY_TYPED, this::addNewItem);
-    }
-
-    /**
-     * A method only meant for testing purpouses - this will setData a new item when a key was pressed
-     *
-     * @param event the keyevent, where the keycode will be read from
-     */
-    private void addNewItem(KeyEvent event) {
-        String key = event.getCharacter();
-        TreeItem<String> selectedItem = getSelectionModel().getSelectedItem();
-        if (selectedItem == subjectNode) {
-            study.addRandomSubject(key);
-        } else if (selectedItem == actionNode) {
-            study.addRandomAction(key);
-        } else if (selectedItem == observationsNode) {
-            study.addRandomObservation(key);
-        }
     }
 
     public void setStudy(Study study) {
         this.study = study;
 
-        root = new TreeItem<>(study.getName());
+        redoTree();
+    }
+
+    private void redoTree() {
+        root = new TreeItem<>(DisplayWrapper.of(study.getName()));
 
         subjectNode = createTreeItem(study.getSubjects());
         actionNode = createTreeItem(study.getActions());
@@ -70,10 +51,10 @@ public class ProjectTreeComponent extends TreeView<String> {
         setRoot(root);
     }
 
-    private TreeItem<String> createTreeItem(Node node) {
-        TreeItem<String> treeItem = new TreeItem<>();
+    private TreeItem<DisplayWrapper<Node>> createTreeItem(Node node) {
+        TreeItem<DisplayWrapper<Node>> treeItem = new TreeItem<>();
         treeItem.setExpanded(true);
-        treeItem.setValue(node.getDisplayString());
+        treeItem.setValue(DisplayWrapper.of(node));
 
         List<Node> children = node.getChildren();
 
