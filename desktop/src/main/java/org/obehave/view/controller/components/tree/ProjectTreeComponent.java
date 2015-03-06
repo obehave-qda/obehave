@@ -22,10 +22,10 @@ public class ProjectTreeComponent extends TreeView<String> {
     private Study study;
 
     private TreeItem root;
-    private TreeItem subjectNode = new TreeItem<>(I18n.getString("ui.subject.plural"));
-    private TreeItem actionNode = new TreeItem<>(I18n.getString("ui.action.plural"));
-    private TreeItem modifierFactoryNode = new TreeItem<>(I18n.getString("ui.modifierfactory.plural"));
-    private TreeItem observationsNode = new TreeItem<>(I18n.getString("ui.observation.plural"));
+    private TreeItem subjectNode = new TreeItem<>(I18n.get("ui.subject.plural"));
+    private TreeItem actionNode = new TreeItem<>(I18n.get("ui.action.plural"));
+    private TreeItem modifierFactoryNode = new TreeItem<>(I18n.get("ui.modifierfactory.plural"));
+    private TreeItem observationsNode = new TreeItem<>(I18n.get("ui.observation.plural"));
 
     public ProjectTreeComponent() {
         super();

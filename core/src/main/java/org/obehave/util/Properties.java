@@ -14,7 +14,7 @@ public class Properties {
     private static final String TRUE = "true";
 
     private static final Logger log = LoggerFactory.getLogger(Properties.class);
-    private final static java.util.Properties properties = new java.util.Properties();
+    private static final java.util.Properties properties = new java.util.Properties();
 
     static {
         final String propertyFile = "obehave.properties";
@@ -27,7 +27,7 @@ public class Properties {
     }
 
     private Properties() {
-        throw new AssertionError(I18n.getString("exception.constructor.utility"));
+        throw new AssertionError(I18n.get("exception.constructor.utility"));
     }
 
     public static String getLanguage() {
