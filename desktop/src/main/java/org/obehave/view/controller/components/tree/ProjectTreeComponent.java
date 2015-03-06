@@ -59,10 +59,10 @@ public class ProjectTreeComponent extends TreeView<String> {
 
         root = new TreeItem<>(study.getName());
 
-        subjectNode = buildNode(study.getSubjects());
-        actionNode = buildNode(study.getActions());
-        modifierFactoryNode = buildNode(study.getModifierFactories());
-        observationsNode = buildNode(study.getObservations());
+        subjectNode = createTreeItem(study.getSubjects());
+        actionNode = createTreeItem(study.getActions());
+        modifierFactoryNode = createTreeItem(study.getModifierFactories());
+        observationsNode = createTreeItem(study.getObservations());
 
         root.getChildren().addAll(subjectNode, actionNode, modifierFactoryNode, observationsNode);
         root.setExpanded(true);
@@ -70,14 +70,15 @@ public class ProjectTreeComponent extends TreeView<String> {
         setRoot(root);
     }
 
-    private TreeItem<String> buildNode(Node node) {
+    private TreeItem<String> createTreeItem(Node node) {
         TreeItem<String> treeItem = new TreeItem<>();
+        treeItem.setExpanded(true);
         treeItem.setValue(node.getDisplayString());
 
         List<Node> children = node.getChildren();
 
         for (Node child : children) {
-            treeItem.getChildren().add(buildNode(child));
+            treeItem.getChildren().add(createTreeItem(child));
         }
 
         return treeItem;
