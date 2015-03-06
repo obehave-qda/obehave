@@ -2,7 +2,6 @@ package org.obehave.android.ui.activities;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -14,12 +13,12 @@ import android.view.MenuItem;
 import com.google.common.eventbus.Subscribe;
 import org.obehave.android.R;
 import org.obehave.android.application.Application;
+import org.obehave.android.database.DataHolder;
 import org.obehave.android.events.NodeSelectedEvent;
 import org.obehave.android.ui.adapters.SectionsPagerAdapter;
 import org.obehave.android.ui.events.*;
 import org.obehave.android.ui.exceptions.UiException;
 import org.obehave.android.ui.fragments.*;
-import org.obehave.android.util.DataHolder;
 import org.obehave.android.util.ErrorDialog;
 import org.obehave.events.EventBusHolder;
 import org.obehave.exceptions.FactoryException;
@@ -28,7 +27,6 @@ import org.obehave.model.Node;
 import org.obehave.model.Subject;
 import org.obehave.model.modifier.ModifierFactory;
 
-import java.io.File;
 import java.util.List;
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
@@ -48,7 +46,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         Subject subject = event.getSubject();
         Log.d(LOG_TAG, "onSubjectSelected");
         Log.d(LOG_TAG, subject.getDisplayString());
-        changeCodingFragment(ActionFragment.newInstance(CODING_FRAGMENT_POSITION, Application.getActionByNode(null), Application.getActionNodesByNode(null)));
+        changeCodingFragment(ActionFragment.newInstance(CODING_FRAGMENT_POSITION, DataHolder.action().getData(null), DataHolder.action().getChildren(null)));
         Application.selectItem(event.getSubject());
     }
 
@@ -156,7 +154,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         if (event.getNodeType() == NodeSelectedEvent.NodeType.SUBJECT) {
             changeToSubjectFragment(event.getNode());
         } else if (event.getNodeType() == NodeSelectedEvent.NodeType.ACTION) {
-            changeCodingFragment(ActionFragment.newInstance(CODING_FRAGMENT_POSITION, Application.getActionByNode(event.getNode()), Application.getActionNodesByNode(event.getNode())));
+            changeCodingFragment(ActionFragment.newInstance(CODING_FRAGMENT_POSITION, DataHolder.action().getData(null), DataHolder.action().getChildren(null)));
         }
     }
 
@@ -172,7 +170,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     private void changeToSubjectFragment(Node node) {
         Log.d(LOG_TAG, "changeToSubjectFragment");
         if (node == null) {
-            node = DataHolder.getInstance().getSubjectRootNode();
+            node = DataHolder.subject().getRootNode();
         }
         currentSubjectNode = node;
         Fragment fragment = SubjectFragment.newInstance(CODING_FRAGMENT_POSITION, node);
@@ -192,20 +190,13 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         if (savedInstanceState == null) {
-            currentSubjectNode = DataHolder.getInstance().getSubjectRootNode();
+            currentSubjectNode = DataHolder.subject().getRootNode();
         }
         else {
             currentSubjectNode = (Node) savedInstanceState.getSerializable(ARG_CURRENT_SUBJECT_NODE);
         }
-
-        Intent intent = getIntent();
-        String filename = intent.getStringExtra(ARG_FILENAME);
-        Application.loadFile(filename);
-
-        Log.d(LOG_TAG, "filename: " + filename);
-
-        File file = new File(filename);
 
         EventBusHolder.register(this);
         setContentView(R.layout.activity_main);

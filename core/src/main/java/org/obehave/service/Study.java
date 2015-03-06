@@ -64,10 +64,19 @@ public class Study {
     }
 
     public static Study load(File savePath) throws SQLException {
+        return load(savePath, false);
+    }
+
+    public static Study load(File savePath, boolean isAndroid) throws SQLException {
         log.info("Loading existing study from {}", savePath);
 
         final Study study = new Study(savePath);
-        Daos.asDefault(new JdbcConnectionSource(Properties.getDatabaseConnectionString(savePath)));
+        if(!isAndroid) {
+            Daos.asDefault(new JdbcConnectionSource(Properties.getDatabaseConnectionString(savePath)));
+        }
+        else {
+            Daos.asDefault(new JdbcConnectionSource(Properties.getAndroidConnectionString(savePath)));
+        }
         study.load();
         return study;
     }
