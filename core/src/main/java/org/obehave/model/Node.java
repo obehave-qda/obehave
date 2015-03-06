@@ -297,4 +297,8 @@ public class Node extends BaseEntity implements Iterable<Displayable>, Displayab
         return new ToStringBuilder(this).appendSuper(super.toString()).append("title", title).append("data", getData())
                 .append("dataType", dataType).toString();
     }
+
+    public boolean isLeaf() {
+        return children.isEmpty();
+    }
 }
