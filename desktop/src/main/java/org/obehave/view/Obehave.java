@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import org.obehave.events.EventBusHolder;
 import org.obehave.util.I18n;
 import org.obehave.view.controller.MainController;
 
@@ -22,7 +23,8 @@ public class Obehave extends Application {
         FXMLLoader loader = new FXMLLoader(mainFxml);
         loader.setResources(I18n.bundle());
         Parent root = loader.load();
-        ((MainController) loader.getController()).setStage(stage);
+        final MainController mainController = loader.getController();
+        mainController.setStage(stage);
 
         Scene scene = new Scene(root);
 
@@ -37,7 +39,8 @@ public class Obehave extends Application {
                 new Image(getClass().getClassLoader().getResourceAsStream("icons/icon_144x144.png")),
                 new Image(getClass().getClassLoader().getResourceAsStream("icons/icon_256x256.png")));
 
-        ((MainController) loader.getController()).chooseStudy();
+        EventBusHolder.register(mainController);
+        mainController.chooseStudy();
         stage.show();
     }
 

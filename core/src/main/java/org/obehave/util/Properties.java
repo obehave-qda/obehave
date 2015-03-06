@@ -42,10 +42,6 @@ public class Properties {
         return trySystemPropertyFirst("database.connectionstring", path.getAbsolutePath());
     }
 
-    public static String getAndroidConnectionString(File path){
-        return trySystemPropertyFirst("database.connectionstring.android", path.getAbsolutePath());
-    }
-
     public static String getDatabaseConnectionStringInitSuffix() {
         return trySystemPropertyFirst("database.connectionstring.initsuffix");
     }
