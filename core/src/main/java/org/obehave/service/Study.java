@@ -4,6 +4,7 @@ import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import org.obehave.events.ChangeEvent;
 import org.obehave.events.ChangeType;
 import org.obehave.events.EventBusHolder;
+import org.obehave.events.LoadedEvent;
 import org.obehave.exceptions.Validate;
 import org.obehave.model.Action;
 import org.obehave.model.Node;
@@ -58,8 +59,7 @@ public class Study {
         log.info("Creating new study at {}", savePath);
 
         final Study study = new Study(savePath);
-        Daos.asDefault(new JdbcConnectionSource(Properties.getDatabaseConnectionString(savePath) +
-                Properties.getDatabaseConnectionStringInitSuffix()));
+        Daos.asDefault(new JdbcConnectionSource(Properties.getDatabaseConnectionStringWithInit(savePath)));
         return study;
     }
 
@@ -86,6 +86,8 @@ public class Study {
 
         long duration = System.currentTimeMillis() - start;
         log.info("Took {}ms for loading of entities", duration);
+
+        EventBusHolder.post(new LoadedEvent());
     }
 
     public Node getSubjects() {
@@ -137,6 +139,10 @@ public class Study {
 
     public Node getObservations() {
         return observations;
+    }
+
+    public Node getModifierFactories() {
+        return modifierFactories;
     }
 
     public boolean addObservation(Observation observation) {

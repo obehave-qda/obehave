@@ -39,11 +39,12 @@ public class Properties {
     }
 
     public static String getDatabaseConnectionString(File path) {
+        path = FileUtil.removeSuffixIfThere(path, getDatabaseSuffix());
         return trySystemPropertyFirst("database.connectionstring", path.getAbsolutePath());
     }
 
-    public static String getDatabaseConnectionStringInitSuffix() {
-        return trySystemPropertyFirst("database.connectionstring.initsuffix");
+    public static String getDatabaseConnectionStringWithInit(File path) {
+        return getDatabaseConnectionString(path) + trySystemPropertyFirst("database.connectionstring.initsuffix");
     }
 
     public static String getDatabaseSuffix() {
