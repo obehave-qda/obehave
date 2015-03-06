@@ -7,14 +7,13 @@ import javafx.scene.input.KeyEvent;
 import org.obehave.events.ChangeEvent;
 import org.obehave.events.ChangeType;
 import org.obehave.events.EventBusHolder;
-import org.obehave.model.Action;
-import org.obehave.model.Displayable;
-import org.obehave.model.Observation;
-import org.obehave.model.Subject;
+import org.obehave.model.*;
 import org.obehave.service.Study;
 import org.obehave.util.I18n;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 public class ProjectTreeComponent extends TreeView<String> {
     private static final Logger log = LoggerFactory.getLogger(ProjectTreeComponent.class);
@@ -63,7 +62,26 @@ public class ProjectTreeComponent extends TreeView<String> {
         root.setExpanded(true);
 
         setRoot(root);
-        setCellFactory(p -> new ContextMenuTreeCell(study));
+
+        subjectNode = buildNode(study.getSubjects());
+        actionNode = buildNode(study.getActions());
+        modifierFactoryNode = buildNode(study.getModifierFactories());
+        observationsNode = buildNode(study.getObservations());
+    }
+
+    public TreeItem<String> buildNode(Node studyNode) {
+        List<Node> children = studyNode.getChildren();
+
+        TreeItem<String> newTreeItem = new TreeItem<>();
+        newTreeItem.setValue(studyNode.getDisplayString());
+
+        if (!studyNode.isLeaf()) {
+            for (Node child : children) {
+                newTreeItem.getChildren().add(buildNode(child));
+            }
+        }
+
+        return newTreeItem;
     }
 
     @Subscribe
