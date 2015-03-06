@@ -1,6 +1,5 @@
 package org.obehave.view.controller;
 
-import com.google.common.eventbus.Subscribe;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuBar;
@@ -10,8 +9,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.controlsfx.dialog.CommandLinksDialog;
-import org.obehave.events.EventBusHolder;
-import org.obehave.events.LoadedEvent;
 import org.obehave.service.Study;
 import org.obehave.util.I18n;
 import org.obehave.util.Properties;
@@ -135,7 +132,6 @@ public class MainController {
 
 
             chosenFile = create ? fileChooser.showSaveDialog(stage) : fileChooser.showOpenDialog(stage);
-            chosenFile = removeSuffixIfThere(chosenFile, Properties.getDatabaseSuffix());
 
             try {
                 if (create) {
@@ -161,15 +157,6 @@ public class MainController {
 
     public void setStage(Stage stage) {
         this.stage = stage;
-    }
-
-    private static File removeSuffixIfThere(File s, String suffix) {
-        final String absolutePath = s.getAbsolutePath();
-        if (!absolutePath.endsWith(suffix)) {
-            return s;
-        } else {
-            return new File(absolutePath.substring(0, absolutePath.lastIndexOf(suffix)));
-        }
     }
 
     public void showStudyNameDialog() {

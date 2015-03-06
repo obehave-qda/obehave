@@ -1,6 +1,5 @@
 package org.obehave.service;
 
-import com.google.common.eventbus.Subscribe;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import org.obehave.events.ChangeEvent;
 import org.obehave.events.ChangeType;
@@ -60,8 +59,7 @@ public class Study {
         log.info("Creating new study at {}", savePath);
 
         final Study study = new Study(savePath);
-        Daos.asDefault(new JdbcConnectionSource(Properties.getDatabaseConnectionString(savePath) +
-                Properties.getDatabaseConnectionStringInitSuffix()));
+        Daos.asDefault(new JdbcConnectionSource(Properties.getDatabaseConnectionStringWithInit(savePath)));
         return study;
     }
 
