@@ -23,12 +23,12 @@ public class ContextMenuTreeCell extends TextFieldTreeCell<String> {
         super();
 
 
-        MenuItem addSubjectItem = new MenuItem(I18n.getString("ui.subject.add"));
-        MenuItem addActionItem = new MenuItem(I18n.getString("ui.action.add"));
-        MenuItem addObservationItem = new MenuItem(I18n.getString("ui.observation.add"));
-        MenuItem removeSubjectItem = new MenuItem(I18n.getString("ui.subject.remove"));
-        MenuItem removeActionItem = new MenuItem(I18n.getString("ui.action.remove"));
-        MenuItem removeObservationItem = new MenuItem(I18n.getString("ui.observation.remove"));
+        MenuItem addSubjectItem = new MenuItem(I18n.get("ui.subject.add"));
+        MenuItem addActionItem = new MenuItem(I18n.get("ui.action.add"));
+        MenuItem addObservationItem = new MenuItem(I18n.get("ui.observation.add"));
+        MenuItem removeSubjectItem = new MenuItem(I18n.get("ui.subject.remove"));
+        MenuItem removeActionItem = new MenuItem(I18n.get("ui.action.remove"));
+        MenuItem removeObservationItem = new MenuItem(I18n.get("ui.observation.remove"));
 
         addSubject.getItems().add(addSubjectItem);
         addAction.getItems().add(addActionItem);
@@ -57,19 +57,19 @@ public class ContextMenuTreeCell extends TextFieldTreeCell<String> {
             if (parent != null) {
                 // second level
                 if (parent.getParent() == null) {
-                    if (item.equals(I18n.getString("ui.subject.plural"))) {
+                    if (item.equals(I18n.get("ui.subject.plural"))) {
                         setContextMenu(addSubject);
-                    } else if (item.equals(I18n.getString("ui.action.plural"))) {
+                    } else if (item.equals(I18n.get("ui.action.plural"))) {
                         setContextMenu(addAction);
-                    } else if (item.equals(I18n.getString("ui.observation.plural"))) {
+                    } else if (item.equals(I18n.get("ui.observation.plural"))) {
                         setContextMenu(addObservation);
                     }
                 } else {
-                    if (parent.getValue().equals(I18n.getString("ui.subject.plural"))) {
+                    if (parent.getValue().equals(I18n.get("ui.subject.plural"))) {
                         setContextMenu(removeSubject);
-                    } else if (parent.getValue().equals(I18n.getString("ui.action.plural"))) {
+                    } else if (parent.getValue().equals(I18n.get("ui.action.plural"))) {
                         setContextMenu(removeAction);
-                    } else if (parent.getValue().equals(I18n.getString("ui.observation.plural"))) {
+                    } else if (parent.getValue().equals(I18n.get("ui.observation.plural"))) {
                         setContextMenu(removeObservation);
                     }
                 }
