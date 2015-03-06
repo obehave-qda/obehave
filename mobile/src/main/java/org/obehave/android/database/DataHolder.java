@@ -1,9 +1,7 @@
 package org.obehave.android.database;
 
-import android.util.Log;
 import org.obehave.android.ui.exceptions.UiException;
 import org.obehave.service.Study;
-import org.obehave.util.Properties;
 
 import java.io.File;
 import java.sql.SQLException;
@@ -33,8 +31,6 @@ public class DataHolder {
         if(study == null) {
             try {
                 File file = new File(filename);
-                Log.d("Property", "" + Properties.getDatabaseConnectionString(file));
-                Log.d("FILE EXISTS; ", "" + file.exists());
                 final boolean isAndroid = true;
                 study.load(new File(filename), isAndroid);
             } catch (SQLException e) {

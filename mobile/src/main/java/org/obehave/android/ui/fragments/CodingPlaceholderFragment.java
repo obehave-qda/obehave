@@ -24,10 +24,7 @@ public class CodingPlaceholderFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        View rootView = inflater.inflate(R.layout.fragment_coding_placeholder, container, false);
-
-
-        return rootView;
+        return inflater.inflate(R.layout.fragment_coding_placeholder, container, false);
     }
 
 }
