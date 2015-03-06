@@ -11,7 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import org.obehave.android.R;
+import org.obehave.android.application.Application;
 import org.obehave.android.ui.activities.MainActivity;
+import org.obehave.android.ui.exceptions.UiException;
 
 
 public class StartActivity extends Activity {
@@ -74,12 +76,23 @@ public class StartActivity extends Activity {
                 Log.d(LOG_TAG, "ResultCode: " + resultCode);
                 Uri file = data.getData();
                 Log.d(LOG_TAG, "FilePath: " + file.getPath());
+
+                try {
+
+                    Application.loadFile(file.getPath());
+                } catch (UiException e) {
+                    e.printStackTrace();
+                    e.getInnerException().printStackTrace();
+
+                }
+                //startMainActivity(file.getPath());
             }
         }
 
         private void startMainActivity(String filename){
             Intent intent = new Intent(getActivity(), MainActivity.class);
-            intent.putExtra(ARG_FILENAME,filename);
+
+            //intent.putExtra(ARG_FILENAME,filename);
             startActivity(intent);
         }
     }

@@ -7,8 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import org.obehave.android.R;
+import org.obehave.android.database.DataHolder;
 import org.obehave.android.events.NodeSelectedEvent;
-import org.obehave.android.application.Application;
 import org.obehave.android.ui.adapters.NameAscendingComparator;
 import org.obehave.android.ui.adapters.NameDescendingComparator;
 import org.obehave.android.ui.adapters.SubjectAdapter;
@@ -62,7 +62,7 @@ public class SubjectFragment extends MyListFragment {
         View rootView = inflater.inflate(R.layout.fragment_subject, container, false);
         sortAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, sortOrders);
         spSort = (Spinner) rootView.findViewById(R.id.spSort);
-        adapter = (SubjectAdapter) new SubjectAdapter(this.getActivity(), Application.getSubjectByNode(parent), Application.getSubjectNodesByNode(parent));
+        adapter = (SubjectAdapter) new SubjectAdapter(this.getActivity(), DataHolder.subject().getData(parent), DataHolder.subject().getChildren(parent));
         spSort.setAdapter(sortAdapter);
         setListAdapter(adapter);
 

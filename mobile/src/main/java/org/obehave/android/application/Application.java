@@ -5,13 +5,12 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import org.joda.time.DateTime;
+import org.obehave.android.database.DataHolder;
 import org.obehave.android.ui.events.TimerTaskEvent;
 import org.obehave.android.ui.exceptions.UiException;
-import org.obehave.android.util.DataHolder;
 import org.obehave.events.EventBusHolder;
 import org.obehave.model.Action;
 import org.obehave.model.Coding;
-import org.obehave.model.Node;
 import org.obehave.model.Subject;
 import org.obehave.model.modifier.Modifier;
 import org.obehave.model.modifier.ModifierFactory;
@@ -46,7 +45,9 @@ public class Application {
      */
     private List<Coding> allCodings;
 
-    public static void loadFile(String filename){
+    public static void loadFile(String filename) throws UiException {
+        boolean isAndroid = true;
+        DataHolder.loadStudy(filename);
     }
 
     /**
@@ -96,21 +97,6 @@ public class Application {
     }
 
 
-    public static List<Subject> getSubjectByNode(Node node){
-        return DataHolder.getInstance().getSubjectsByNode(node);
-    }
-
-    public static List<Node> getActionNodesByNode(Node node){
-        return DataHolder.getInstance().getChildrenOfActionNode(node);
-    }
-
-    public static List<Action> getActionByNode(Node node){
-        return DataHolder.getInstance().getActionsByNode(node);
-    }
-
-    public static List<Node> getSubjectNodesByNode(Node node){
-        return DataHolder.getInstance().getChildrenOfSubjectNode(node);
-    }
 
     /**
      *
