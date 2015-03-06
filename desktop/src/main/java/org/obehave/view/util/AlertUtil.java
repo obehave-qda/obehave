@@ -13,7 +13,7 @@ import java.util.Optional;
  */
 public class AlertUtil {
     private AlertUtil() {
-        throw new AssertionError(I18n.getString("exception.constructor.utility"));
+        throw new AssertionError(I18n.get("exception.constructor.utility"));
     }
 
     /**

@@ -11,7 +11,7 @@ public class I18n {
     private static final Locale configuredLocale = new Locale(Properties.getLanguage());
 
     private I18n() {
-        throw new AssertionError(I18n.getString("exception.constructor.utility"));
+        throw new AssertionError(I18n.get("exception.constructor.utility"));
     }
 
     public static ResourceBundle bundle() {
@@ -22,11 +22,11 @@ public class I18n {
         return ResourceBundle.getBundle("language.lang", locale);
     }
 
-    public static String getString(String key) {
+    public static String get(String key) {
         return bundle().getString(key);
     }
 
     public static String get(String key, Object... substitutions) {
-        return MessageFormat.format(getString(key), substitutions);
+        return MessageFormat.format(get(key), substitutions);
     }
 }

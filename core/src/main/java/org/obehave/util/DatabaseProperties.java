@@ -17,7 +17,7 @@ public class DatabaseProperties {
     public static final String STUDY_NAME = "study.name";
 
     private DatabaseProperties() {
-        throw new AssertionError(I18n.getString("exception.constructor.utility"));
+        throw new AssertionError(I18n.get("exception.constructor.utility"));
     }
 
     public static String get(String key) {
