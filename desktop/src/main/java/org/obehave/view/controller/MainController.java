@@ -63,10 +63,10 @@ public class MainController {
     @FXML
     void loadVideo(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle(I18n.getString("ui.video.open.title"));
+        fileChooser.setTitle(I18n.get("ui.video.open.title"));
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter(I18n.getString("ui.filefilter.video"), "*.mp4"),
-                new FileChooser.ExtensionFilter(I18n.getString("ui.filefilter.all"), "*.*"));
+                new FileChooser.ExtensionFilter(I18n.get("ui.filefilter.video"), "*.mp4"),
+                new FileChooser.ExtensionFilter(I18n.get("ui.filefilter.all"), "*.*"));
 
         videoComponent.loadFile(fileChooser.showOpenDialog(null));
     }
@@ -91,16 +91,16 @@ public class MainController {
 
     public void chooseStudy() {
         // Find out if creating or opening a new study
-        final String createNewOne = I18n.getString("ui.study.create.title");
-        final String openExistingOne = I18n.getString("ui.study.open.title");
-        final String closeApplication = I18n.getString("ui.study.close");
+        final String createNewOne = I18n.get("ui.study.create.title");
+        final String openExistingOne = I18n.get("ui.study.open.title");
+        final String closeApplication = I18n.get("ui.study.close");
         List<CommandLinksDialog.CommandLinksButtonType> links = Arrays.asList(
-                new CommandLinksDialog.CommandLinksButtonType(createNewOne, I18n.getString("ui.study.create.description"), false),
-                new CommandLinksDialog.CommandLinksButtonType(openExistingOne, I18n.getString("ui.study.open.description"), false),
+                new CommandLinksDialog.CommandLinksButtonType(createNewOne, I18n.get("ui.study.create.description"), false),
+                new CommandLinksDialog.CommandLinksButtonType(openExistingOne, I18n.get("ui.study.open.description"), false),
                 new CommandLinksDialog.CommandLinksButtonType(closeApplication, false));
 
         CommandLinksDialog commandLinksDialog = new CommandLinksDialog(links);
-        commandLinksDialog.setTitle(I18n.getString("ui.study.dialog"));
+        commandLinksDialog.setTitle(I18n.get("ui.study.dialog"));
 
         File chosenFile;
         boolean create;
@@ -124,7 +124,7 @@ public class MainController {
                 if (defaultSaveFolder.mkdirs()) {
                     fileChooser.setInitialDirectory(defaultSaveFolder);
                 } else {
-                    AlertUtil.showError(I18n.getString("ui.study.error.defaultsavefolder.title"),
+                    AlertUtil.showError(I18n.get("ui.study.error.defaultsavefolder.title"),
                             I18n.get("ui.study.error.defaultsavefolder.description", defaultSaveFolder));
                 }
             }
@@ -142,7 +142,7 @@ public class MainController {
                     study = Study.load(chosenFile);
                 }
             } catch (SQLException e) {
-                AlertUtil.showError(I18n.getString("ui.study.error.database.title"),
+                AlertUtil.showError(I18n.get("ui.study.error.database.title"),
                         I18n.get("ui.study.error.database.description", e.getMessage()), e);
             }
         } while (study == null);
@@ -172,8 +172,8 @@ public class MainController {
     public void showStudyNameDialog() {
         Optional<String> name;
         do {
-            name = AlertUtil.askForString(I18n.getString("ui.study.dialog.name.title"),
-                    I18n.getString("ui.study.dialog.name.description"));
+            name = AlertUtil.askForString(I18n.get("ui.study.dialog.name.title"),
+                    I18n.get("ui.study.dialog.name.description"));
         } while (!name.isPresent() || name.get().isEmpty());
 
         study.setName(name.get());

@@ -10,7 +10,7 @@ import java.util.Collection;
  */
 public class Validate {
     private Validate() {
-        throw new AssertionError(I18n.getString("exception.constructor.utility"));
+        throw new AssertionError(I18n.get("exception.constructor.utility"));
     }
 
     /**

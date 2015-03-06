@@ -39,7 +39,7 @@ public class Modifier extends BaseEntity {
         type = Type.DECIMAL_MODIFIER;
         setModifierFactory(modifierFactory);
 
-        Validate.isNotNull(value, I18n.getString("validate.modifier.bigdecimal"));
+        Validate.isNotNull(value, I18n.get("validate.modifier.bigdecimal"));
         decimalValue = value;
     }
 
@@ -48,7 +48,7 @@ public class Modifier extends BaseEntity {
         type = Type.ENUMERATION_MODIFIER;
         setModifierFactory(modifierFactory);
 
-        Validate.isNotNull(value, I18n.getString("validate.modifier.string"));
+        Validate.isNotNull(value, I18n.get("validate.modifier.string"));
         this.enumerationValue = value;
     }
 
@@ -56,7 +56,7 @@ public class Modifier extends BaseEntity {
         type = Type.SUBJECT_MODIFIER;
         setModifierFactory(modifierFactory);
 
-        Validate.isNotNull(subject, I18n.getString("validate.modifier.subject"));
+        Validate.isNotNull(subject, I18n.get("validate.modifier.subject"));
         this.subject = subject;
     }
 
@@ -83,7 +83,7 @@ public class Modifier extends BaseEntity {
     }
 
     private void setModifierFactory(ModifierFactory modifierFactory) {
-        Validate.isNotNull(modifierFactory, I18n.getString("validate.modifier.modifierfactory"));
+        Validate.isNotNull(modifierFactory, I18n.get("validate.modifier.modifierfactory"));
 
         this.modifierFactory = modifierFactory;
     }
