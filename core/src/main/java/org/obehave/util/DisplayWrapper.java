@@ -20,7 +20,7 @@ public class DisplayWrapper<T> {
         this.object = object;
     }
 
-    public static <U> DisplayWrapper<U> of(U object) {
+    public static <T> DisplayWrapper<T> of(T object) {
         return new DisplayWrapper<>(object);
     }
 
