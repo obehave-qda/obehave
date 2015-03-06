@@ -38,6 +38,10 @@ public class Properties {
         return new File(trySystemPropertyFirst("defaultsavefolder"));
     }
 
+    public static String getAndroidConnectionString(File path){
+        return trySystemPropertyFirst("database.connectionstring.android", path.getAbsolutePath());
+    }
+
     public static String getDatabaseConnectionString(File path) {
         return trySystemPropertyFirst("database.connectionstring", path.getAbsolutePath());
     }

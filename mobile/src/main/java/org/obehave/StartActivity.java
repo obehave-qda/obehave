@@ -12,8 +12,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import org.obehave.android.R;
 import org.obehave.android.application.Application;
+import org.obehave.android.database.DataHolder;
 import org.obehave.android.ui.activities.MainActivity;
 import org.obehave.android.ui.exceptions.UiException;
+import org.obehave.android.util.ErrorDialog;
 
 
 public class StartActivity extends Activity {
@@ -70,22 +72,31 @@ public class StartActivity extends Activity {
 
         @Override
         public void onActivityResult(int requestCode, int resultCode, Intent data) {
-            super.onActivityResult(requestCode, resultCode, data);
-            if(resultCode == RESULT_OK) {
-                Log.d(LOG_TAG, "RequestCode: " + requestCode);
-                Log.d(LOG_TAG, "ResultCode: " + resultCode);
-                Uri file = data.getData();
-                Log.d(LOG_TAG, "FilePath: " + file.getPath());
+            // super.onActivityResult(requestCode, resultCode, data);
+            // http://stackoverflow.com/questions/20782619/failure-delivering-result-resultinfo
+            // throws Failure delivering result ResultInfo
+            if(requestCode == PICK_CONTENT && data != null) {
+                if (resultCode == RESULT_OK) {
+                    Log.d(LOG_TAG, "RequestCode: " + requestCode);
+                    Log.d(LOG_TAG, "ResultCode: " + resultCode);
+                    Uri file = data.getData();
+                    Log.d(LOG_TAG, "FilePath: " + file.getPath());
 
-                try {
+                    try {
 
-                    Application.loadFile(file.getPath());
-                } catch (UiException e) {
-                    e.printStackTrace();
-                    e.getInnerException().printStackTrace();
+                        Application.loadFile(file.getPath());
+                        DataHolder.subject().getRootNode();
+                        startMainActivity(file.getPath());
+                    } catch (UiException e) {
+                        e.printStackTrace();
+                        e.getInnerException().printStackTrace();
+                        Log.d("errorLoading", e.getStackTrace().toString());
+                        Log.d("errorLoading", e.getMessage());
+                        ErrorDialog ed = new ErrorDialog(e, getActivity());
+                        ed.invoke();
+                    }
 
                 }
-                //startMainActivity(file.getPath());
             }
         }
 

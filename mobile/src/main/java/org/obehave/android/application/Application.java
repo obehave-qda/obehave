@@ -46,7 +46,6 @@ public class Application {
     private List<Coding> allCodings;
 
     public static void loadFile(String filename) throws UiException {
-        boolean isAndroid = true;
         DataHolder.loadStudy(filename);
     }
 
