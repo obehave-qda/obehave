@@ -58,30 +58,29 @@ public class ProjectTreeComponent extends TreeView<String> {
         this.study = study;
 
         root = new TreeItem<>(study.getName());
-        root.getChildren().addAll(subjectNode, actionNode, modifierFactoryNode, observationsNode);
-        root.setExpanded(true);
-
-        setRoot(root);
 
         subjectNode = buildNode(study.getSubjects());
         actionNode = buildNode(study.getActions());
         modifierFactoryNode = buildNode(study.getModifierFactories());
         observationsNode = buildNode(study.getObservations());
+
+        root.getChildren().addAll(subjectNode, actionNode, modifierFactoryNode, observationsNode);
+        root.setExpanded(true);
+
+        setRoot(root);
     }
 
-    public TreeItem<String> buildNode(Node studyNode) {
-        List<Node> children = studyNode.getChildren();
+    private TreeItem<String> buildNode(Node node) {
+        TreeItem<String> treeItem = new TreeItem<>();
+        treeItem.setValue(node.getDisplayString());
 
-        TreeItem<String> newTreeItem = new TreeItem<>();
-        newTreeItem.setValue(studyNode.getDisplayString());
+        List<Node> children = node.getChildren();
 
-        if (!studyNode.isLeaf()) {
-            for (Node child : children) {
-                newTreeItem.getChildren().add(buildNode(child));
-            }
+        for (Node child : children) {
+            treeItem.getChildren().add(buildNode(child));
         }
 
-        return newTreeItem;
+        return treeItem;
     }
 
     @Subscribe

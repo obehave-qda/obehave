@@ -17,7 +17,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Utility class for retrieving DAOs. Not sure if thread safe. Probably not.
@@ -54,7 +56,9 @@ public class Daos {
     }
 
     /**
-     * Retrieves the default instance of this class, previously set via {@link org.obehave.persistence.Daos#asDefault(com.j256.ormlite.support.ConnectionSource)} or {@link org.obehave.persistence.Daos#asDefault()}
+     * Retrieves the default instance of this class, previously set via
+     * {@link org.obehave.persistence.Daos#asDefault(com.j256.ormlite.support.ConnectionSource)} or
+     * {@link org.obehave.persistence.Daos#asDefault()}
      * @return the default instance, if previously set
      * @throws java.lang.IllegalStateException if no default instance was previously set
      */
@@ -119,8 +123,10 @@ public class Daos {
     }
 
     /**
-     * Checks if there is already a default instance set. If so, calls to @{@link org.obehave.persistence.Daos#get()} will work,
-     * while calls to {@link org.obehave.persistence.Daos#asDefault()} or {@link Daos#asDefault(com.j256.ormlite.support.ConnectionSource)} won't.
+     * Checks if there is already a default instance set. If so, calls to
+     * @{@link org.obehave.persistence.Daos#get()} will work,
+     * while calls to {@link org.obehave.persistence.Daos#asDefault()} or
+     * {@link Daos#asDefault(com.j256.ormlite.support.ConnectionSource)} won't.
      * @return true, if a default instance was already set
      */
     public static boolean hasDefault() {

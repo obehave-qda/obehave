@@ -132,6 +132,7 @@ INSERT INTO PUBLIC.Coding (MODIFIED, SUBJECT, ACTION, MODIFIER, OBSERVATION, STA
 
 -- Property
 INSERT INTO PUBLIC.PROPERTY (MODIFIED, KEY, VALUE) VALUES (sysdate, 'existingkey', 'existingvalue');
+INSERT INTO PUBLIC.PROPERTY (MODIFIED, KEY, VALUE) VALUES (sysdate, 'study.name', 'Teststudy');
 
 -- Nodes
 --- root for subjects
