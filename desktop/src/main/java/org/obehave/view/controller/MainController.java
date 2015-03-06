@@ -132,7 +132,6 @@ public class MainController {
 
 
             chosenFile = create ? fileChooser.showSaveDialog(stage) : fileChooser.showOpenDialog(stage);
-            chosenFile = removeSuffixIfThere(chosenFile, Properties.getDatabaseSuffix());
 
             try {
                 if (create) {
@@ -158,15 +157,6 @@ public class MainController {
 
     public void setStage(Stage stage) {
         this.stage = stage;
-    }
-
-    private static File removeSuffixIfThere(File s, String suffix) {
-        final String absolutePath = s.getAbsolutePath();
-        if (!absolutePath.endsWith(suffix)) {
-            return s;
-        } else {
-            return new File(absolutePath.substring(0, absolutePath.lastIndexOf(suffix)));
-        }
     }
 
     public void showStudyNameDialog() {
