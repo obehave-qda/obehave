@@ -6,10 +6,7 @@ import org.obehave.events.ChangeType;
 import org.obehave.events.EventBusHolder;
 import org.obehave.events.LoadedEvent;
 import org.obehave.exceptions.Validate;
-import org.obehave.model.Action;
-import org.obehave.model.Node;
-import org.obehave.model.Observation;
-import org.obehave.model.Subject;
+import org.obehave.model.*;
 import org.obehave.model.modifier.ModifierFactory;
 import org.obehave.persistence.Daos;
 import org.obehave.util.DatabaseProperties;
@@ -23,7 +20,7 @@ import java.sql.SQLException;
 /**
  * A study contains multiple subjects, actions and observations.
  */
-public class Study {
+public class Study implements Displayable {
     private static final Logger log = LoggerFactory.getLogger(Study.class);
 
     private String name;
@@ -210,5 +207,10 @@ public class Study {
 
     public void setSavePath(File savePath) {
         this.savePath = savePath;
+    }
+
+    @Override
+    public String getDisplayString() {
+        return getName();
     }
 }
