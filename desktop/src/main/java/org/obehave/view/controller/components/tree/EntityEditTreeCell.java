@@ -6,6 +6,7 @@ import org.obehave.model.Action;
 import org.obehave.model.Node;
 import org.obehave.model.Observation;
 import org.obehave.model.Subject;
+import org.obehave.model.modifier.ModifierFactory;
 import org.obehave.util.DisplayWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +17,10 @@ import org.slf4j.LoggerFactory;
 public class EntityEditTreeCell extends TextFieldTreeCell<DisplayWrapper<?>> {
     private static final Logger log = LoggerFactory.getLogger(EntityEditTreeCell.class);
 
-    public EntityEditTreeCell() {
+    private PopOverHolder popOverHolder;
+
+    public EntityEditTreeCell(PopOverHolder popOverHolder) {
+        this.popOverHolder = popOverHolder;
 
         addEventHandler(MouseEvent.MOUSE_CLICKED, event -> handle());
     }
@@ -36,6 +40,8 @@ public class EntityEditTreeCell extends TextFieldTreeCell<DisplayWrapper<?>> {
                     handleSubject((Subject) item, ownerNode);
                 } else if (item instanceof Action) {
                     handleAction((Action) item, ownerNode);
+                } else if (item instanceof ModifierFactory) {
+                    handleModifierFactory((ModifierFactory) item, ownerNode);
                 } else if (item instanceof Observation) {
                     handleObservation((Observation) item, ownerNode);
                 }
@@ -44,14 +50,18 @@ public class EntityEditTreeCell extends TextFieldTreeCell<DisplayWrapper<?>> {
     }
 
     private void handleSubject(Subject subject, javafx.scene.Node owner) {
-        PopOverHolder.getSubject(subject).show(owner);
+        popOverHolder.getSubject(subject).show(owner);
     }
 
     private void handleAction(Action action, javafx.scene.Node owner) {
-        PopOverHolder.getAction(action).show(owner);
+        popOverHolder.getAction(action).show(owner);
+    }
+
+    private void handleModifierFactory(ModifierFactory modifierFactory, javafx.scene.Node owner) {
+        popOverHolder.getModifierFactory(modifierFactory).show(owner);
     }
 
     private void handleObservation(Observation observation, javafx.scene.Node owner) {
-        PopOverHolder.getObservation(observation).show(owner);
+        popOverHolder.getObservation(observation).show(owner);
     }
 }

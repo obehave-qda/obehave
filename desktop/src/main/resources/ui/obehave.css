@@ -18,3 +18,7 @@
 #codingPane Rectangle#cover {
 	-fx-fill: white;
 }
+
+.popover Label {
+    -fx-text-fill: black;
+}

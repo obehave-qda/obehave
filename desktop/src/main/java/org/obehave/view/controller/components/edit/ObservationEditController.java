@@ -1,6 +1,5 @@
 package org.obehave.view.controller.components.edit;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
@@ -10,7 +9,6 @@ import org.joda.time.DateTime;
 import org.obehave.model.Observation;
 import org.obehave.service.ObservationService;
 import org.obehave.view.Obehave;
-import org.obehave.view.controller.components.tree.PopOverHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,6 +23,8 @@ public class ObservationEditController {
     private static final ObservationService observationService = ObservationService.getInstance();
 
     private Observation loadedObservation;
+
+    private Runnable saveCallback;
 
     @FXML
     private TextField name;
@@ -50,7 +50,7 @@ public class ObservationEditController {
         this.name.setText(name);
     }
 
-    public void selectVideo(ActionEvent event) {
+    public void selectVideo() {
         FileChooser chooser = new FileChooser();
         setVideoPath(chooser.showOpenDialog(Obehave.STAGE));
     }
@@ -84,7 +84,7 @@ public class ObservationEditController {
         setVideoPath(o.getVideo());
     }
 
-    public void saveCurrent(ActionEvent e) {
+    public void saveCurrent() {
         if (loadedObservation == null) {
             log.debug("Creating new observation");
             loadedObservation = new Observation(getName());
@@ -104,6 +104,10 @@ public class ObservationEditController {
         observationService.save(loadedObservation);
 
         loadedObservation = null;
-        PopOverHolder.hidePopOver();
+        saveCallback.run();
+    }
+
+    public void setSaveCallback(Runnable saveCallback) {
+        this.saveCallback = saveCallback;
     }
 }

@@ -30,13 +30,15 @@ public class ProjectTreeComponent extends TreeView<DisplayWrapper<?>> {
     public ProjectTreeComponent() {
         super();
 
-        setCellFactory(param -> new EntityEditTreeCell());
 
         EventBusHolder.register(this);
     }
 
     public void setStudy(Study study) {
         this.study = study;
+
+        PopOverHolder popOverHolder = new PopOverHolder(study);
+        setCellFactory(param -> new EntityEditTreeCell(popOverHolder));
 
         redoTree();
     }

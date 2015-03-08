@@ -2,9 +2,10 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import java.net.URL?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="144.0"
             prefWidth="256.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.obehave.view.controller.components.edit.SubjectEditController">
+            fx:controller="org.obehave.view.controller.components.edit.SubjectEditController" styleClass="popover">
     <children>
         <GridPane prefHeight="80.0" prefWidth="247.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="10.0"
                   AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="5.0">
@@ -19,14 +20,17 @@
                 <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES"/>
             </rowConstraints>
             <children>
-                <Label text="Name" textFill="#000000" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <Label text="Name" GridPane.columnIndex="0" GridPane.rowIndex="0" />
                 <TextField fx:id="name" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="0"/>
-                <Label text="Alias" textFill="#000000" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                <Label text="Alias" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
                 <TextField fx:id="alias" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1"/>
-                <Label text="Color" textFill="#000000" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                <Label text="Color" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
                 <ColorPicker fx:id="colorPicker" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2"/>
                 <Button text="Save" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.halignment="LEFT"/>
             </children>
         </GridPane>
     </children>
+    <stylesheets>
+        <URL value="@/ui/obehave.css"/>
+    </stylesheets>
 </AnchorPane>

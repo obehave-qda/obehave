@@ -1,6 +1,5 @@
 package org.obehave.view.controller.components.edit;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.TextField;
@@ -18,6 +17,7 @@ public class SubjectEditController {
     private static final SubjectService subjectService = SubjectService.getInstance();
 
     private Subject loadedSubject;
+    private Runnable saveCallback;
 
     @FXML
     private TextField name;
@@ -60,7 +60,7 @@ public class SubjectEditController {
         colorPicker.setValue(ColorConverter.convertToJavaFX(s.getColor()));
     }
 
-    public void saveCurrent(ActionEvent e) {
+    public void saveCurrent() {
         if (loadedSubject == null) {
             log.debug("Creating new subject");
             loadedSubject = new Subject(getName());
@@ -75,5 +75,10 @@ public class SubjectEditController {
         subjectService.save(loadedSubject);
 
         loadedSubject = null;
+        saveCallback.run();
+    }
+
+    public void setSaveCallback(Runnable saveCallback) {
+        this.saveCallback = saveCallback;
     }
 }

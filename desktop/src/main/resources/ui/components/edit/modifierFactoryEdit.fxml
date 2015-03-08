@@ -2,31 +2,58 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="144.0"
-            prefWidth="256.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.obehave.view.controller.components.edit.SubjectEditController">
-    <children>
-        <GridPane prefHeight="80.0" prefWidth="247.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="10.0"
-                  AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="5.0">
-            <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-            </columnConstraints>
-            <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES"/>
-                <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES"/>
-                <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES"/>
-                <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES"/>
-            </rowConstraints>
-            <children>
-                <Label text="Name" textFill="#000000" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                <TextField fx:id="name" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="0"/>
-                <Label text="Alias" textFill="#000000" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                <TextField fx:id="alias" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1"/>
-                <Label text="Color" textFill="#000000" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                <ColorPicker fx:id="colorPicker" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2"/>
-                <Button text="Save" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.halignment="LEFT"/>
-            </children>
-        </GridPane>
-    </children>
+<?import org.controlsfx.control.CheckListView?>
+<?import java.net.URL?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefWidth="220.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.obehave.view.controller.components.edit.ModifierFactoryEditController"
+            styleClass="popover">
+    <BorderPane maxWidth="200" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="10.0"
+                AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="5.0">
+        <top>
+            <VBox>
+                <TextField fx:id="name" maxWidth="200"/>
+                <ComboBox fx:id="combobox" onAction="#comboboxChange"/>
+            </VBox>
+        </top>
+        <center>
+            <AnchorPane fx:id="enumerationPane">
+                <VBox maxWidth="200">
+                    <ListView fx:id="enumerationList"/>
+                    <HBox>
+                        <Button text="+" onAction="#enumerationAdd"/>
+                        <Button text="-" onAction="#enumerationRemove"/>
+                    </HBox>
+                    <TextField fx:id="enumerationEntry" onKeyReleased="#enumerationAddEnter"/>
+                </VBox>
+            </AnchorPane>
+            <AnchorPane fx:id="subjectPane">
+                <VBox maxWidth="200">
+                    <Label text="Valid subjects"/>
+                    <CheckListView fx:id="checkedSubjects"/>
+                </VBox>
+            </AnchorPane>
+            <AnchorPane fx:id="numberRangePane">
+                <HBox>
+                    <GridPane>
+                        <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                        </columnConstraints>
+                        <Label text="From" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                        <Label text="To" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                        <TextField fx:id="rangeFrom" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                        <TextField fx:id="rangeTo" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                    </GridPane>
+                </HBox>
+            </AnchorPane>
+            <AnchorPane fx:id="visiblePane"/>
+        </center>
+        <bottom>
+            <Button text="Save" onAction="#saveCurrent"/>
+        </bottom>
+    </BorderPane>
+    <stylesheets>
+        <URL value="@/ui/obehave.css"/>
+    </stylesheets>
 </AnchorPane>

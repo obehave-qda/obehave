@@ -146,7 +146,7 @@ public class MainController {
             }
         } while (study == null);
 
-        stage.setTitle(stage.getTitle() + ": " + chosenFile.getAbsolutePath());
+        stage.setTitle(stage.getTitle() + " - " + study.getName() + " - " + chosenFile.getAbsolutePath());
         tree.setStudy(study);
     }
 
