@@ -190,6 +190,14 @@ public class ModifierFactory extends BaseEntity implements Displayable {
         return true;
     }
 
+    public boolean setValidValues(String... values) {
+        validateType(Type.ENUMERATION_MODIFIER_FACTORY);
+
+        validValues.clear();
+
+        return addValidValues(values);
+    }
+
 
     private Modifier createEnumerationModifier(String input) throws FactoryException {
         validateType(Type.ENUMERATION_MODIFIER_FACTORY);
@@ -246,6 +254,14 @@ public class ModifierFactory extends BaseEntity implements Displayable {
         }
 
         return true;
+    }
+
+    public boolean setValidSubjects(Subject... subjects) {
+        validateType(Type.SUBJECT_MODIFIER_FACTORY);
+
+        validSubjects.clear();
+
+        return addValidSubjects(subjects);
     }
 
     public List<Subject> getValidSubjects() {
