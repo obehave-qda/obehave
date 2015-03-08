@@ -38,11 +38,16 @@ public class Properties {
         return new File(trySystemPropertyFirst("defaultsavefolder"));
     }
 
-    public static String getAndroidConnectionString(File path){
+    public static String getDatabaseConnectionStringWithInit(File path) {
+        return getDatabaseConnectionString(path) + trySystemPropertyFirst("database.connectionstring.initsuffix");
+    }
+
+    public static String getAndroidDatabaseConnectionString(File path){
         return trySystemPropertyFirst("database.connectionstring.android", path.getAbsolutePath());
     }
 
     public static String getDatabaseConnectionString(File path) {
+        path = FileUtil.removeSuffixIfThere(path, getDatabaseSuffix());
         return trySystemPropertyFirst("database.connectionstring", path.getAbsolutePath());
     }
 

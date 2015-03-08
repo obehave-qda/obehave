@@ -12,7 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import com.google.common.eventbus.Subscribe;
 import org.obehave.android.R;
-import org.obehave.android.application.Application;
+import org.obehave.android.application.MyApplication;
 import org.obehave.android.database.DataHolder;
 import org.obehave.android.events.NodeSelectedEvent;
 import org.obehave.android.ui.adapters.SectionsPagerAdapter;
@@ -47,7 +47,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         Log.d(LOG_TAG, "onSubjectSelected");
         Log.d(LOG_TAG, subject.getDisplayString());
         changeCodingFragment(ActionFragment.newInstance(CODING_FRAGMENT_POSITION, DataHolder.action().getData(null), DataHolder.action().getChildren(null)));
-        Application.selectItem(event.getSubject());
+        MyApplication.selectItem(event.getSubject());
     }
 
     @Subscribe
@@ -56,10 +56,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         Log.d(LOG_TAG, "onActionSelected");
         Log.d(LOG_TAG, action.getDisplayString());
         try {
-            Application.selectItem(action);
-            ModifierFactory modifierFactory = Application.getModifierFactoryOfSelectedAction();
+            MyApplication.selectItem(action);
+            ModifierFactory modifierFactory = MyApplication.getModifierFactoryOfSelectedAction();
             if (modifierFactory == null) {
-                Application.createCoding();
+                MyApplication.createCoding();
             } else if (modifierFactory.getType() == ModifierFactory.Type.SUBJECT_MODIFIER_FACTORY) {
                 changeCodingFragment(SubjectModifierFragment.newInstance(CODING_FRAGMENT_POSITION, (modifierFactory).getValidSubjects()));
             } else if (modifierFactory.getType() == ModifierFactory.Type.ENUMERATION_MODIFIER_FACTORY) {
@@ -81,9 +81,9 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                 throw new UiException("Es muss mindestens ein Subjekt gewählt werden.");
             }
 
-            ModifierFactory subjectModifierFactory = (ModifierFactory) Application.getSelectedAction().getModifierFactory();
-            Application.selectItem(subjectModifierFactory.create(subjects.get(0).getName()));
-            Application.createCoding();
+            ModifierFactory subjectModifierFactory = (ModifierFactory) MyApplication.getSelectedAction().getModifierFactory();
+            MyApplication.selectItem(subjectModifierFactory.create(subjects.get(0).getName()));
+            MyApplication.createCoding();
             getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             changeToSubjectFragment(null);
 
@@ -105,9 +105,9 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                 throw new UiException("Es muss mindestens ein Wert gewählt werden.");
             }
 
-            ModifierFactory enumerationModifierFactory = Application.getSelectedAction().getModifierFactory();
-            Application.selectItem(enumerationModifierFactory.create(values.get(0)));
-            Application.createCoding();
+            ModifierFactory enumerationModifierFactory = MyApplication.getSelectedAction().getModifierFactory();
+            MyApplication.selectItem(enumerationModifierFactory.create(values.get(0)));
+            MyApplication.createCoding();
             getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             changeToSubjectFragment(null);
         } catch (UiException exception) {
@@ -123,22 +123,22 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     @Subscribe
     public void onTimerStartEvent(TimerStartEvent event) {
         Log.d(LOG_TAG, "onTimerStartEvent");
-        Application.startTimer();
+        MyApplication.startTimer();
     }
 
     @Subscribe
     public void onTimerStopEvent(TimerStopEvent event) {
         Log.d(LOG_TAG, "onTimerStopEvent");
-        Application.stopTimer();
+        MyApplication.stopTimer();
     }
 
     @Subscribe
     public void onDecimalRangeModifierSelected(DecimalRangeModifierSelectedEvent event) {
         String value = event.getValue();
         try {
-            ModifierFactory modifierFactory = Application.getSelectedAction().getModifierFactory();
-            Application.selectItem(modifierFactory.create(value));
-            Application.createCoding();
+            ModifierFactory modifierFactory = MyApplication.getSelectedAction().getModifierFactory();
+            MyApplication.selectItem(modifierFactory.create(value));
+            MyApplication.createCoding();
             getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             changeToSubjectFragment(null);
 
@@ -283,7 +283,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     protected void onDestroy() {
         super.onDestroy();
         /* TODO: Check if timer is stopped  */
-        Application.onDestroy();
+        MyApplication.onDestroy();
     }
 
     @Override
