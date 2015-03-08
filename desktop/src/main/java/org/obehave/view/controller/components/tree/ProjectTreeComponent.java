@@ -7,6 +7,7 @@ import org.obehave.events.ChangeEvent;
 import org.obehave.events.ChangeType;
 import org.obehave.events.EventBusHolder;
 import org.obehave.model.*;
+import org.obehave.model.modifier.ModifierFactory;
 import org.obehave.service.Study;
 import org.obehave.util.DisplayWrapper;
 import org.slf4j.Logger;
@@ -14,7 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class ProjectTreeComponent extends TreeView<String> {
+public class ProjectTreeComponent extends TreeView<DisplayWrapper<?>> {
     private static final Logger log = LoggerFactory.getLogger(ProjectTreeComponent.class);
 
     private Study study;
@@ -27,6 +28,8 @@ public class ProjectTreeComponent extends TreeView<String> {
 
     public ProjectTreeComponent() {
         super();
+
+        setCellFactory(param -> new EntityEditTreeCell());
 
         EventBusHolder.register(this);
     }
@@ -74,6 +77,8 @@ public class ProjectTreeComponent extends TreeView<String> {
                 handleEntityChange(d, change.getChangeType(), subjectNode);
             } else if (d instanceof Action) {
                 handleEntityChange(d, change.getChangeType(), actionNode);
+            } else if (d instanceof ModifierFactory) {
+                handleEntityChange(d, change.getChangeType(), modifierFactoryNode);
             } else if (d instanceof Observation) {
                 handleEntityChange(d, change.getChangeType(), observationsNode);
             }
@@ -81,36 +86,7 @@ public class ProjectTreeComponent extends TreeView<String> {
     }
 
     private void handleEntityChange(Displayable displayable, ChangeType changeType, TreeItem node) {
-        String displayString = displayable.getDisplayString();
-
-        if (changeType == ChangeType.CREATE) {
-            node.getChildren().add(new TreeItem<>(displayString));
-        } else if (changeType == ChangeType.DELETE) {
-            node.getChildren().remove(getMatchingTreeItem(root, displayString));
-        }
-    }
-
-    /**
-     * Searches for a item, where the displayed value is equal to a given text
-     *
-     * @param root the node where to start the search from
-     * @param text the text to search
-     * @return a matching item
-     */
-    private TreeItem<String> getMatchingTreeItem(TreeItem<String> root, String text) {
-        for (TreeItem<String> i : root.getChildren()) {
-            if (i.getValue().equals(text)) {
-                return i;
-            }
-
-            if (i.getChildren().size() > 0) {
-                TreeItem<String> matchingItem = getMatchingTreeItem(i, text);
-                if (matchingItem != null) {
-                    return matchingItem;
-                }
-            }
-        }
-
-        return null;
+        // TODO make something better here!
+        redoTree();
     }
 }
