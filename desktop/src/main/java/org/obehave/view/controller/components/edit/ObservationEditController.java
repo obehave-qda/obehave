@@ -52,10 +52,16 @@ public class ObservationEditController {
 
     public void selectVideo(ActionEvent event) {
         FileChooser chooser = new FileChooser();
-        videoPath = chooser.showOpenDialog(Obehave.STAGE);
+        setVideoPath(chooser.showOpenDialog(Obehave.STAGE));
+    }
+
+    public void setVideoPath(File path) {
+        videoPath = path;
 
         if (videoPath != null) {
             video.setText(videoPath.getName());
+        } else {
+            video.setText("Select video...");
         }
     }
 
@@ -63,10 +69,19 @@ public class ObservationEditController {
         loadedObservation = o;
 
         setName(o.getName());
+
         DateTime dt = o.getDateTime();
-        date.setValue(LocalDate.of(dt.getYear(), dt.getMonthOfYear(), dt.getDayOfMonth()));
-        hour.setText(String.format("%2d", dt.getHourOfDay()));
-        minute.setText(String.format("%2d", dt.getMinuteOfHour()));
+        if (dt != null) {
+            date.setValue(LocalDate.of(dt.getYear(), dt.getMonthOfYear(), dt.getDayOfMonth()));
+            hour.setText(String.format("%02d", dt.getHourOfDay()));
+            minute.setText(String.format("%02d", dt.getMinuteOfHour()));
+        } else {
+            date.setValue(null);
+            hour.setText("00");
+            minute.setText("00");
+        }
+
+        setVideoPath(o.getVideo());
     }
 
     public void saveCurrent(ActionEvent e) {
@@ -89,6 +104,6 @@ public class ObservationEditController {
         observationService.save(loadedObservation);
 
         loadedObservation = null;
-        PopOverHolder.hidePopOvers();
+        PopOverHolder.hidePopOver();
     }
 }
