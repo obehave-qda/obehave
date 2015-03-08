@@ -1,4 +1,4 @@
-package org.obehave;
+package org.obehave.android.ui.activities;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -10,12 +10,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import com.google.common.eventbus.Subscribe;
 import org.obehave.android.R;
-import org.obehave.android.application.Application;
-import org.obehave.android.database.DataHolder;
+import org.obehave.android.application.MyApplication;
 import org.obehave.android.ui.activities.MainActivity;
 import org.obehave.android.ui.exceptions.UiException;
 import org.obehave.android.util.ErrorDialog;
+import org.obehave.events.EventBusHolder;
+import org.obehave.events.LoadedEvent;
 
 
 public class StartActivity extends Activity {
@@ -51,6 +53,8 @@ public class StartActivity extends Activity {
             btnChooseFile = (Button) rootView.findViewById(R.id.btnChooseStudyFile);
             btnImport = (Button) rootView.findViewById(R.id.btnChooseStudyWLAN);
 
+            EventBusHolder.register(this);
+
             btnChooseFile.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -83,10 +87,7 @@ public class StartActivity extends Activity {
                     Log.d(LOG_TAG, "FilePath: " + file.getPath());
 
                     try {
-
-                        Application.loadFile(file.getPath());
-                        DataHolder.subject().getRootNode();
-                        startMainActivity(file.getPath());
+                        MyApplication.loadFile(file.getPath());
                     } catch (UiException e) {
                         e.printStackTrace();
                         e.getInnerException().printStackTrace();
@@ -100,11 +101,21 @@ public class StartActivity extends Activity {
             }
         }
 
-        private void startMainActivity(String filename){
-            Intent intent = new Intent(getActivity(), MainActivity.class);
+        @Subscribe
+        public void studyLoaded(LoadedEvent e){
+            startMainActivity();
+        }
 
-            //intent.putExtra(ARG_FILENAME,filename);
+        private void startMainActivity(){
+            Intent intent = new Intent(getActivity(), MainActivity.class);
             startActivity(intent);
+        }
+
+        @Override
+        public void onDestroy() {
+            super.onDestroy();
+            Log.d(LOG_TAG, "onDestroy");
+            EventBusHolder.unregister(this);
         }
     }
 }

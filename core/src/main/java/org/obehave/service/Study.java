@@ -75,7 +75,7 @@ public class Study {
             Daos.asDefault(new JdbcConnectionSource(Properties.getDatabaseConnectionString(savePath)));
         }
         else {
-            Daos.asDefault(new JdbcConnectionSource(Properties.getAndroidConnectionString(savePath)));
+            Daos.asDefault(new JdbcConnectionSource(Properties.getAndroidDatabaseConnectionString(savePath)));
         }
         study.load();
         return study;

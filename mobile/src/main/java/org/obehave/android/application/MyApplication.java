@@ -1,6 +1,8 @@
 package org.obehave.android.application;
 
 
+import android.app.Application;
+import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -19,9 +21,9 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class Application {
+public class MyApplication  extends Application{
 
-    private static final String LOG_TAG = Application.class.getSimpleName();
+    private static final String LOG_TAG = MyApplication.class.getSimpleName();
     private static final int INTERVAL_TIME = 130;
     /**
      * Stores the time when the timer is started
@@ -36,7 +38,7 @@ public class Application {
      */
     private static Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
-            Application.doTimerTasks();
+            MyApplication.doTimerTasks();
         }
     };
 
@@ -44,6 +46,17 @@ public class Application {
      * List of all Codings
      */
     private List<Coding> allCodings;
+
+    private static Context context;
+
+    public void onCreate(){
+        super.onCreate();
+        MyApplication.context = getApplicationContext();
+    }
+
+    public static Context getAppContext() {
+        return MyApplication.context;
+    }
 
     public static void loadFile(String filename) throws UiException {
         DataHolder.loadStudy(filename);
@@ -140,8 +153,7 @@ public class Application {
 
     }
 
-    // the class should not be instanceable
-    private Application(){
+    public MyApplication(){
 
     }
 
