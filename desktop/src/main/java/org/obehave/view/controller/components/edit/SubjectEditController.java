@@ -1,13 +1,24 @@
 package org.obehave.view.controller.components.edit;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.TextField;
+import org.obehave.model.Subject;
+import org.obehave.service.SubjectService;
+import org.obehave.view.util.ColorConverter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Markus Möslinger
  */
 public class SubjectEditController {
+    private static final Logger log = LoggerFactory.getLogger(SubjectEditController.class);
+    private static final SubjectService subjectService = SubjectService.getInstance();
+
+    private Subject loadedSubject;
+
     @FXML
     private TextField name;
 
@@ -39,5 +50,30 @@ public class SubjectEditController {
 
     public void setColorPicker(ColorPicker colorPicker) {
         this.colorPicker = colorPicker;
+    }
+
+    public void loadSubject(Subject s) {
+        loadedSubject = s;
+
+        setName(s.getName());
+        setAlias(s.getAlias());
+        colorPicker.setValue(ColorConverter.convertToJavaFX(s.getColor()));
+    }
+
+    public void saveCurrent(ActionEvent e) {
+        if (loadedSubject == null) {
+            log.debug("Creating new subject");
+            loadedSubject = new Subject(getName());
+        } else {
+            log.debug("Saving existing subject");
+            loadedSubject.setName(getName());
+        }
+
+        loadedSubject.setAlias(getAlias());
+        loadedSubject.setColor(ColorConverter.convertToObehave(colorPicker.getValue()));
+
+        subjectService.save(loadedSubject);
+
+        loadedSubject = null;
     }
 }

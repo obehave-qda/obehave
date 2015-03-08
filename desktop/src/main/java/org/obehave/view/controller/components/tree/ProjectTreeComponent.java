@@ -6,6 +6,7 @@ import javafx.scene.control.TreeView;
 import org.obehave.events.ChangeEvent;
 import org.obehave.events.ChangeType;
 import org.obehave.events.EventBusHolder;
+import org.obehave.events.RepaintStudyEvent;
 import org.obehave.model.*;
 import org.obehave.model.modifier.ModifierFactory;
 import org.obehave.service.Study;
@@ -37,6 +38,11 @@ public class ProjectTreeComponent extends TreeView<DisplayWrapper<?>> {
     public void setStudy(Study study) {
         this.study = study;
 
+        redoTree();
+    }
+
+    @Subscribe
+    public void repaintStudy(RepaintStudyEvent event) {
         redoTree();
     }
 

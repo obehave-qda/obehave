@@ -25,7 +25,7 @@
                 <TextField fx:id="alias" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1"/>
                 <Label text="Color" textFill="#000000" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
                 <ColorPicker fx:id="colorPicker" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2"/>
-                <Button text="Save" onAction="#saveCurrent" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.halignment="LEFT"/>
+                <Button text="Save" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.halignment="LEFT"/>
             </children>
         </GridPane>
     </children>

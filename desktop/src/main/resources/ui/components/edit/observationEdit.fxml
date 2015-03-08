@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="144.0"
+            prefWidth="256.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.obehave.view.controller.components.edit.ObservationEditController">
+    <children>
+        <GridPane prefHeight="100.0" prefWidth="247.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="10.0"
+                  AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="5.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES"/>
+            </rowConstraints>
+            <children>
+                <Label text="Name" textFill="#000000" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <TextField fx:id="name" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.columnSpan="2"/>
+                <Label text="Date" textFill="#000000" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                <DatePicker fx:id="date" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.columnSpan="2"/>
+                <Label text="Time" textFill="#000000" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                <TextField fx:id="hour" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2"/>
+                <TextField fx:id="minute" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="2"/>
+                <Label text="Video" textFill="#000000" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                <Button text="Click to load" fx:id="video" onAction="#selectVideo" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.columnSpan="2"/>
+                <Button text="Save" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.halignment="LEFT"/>
+            </children>
+        </GridPane>
+    </children>
+</AnchorPane>
