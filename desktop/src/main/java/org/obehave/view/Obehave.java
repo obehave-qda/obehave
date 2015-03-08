@@ -13,6 +13,8 @@ import org.obehave.view.controller.MainController;
 import java.net.URL;
 
 public class Obehave extends Application {
+    public static Stage STAGE;
+
     @Override
     public void start(Stage stage) throws Exception {
         final URL mainFxml = getClass().getClassLoader().getResource("ui/main.fxml");
@@ -25,6 +27,7 @@ public class Obehave extends Application {
         Parent root = loader.load();
         final MainController mainController = loader.getController();
         mainController.setStage(stage);
+        STAGE = stage;
 
         Scene scene = new Scene(root);
 

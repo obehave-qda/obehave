@@ -4,7 +4,6 @@ import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import org.obehave.events.ChangeEvent;
 import org.obehave.events.ChangeType;
 import org.obehave.events.EventBusHolder;
-import org.obehave.events.LoadedEvent;
 import org.obehave.exceptions.Validate;
 import org.obehave.model.*;
 import org.obehave.model.modifier.ModifierFactory;
@@ -83,8 +82,6 @@ public class Study implements Displayable {
 
         long duration = System.currentTimeMillis() - start;
         log.info("Took {}ms for loading of entities", duration);
-
-        EventBusHolder.post(new LoadedEvent());
     }
 
     public Node getSubjects() {
