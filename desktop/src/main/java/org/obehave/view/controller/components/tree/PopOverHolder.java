@@ -1,10 +1,12 @@
 package org.obehave.view.controller.components.tree;
 
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import org.controlsfx.control.PopOver;
 import org.obehave.model.Action;
 import org.obehave.model.Observation;
 import org.obehave.model.Subject;
+import org.obehave.model.modifier.ModifierFactory;
 import org.obehave.view.controller.components.edit.ObservationEditController;
 import org.obehave.view.controller.components.edit.SubjectEditController;
 import org.slf4j.Logger;
@@ -19,65 +21,62 @@ public class PopOverHolder {
     private static final Logger log = LoggerFactory.getLogger(PopOverHolder.class);
 
     private static final FXMLLoader subjectLoader = getFxmlLoader("subjectEdit.fxml");
-    private static final FXMLLoader actionLoader = getFxmlLoader("subjectEdit.fxml");
+    private static final FXMLLoader actionLoader = getFxmlLoader("actionEdit.fxml");
+    private static final FXMLLoader modifierFactoryLoader = getFxmlLoader("modifierFactoryEdit.fxml");
     private static final FXMLLoader observationLoader = getFxmlLoader("observationEdit.fxml");
 
-    // maybe one PopOver with changing content is enough. Don't know.
-    private static final PopOver subjectPopOver = createPopOver(subjectLoader);
-    private static final PopOver actionPopOver = createPopOver(actionLoader);
-    private static final PopOver observationPopOver = createPopOver(observationLoader);
+    private static Parent subjectParent;
+    private static Parent actionParent;
+    private static Parent modifierFactoryParent;
+    private static Parent observationParent;
 
-    public static PopOver hideAllAndGetSubject(Subject s) {
+    private static final PopOver popOver = createPopOver();
+
+    public static PopOver getSubject(Subject s) {
         log.debug("Getting popover for subject {}", s);
-        hidePopOvers(subjectPopOver, actionPopOver);
+        popOver.setContentNode(getSubjectParent());
 
         SubjectEditController controller = subjectLoader.getController();
         controller.loadSubject(s);
 
-        return subjectPopOver;
+        return popOver;
     }
 
-    public static PopOver hideAllAndGetAction(Action a) {
+    public static PopOver getAction(Action a) {
         log.debug("Getting popover for action {}", a);
-        hidePopOvers(subjectPopOver, observationPopOver);
+        popOver.setContentNode(getActionParent());
 
-        return actionPopOver;
+        return popOver;
     }
 
-    public static PopOver hideAllAndGetObservation(Observation o) {
+    public static PopOver getModifierFactory(ModifierFactory mf) {
+        log.debug("Getting popover for modifier factory {}", mf);
+        popOver.setContentNode(getModifierFactoryParent());
+
+        return popOver;
+    }
+
+    public static PopOver getObservation(Observation o) {
         log.debug("Getting popover for observation {}", o);
-        hidePopOvers(subjectPopOver, actionPopOver);
+        popOver.setContentNode(getObservationParent());
 
         ObservationEditController controller = observationLoader.getController();
         controller.loadObservation(o);
 
-        return observationPopOver;
+        return popOver;
     }
 
-    public static void hidePopOvers(PopOver... popOvers) {
-        log.trace("Hiding all pop overs");
-
-        for (PopOver popOver : popOvers) {
-            popOver.hide();
-        }
-    }
-
-    public static void hideAllPopOvers() {
-        hidePopOvers(subjectPopOver, actionPopOver, observationPopOver);
+    public static void hidePopOver() {
+        popOver.hide();
     }
 
     private static FXMLLoader getFxmlLoader(String fxmlFile) {
         return new FXMLLoader(PopOverHolder.class.getResource("/ui/components/edit/" + fxmlFile));
     }
 
+    private static PopOver createPopOver() {
+        PopOver popOver = new PopOver();
 
-    private static PopOver createPopOver(FXMLLoader loader) {
-        PopOver popOver = null;
-        try {
-            popOver = new PopOver(loader.load());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
         popOver.setDetachable(false);
         popOver.setArrowSize(12);
         popOver.setArrowIndent(12);
@@ -85,5 +84,45 @@ public class PopOverHolder {
         popOver.setArrowLocation(PopOver.ArrowLocation.LEFT_TOP);
 
         return popOver;
+    }
+
+    private static Parent getSubjectParent() {
+        if (subjectParent == null) {
+            subjectParent = load(subjectLoader);
+        }
+
+        return subjectParent;
+    }
+
+    private static Parent getActionParent() {
+        if (actionParent == null) {
+            actionParent = load(actionLoader);
+        }
+
+        return actionParent;
+    }
+
+    private static Parent getObservationParent() {
+        if (observationParent == null) {
+            observationParent = load(observationLoader);
+        }
+
+        return observationParent;
+    }
+
+    private static Parent getModifierFactoryParent() {
+        if (modifierFactoryParent == null) {
+            modifierFactoryParent = load(modifierFactoryLoader);
+        }
+
+        return modifierFactoryParent;
+    }
+
+    private static Parent load(FXMLLoader loader) {
+        try {
+            return loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

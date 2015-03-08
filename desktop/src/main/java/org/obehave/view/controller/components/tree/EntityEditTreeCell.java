@@ -44,14 +44,14 @@ public class EntityEditTreeCell extends TextFieldTreeCell<DisplayWrapper<?>> {
     }
 
     private void handleSubject(Subject subject, javafx.scene.Node owner) {
-        PopOverHolder.hideAllAndGetSubject(subject).show(owner);
+        PopOverHolder.getSubject(subject).show(owner);
     }
 
     private void handleAction(Action action, javafx.scene.Node owner) {
-        PopOverHolder.hideAllAndGetAction(action).show(owner);
+        PopOverHolder.getAction(action).show(owner);
     }
 
     private void handleObservation(Observation observation, javafx.scene.Node owner) {
-        PopOverHolder.hideAllAndGetObservation(observation).show(owner);
+        PopOverHolder.getObservation(observation).show(owner);
     }
 }
