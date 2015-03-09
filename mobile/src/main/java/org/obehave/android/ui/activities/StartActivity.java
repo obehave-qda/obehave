@@ -13,7 +13,6 @@ import android.widget.Button;
 import com.google.common.eventbus.Subscribe;
 import org.obehave.android.R;
 import org.obehave.android.application.MyApplication;
-import org.obehave.android.ui.activities.MainActivity;
 import org.obehave.android.ui.exceptions.UiException;
 import org.obehave.android.util.ErrorDialog;
 import org.obehave.events.EventBusHolder;
