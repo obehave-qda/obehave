@@ -11,7 +11,6 @@ import org.obehave.exceptions.Validate;
 import org.obehave.persistence.impl.ObservationDaoImpl;
 
 import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -21,8 +20,7 @@ import java.util.List;
  * During an observation, it's possible to code subjects and actions.
  */
 @DatabaseTable(tableName = "Observation", daoClass = ObservationDaoImpl.class)
-public class Observation extends BaseEntity implements Displayable, Serializable {
-    private static final long serialVersionUID = 1L;
+public class Observation extends BaseEntity implements Displayable {
     public static final String COLUMN_NAME = "name";
 
     @DatabaseField(columnName = COLUMN_NAME)

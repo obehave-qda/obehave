@@ -9,7 +9,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.obehave.model.modifier.ModifierFactory;
 import org.obehave.persistence.impl.NodeDaoImpl;
 
-import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -18,8 +17,7 @@ import java.util.*;
  * {@code Group} is {@see Iterable}, so using a for each loop will return every item contained in this group or one of it's subgroups.
  */
 @DatabaseTable(tableName = "Node", daoClass = NodeDaoImpl.class)
-public class Node extends BaseEntity implements Iterable<Displayable>, Displayable, Serializable {
-    private static final long serialVersionUID = 1L;
+public class Node extends BaseEntity implements Iterable<Displayable>, Displayable {
     public static final String COLUMN_PARENT = "parent";
     public static final String COLUMN_TYPE = "type";
 

@@ -36,7 +36,7 @@ abstract public class NodeDataHolder<T> {
         }
 
         for(Node currentNode: node.getChildren()){
-            if(currentNode.getData() == null){
+            if(currentNode.getChildren() != null && currentNode.getData() == null){
                 nodes.add(currentNode);
             }
         }
