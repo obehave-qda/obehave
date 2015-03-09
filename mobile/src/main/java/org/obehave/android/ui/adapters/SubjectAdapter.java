@@ -128,7 +128,6 @@ public class SubjectAdapter extends BaseAdapter{
             convertView.setTag(holder);
         }
 
-
         return convertView;
     }
 
@@ -180,7 +179,4 @@ public class SubjectAdapter extends BaseAdapter{
 
         this.notifyDataSetChanged();
     }
-
-
-
 }

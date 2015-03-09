@@ -43,6 +43,7 @@ public class Properties {
     }
 
     public static String getAndroidDatabaseConnectionString(File path){
+        path = FileUtil.removeSuffixIfThere(path, getDatabaseSuffix());
         return trySystemPropertyFirst("database.connectionstring.android", path.getAbsolutePath());
     }
 

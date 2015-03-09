@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import com.google.common.eventbus.Subscribe;
 import org.obehave.android.R;
 import org.obehave.android.application.MyApplication;
-import org.obehave.android.database.DataHolder;
 import org.obehave.android.events.NodeSelectedEvent;
 import org.obehave.android.ui.adapters.SectionsPagerAdapter;
 import org.obehave.android.ui.events.*;
@@ -37,12 +36,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
     @Subscribe
     public void onSubjectSelected(SubjectSelectedEvent event) {
-        Subject subject = event.getSubject();
-        Log.d(LOG_TAG, "onSubjectSelected");
-        Log.d(LOG_TAG, subject.getDisplayString());
-        replaceFragment(ActionFragment.newInstance(CODING_FRAGMENT_POSITION, DataHolder.action().getData(null), DataHolder.action().getChildren(null)));
-
-        MyApplication.selectItem(event.getSubject());
+        mSectionsPagerAdapter.switchToNextCodingFragment(ActionFragment.newInstance(CODING_FRAGMENT_POSITION));
     }
 
     @Subscribe
@@ -149,7 +143,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         if (event.getNodeType() == NodeSelectedEvent.NodeType.SUBJECT) {
             mSectionsPagerAdapter.switchToNextCodingFragment(SubjectFragment.newInstance(CODING_FRAGMENT_POSITION, event.getNode()));
         } else if (event.getNodeType() == NodeSelectedEvent.NodeType.ACTION) {
-            //replaceFragment(ActionFragment.newInstance(CODING_FRAGMENT_POSITION, DataHolder.action().getData(null), DataHolder.action().getChildren(null)));
+            mSectionsPagerAdapter.switchToNextCodingFragment(ActionFragment.newInstance(CODING_FRAGMENT_POSITION, event.getNode()));
         }
     }
 

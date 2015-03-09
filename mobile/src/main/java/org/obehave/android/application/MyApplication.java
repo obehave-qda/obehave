@@ -125,6 +125,7 @@ public class MyApplication  extends Application{
     }
 
     public static void selectItem(Subject subject){
+        ApplicationState.getInstance().setCodingStartedTime();
         ApplicationState.getInstance().setSubject(subject);
     }
 
@@ -146,6 +147,22 @@ public class MyApplication  extends Application{
 
     public static Modifier getSelectedModifer(){
         return ApplicationState.getInstance().getModifier();
+    }
+
+    public static void setSubjectSortOrder(int sortType){
+        ApplicationState.getInstance().setSelectedSubjectSortType(sortType);
+    }
+
+    public static int getSubjectSortOrder(){
+        return ApplicationState.getInstance().getSelectedSubjectSortType();
+    }
+
+    public static void setActionSortOrder(int sortType){
+        ApplicationState.getInstance().setSelectedActionSortType(sortType);
+    }
+
+    public static int getActionSortOrder(){
+        return ApplicationState.getInstance().getSelectedActionSortType();
     }
 
     public static void createCoding() {
