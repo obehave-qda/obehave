@@ -17,8 +17,6 @@ import org.obehave.events.EventBusHolder;
 import org.obehave.model.Node;
 import org.obehave.model.Subject;
 
-import java.util.List;
-
 public class SubjectFragment extends MyListFragment {
 
     private static final String ARG_SECTION_NUMBER = "section_number";
@@ -28,8 +26,6 @@ public class SubjectFragment extends MyListFragment {
     private ArrayAdapter<String> sortAdapter;
     private ListAdapter adapter;
     private Node parent;
-    private List<Subject> subjects;
-    private List<Node> nodes;
     private String[] sortOrders = {
             "Standard",
             "Alphabetisch A-Z",
@@ -42,13 +38,20 @@ public class SubjectFragment extends MyListFragment {
     private static final int ALPHABETICAL_DESCENDING = 2;
 
     public static SubjectFragment newInstance(int sectionNumber, Node parent) {
+        return createFragment(sectionNumber, parent);
+    }
+
+
+    public static SubjectFragment newInstance(int sectionNumber) {
+        return createFragment(sectionNumber, DataHolder.subject().getRootNode());
+    }
+
+    private static SubjectFragment createFragment(int sectionNumber, Node parent){
         SubjectFragment fragment = new SubjectFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_SECTION_NUMBER, sectionNumber);
         args.putSerializable(ARG_PARENT_NODE, parent);
         fragment.setArguments(args);
-
-        /* which type of fragment should be loaded */
         return fragment;
     }
 
@@ -56,16 +59,44 @@ public class SubjectFragment extends MyListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        parent = (Node) this.getArguments().getSerializable(ARG_PARENT_NODE);
-
-        Log.d(LOG_TAG, parent.getDisplayString());
         View rootView = inflater.inflate(R.layout.fragment_subject, container, false);
-        sortAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, sortOrders);
-        spSort = (Spinner) rootView.findViewById(R.id.spSort);
-        adapter = (SubjectAdapter) new SubjectAdapter(this.getActivity(), DataHolder.subject().getData(parent), DataHolder.subject().getChildren(parent));
-        spSort.setAdapter(sortAdapter);
-        setListAdapter(adapter);
 
+        //if(savedInstanceState == null)
+        initParentNode();
+        initSortComponent(rootView);
+        initSortEventListeners();
+        initListview();
+        return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Log.d(LOG_TAG, "onActivityCreated");
+        if(savedInstanceState == null){
+
+        }
+        //restoreData(savedInstanceState);
+
+    }
+
+    private void restoreData(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            parent = (Node) savedInstanceState.getSerializable(ARG_PARENT_NODE);
+        }
+    }
+
+    private void initParentNode(){
+        parent = (Node) this.getArguments().getSerializable(ARG_PARENT_NODE);
+    }
+
+    private void initSortComponent(View rootView){
+        spSort = (Spinner) rootView.findViewById(R.id.spSort);
+        sortAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, sortOrders);
+        spSort.setAdapter(sortAdapter);
+    }
+
+    private void initSortEventListeners(){
         spSort.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -79,12 +110,13 @@ public class SubjectFragment extends MyListFragment {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
+            public void onNothingSelected(AdapterView<?> parent) { }
         });
+    }
 
-        return rootView;
+    private void initListview(){
+        adapter = new SubjectAdapter(this.getActivity(), DataHolder.subject().getData(parent), DataHolder.subject().getChildren(parent));
+        setListAdapter(adapter);
     }
 
     @Override
@@ -99,6 +131,14 @@ public class SubjectFragment extends MyListFragment {
             Node node = (Node) object;
             EventBusHolder.post(new NodeSelectedEvent(node, NodeSelectedEvent.NodeType.SUBJECT));
         }
+    }
 
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.d(LOG_TAG, "onSaveInstanceState");
+        outState.putSerializable(ARG_PARENT_NODE, parent);
     }
 }

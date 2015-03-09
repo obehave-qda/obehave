@@ -4,10 +4,13 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.obehave.exceptions.Validate;
 
+import java.io.Serializable;
+
 /**
  * @author Markus Möslinger
  */
-public class Color {
+public class Color implements Serializable{
+    private static final long serialVersionUID = 1L;
     // memory footprint of this class could be reduced by a factor of 4, if only one int would be used
     // see {@link java.awt.Color} for example
 

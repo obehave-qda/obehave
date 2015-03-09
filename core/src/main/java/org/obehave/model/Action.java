@@ -8,8 +8,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.obehave.model.modifier.ModifierFactory;
 import org.obehave.persistence.impl.ActionDaoImpl;
 
-import java.io.Serializable;
-
 /**
  * This class describes actions a subject is able to perform.
  * There are several types of actions:
@@ -20,8 +18,7 @@ import java.io.Serializable;
  * Actions can be modified in some way.
  */
 @DatabaseTable(tableName = "Action", daoClass = ActionDaoImpl.class)
-public class Action extends BaseEntity implements Displayable, Serializable {
-    private static final long serialVersionUID = 1L;
+public class Action extends BaseEntity implements Displayable {
     public static final String COLUMN_NAME = "name";
 
     @DatabaseField(columnName = COLUMN_NAME)

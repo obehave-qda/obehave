@@ -23,7 +23,6 @@ import org.obehave.android.util.ErrorDialog;
 import org.obehave.events.EventBusHolder;
 import org.obehave.exceptions.FactoryException;
 import org.obehave.model.Action;
-import org.obehave.model.Node;
 import org.obehave.model.Subject;
 import org.obehave.model.modifier.ModifierFactory;
 
@@ -32,21 +31,17 @@ import java.util.List;
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
 
     private static final int CODING_FRAGMENT_POSITION = 2;
-    private static final String ARG_CURRENT_SUBJECT_NODE = "subject_node";
-    private static final String ARG_FILENAME = "filename";
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
-    private Node currentSubjectNode;
-
-    private String activeFragmentTag = "SubjectFragment";
 
     @Subscribe
     public void onSubjectSelected(SubjectSelectedEvent event) {
         Subject subject = event.getSubject();
         Log.d(LOG_TAG, "onSubjectSelected");
         Log.d(LOG_TAG, subject.getDisplayString());
-        changeCodingFragment(ActionFragment.newInstance(CODING_FRAGMENT_POSITION, DataHolder.action().getData(null), DataHolder.action().getChildren(null)));
+        replaceFragment(ActionFragment.newInstance(CODING_FRAGMENT_POSITION, DataHolder.action().getData(null), DataHolder.action().getChildren(null)));
+
         MyApplication.selectItem(event.getSubject());
     }
 
@@ -61,11 +56,11 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             if (modifierFactory == null) {
                 MyApplication.createCoding();
             } else if (modifierFactory.getType() == ModifierFactory.Type.SUBJECT_MODIFIER_FACTORY) {
-                changeCodingFragment(SubjectModifierFragment.newInstance(CODING_FRAGMENT_POSITION, (modifierFactory).getValidSubjects()));
+                replaceFragment(SubjectModifierFragment.newInstance(CODING_FRAGMENT_POSITION, (modifierFactory).getValidSubjects()));
             } else if (modifierFactory.getType() == ModifierFactory.Type.ENUMERATION_MODIFIER_FACTORY) {
-                changeCodingFragment(EnumerationModifierFragment.newInstance(CODING_FRAGMENT_POSITION, (modifierFactory).getValidValues()));
+                replaceFragment(EnumerationModifierFragment.newInstance(CODING_FRAGMENT_POSITION, (modifierFactory).getValidValues()));
             } else if (modifierFactory.getType() == ModifierFactory.Type.DECIMAL_RANGE_MODIFIER_FACTORY) {
-                changeCodingFragment(DecimalRangeModifierFragment.newInstance(CODING_FRAGMENT_POSITION, modifierFactory.getFrom(), modifierFactory.getTo()));
+                replaceFragment(DecimalRangeModifierFragment.newInstance(CODING_FRAGMENT_POSITION, modifierFactory.getFrom(), modifierFactory.getTo()));
             }
         } catch (UiException ex) {
             ErrorDialog ed = new ErrorDialog(ex.getMessage(), this);
@@ -85,7 +80,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             MyApplication.selectItem(subjectModifierFactory.create(subjects.get(0).getName()));
             MyApplication.createCoding();
             getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            changeToSubjectFragment(null);
+            replaceFragment(SubjectFragment.newInstance(CODING_FRAGMENT_POSITION));
 
         } catch (UiException exception) {
             ErrorDialog ed = new ErrorDialog(exception, this);
@@ -109,7 +104,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             MyApplication.selectItem(enumerationModifierFactory.create(values.get(0)));
             MyApplication.createCoding();
             getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            changeToSubjectFragment(null);
+            replaceFragment(SubjectFragment.newInstance(CODING_FRAGMENT_POSITION));
         } catch (UiException exception) {
             ErrorDialog ed = new ErrorDialog(exception, this);
             ed.invoke();
@@ -140,7 +135,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             MyApplication.selectItem(modifierFactory.create(value));
             MyApplication.createCoding();
             getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            changeToSubjectFragment(null);
+            replaceFragment(SubjectFragment.newInstance(CODING_FRAGMENT_POSITION));
 
         } catch (FactoryException e) {
             ErrorDialog ed = new ErrorDialog(e.getMessage(), this);
@@ -152,71 +147,47 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     @Subscribe
     public void onNodeSelected(NodeSelectedEvent event) {
         if (event.getNodeType() == NodeSelectedEvent.NodeType.SUBJECT) {
-            changeToSubjectFragment(event.getNode());
+            mSectionsPagerAdapter.switchToNextCodingFragment(SubjectFragment.newInstance(CODING_FRAGMENT_POSITION, event.getNode()));
         } else if (event.getNodeType() == NodeSelectedEvent.NodeType.ACTION) {
-            changeCodingFragment(ActionFragment.newInstance(CODING_FRAGMENT_POSITION, DataHolder.action().getData(null), DataHolder.action().getChildren(null)));
+            //replaceFragment(ActionFragment.newInstance(CODING_FRAGMENT_POSITION, DataHolder.action().getData(null), DataHolder.action().getChildren(null)));
         }
     }
 
-    private void changeCodingFragment(Fragment fragment) {
+    private void replaceFragment(Fragment fragment) {
         Log.d(LOG_TAG, "Fragment - Change Coding Fragment");
-        android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.root_frame, fragment);
-        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
-    }
-
-    private void changeToSubjectFragment(Node node) {
-        Log.d(LOG_TAG, "changeToSubjectFragment");
-        if (node == null) {
-            node = DataHolder.subject().getRootNode();
-        }
-        currentSubjectNode = node;
-        Fragment fragment = SubjectFragment.newInstance(CODING_FRAGMENT_POSITION, node);
-        android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.root_frame, fragment);
-        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+        mSectionsPagerAdapter.switchToNextCodingFragment(fragment);
     }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        if(getActionBar().getSelectedTab().getPosition() == CODING_FRAGMENT_POSITION){
+            if(!mSectionsPagerAdapter.back()){
+                finish();
+            }
+        }
+        else {
+            super.onBackPressed();
+        }
+
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //if(savedInstanceState == null
 
-
-        if (savedInstanceState == null) {
-            currentSubjectNode = DataHolder.subject().getRootNode();
-        }
-        else {
-            currentSubjectNode = (Node) savedInstanceState.getSerializable(ARG_CURRENT_SUBJECT_NODE);
-        }
-
-        EventBusHolder.register(this);
         setContentView(R.layout.activity_main);
 
         final ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-
         mViewPager = (ViewPager) findViewById(R.id.pager);
+        mSectionsPagerAdapter = new SectionsPagerAdapter(actionBar, mViewPager, getSupportFragmentManager(), SubjectFragment.newInstance(CODING_FRAGMENT_POSITION));
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 actionBar.setSelectedNavigationItem(position);
-                if (position == CODING_FRAGMENT_POSITION) { // CodingFragment
-                    getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                    changeToSubjectFragment(currentSubjectNode);
-
-                }
             }
         });
 
@@ -232,14 +203,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                             .setText(title)
                             .setTabListener(this));
         }
-
-
-        // TODO: Change Filename;
-
-
-        // changeCodingFragment(SubjectFragment.newInstance(1, ApplicationService.getAllSubjects()));
-        // replacing Sub
-
     }
 
     @Override
@@ -248,6 +211,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         getMenuInflater().inflate(R.menu.menu_open_coding_schema, menu);
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -289,7 +253,20 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(ARG_CURRENT_SUBJECT_NODE, currentSubjectNode);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(LOG_TAG, "onStart");
+        EventBusHolder.register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(LOG_TAG, "onStop");
+        EventBusHolder.unregister(this);
     }
 
 }
