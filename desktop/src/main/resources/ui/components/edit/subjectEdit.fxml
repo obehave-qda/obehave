@@ -25,7 +25,8 @@
                 <Label text="Alias" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
                 <TextField fx:id="alias" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1"/>
                 <Label text="Color" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                <ColorPicker fx:id="colorPicker" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2"/>
+                <ColorPicker fx:id="colorPicker" GridPane.columnIndex="1" GridPane.halignment="CENTER"
+                             GridPane.rowIndex="2" styleClass="split-button"/>
                 <Button text="Save" onAction="#saveCurrent" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.halignment="LEFT"/>
             </children>
         </GridPane>
