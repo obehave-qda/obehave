@@ -111,8 +111,6 @@ public class EventsPane extends Pane {
         line.startYProperty().setValue(0);
         line.endYProperty().bind(NodeUtil.snapXY(prefHeightProperty()));
 
-        log.trace("Created line {}", line);
-
         return line;
     }
 }
