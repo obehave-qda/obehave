@@ -269,6 +269,10 @@ public class Node extends BaseEntity implements Iterable<Displayable>, Displayab
         this.exclusivity = exclusivity;
     }
 
+    public Class<?> getDataType() {
+        return dataType;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {

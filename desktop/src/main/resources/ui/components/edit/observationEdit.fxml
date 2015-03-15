@@ -32,6 +32,7 @@
                 <Label text="Video" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
                 <Button text="Click to load" fx:id="video" onAction="#selectVideo" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.columnSpan="2"/>
                 <Button text="Save" onAction="#saveCurrent" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.halignment="LEFT"/>
+                <Button text="Cancel" onAction="#cancel" GridPane.columnIndex="2" GridPane.rowIndex="4" GridPane.halignment="RIGHT"/>
             </children>
         </GridPane>
     </children>

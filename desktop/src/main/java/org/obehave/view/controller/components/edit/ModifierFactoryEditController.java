@@ -205,6 +205,10 @@ public class ModifierFactoryEditController implements Initializable {
         enumerationList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
+    public void cancel() {
+        saveCallback.run();
+    }
+
     private void showPane(AnchorPane pane) {
         log.trace("Showing pane {}", pane);
 

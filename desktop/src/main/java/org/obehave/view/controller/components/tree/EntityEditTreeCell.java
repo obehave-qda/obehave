@@ -2,11 +2,7 @@ package org.obehave.view.controller.components.tree;
 
 import javafx.scene.control.cell.TextFieldTreeCell;
 import javafx.scene.input.MouseEvent;
-import org.obehave.model.Action;
 import org.obehave.model.Node;
-import org.obehave.model.Observation;
-import org.obehave.model.Subject;
-import org.obehave.model.modifier.ModifierFactory;
 import org.obehave.util.DisplayWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,10 +18,10 @@ public class EntityEditTreeCell extends TextFieldTreeCell<DisplayWrapper<?>> {
     public EntityEditTreeCell(PopOverHolder popOverHolder) {
         this.popOverHolder = popOverHolder;
 
-        addEventHandler(MouseEvent.MOUSE_CLICKED, event -> handle());
+        addEventHandler(MouseEvent.MOUSE_CLICKED, this::handle);
     }
 
-    private void handle() {
+    private void handle(MouseEvent event) {
         Object node = getItem().get();
         log.trace("Clicked on {}", node);
 
@@ -35,33 +31,23 @@ public class EntityEditTreeCell extends TextFieldTreeCell<DisplayWrapper<?>> {
             Object item = ((Node) node).getData();
             log.trace("It's a node with {}", item);
 
-            if (item != null) {
-                if (item instanceof Subject) {
-                    handleSubject((Subject) item, ownerNode);
-                } else if (item instanceof Action) {
-                    handleAction((Action) item, ownerNode);
-                } else if (item instanceof ModifierFactory) {
-                    handleModifierFactory((ModifierFactory) item, ownerNode);
-                } else if (item instanceof Observation) {
-                    handleObservation((Observation) item, ownerNode);
-                }
+            // it's a node
+            if (event.isShortcutDown()) {
+                popOverHolder.get((Node) node).show(ownerNode);
             }
         }
     }
 
-    private void handleSubject(Subject subject, javafx.scene.Node owner) {
-        popOverHolder.getSubject(subject).show(owner);
+    @Override
+    public void updateItem(DisplayWrapper<?> item, boolean empty) {
+        super.updateItem(item, empty);
+
+        if (!empty && getTreeItem().getParent() != null) {
+            setContextMenu(ContextMenuBuilder.forItem(popOverHolder, getTreeItem(), this::getNode));
+        }
     }
 
-    private void handleAction(Action action, javafx.scene.Node owner) {
-        popOverHolder.getAction(action).show(owner);
-    }
-
-    private void handleModifierFactory(ModifierFactory modifierFactory, javafx.scene.Node owner) {
-        popOverHolder.getModifierFactory(modifierFactory).show(owner);
-    }
-
-    private void handleObservation(Observation observation, javafx.scene.Node owner) {
-        popOverHolder.getObservation(observation).show(owner);
+    private javafx.scene.Node getNode() {
+        return getSkin().getNode();
     }
 }

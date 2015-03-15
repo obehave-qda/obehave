@@ -2,11 +2,7 @@ package org.obehave.view.controller.components.coding;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.scene.effect.BlendMode;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.scene.text.FontSmoothingType;
 import javafx.scene.text.Text;
 import org.joda.time.Duration;
@@ -68,7 +64,6 @@ public class TimelinePane extends Pane {
             secondLabel.getStyleClass().add("secondLabel");
             secondLabel.setFontSmoothingType(FontSmoothingType.LCD);
             getChildren().add(secondLabel);
-            log.trace("Added text label {}", secondLabel);
         }
     }
 }

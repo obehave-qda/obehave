@@ -27,6 +27,7 @@
                 <Label text="Color" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
                 <ColorPicker fx:id="colorPicker" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2"/>
                 <Button text="Save" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.halignment="LEFT"/>
+                <Button text="Cancel" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.halignment="RIGHT"/>
             </children>
         </GridPane>
     </children>
