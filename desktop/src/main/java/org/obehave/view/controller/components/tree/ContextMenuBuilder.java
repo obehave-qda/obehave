@@ -5,7 +5,9 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeItem;
 import org.obehave.model.Action;
 import org.obehave.model.Node;
+import org.obehave.service.NodeService;
 import org.obehave.util.DisplayWrapper;
+import org.obehave.view.util.TreeUtil;
 
 import java.util.function.Supplier;
 
@@ -17,6 +19,7 @@ public class ContextMenuBuilder {
     private Node node;
     private int hierarchyLevel;
     private Supplier<javafx.scene.Node> ownerNodeSupplier;
+    private NodeService nodeService = NodeService.getInstance();
 
     private ContextMenu cm = new ContextMenu();
 
@@ -29,26 +32,16 @@ public class ContextMenuBuilder {
         ContextMenuBuilder builder = new ContextMenuBuilder(popOverHolder);
 
         builder.node = (Node) treeItem.getValue().get();
-        builder.hierarchyLevel = getHierarchyLevel(treeItem);
+        builder.hierarchyLevel = TreeUtil.getHierarchyLevel(treeItem);
         builder.ownerNodeSupplier = ownerNodeSupplier;
 
         builder.addNewGroup();
         builder.addNewItem();
         builder.addEditGroup();
         builder.addEditItem();
+        builder.addDeleteItem();
 
         return builder.cm;
-    }
-
-    private static int getHierarchyLevel(TreeItem<?> treeItem) {
-        int level = 0;
-
-        while (treeItem.getParent() != null) {
-            treeItem = treeItem.getParent();
-            level++;
-        }
-
-        return level;
     }
 
     private void addNewGroup() {
@@ -82,6 +75,19 @@ public class ContextMenuBuilder {
         if (node.getData() != null) {
             final MenuItem menuItem = new MenuItem("Edit item");
             menuItem.setOnAction(event -> popOverHolder.get(node).show(ownerNodeSupplier.get()));
+
+            cm.getItems().add(menuItem);
+        }
+    }
+
+    private void addDeleteItem() {
+        if (node.getData() != null) {
+            final MenuItem menuItem = new MenuItem("Delete item");
+            menuItem.setOnAction(event -> {
+                node.getParent().remove(node);
+                nodeService.save(node.getParent());
+                nodeService.delete(node);
+            });
 
             cm.getItems().add(menuItem);
         }

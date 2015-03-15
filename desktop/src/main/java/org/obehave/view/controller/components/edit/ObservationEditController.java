@@ -11,6 +11,7 @@ import org.obehave.model.Observation;
 import org.obehave.service.NodeService;
 import org.obehave.service.ObservationService;
 import org.obehave.view.Obehave;
+import org.obehave.view.util.AlertUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -90,9 +91,16 @@ public class ObservationEditController {
             hour.setText("00");
             minute.setText("00");
         }
+
+        name.requestFocus();
     }
 
     public void saveCurrent() {
+        if (name.getText().isEmpty()) {
+            AlertUtil.showError("Validation error", "Observation must have a name");
+            return;
+        }
+
         Observation o;
 
         if (loadedObservationNode.getData() == null) {

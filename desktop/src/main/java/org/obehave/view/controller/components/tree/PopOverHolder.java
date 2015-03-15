@@ -9,6 +9,7 @@ import org.obehave.model.Observation;
 import org.obehave.model.Subject;
 import org.obehave.model.modifier.ModifierFactory;
 import org.obehave.service.Study;
+import org.obehave.view.controller.components.edit.ActionEditController;
 import org.obehave.view.controller.components.edit.ModifierFactoryEditController;
 import org.obehave.view.controller.components.edit.ObservationEditController;
 import org.obehave.view.controller.components.edit.SubjectEditController;
@@ -49,6 +50,11 @@ public class PopOverHolder {
     public PopOver getAction(Node node) {
         log.debug("Getting popover for action {}", node);
         popOver.setContentNode(getActionParent());
+
+        ActionEditController controller = actionLoader.getController();
+        controller.setStudy(study);
+        controller.setSaveCallback(this::hidePopOver);
+        controller.loadAction(node);
 
         return popOver;
     }
