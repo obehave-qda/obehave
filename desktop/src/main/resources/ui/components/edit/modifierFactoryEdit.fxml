@@ -50,7 +50,10 @@
             <AnchorPane fx:id="visiblePane"/>
         </center>
         <bottom>
-            <Button text="Save" onAction="#saveCurrent"/>
+            <FlowPane>
+                <Button text="Save" onAction="#saveCurrent"/>
+                <Button text="Cancel" onAction="#cancel"/>
+            </FlowPane>
         </bottom>
     </BorderPane>
     <stylesheets>

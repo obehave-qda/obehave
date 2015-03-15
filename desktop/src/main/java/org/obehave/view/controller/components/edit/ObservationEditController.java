@@ -107,6 +107,10 @@ public class ObservationEditController {
         saveCallback.run();
     }
 
+    public void cancel() {
+        saveCallback.run();
+    }
+
     public void setSaveCallback(Runnable saveCallback) {
         this.saveCallback = saveCallback;
     }

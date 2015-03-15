@@ -3,9 +3,7 @@ package org.obehave.view.controller.components.tree;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import org.controlsfx.control.PopOver;
-import org.obehave.model.Action;
-import org.obehave.model.Observation;
-import org.obehave.model.Subject;
+import org.obehave.model.*;
 import org.obehave.model.modifier.ModifierFactory;
 import org.obehave.service.Study;
 import org.obehave.view.controller.components.edit.ModifierFactoryEditController;
@@ -73,6 +71,22 @@ public class PopOverHolder {
         controller.loadObservation(o);
 
         return popOver;
+    }
+
+    public PopOver get(Node n) {
+        Displayable data = n.getData();
+
+        if (data instanceof Subject) {
+            return getSubject((Subject) data);
+        } else if (data instanceof Action) {
+            return getAction((Action) data);
+        } else if (data instanceof ModifierFactory) {
+            return getModifierFactory((ModifierFactory) data);
+        } else if (data instanceof Observation) {
+            return getObservation((Observation) data);
+        }
+
+        return null;
     }
 
     public void hidePopOver() {
