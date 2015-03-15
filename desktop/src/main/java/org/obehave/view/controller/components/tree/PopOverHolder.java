@@ -3,7 +3,10 @@ package org.obehave.view.controller.components.tree;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import org.controlsfx.control.PopOver;
-import org.obehave.model.*;
+import org.obehave.model.Action;
+import org.obehave.model.Node;
+import org.obehave.model.Observation;
+import org.obehave.model.Subject;
 import org.obehave.model.modifier.ModifierFactory;
 import org.obehave.service.Study;
 import org.obehave.view.controller.components.edit.ModifierFactoryEditController;
@@ -32,25 +35,25 @@ public class PopOverHolder {
         this.study = study;
     }
 
-    public PopOver getSubject(Subject s) {
-        log.debug("Getting popover for subject {}", s);
+    public PopOver getSubject(Node node) {
+        log.debug("Getting popover for subject {}", node.getData());
         popOver.setContentNode(getSubjectParent());
 
         SubjectEditController controller = subjectLoader.getController();
         controller.setSaveCallback(this::hidePopOver);
-        controller.loadSubject(s);
+        controller.loadSubject(node);
 
         return popOver;
     }
 
-    public PopOver getAction(Action a) {
-        log.debug("Getting popover for action {}", a);
+    public PopOver getAction(Node node) {
+        log.debug("Getting popover for action {}", node);
         popOver.setContentNode(getActionParent());
 
         return popOver;
     }
 
-    public PopOver getModifierFactory(ModifierFactory mf) {
+    public PopOver getModifierFactory(Node mf) {
         log.debug("Getting popover for modifier factory {}", mf);
         popOver.setContentNode(getModifierFactoryParent());
 
@@ -62,31 +65,31 @@ public class PopOverHolder {
         return popOver;
     }
 
-    public PopOver getObservation(Observation o) {
-        log.debug("Getting popover for observation {}", o);
+    public PopOver getObservation(Node node) {
+        log.debug("Getting popover for observation {}", node);
         popOver.setContentNode(getObservationParent());
 
         ObservationEditController controller = observationLoader.getController();
         controller.setSaveCallback(this::hidePopOver);
-        controller.loadObservation(o);
+        controller.loadObservation(node);
 
         return popOver;
     }
 
-    public PopOver get(Node n) {
-        Displayable data = n.getData();
+    public PopOver get(Node node) {
+        Class<?> type = node.getDataType();
 
-        if (data instanceof Subject) {
-            return getSubject((Subject) data);
-        } else if (data instanceof Action) {
-            return getAction((Action) data);
-        } else if (data instanceof ModifierFactory) {
-            return getModifierFactory((ModifierFactory) data);
-        } else if (data instanceof Observation) {
-            return getObservation((Observation) data);
+        if (type == Subject.class) {
+            return getSubject(node);
+        } else if (type == Action.class) {
+            return getAction(node);
+        } else if (type == ModifierFactory.class) {
+            return getModifierFactory(node);
+        } else if (type == Observation.class) {
+            return getObservation(node);
         }
 
-        return null;
+        throw new IllegalArgumentException("Invalid node " + node + "! Class isn't recognized: " + type);
     }
 
     public void hidePopOver() {

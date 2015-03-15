@@ -1,6 +1,8 @@
 package org.obehave.util;
 
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
+import org.junit.Ignore;
+import org.junit.Test;
 import org.obehave.persistence.Daos;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,8 +26,9 @@ public class TestStudyCreator {
         log.info("Done creating teststudy at {}", path.getAbsolutePath());
     }
 
-    // just uncomment the next line and execute the test
-    //@Test
+    // just comment the ignore before executing this test
+    @Ignore
+    @Test
     public void createStudy() throws SQLException {
         // We want to create the file @ obehave/studies instead of obehave/core/studies
         final File folder = new File("../studies");

@@ -38,8 +38,7 @@ public class ModifierFactory extends BaseEntity implements Displayable {
     @DatabaseField(columnName = "alias")
     private String alias;
 
-    private ModifierFactory() {
-        // for frameworks
+    public ModifierFactory() {
     }
 
     public ModifierFactory(int from, int to) {

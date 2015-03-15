@@ -6,7 +6,9 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import org.joda.time.DateTime;
+import org.obehave.model.Node;
 import org.obehave.model.Observation;
+import org.obehave.service.NodeService;
 import org.obehave.service.ObservationService;
 import org.obehave.view.Obehave;
 import org.slf4j.Logger;
@@ -21,8 +23,9 @@ import java.time.LocalDate;
 public class ObservationEditController {
     private static final Logger log = LoggerFactory.getLogger(ObservationEditController.class);
     private static final ObservationService observationService = ObservationService.getInstance();
+    private static final NodeService nodeService = NodeService.getInstance();
 
-    private Observation loadedObservation;
+    private Node loadedObservationNode;
 
     private Runnable saveCallback;
 
@@ -65,13 +68,20 @@ public class ObservationEditController {
         }
     }
 
-    public void loadObservation(Observation o) {
-        loadedObservation = o;
+    public void loadObservation(Node node) {
+        loadedObservationNode = node;
+        Observation o = (Observation) node.getData();
 
-        setName(o.getName());
+        if (o == null) {
+            setName("");
+            setVideoPath(null);
+        } else {
+            setName(o.getName());
+            setVideoPath(o.getVideo());
+        }
 
-        DateTime dt = o.getDateTime();
-        if (dt != null) {
+        if (o != null && o.getDateTime() != null) {
+            DateTime dt = o.getDateTime();
             date.setValue(LocalDate.of(dt.getYear(), dt.getMonthOfYear(), dt.getDayOfMonth()));
             hour.setText(String.format("%02d", dt.getHourOfDay()));
             minute.setText(String.format("%02d", dt.getMinuteOfHour()));
@@ -80,30 +90,34 @@ public class ObservationEditController {
             hour.setText("00");
             minute.setText("00");
         }
-
-        setVideoPath(o.getVideo());
     }
 
     public void saveCurrent() {
-        if (loadedObservation == null) {
+        Observation o;
+
+        if (loadedObservationNode.getData() == null) {
             log.debug("Creating new observation");
-            loadedObservation = new Observation(getName());
+            o = new Observation();
+            loadedObservationNode.addChild(o);
         } else {
             log.debug("Saving existing observation");
-            loadedObservation.setName(getName());
+            o = (Observation) loadedObservationNode.getData();
         }
 
-        loadedObservation.setVideo(videoPath);
+        o.setName(getName());
+
+        o.setVideo(videoPath);
         LocalDate pickedDate = date.getValue();
 
         DateTime dt = new DateTime(pickedDate.getYear(), pickedDate.getMonthValue(), pickedDate.getDayOfMonth(),
                 Integer.valueOf(hour.getText()), Integer.valueOf(minute.getText()));
 
-        loadedObservation.setDateTime(dt);
+        o.setDateTime(dt);
 
-        observationService.save(loadedObservation);
+        observationService.save(o);
+        nodeService.save(loadedObservationNode);
 
-        loadedObservation = null;
+        loadedObservationNode = null;
         saveCallback.run();
     }
 
