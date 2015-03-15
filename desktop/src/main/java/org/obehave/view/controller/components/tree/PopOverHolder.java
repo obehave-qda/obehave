@@ -9,10 +9,7 @@ import org.obehave.model.Observation;
 import org.obehave.model.Subject;
 import org.obehave.model.modifier.ModifierFactory;
 import org.obehave.service.Study;
-import org.obehave.view.controller.components.edit.ActionEditController;
-import org.obehave.view.controller.components.edit.ModifierFactoryEditController;
-import org.obehave.view.controller.components.edit.ObservationEditController;
-import org.obehave.view.controller.components.edit.SubjectEditController;
+import org.obehave.view.controller.components.edit.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,12 +20,14 @@ public class PopOverHolder {
 
     private final FXMLLoader subjectLoader = getFxmlLoader("subjectEdit.fxml");
     private final FXMLLoader actionLoader = getFxmlLoader("actionEdit.fxml");
+    private final FXMLLoader actionGroupLoader = getFxmlLoader("actionGroupEdit.fxml");
     private final FXMLLoader modifierFactoryLoader = getFxmlLoader("modifierFactoryEdit.fxml");
     private final FXMLLoader observationLoader = getFxmlLoader("observationEdit.fxml");
     private final PopOver popOver = createPopOver();
     private final Study study;
     private Parent subjectParent;
     private Parent actionParent;
+    private Parent actionGroupParent;
     private Parent modifierFactoryParent;
     private Parent observationParent;
 
@@ -55,6 +54,18 @@ public class PopOverHolder {
         controller.setStudy(study);
         controller.setSaveCallback(this::hidePopOver);
         controller.loadAction(node);
+
+        return popOver;
+    }
+
+    public PopOver getActionGroup(Node node) {
+        log.debug("Getting popover for action group {}", node);
+        popOver.setContentNode(getActionGroupParent());
+
+        ActionGroupEditController controller = actionGroupLoader.getController();
+        controller.setStudy(study);
+        controller.setSaveCallback(this::hidePopOver);
+        controller.loadActionGroup(node);
 
         return popOver;
     }
@@ -88,7 +99,11 @@ public class PopOverHolder {
         if (type == Subject.class) {
             return getSubject(node);
         } else if (type == Action.class) {
-            return getAction(node);
+            if (node.getData() != null) {
+                return getAction(node);
+            } else {
+                return getActionGroup(node);
+            }
         } else if (type == ModifierFactory.class) {
             return getModifierFactory(node);
         } else if (type == Observation.class) {
@@ -132,6 +147,14 @@ public class PopOverHolder {
         }
 
         return actionParent;
+    }
+
+    private Parent getActionGroupParent() {
+        if (actionGroupParent == null) {
+            actionGroupParent = load(actionGroupLoader);
+        }
+
+        return actionGroupParent;
     }
 
     private Parent getObservationParent() {
