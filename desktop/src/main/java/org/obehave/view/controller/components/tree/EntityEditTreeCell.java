@@ -32,7 +32,7 @@ public class EntityEditTreeCell extends TextFieldTreeCell<DisplayWrapper<?>> {
             log.trace("It's a node with {}", item);
 
             // it's a node
-            if (event.isShortcutDown()) {
+            if (event.isShortcutDown() && ((Node) node).getData() != null) {
                 popOverHolder.get((Node) node).show(ownerNode);
             }
         }

@@ -8,6 +8,7 @@ import org.obehave.model.Node;
 import org.obehave.model.Subject;
 import org.obehave.service.NodeService;
 import org.obehave.service.SubjectService;
+import org.obehave.view.util.AlertUtil;
 import org.obehave.view.util.ColorConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,9 +71,16 @@ public class SubjectEditController {
             setAlias("");
             colorPicker.setValue(Color.BLACK);
         }
+
+        name.requestFocus();
     }
 
     public void saveCurrent() {
+        if (name.getText().isEmpty()) {
+            AlertUtil.showError("Validation error", "Subject must have a name");
+            return;
+        }
+
         Subject subject;
 
         if (loadedSubjectNode.getData() == null) {

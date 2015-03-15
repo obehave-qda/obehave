@@ -21,6 +21,7 @@ import org.obehave.service.NodeService;
 import org.obehave.service.Study;
 import org.obehave.util.DisplayWrapper;
 import org.obehave.util.I18n;
+import org.obehave.view.util.AlertUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -136,12 +137,21 @@ public class ModifierFactoryEditController implements Initializable {
                     mf.getValidValues().forEach(s -> enumerationList.getItems().add(s));
                     break;
                 case DECIMAL_RANGE_MODIFIER_FACTORY:
+                    rangeFrom.setText(String.valueOf(mf.getFrom()));
+                    rangeTo.setText(String.valueOf(mf.getTo()));
                     break;
             }
         }
+
+        name.requestFocus();
     }
 
     public void saveCurrent() {
+        if (name.getText().isEmpty()) {
+            AlertUtil.showError("Validation error", "Modifier must have a name");
+            return;
+        }
+
         ModifierFactory mf = (ModifierFactory) loadedModifierFactoryNode.getData();
 
         if (combobox.getValue().equals(COMBO_SUBJECT_LIST)) {
