@@ -17,6 +17,7 @@ import org.obehave.model.Node;
 import org.obehave.model.Subject;
 import org.obehave.model.modifier.ModifierFactory;
 import org.obehave.service.ModifierFactoryService;
+import org.obehave.service.NodeService;
 import org.obehave.service.Study;
 import org.obehave.util.DisplayWrapper;
 import org.obehave.util.I18n;
@@ -36,12 +37,12 @@ public class ModifierFactoryEditController implements Initializable {
     private static final Logger log = LoggerFactory.getLogger(ModifierFactoryEditController.class);
 
     private static final ModifierFactoryService modifierFactoryService = ModifierFactoryService.getInstance();
+    private static final NodeService nodeService = NodeService.getInstance();
 
     private static final String COMBO_SUBJECT_LIST = I18n.get("ui.modifierfactory.edit.combo.subjectlist");
     private static final String COMBO_ENUMERATION_LIST = I18n.get("ui.modifierfactory.edit.combo.enumerationlist");
     private static final String COMBO_NUMBER_RANGE = I18n.get("ui.modifierfactory.edit.combo.numberrange");
 
-    private Study study;
     private Runnable saveCallback;
 
     @FXML
@@ -74,7 +75,7 @@ public class ModifierFactoryEditController implements Initializable {
     @FXML
     private TextField rangeTo;
 
-    private ModifierFactory loadedModifierFactory;
+    private Node loadedModifierFactoryNode;
 
     public void enumerationAdd() {
         final String text = enumerationEntry.getText();
@@ -109,61 +110,71 @@ public class ModifierFactoryEditController implements Initializable {
         enumerationList.getSelectionModel().clearSelection();
     }
 
-    public void loadModifierFactory(ModifierFactory mf) {
-        loadedModifierFactory = mf;
+    public void loadModifierFactory(Node node) {
+        loadedModifierFactoryNode = node;
 
-        name.setText(mf.getName());
+        ModifierFactory mf = (ModifierFactory) node.getData();
 
-        combobox.setDisable(true);
-        switch (mf.getType()) {
-            case SUBJECT_MODIFIER_FACTORY:
-                combobox.setValue(COMBO_SUBJECT_LIST);
 
-                checkedSubjects.getCheckModel().clearChecks();
-                mf.getValidSubjects().forEach(s -> checkedSubjects.getCheckModel().check(DisplayWrapper.of(s)));
-                break;
-            case ENUMERATION_MODIFIER_FACTORY:
-                combobox.setValue(COMBO_ENUMERATION_LIST);
+        checkedSubjects.getCheckModel().clearChecks();
+        enumerationList.getItems().clear();
 
-                enumerationList.getItems().clear();
-                mf.getValidValues().forEach(s -> enumerationList.getItems().add(s));
-                break;
-            case DECIMAL_RANGE_MODIFIER_FACTORY:
-                combobox.setValue(COMBO_NUMBER_RANGE);
+        if (mf == null) {
+            name.setText("");
+            combobox.setVisible(true);
+            rangeFrom.setText("");
+            rangeTo.setText("");
+        } else {
+            name.setText(mf.getName());
+            combobox.setVisible(false);
 
-                rangeFrom.setText(String.valueOf(mf.getFrom()));
-                rangeTo.setText(String.valueOf(mf.getTo()));
-                break;
+            switch (mf.getType()) {
+                case SUBJECT_MODIFIER_FACTORY:
+                    mf.getValidSubjects().forEach(s -> checkedSubjects.getCheckModel().check(DisplayWrapper.of(s)));
+                    break;
+                case ENUMERATION_MODIFIER_FACTORY:
+                    mf.getValidValues().forEach(s -> enumerationList.getItems().add(s));
+                    break;
+                case DECIMAL_RANGE_MODIFIER_FACTORY:
+                    break;
+            }
         }
     }
 
     public void saveCurrent() {
-        loadedModifierFactory.setName(name.getText());
+        ModifierFactory mf = (ModifierFactory) loadedModifierFactoryNode.getData();
 
         if (combobox.getValue().equals(COMBO_SUBJECT_LIST)) {
-            if (loadedModifierFactory == null) {
-                loadedModifierFactory = new ModifierFactory(getCheckedSubjects());
+            if (mf == null) {
+                mf = new ModifierFactory(getCheckedSubjects());
+                loadedModifierFactoryNode.addChild(mf);
             } else {
-                loadedModifierFactory.setValidSubjects(getCheckedSubjects());
+                mf.setValidSubjects(getCheckedSubjects());
             }
         } else if (combobox.getValue().equals(COMBO_ENUMERATION_LIST)) {
-            if (loadedModifierFactory == null) {
-                loadedModifierFactory = new ModifierFactory(getAddedValues());
+            if (mf == null) {
+                mf = new ModifierFactory(getAddedValues());
+                loadedModifierFactoryNode.addChild(mf);
             } else {
-                loadedModifierFactory.setValidValues(getAddedValues());
+                mf.setValidValues(getAddedValues());
             }
         } else if (combobox.getValue().equals(COMBO_NUMBER_RANGE)) {
-            if (loadedModifierFactory == null) {
-                loadedModifierFactory = new ModifierFactory(
+            if (mf == null) {
+                mf = new ModifierFactory(
                         Integer.valueOf(rangeFrom.getText()), Integer.valueOf(rangeTo.getText()));
+                loadedModifierFactoryNode.addChild(mf);
             } else {
-                loadedModifierFactory.setRange(
+                mf.setRange(
                         Integer.valueOf(rangeFrom.getText()), Integer.valueOf(rangeTo.getText()));
             }
         }
 
-        modifierFactoryService.save(loadedModifierFactory);
-        loadedModifierFactory = null;
+        mf.setName(name.getText());
+
+        modifierFactoryService.save(mf);
+        nodeService.save(loadedModifierFactoryNode);
+
+        loadedModifierFactoryNode = null;
         saveCallback.run();
     }
 
@@ -217,8 +228,6 @@ public class ModifierFactoryEditController implements Initializable {
     }
 
     public void setStudy(Study study) {
-        this.study = study;
-
         checkedSubjects.getItems().clear();
         Node subjectNode = study.getSubjects();
 

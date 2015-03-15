@@ -32,8 +32,7 @@ public class Action extends BaseEntity implements Displayable {
     @DatabaseField(columnName = "recurring")
     private int recurring;
 
-    private Action() {
-        // for frameworks
+    public Action() {
     }
 
     /**

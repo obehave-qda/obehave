@@ -3,11 +3,15 @@ package org.obehave.view.controller.components.edit;
 import javafx.fxml.FXML;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
+import org.obehave.model.Node;
 import org.obehave.model.Subject;
+import org.obehave.service.NodeService;
 import org.obehave.service.SubjectService;
 import org.obehave.view.util.ColorConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 /**
  * @author Markus Möslinger
@@ -15,8 +19,9 @@ import org.slf4j.LoggerFactory;
 public class SubjectEditController {
     private static final Logger log = LoggerFactory.getLogger(SubjectEditController.class);
     private static final SubjectService subjectService = SubjectService.getInstance();
+    private static final NodeService nodeService = NodeService.getInstance();
 
-    private Subject loadedSubject;
+    private Node loadedSubjectNode;
     private Runnable saveCallback;
 
     @FXML
@@ -52,29 +57,40 @@ public class SubjectEditController {
         this.colorPicker = colorPicker;
     }
 
-    public void loadSubject(Subject s) {
-        loadedSubject = s;
+    public void loadSubject(Node node) {
+        loadedSubjectNode = node;
+        Subject s = (Subject) node.getData();
 
-        setName(s.getName());
-        setAlias(s.getAlias());
-        colorPicker.setValue(ColorConverter.convertToJavaFX(s.getColor()));
+        if (s != null) {
+            setName(s.getName());
+            setAlias(s.getAlias());
+            colorPicker.setValue(ColorConverter.convertToJavaFX(s.getColor()));
+        } else {
+            setName("");
+            setAlias("");
+            colorPicker.setValue(Color.BLACK);
+        }
     }
 
     public void saveCurrent() {
-        if (loadedSubject == null) {
+        Subject subject;
+
+        if (loadedSubjectNode.getData() == null) {
             log.debug("Creating new subject");
-            loadedSubject = new Subject(getName());
+            subject = new Subject();
+            loadedSubjectNode.addChild(subject);
         } else {
-            log.debug("Saving existing subject");
-            loadedSubject.setName(getName());
+            subject = (Subject) loadedSubjectNode.getData();
         }
 
-        loadedSubject.setAlias(getAlias());
-        loadedSubject.setColor(ColorConverter.convertToObehave(colorPicker.getValue()));
+        subject.setName(getName());
+        subject.setAlias(getAlias());
+        subject.setColor(ColorConverter.convertToObehave(colorPicker.getValue()));
 
-        subjectService.save(loadedSubject);
+        subjectService.save(subject);
+        nodeService.save(loadedSubjectNode);
 
-        loadedSubject = null;
+        loadedSubjectNode = null;
         saveCallback.run();
     }
 
