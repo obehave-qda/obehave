@@ -25,7 +25,8 @@
         </fx:define>
         <Label text="Name" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
         <TextField fx:id="name" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="0"/>
-        <CheckBox text="Exclusive" fx:id="exclusive" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <CheckBox fx:id="exclusive" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <Label text="Exclusive" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
         <Button text="Save" onAction="#saveCurrent" GridPane.columnIndex="0" GridPane.rowIndex="2"
                 GridPane.halignment="LEFT"/>
