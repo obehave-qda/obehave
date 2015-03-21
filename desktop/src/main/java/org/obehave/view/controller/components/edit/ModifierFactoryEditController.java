@@ -116,7 +116,6 @@ public class ModifierFactoryEditController implements Initializable {
 
         ModifierFactory mf = (ModifierFactory) node.getData();
 
-
         checkedSubjects.getCheckModel().clearChecks();
         enumerationList.getItems().clear();
 
@@ -132,13 +131,16 @@ public class ModifierFactoryEditController implements Initializable {
             switch (mf.getType()) {
                 case SUBJECT_MODIFIER_FACTORY:
                     mf.getValidSubjects().forEach(s -> checkedSubjects.getCheckModel().check(DisplayWrapper.of(s)));
+                    combobox.setValue(COMBO_SUBJECT_LIST);
                     break;
                 case ENUMERATION_MODIFIER_FACTORY:
                     mf.getValidValues().forEach(s -> enumerationList.getItems().add(s));
+                    combobox.setValue(COMBO_ENUMERATION_LIST);
                     break;
                 case DECIMAL_RANGE_MODIFIER_FACTORY:
                     rangeFrom.setText(String.valueOf(mf.getFrom()));
                     rangeTo.setText(String.valueOf(mf.getTo()));
+                    combobox.setValue(COMBO_NUMBER_RANGE);
                     break;
             }
         }
