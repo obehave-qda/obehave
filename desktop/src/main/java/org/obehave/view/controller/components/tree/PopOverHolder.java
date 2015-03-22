@@ -46,26 +46,50 @@ public class PopOverHolder {
         return popOver;
     }
 
-    public PopOver getAction(Node node) {
+    public PopOver getActionEdit(Node node) {
         log.debug("Getting popover for action {}", node);
         popOver.setContentNode(getActionParent());
 
         ActionEditController controller = actionLoader.getController();
         controller.setStudy(study);
         controller.setSaveCallback(this::hidePopOver);
-        controller.loadAction(node);
+        controller.loadActionEdit(node);
 
         return popOver;
     }
 
-    public PopOver getActionGroup(Node node) {
+    public PopOver getActionNew(Node parent) {
+        log.debug("Getting popover for action {}", parent);
+        popOver.setContentNode(getActionParent());
+
+        ActionEditController controller = actionLoader.getController();
+        controller.setStudy(study);
+        controller.setSaveCallback(this::hidePopOver);
+        controller.loadActionNew(parent);
+
+        return popOver;
+    }
+
+    public PopOver getActionGroupEdit(Node node) {
         log.debug("Getting popover for action group {}", node);
         popOver.setContentNode(getActionGroupParent());
 
         ActionGroupEditController controller = actionGroupLoader.getController();
         controller.setStudy(study);
         controller.setSaveCallback(this::hidePopOver);
-        controller.loadActionGroup(node);
+        controller.loadActionGroupEdit(node);
+
+        return popOver;
+    }
+
+    public PopOver getActionGroupNew(Node parent) {
+        log.debug("Getting popover for action group {}", parent);
+        popOver.setContentNode(getActionGroupParent());
+
+        ActionGroupEditController controller = actionGroupLoader.getController();
+        controller.setStudy(study);
+        controller.setSaveCallback(this::hidePopOver);
+        controller.loadActionGroupNew(parent);
 
         return popOver;
     }
@@ -93,6 +117,10 @@ public class PopOverHolder {
         return popOver;
     }
 
+    public PopOver getNewActionGroupWithParent(Node parent) {
+        return getActionGroupNew(parent);
+    }
+
     public PopOver get(Node node) {
         Class<?> type = node.getDataType();
 
@@ -100,9 +128,9 @@ public class PopOverHolder {
             return getSubject(node);
         } else if (type == Action.class) {
             if (node.getData() != null) {
-                return getAction(node);
+                return getActionEdit(node);
             } else {
-                return getActionGroup(node);
+                return getActionGroupEdit(node);
             }
         } else if (type == ModifierFactory.class) {
             return getModifierFactory(node);

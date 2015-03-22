@@ -77,11 +77,27 @@ public class Study implements Displayable {
         modifierFactories = Validate.hasOnlyOneElement(Daos.get().node().getRoot(ModifierFactory.class)).get(0);
         observations = Validate.hasOnlyOneElement(Daos.get().node().getRoot(Observation.class)).get(0);
 
+        removeEmptyNodes(subjects);
+        removeEmptyNodes(actions);
+        removeEmptyNodes(modifierFactories);
+        removeEmptyNodes(observations);
+
         final String studyName = DatabaseProperties.get(DatabaseProperties.STUDY_NAME);
         setName(studyName);
 
         long duration = System.currentTimeMillis() - start;
         log.info("Took {}ms for loading of entities", duration);
+    }
+
+    private void removeEmptyNodes(Node node) {
+        if (node.getData() == null && (node.getTitle() == null || node.getTitle().isEmpty())) {
+            node.getParent().remove(node);
+            log.warn("Why is there an empty node at all? Look! " + node);
+        } else {
+            for (Node child : node.getChildren()) {
+                removeEmptyNodes(child);
+            }
+        }
     }
 
     public Node getSubjects() {

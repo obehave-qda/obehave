@@ -106,7 +106,6 @@ public class ObservationEditController {
         if (loadedObservationNode.getData() == null) {
             log.debug("Creating new observation");
             o = new Observation();
-            loadedObservationNode.addChild(o);
         } else {
             log.debug("Saving existing observation");
             o = (Observation) loadedObservationNode.getData();
@@ -117,12 +116,17 @@ public class ObservationEditController {
         o.setVideo(videoPath);
         LocalDate pickedDate = date.getValue();
 
-        DateTime dt = new DateTime(pickedDate.getYear(), pickedDate.getMonthValue(), pickedDate.getDayOfMonth(),
-                Integer.valueOf(hour.getText()), Integer.valueOf(minute.getText()));
+        if (pickedDate != null) {
+            DateTime dt = new DateTime(pickedDate.getYear(), pickedDate.getMonthValue(), pickedDate.getDayOfMonth(),
+                    Integer.valueOf(hour.getText()), Integer.valueOf(minute.getText()));
 
-        o.setDateTime(dt);
+            o.setDateTime(dt);
+        }
 
         observationService.save(o);
+        if (loadedObservationNode.getData() == null) {
+            loadedObservationNode.addChild(o);
+        }
         nodeService.save(loadedObservationNode);
 
         loadedObservationNode = null;

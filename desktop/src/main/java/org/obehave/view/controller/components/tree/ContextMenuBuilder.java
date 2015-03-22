@@ -18,7 +18,7 @@ public class ContextMenuBuilder {
     private final PopOverHolder popOverHolder;
     private Node node;
     private int hierarchyLevel;
-    private Supplier<javafx.scene.Node> ownerNodeSupplier;
+    private Supplier<javafx.scene.Node> nodeAnchor;
     private NodeService nodeService = NodeService.getInstance();
 
     private ContextMenu cm = new ContextMenu();
@@ -33,12 +33,12 @@ public class ContextMenuBuilder {
 
         builder.node = (Node) treeItem.getValue().get();
         builder.hierarchyLevel = TreeUtil.getHierarchyLevel(treeItem);
-        builder.ownerNodeSupplier = ownerNodeSupplier;
+        builder.nodeAnchor = ownerNodeSupplier;
 
-        builder.addNewGroup();
         builder.addNewItem();
-        builder.addEditGroup();
+        builder.addNewGroup();
         builder.addEditItem();
+        builder.addEditGroup();
         builder.addDeleteItem();
 
         return builder.cm;
@@ -47,7 +47,7 @@ public class ContextMenuBuilder {
     private void addNewGroup() {
         if (node.getData() == null && node.getDataType() == Action.class && hierarchyLevel == 1) {
             final MenuItem menuItem = new MenuItem("Add group");
-            menuItem.setOnAction(event -> popOverHolder.get(node).show(ownerNodeSupplier.get()));
+            menuItem.setOnAction(event -> popOverHolder.getNewActionGroupWithParent(node).show(nodeAnchor.get()));
 
             cm.getItems().add(menuItem);
         }
@@ -56,7 +56,12 @@ public class ContextMenuBuilder {
     private void addNewItem() {
         if (node.getData() == null && (hierarchyLevel == 1 || (node.getDataType() == Action.class && hierarchyLevel == 2))) {
             final MenuItem menuItem = new MenuItem("Add item");
-            menuItem.setOnAction(event -> popOverHolder.get(node).show(ownerNodeSupplier.get()));
+
+            if (node.getDataType() == Action.class && node.getData() == null) {
+                menuItem.setOnAction(event -> popOverHolder.getActionNew(node).show(nodeAnchor.get()));
+            } else {
+                menuItem.setOnAction(event -> popOverHolder.get(node).show(nodeAnchor.get()));
+            }
 
             cm.getItems().add(menuItem);
         }
@@ -65,7 +70,7 @@ public class ContextMenuBuilder {
     private void addEditGroup() {
         if (node.getData() == null && node.getDataType() == Action.class && hierarchyLevel == 2) {
             final MenuItem menuItem = new MenuItem("Edit group");
-            menuItem.setOnAction(event -> popOverHolder.get(node).show(ownerNodeSupplier.get()));
+            menuItem.setOnAction(event -> popOverHolder.get(node).show(nodeAnchor.get()));
 
             cm.getItems().add(menuItem);
         }
@@ -74,7 +79,7 @@ public class ContextMenuBuilder {
     private void addEditItem() {
         if (node.getData() != null) {
             final MenuItem menuItem = new MenuItem("Edit item");
-            menuItem.setOnAction(event -> popOverHolder.get(node).show(ownerNodeSupplier.get()));
+            menuItem.setOnAction(event -> popOverHolder.get(node).show(nodeAnchor.get()));
 
             cm.getItems().add(menuItem);
         }

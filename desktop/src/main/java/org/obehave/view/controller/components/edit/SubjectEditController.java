@@ -86,7 +86,6 @@ public class SubjectEditController {
         if (loadedSubjectNode.getData() == null) {
             log.debug("Creating new subject");
             subject = new Subject();
-            loadedSubjectNode.addChild(subject);
         } else {
             subject = (Subject) loadedSubjectNode.getData();
         }
@@ -96,6 +95,9 @@ public class SubjectEditController {
         subject.setColor(ColorConverter.convertToObehave(colorPicker.getValue()));
 
         subjectService.save(subject);
+        if (loadedSubjectNode.getData() == null) {
+            loadedSubjectNode.addChild(subject);
+        }
         nodeService.save(loadedSubjectNode);
 
         loadedSubjectNode = null;

@@ -47,15 +47,15 @@ public class Node extends BaseEntity implements Iterable<Displayable>, Displayab
     @DatabaseField(columnName = COLUMN_TYPE)
     private Class<?> dataType;
 
-    @DatabaseField(columnName = "subject", foreign = true, foreignAutoRefresh = true)
+    @DatabaseField(columnName = "subject", foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
     private Subject subject;
-    @DatabaseField(columnName = "action", foreign = true, foreignAutoRefresh = true)
+    @DatabaseField(columnName = "action", foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
     private Action action;
-    @DatabaseField(columnName = "modifierFactory", foreign = true, foreignAutoRefresh = true)
+    @DatabaseField(columnName = "modifierFactory", foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
     private ModifierFactory modifierFactory;
-    @DatabaseField(columnName = "observation", foreign = true, foreignAutoRefresh = true)
+    @DatabaseField(columnName = "observation", foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
     private Observation observation;
-    @DatabaseField(columnName = COLUMN_PARENT, foreign = true, foreignAutoRefresh = true)
+    @DatabaseField(columnName = COLUMN_PARENT, foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
     private Node parent;
 
     @DatabaseField(columnName = "title")

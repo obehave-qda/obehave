@@ -24,6 +24,8 @@ public class ActionGroupEditController {
     private Node loadedActionNode;
     private Runnable saveCallback;
 
+    private boolean edit;
+
     private Study study;
 
     @FXML
@@ -40,16 +42,22 @@ public class ActionGroupEditController {
         this.name.setText(name);
     }
 
-    public void loadActionGroup(Node node) {
+    public void loadActionGroupEdit(Node node) {
         loadedActionNode = node;
+        edit = true;
 
-        if (node != null) {
-            setName(node.getTitle());
-            exclusive.setSelected(node.getExclusivity() != Node.Exclusivity.NOT_EXCLUSIVE);
-        } else {
-            setName("");
-            exclusive.setSelected(false);
-        }
+        setName(node.getTitle());
+        exclusive.setSelected(node.getExclusivity() != Node.Exclusivity.NOT_EXCLUSIVE);
+
+        name.requestFocus();
+    }
+
+    public void loadActionGroupNew(Node parent) {
+        loadedActionNode = parent;
+        edit = false;
+
+        setName("");
+        exclusive.setSelected(false);
 
         name.requestFocus();
     }
@@ -62,11 +70,10 @@ public class ActionGroupEditController {
 
         Node node;
 
-        if (loadedActionNode == null) {
+        if (!edit) {
             log.debug("Creating new action");
             node = new Node(Action.class);
-
-            study.getActions().addChild(node);
+            loadedActionNode.addChild(node);
         } else {
             node = loadedActionNode;
         }

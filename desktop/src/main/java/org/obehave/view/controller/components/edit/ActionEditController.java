@@ -32,6 +32,8 @@ public class ActionEditController {
     private Node loadedActionNode;
     private Runnable saveCallback;
 
+    private boolean edit;
+
     private Study study;
 
     @FXML
@@ -70,31 +72,37 @@ public class ActionEditController {
         this.alias.setText(alias);
     }
 
-    public void loadAction(Node node) {
+    public void loadActionEdit(Node node) {
         loadedActionNode = node;
+        edit = true;
         Action a = (Action) node.getData();
 
-        if (a != null) {
-            setName(a.getName());
-            setAlias(a.getAlias());
+        setName(a.getName());
+        setAlias(a.getAlias());
 
-            if (a.getModifierFactory() != null) {
-                modifierFactoryCombo.getSelectionModel().select(DisplayWrapper.of(a.getModifierFactory()));
-            } else {
-                modifierFactoryCombo.getSelectionModel().clearSelection();
-            }
-
-            if (a.getType() == Action.Type.POINT) {
-                radioPoint.setSelected(true);
-            } else {
-                radioState.setSelected(true);
-            }
+        if (a.getModifierFactory() != null) {
+            modifierFactoryCombo.getSelectionModel().select(DisplayWrapper.of(a.getModifierFactory()));
         } else {
-            setName("");
-            setAlias("");
-            radioPoint.setSelected(true);
-            modifierFactoryCombo.getSelectionModel().select(0);
+            modifierFactoryCombo.getSelectionModel().clearSelection();
         }
+
+        if (a.getType() == Action.Type.POINT) {
+            radioPoint.setSelected(true);
+        } else {
+            radioState.setSelected(true);
+        }
+
+        name.requestFocus();
+    }
+
+    public void loadActionNew(Node parent) {
+        loadedActionNode = parent;
+        edit = false;
+
+        setName("");
+        setAlias("");
+        radioPoint.setSelected(true);
+        modifierFactoryCombo.getSelectionModel().select(0);
 
         name.requestFocus();
     }
@@ -107,10 +115,9 @@ public class ActionEditController {
 
         Action action;
 
-        if (loadedActionNode.getData() == null) {
+        if (!edit) {
             log.debug("Creating new action");
             action = new Action();
-            loadedActionNode.addChild(action);
         } else {
             action = (Action) loadedActionNode.getData();
         }
@@ -126,7 +133,11 @@ public class ActionEditController {
 
         action.setModifierFactory(modifierFactoryCombo.getSelectionModel().getSelectedItem().get());
 
+
         actionService.save(action);
+        if (!edit) {
+            loadedActionNode.addChild(action);
+        }
         nodeService.save(loadedActionNode);
 
         loadedActionNode = null;
