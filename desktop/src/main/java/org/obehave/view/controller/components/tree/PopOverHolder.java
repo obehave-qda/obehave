@@ -36,7 +36,7 @@ public class PopOverHolder {
     }
 
     public PopOver getSubject(Node node) {
-        log.debug("Getting popover for subject {}", node.getData());
+        log.trace("Getting popover for subject {}", node.getData());
         popOver.setContentNode(getSubjectParent());
 
         SubjectEditController controller = subjectLoader.getController();
@@ -47,7 +47,7 @@ public class PopOverHolder {
     }
 
     public PopOver getActionEdit(Node node) {
-        log.debug("Getting popover for action {}", node);
+        log.trace("Getting popover for action {}", node);
         popOver.setContentNode(getActionParent());
 
         ActionEditController controller = actionLoader.getController();
@@ -59,7 +59,7 @@ public class PopOverHolder {
     }
 
     public PopOver getActionNew(Node parent) {
-        log.debug("Getting popover for action {}", parent);
+        log.trace("Getting popover for action {}", parent);
         popOver.setContentNode(getActionParent());
 
         ActionEditController controller = actionLoader.getController();
@@ -71,7 +71,7 @@ public class PopOverHolder {
     }
 
     public PopOver getActionGroupEdit(Node node) {
-        log.debug("Getting popover for action group {}", node);
+        log.trace("Getting popover for action group {}", node);
         popOver.setContentNode(getActionGroupParent());
 
         ActionGroupEditController controller = actionGroupLoader.getController();
@@ -83,7 +83,7 @@ public class PopOverHolder {
     }
 
     public PopOver getActionGroupNew(Node parent) {
-        log.debug("Getting popover for action group {}", parent);
+        log.trace("Getting popover for action group {}", parent);
         popOver.setContentNode(getActionGroupParent());
 
         ActionGroupEditController controller = actionGroupLoader.getController();
@@ -95,7 +95,7 @@ public class PopOverHolder {
     }
 
     public PopOver getModifierFactory(Node mf) {
-        log.debug("Getting popover for modifier factory {}", mf);
+        log.trace("Getting popover for modifier factory {}", mf);
         popOver.setContentNode(getModifierFactoryParent());
 
         ModifierFactoryEditController controller = modifierFactoryLoader.getController();
@@ -107,7 +107,7 @@ public class PopOverHolder {
     }
 
     public PopOver getObservation(Node node) {
-        log.debug("Getting popover for observation {}", node);
+        log.trace("Getting popover for observation {}", node);
         popOver.setContentNode(getObservationParent());
 
         ObservationEditController controller = observationLoader.getController();
