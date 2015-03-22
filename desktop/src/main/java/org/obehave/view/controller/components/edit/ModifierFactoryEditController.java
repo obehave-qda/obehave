@@ -156,34 +156,36 @@ public class ModifierFactoryEditController implements Initializable {
 
         ModifierFactory mf = (ModifierFactory) loadedModifierFactoryNode.getData();
 
+        boolean mfNull = mf == null;
+
         if (combobox.getValue().equals(COMBO_SUBJECT_LIST)) {
-            if (mf == null) {
+            if (mfNull) {
                 mf = new ModifierFactory(getCheckedSubjects());
-                loadedModifierFactoryNode.addChild(mf);
             } else {
                 mf.setValidSubjects(getCheckedSubjects());
             }
         } else if (combobox.getValue().equals(COMBO_ENUMERATION_LIST)) {
-            if (mf == null) {
+            if (mfNull) {
                 mf = new ModifierFactory(getAddedValues());
-                loadedModifierFactoryNode.addChild(mf);
             } else {
                 mf.setValidValues(getAddedValues());
             }
         } else if (combobox.getValue().equals(COMBO_NUMBER_RANGE)) {
-            if (mf == null) {
-                mf = new ModifierFactory(
-                        Integer.valueOf(rangeFrom.getText()), Integer.valueOf(rangeTo.getText()));
-                loadedModifierFactoryNode.addChild(mf);
+            if (mfNull) {
+                mf = new ModifierFactory(Integer.valueOf(rangeFrom.getText()), Integer.valueOf(rangeTo.getText()));
             } else {
-                mf.setRange(
-                        Integer.valueOf(rangeFrom.getText()), Integer.valueOf(rangeTo.getText()));
+                mf.setRange(Integer.valueOf(rangeFrom.getText()), Integer.valueOf(rangeTo.getText()));
             }
+        } else {
+            throw new IllegalStateException("ModifierFactory has to have a type");
         }
 
         mf.setName(name.getText());
 
         modifierFactoryService.save(mf);
+        if (mfNull) {
+            loadedModifierFactoryNode.addChild(mf);
+        }
         nodeService.save(loadedModifierFactoryNode);
 
         loadedModifierFactoryNode = null;

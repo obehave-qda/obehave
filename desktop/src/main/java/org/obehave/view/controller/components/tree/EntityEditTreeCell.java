@@ -22,18 +22,17 @@ public class EntityEditTreeCell extends TextFieldTreeCell<DisplayWrapper<?>> {
     }
 
     private void handle(MouseEvent event) {
-        Object node = getItem().get();
-        log.trace("Clicked on {}", node);
+        Object item = getItem().get();
+        log.trace("Clicked tree item: {}", item);
 
         javafx.scene.Node ownerNode = getSkin().getNode();
 
-        if (node instanceof Node) {
-            Object item = ((Node) node).getData();
-            log.trace("It's a node with {}", item);
+        if (item instanceof Node) {
+            Node node = (Node) item;
 
             // it's a node
-            if (event.isShortcutDown() && ((Node) node).getData() != null) {
-                popOverHolder.get((Node) node).show(ownerNode);
+            if (event.isShortcutDown() && node.getData() != null) {
+                popOverHolder.get(node).show(ownerNode);
             }
         }
     }
