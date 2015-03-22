@@ -94,13 +94,8 @@ public class MainController {
         final String createNewOne = I18n.get("ui.study.create.title");
         final String openExistingOne = I18n.get("ui.study.open.title");
         final String closeApplication = I18n.get("ui.study.close");
-        List<CommandLinksDialog.CommandLinksButtonType> links = Arrays.asList(
-                new CommandLinksDialog.CommandLinksButtonType(createNewOne, I18n.get("ui.study.create.description"), false),
-                new CommandLinksDialog.CommandLinksButtonType(openExistingOne, I18n.get("ui.study.open.description"), false),
-                new CommandLinksDialog.CommandLinksButtonType(closeApplication, false));
 
-        CommandLinksDialog commandLinksDialog = new CommandLinksDialog(links);
-        commandLinksDialog.setTitle(I18n.get("ui.study.dialog"));
+        CommandLinksDialog commandLinksDialog = getCommandLinksDialog();
 
         File chosenFile;
         boolean create;
@@ -135,6 +130,10 @@ public class MainController {
 
             try {
                 if (create) {
+                    if (chosenFile.exists()) {
+                        log.info("File {} exists already, creating new one at same path", chosenFile);
+                        chosenFile.delete();
+                    }
                     study = Study.create(chosenFile);
                     showStudyNameDialog();
                 } else {
@@ -148,6 +147,21 @@ public class MainController {
 
         stage.setTitle(stage.getTitle() + " - " + study.getName() + " - " + chosenFile.getAbsolutePath());
         tree.setStudy(study);
+    }
+
+    private CommandLinksDialog getCommandLinksDialog() {
+        final String createNewOne = I18n.get("ui.study.create.title");
+        final String openExistingOne = I18n.get("ui.study.open.title");
+        final String closeApplication = I18n.get("ui.study.close");
+        List<CommandLinksDialog.CommandLinksButtonType> links = Arrays.asList(
+                new CommandLinksDialog.CommandLinksButtonType(createNewOne, I18n.get("ui.study.create.description"), false),
+                new CommandLinksDialog.CommandLinksButtonType(openExistingOne, I18n.get("ui.study.open.description"), false),
+                new CommandLinksDialog.CommandLinksButtonType(closeApplication, false));
+
+        CommandLinksDialog commandLinksDialog = new CommandLinksDialog(links);
+        commandLinksDialog.setTitle(I18n.get("ui.study.dialog"));
+
+        return commandLinksDialog;
     }
 
     @FXML

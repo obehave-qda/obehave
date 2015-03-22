@@ -114,4 +114,21 @@ CREATE TABLE PUBLIC.Property
   modified TIMESTAMP NOT NULL,
   key VARCHAR2(255) NOT NULL,
   value VARCHAR2(255) NOT NULL
-)
+);
+
+-- Nodes
+--- root for subjects
+INSERT INTO PUBLIC.NODE (MODIFIED, PARENT, TITLE, TYPE, SUBJECT, ACTION, ACTIONTYPE, MODIFIERFACTORY, OBSERVATION)
+VALUES (sysdate, null, 'Subjects', 'org.obehave.model.Subject', null, null, null, null, null);
+--- root for actions
+INSERT INTO PUBLIC.NODE (MODIFIED, PARENT, TITLE, TYPE, SUBJECT, ACTION, ACTIONTYPE, MODIFIERFACTORY, OBSERVATION)
+VALUES (sysdate, null, 'Actions', 'org.obehave.model.Action', null, null, null, null, null);
+--- root for modifierfactories
+INSERT INTO PUBLIC.NODE (MODIFIED, PARENT, TITLE, TYPE, SUBJECT, ACTION, ACTIONTYPE, MODIFIERFACTORY, OBSERVATION)
+VALUES (sysdate, null, 'Modifiers', 'org.obehave.model.modifier.ModifierFactory', null, null, null, null, null);
+--- root for observations
+INSERT INTO PUBLIC.NODE (MODIFIED, PARENT, TITLE, TYPE, SUBJECT, ACTION, ACTIONTYPE, MODIFIERFACTORY, OBSERVATION)
+VALUES (sysdate, null, 'Observations', 'org.obehave.model.Observation', null, null, null, null, null);
+
+
+COMMIT;
