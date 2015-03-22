@@ -56,6 +56,8 @@ public class ObservationEditController {
 
     public void selectVideo() {
         FileChooser chooser = new FileChooser();
+        chooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Video files", "*.mp4", "*.m4a", "*.m4v",
+                "*.m3u8", "*.fxm", "*.flv"));
         setVideoPath(chooser.showOpenDialog(Obehave.STAGE));
     }
 
