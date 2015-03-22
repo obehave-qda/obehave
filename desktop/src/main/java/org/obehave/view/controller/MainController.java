@@ -90,18 +90,20 @@ public class MainController {
     }
 
     public void chooseStudy() {
+        // TODO simplify! Maybe refactor into a seperate class.
+
         // Find out if creating or opening a new study
         final String createNewOne = I18n.get("ui.study.create.title");
         final String openExistingOne = I18n.get("ui.study.open.title");
         final String closeApplication = I18n.get("ui.study.close");
 
-        CommandLinksDialog commandLinksDialog = getCommandLinksDialog();
-
         File chosenFile;
         boolean create;
 
         do {
-            String selectedButtonTitle = commandLinksDialog.showAndWait().get().getText();
+            // we can't reuse commandLinksDialog, because of a bug in it's implemenation.
+            // if we would, selecting link 'n', aborting, selecting link 'n' again won't work.
+            String selectedButtonTitle = getCommandLinksDialog().showAndWait().get().getText();
 
             if (selectedButtonTitle.equals(closeApplication)) {
                 close(null);
@@ -124,24 +126,27 @@ public class MainController {
                 }
             }
             fileChooser.setTitle(selectedButtonTitle);
+            fileChooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("Save file", "*" + Properties.getDatabaseSuffix()));
 
 
             chosenFile = create ? fileChooser.showSaveDialog(stage) : fileChooser.showOpenDialog(stage);
-
-            try {
-                if (create) {
-                    if (chosenFile.exists()) {
-                        log.info("File {} exists already, creating new one at same path", chosenFile);
-                        chosenFile.delete();
+            if (chosenFile != null) {
+                try {
+                    if (create) {
+                        if (chosenFile.exists()) {
+                            log.info("File {} exists already, creating new one at same path", chosenFile);
+                            chosenFile.delete();
+                        }
+                        study = Study.create(chosenFile);
+                        showStudyNameDialog();
+                    } else {
+                        study = Study.load(chosenFile);
                     }
-                    study = Study.create(chosenFile);
-                    showStudyNameDialog();
-                } else {
-                    study = Study.load(chosenFile);
+                } catch (SQLException e) {
+                    AlertUtil.showError(I18n.get("ui.study.error.database.title"),
+                            I18n.get("ui.study.error.database.description", e.getMessage()), e);
                 }
-            } catch (SQLException e) {
-                AlertUtil.showError(I18n.get("ui.study.error.database.title"),
-                        I18n.get("ui.study.error.database.description", e.getMessage()), e);
             }
         } while (study == null);
 
