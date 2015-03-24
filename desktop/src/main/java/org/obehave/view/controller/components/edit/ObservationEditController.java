@@ -56,7 +56,7 @@ public class ObservationEditController {
 
     public void selectVideo() {
         FileChooser chooser = new FileChooser();
-        setVideoPath(chooser.showOpenDialog(Obehave.STAGE));
+        setVideoPath(chooser.showOpenDialog(video.getScene().getWindow()));
     }
 
     public void setVideoPath(File path) {
