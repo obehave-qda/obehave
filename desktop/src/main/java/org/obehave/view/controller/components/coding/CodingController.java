@@ -32,8 +32,8 @@ import java.util.ResourceBundle;
  * <li>a {@link TimelinePane}: a simple timeline, labeled per second / minute</li>
  * </ul>
  */
-public class CodingComponent extends ScrollPane implements Initializable {
-    private static final Logger log = LoggerFactory.getLogger(CodingComponent.class);
+public class CodingController extends ScrollPane implements Initializable {
+    private static final Logger log = LoggerFactory.getLogger(CodingController.class);
 
     private DoubleProperty subjectHeightProperty = new SimpleDoubleProperty(this, "subjectHeightProperty", 30);
     private DoubleProperty timelineHeightProperty = new SimpleDoubleProperty(this, "timelineHeightProperty", 30);
@@ -64,7 +64,7 @@ public class CodingComponent extends ScrollPane implements Initializable {
     @FXML
     private Rectangle cover;
 
-    public CodingComponent() {
+    public CodingController() {
         super();
         EventBusHolder.register(this);
 

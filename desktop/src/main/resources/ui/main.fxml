@@ -2,11 +2,10 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import org.obehave.view.controller.components.coding.CodingComponent?>
+<?import org.obehave.view.controller.components.coding.CodingController?>
 <?import org.obehave.view.controller.components.tree.ProjectTreeComponent?>
 <?import org.obehave.view.controller.components.VideoComponent?>
 <?import java.net.URL?>
-
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="org.obehave.view.controller.MainController" fx:id="vbox">
     <MenuBar fx:id="menubar">
@@ -25,8 +24,8 @@
             </center>
             <bottom>
                 <AnchorPane>
-                    <CodingComponent AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0"
-                                     AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" fx:id="codingComponent"/>
+                    <CodingController AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0"
+                                     AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" fx:id="codingController"/>
                 </AnchorPane>
             </bottom>
         </BorderPane>
