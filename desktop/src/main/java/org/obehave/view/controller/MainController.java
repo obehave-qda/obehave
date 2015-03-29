@@ -4,7 +4,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.SplitPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -12,8 +11,7 @@ import org.controlsfx.dialog.CommandLinksDialog;
 import org.obehave.service.Study;
 import org.obehave.util.I18n;
 import org.obehave.util.Properties;
-import org.obehave.view.controller.components.VideoComponent;
-import org.obehave.view.controller.components.coding.CodingController;
+import org.obehave.view.controller.components.ObservationController;
 import org.obehave.view.controller.components.tree.ProjectTreeComponent;
 import org.obehave.view.util.AlertUtil;
 import org.slf4j.Logger;
@@ -41,9 +39,6 @@ public class MainController {
     private ProjectTreeComponent tree;
 
     @FXML
-    private VideoComponent videoComponent;
-
-    @FXML
     private SplitPane splitpane;
 
     @FXML
@@ -53,23 +48,9 @@ public class MainController {
     private MenuBar menubar;
 
     @FXML
-    private CodingController codingController;
-
-    @FXML
-    private BorderPane contentBorderPane;
+    private ObservationController observationController;
 
     private Stage stage;
-
-    @FXML
-    void loadVideo(ActionEvent event) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle(I18n.get("ui.video.open.title"));
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter(I18n.get("ui.filefilter.video"), "*.mp4"),
-                new FileChooser.ExtensionFilter(I18n.get("ui.filefilter.all"), "*.*"));
-
-        videoComponent.loadFile(fileChooser.showOpenDialog(null));
-    }
 
     @FXML
     void close(ActionEvent event) {
@@ -80,13 +61,9 @@ public class MainController {
     @FXML
     void initialize() {
         assert tree != null : "fx:id=\"tree\" was not injected: check your FXML file 'main.fxml'.";
-        assert videoComponent != null : "fx:id=\"videoComponent\" was not injected: check your FXML file 'main.fxml'.";
         assert splitpane != null : "fx:id=\"splitpane\" was not injected: check your FXML file 'main.fxml'.";
 
         splitpane.prefHeightProperty().bind(vbox.heightProperty().subtract(menubar.heightProperty()));
-
-        videoComponent.maxHeightProperty().bind(contentBorderPane.heightProperty().divide(1.5));
-        codingController.maxHeightProperty().bind(contentBorderPane.heightProperty().divide(3));
     }
 
     public void chooseStudy() {
@@ -94,11 +71,7 @@ public class MainController {
 
         // Find out if creating or opening a new study
         final String createNewOne = I18n.get("ui.study.create.title");
-        final String openExistingOne = I18n.get("ui.study.open.title");
         final String closeApplication = I18n.get("ui.study.close");
-
-        File chosenFile;
-        boolean create;
 
         do {
             // we can't reuse commandLinksDialog, because of a bug in it's implemenation.
@@ -109,7 +82,7 @@ public class MainController {
                 close(null);
             }
             // at this point, selectedButtonTitle can either be createNewOne or openExistingOne
-            create = selectedButtonTitle.equals(createNewOne);
+            boolean create = selectedButtonTitle.equals(createNewOne);
 
             // configuring file chooser and show until a file was selected
             final File defaultSaveFolder = Properties.getSaveFolder();
@@ -130,14 +103,10 @@ public class MainController {
                     new FileChooser.ExtensionFilter("Save file", "*" + Properties.getDatabaseSuffix()));
 
 
-            chosenFile = create ? fileChooser.showSaveDialog(stage) : fileChooser.showOpenDialog(stage);
+            File chosenFile = create ? fileChooser.showSaveDialog(stage) : fileChooser.showOpenDialog(stage);
             if (chosenFile != null) {
                 try {
                     if (create) {
-                        if (chosenFile.exists()) {
-                            log.info("File {} exists already, creating new one at same path", chosenFile);
-                            chosenFile.delete();
-                        }
                         study = Study.create(chosenFile);
                         showStudyNameDialog();
                     } else {
@@ -150,7 +119,7 @@ public class MainController {
             }
         } while (study == null);
 
-        stage.setTitle(stage.getTitle() + " - " + study.getName() + " - " + chosenFile.getAbsolutePath());
+        stage.setTitle(stage.getTitle() + " - " + study.getName() + " - " + study.getSavePath());
         tree.setStudy(study);
     }
 
@@ -186,5 +155,16 @@ public class MainController {
         } while (!name.isPresent() || name.get().isEmpty());
 
         study.setName(name.get());
+    }
+
+    @FXML
+    void loadVideo(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle(I18n.get("ui.video.open.title"));
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter(I18n.get("ui.filefilter.video"), "*.mp4"),
+                new FileChooser.ExtensionFilter(I18n.get("ui.filefilter.all"), "*.*"));
+
+        observationController.loadVideo(fileChooser.showOpenDialog(stage));
     }
 }

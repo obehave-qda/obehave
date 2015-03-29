@@ -54,6 +54,13 @@ public class Study implements Displayable {
     public static Study create(File savePath) throws SQLException {
         log.info("Creating new study at {}", savePath);
 
+        if (savePath.exists()) {
+            log.info("File {} exists already, creating new one at same path", savePath);
+            if (!savePath.delete()) {
+                log.error("Couldn't delete file {}!" + savePath);
+            }
+        }
+
         final Study study = new Study(savePath);
         Daos.asDefault(new JdbcConnectionSource(Properties.getDatabaseConnectionStringWithInit(savePath)));
 
