@@ -1,6 +1,7 @@
 package org.obehave.view.controller.components;
 
 
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -8,6 +9,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.util.Duration;
 import org.obehave.exceptions.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,11 +57,15 @@ public class VideoComponent extends BorderPane {
         return new Media(file.toURI().toString());
     }
 
-    public void loadFile(File file) {
+    public void loadVideo(File file) {
         Media media = toMedia(file);
 
         mediaView.setMediaPlayer(new MediaPlayer(media));
 
         mediaView.getMediaPlayer().play();
+    }
+
+    public ReadOnlyObjectProperty<Duration> currentTime() {
+        return mediaView.getMediaPlayer().currentTimeProperty();
     }
 }

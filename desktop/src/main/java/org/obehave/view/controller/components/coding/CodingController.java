@@ -4,8 +4,6 @@ package org.obehave.view.controller.components.coding;
 import com.google.common.eventbus.Subscribe;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -14,6 +12,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 import org.obehave.events.ChangeEvent;
 import org.obehave.events.EventBusHolder;
+import org.obehave.model.Observation;
 import org.obehave.model.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +37,8 @@ public class CodingController extends ScrollPane implements Initializable {
     private DoubleProperty subjectHeightProperty = new SimpleDoubleProperty(this, "subjectHeightProperty", 30);
     private DoubleProperty timelineHeightProperty = new SimpleDoubleProperty(this, "timelineHeightProperty", 30);
     private DoubleProperty secondWithProperty = new SimpleDoubleProperty(this, "secondWithProperty", 15);
+
+    private DoubleProperty currentTime = new SimpleDoubleProperty(this, "currentTime");
 
     /**
      * A property containing the current visible x value of the view port
@@ -125,34 +126,30 @@ public class CodingController extends ScrollPane implements Initializable {
         cover.setLayoutX(0);
         cover.setLayoutY(0);
 
+        eventsPane.currentTime().bind(currentTime);
+
 
         // ********* configuring scroll bindings
         viewPortX.bind(hvalueProperty().multiply(codingPane.widthProperty().subtract(new BoundsProperties.ScrollPaneViewPortWidthBinding(this))));
         viewPortY.bind(vvalueProperty().multiply(codingPane.heightProperty().subtract(new BoundsProperties.ScrollPaneViewPortHeightBinding(this))));
 
         // make subjectsList fixed when scrolling horizontal
-        viewPortX.addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                subjectsList.layoutXProperty().set(newValue.doubleValue());
-                cover.layoutXProperty().set(newValue.doubleValue());
-            }
+        viewPortX.addListener((observable, oldValue, newValue) -> {
+            subjectsList.layoutXProperty().set(newValue.doubleValue());
+            cover.layoutXProperty().set(newValue.doubleValue());
         });
 
         // make timelinePane fixed when scrolling vertical - we have to do some shit do avoid an infinite growing of the pane. Whatever.
-        viewPortY.addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                double newY = heightProperty().add(newValue.doubleValue()).subtract(timelinePane.heightProperty()).doubleValue();
+        viewPortY.addListener((observable, oldValue, newValue) -> {
+            double newY = heightProperty().add(newValue.doubleValue()).subtract(timelinePane.heightProperty()).doubleValue();
 
-                // would the new y value increase the overall size of the pane? Actually, we don't want that. Except it's the initial positioning!
-                if (newY + timelinePane.heightProperty().doubleValue() > codingPane.heightProperty().doubleValue() && codingPane.heightProperty().get() != 0) {
-                    newY = codingPane.heightProperty().subtract(timelinePane.heightProperty()).doubleValue();
-                }
-
-                timelinePane.layoutYProperty().set(newY);
-                cover.layoutYProperty().set(newY);
+            // would the new y value increase the overall size of the pane? Actually, we don't want that. Except it's the initial positioning!
+            if (newY + timelinePane.heightProperty().doubleValue() > codingPane.heightProperty().doubleValue() && codingPane.heightProperty().get() != 0) {
+                newY = codingPane.heightProperty().subtract(timelinePane.heightProperty()).doubleValue();
             }
+
+            timelinePane.layoutYProperty().set(newY);
+            cover.layoutYProperty().set(newY);
         });
     }
 
@@ -182,5 +179,13 @@ public class CodingController extends ScrollPane implements Initializable {
     public void removeSubject(Subject subject) {
         eventsPane.removeSubject(subject);
         subjectsList.removeSubject(subject);
+    }
+
+    public void loadCodings(Observation observation) {
+
+    }
+
+    public DoubleProperty currentTime() {
+        return currentTime;
     }
 }
