@@ -1,7 +1,6 @@
 package org.obehave.util;
 
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
-import org.junit.Test;
 import org.obehave.persistence.Daos;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,20 +14,7 @@ import java.sql.SQLException;
 public class TestStudyCreator {
     private static final Logger log = LoggerFactory.getLogger(TestStudyCreator.class);
 
-    private void create(File path) throws SQLException {
-        log.info("Creating teststudy at {}", path.getAbsolutePath());
-
-        Daos.asDefault(new JdbcConnectionSource(Properties.getDatabaseConnectionStringWithInit(path)));
-        Daos.get().node().executeRaw("runscript from 'classpath:sql/populate.sql'");
-        Daos.closeAll();
-
-        log.info("Done creating teststudy at {}", path.getAbsolutePath());
-    }
-
-    // just comment the ignore before executing this test
-    //@Ignore
-    @Test
-    public void createStudy() throws SQLException {
+    public TestStudyCreator() throws SQLException {
         // We want to create the file @ obehave/studies instead of obehave/core/studies
         final File folder = new File("../studies");
 
@@ -43,5 +29,19 @@ public class TestStudyCreator {
         }
 
         create(path);
+    }
+
+    private void create(File path) throws SQLException {
+        log.info("Creating teststudy at {}", path.getAbsolutePath());
+
+        Daos.asDefault(new JdbcConnectionSource(Properties.getDatabaseConnectionStringWithInit(path)));
+        Daos.get().node().executeRaw("runscript from 'classpath:sql/populate.sql'");
+        Daos.closeAll();
+
+        log.info("Done creating teststudy at {}", path.getAbsolutePath());
+    }
+
+    public static void main() throws SQLException {
+        new TestStudyCreator();
     }
 }
