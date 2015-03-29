@@ -30,10 +30,23 @@ public class EventsPane extends Pane {
 
     private DoubleProperty subjectListWidthProperty = new SimpleDoubleProperty(this, "subjectListWidthProperty");
 
+    private DoubleProperty currentTime = new SimpleDoubleProperty(this, "currentTimeProperty");
+
     public EventsPane() {
         prefHeightProperty().bind(subjectHeightProperty().multiply(subjectPanesSize).add(subjectHeightProperty().divide(2)));
 
         msProperty.addListener((observable, oldValue, newValue) -> refresh());
+
+        Line secondsLine = new Line();
+
+        secondsLine.startXProperty().bind(
+                NodeUtil.snapXY(secondWidthProperty.multiply(currentTime).add(subjectListWidthProperty)));
+        secondsLine.endXProperty().bind(NodeUtil.snapXY(secondsLine.startXProperty()));
+
+        secondsLine.startYProperty().setValue(0);
+        secondsLine.endYProperty().bind(NodeUtil.snapXY(prefHeightProperty()));
+
+        getChildren().add(secondsLine);
     }
 
     public DoubleProperty msProperty() {
@@ -112,5 +125,9 @@ public class EventsPane extends Pane {
         line.endYProperty().bind(NodeUtil.snapXY(prefHeightProperty()));
 
         return line;
+    }
+
+    public DoubleProperty currentTime() {
+        return currentTime;
     }
 }
