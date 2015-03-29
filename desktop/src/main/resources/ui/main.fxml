@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import org.obehave.view.controller.components.coding.CodingController?>
+<?import javafx.scene.layout.VBox?>
+<?import org.obehave.view.controller.components.ObservationController?>
 <?import org.obehave.view.controller.components.tree.ProjectTreeComponent?>
-<?import org.obehave.view.controller.components.VideoComponent?>
 <?import java.net.URL?>
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="org.obehave.view.controller.MainController" fx:id="vbox">
@@ -16,19 +15,7 @@
     </MenuBar>
     <SplitPane dividerPositions="0.25" fx:id="splitpane">
         <ProjectTreeComponent fx:id="tree" SplitPane.resizableWithParent="false"/>
-        <BorderPane fx:id="contentBorderPane">
-            <center>
-                <AnchorPane>
-                    <VideoComponent fx:id="videoComponent"/>
-                </AnchorPane>
-            </center>
-            <bottom>
-                <AnchorPane>
-                    <CodingController AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0"
-                                     AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" fx:id="codingController"/>
-                </AnchorPane>
-            </bottom>
-        </BorderPane>
+        <ObservationController fx:id="observationController" />
     </SplitPane>
     <stylesheets>
         <URL value="@obehave.css"/>

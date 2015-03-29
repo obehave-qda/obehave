@@ -30,7 +30,6 @@ public class ProjectTreeComponent extends TreeView<DisplayWrapper<?>> {
     public ProjectTreeComponent() {
         super();
 
-
         EventBusHolder.register(this);
     }
 
