@@ -13,7 +13,7 @@ import org.obehave.service.Study;
 import org.obehave.util.I18n;
 import org.obehave.util.Properties;
 import org.obehave.view.controller.components.VideoComponent;
-import org.obehave.view.controller.components.coding.CodingComponent;
+import org.obehave.view.controller.components.coding.CodingController;
 import org.obehave.view.controller.components.tree.ProjectTreeComponent;
 import org.obehave.view.util.AlertUtil;
 import org.slf4j.Logger;
@@ -53,7 +53,7 @@ public class MainController {
     private MenuBar menubar;
 
     @FXML
-    private CodingComponent codingComponent;
+    private CodingController codingController;
 
     @FXML
     private BorderPane contentBorderPane;
@@ -86,7 +86,7 @@ public class MainController {
         splitpane.prefHeightProperty().bind(vbox.heightProperty().subtract(menubar.heightProperty()));
 
         videoComponent.maxHeightProperty().bind(contentBorderPane.heightProperty().divide(1.5));
-        codingComponent.maxHeightProperty().bind(contentBorderPane.heightProperty().divide(3));
+        codingController.maxHeightProperty().bind(contentBorderPane.heightProperty().divide(3));
     }
 
     public void chooseStudy() {
