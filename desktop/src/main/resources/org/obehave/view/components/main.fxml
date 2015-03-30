@@ -6,7 +6,7 @@
 <?import org.obehave.view.components.tree.ProjectTreeControl?>
 <?import java.net.URL?>
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="org.obehave.view.components.MainController" fx:id="vbox">
+      fx:controller="org.obehave.view.components.MainController" fx:id="vbox" prefWidth="800">
     <MenuBar fx:id="menubar">
         <Menu text="File">
             <MenuItem onAction="#changeStudyName" text="Change Study Name"/>

@@ -22,3 +22,21 @@
 .popover Label {
     -fx-text-fill: black;
 }
+
+#inputSubject {
+	-fx-border-width: 1 0 1 1;
+	-fx-background-radius: 3 0 0 3;
+	-fx-border-style: solid none solid solid;
+}
+
+#inputAction {
+	-fx-border-width: 1 0 1 0;
+	-fx-background-radius: 0 0 0 0;
+	-fx-border-style: solid none solid none;
+}
+
+#inputModifier {
+	-fx-border-width: 1 1 1 0;
+	-fx-background-radius: 0 3 3 0;
+	-fx-border-style: solid solid solid none;
+}
