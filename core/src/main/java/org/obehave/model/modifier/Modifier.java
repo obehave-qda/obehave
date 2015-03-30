@@ -78,6 +78,10 @@ public class Modifier extends BaseEntity {
         }
     }
 
+    public Type getType() {
+        return type;
+    }
+
     public ModifierFactory getModifierFactory() {
         return modifierFactory;
     }
@@ -88,7 +92,7 @@ public class Modifier extends BaseEntity {
         this.modifierFactory = modifierFactory;
     }
 
-    public static enum Type {
+    public enum Type {
         // this sucks. Due to ORMLite's incapability of handling inheritance strategies, ie. one table per class hierarchy,
         // we are flattening the class hierarchy to only only class.
         DECIMAL_MODIFIER, ENUMERATION_MODIFIER, SUBJECT_MODIFIER
