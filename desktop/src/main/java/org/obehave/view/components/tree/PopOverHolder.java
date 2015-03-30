@@ -157,6 +157,7 @@ public class PopOverHolder {
         popOver.setArrowIndent(12);
         popOver.setCornerRadius(6);
         popOver.setArrowLocation(PopOver.ArrowLocation.LEFT_TOP);
+        popOver.setAutoFix(true);
 
         return popOver;
     }
