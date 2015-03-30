@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.VBox?>
+<?import org.obehave.view.components.observation.ObservationControl?>
+<?import org.obehave.view.components.tree.ProjectTreeControl?>
+<?import java.net.URL?>
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.obehave.view.components.MainController" fx:id="vbox">
+    <MenuBar fx:id="menubar">
+        <Menu text="File">
+            <MenuItem onAction="#loadVideo" text="Load Video"/>
+            <MenuItem onAction="#close" text="Close"/>
+        </Menu>
+    </MenuBar>
+    <SplitPane dividerPositions="0.25" fx:id="splitpane">
+        <ProjectTreeControl fx:id="tree" SplitPane.resizableWithParent="false"/>
+        <ObservationControl fx:id="observationControl" />
+    </SplitPane>
+    <stylesheets>
+        <URL value="@obehave.css"/>
+    </stylesheets>
+</VBox>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.controlsfx.control.CheckListView?>
+<?import java.net.URL?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefWidth="220.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.obehave.view.components.tree.edit.ModifierFactoryEditControl"
+            styleClass="popover">
+    <BorderPane maxWidth="200" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="10.0"
+                AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="5.0">
+        <top>
+            <VBox>
+                <TextField fx:id="name" maxWidth="200"/>
+                <ComboBox fx:id="combobox" onAction="#comboboxChange"/>
+            </VBox>
+        </top>
+        <center>
+            <AnchorPane fx:id="enumerationPane">
+                <VBox maxWidth="200">
+                    <ListView fx:id="enumerationList"/>
+                    <HBox>
+                        <Button text="+" onAction="#enumerationAdd"/>
+                        <Button text="-" onAction="#enumerationRemove"/>
+                    </HBox>
+                    <TextField fx:id="enumerationEntry" onKeyReleased="#enumerationAddEnter"/>
+                </VBox>
+            </AnchorPane>
+            <AnchorPane fx:id="subjectPane">
+                <VBox maxWidth="200">
+                    <Label text="Valid subjects"/>
+                    <CheckListView fx:id="checkedSubjects"/>
+                </VBox>
+            </AnchorPane>
+            <AnchorPane fx:id="numberRangePane">
+                <HBox>
+                    <GridPane>
+                        <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                        </columnConstraints>
+                        <Label text="From" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                        <Label text="To" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                        <TextField fx:id="rangeFrom" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                        <TextField fx:id="rangeTo" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                    </GridPane>
+                </HBox>
+            </AnchorPane>
+            <AnchorPane fx:id="visiblePane"/>
+        </center>
+        <bottom>
+            <FlowPane>
+                <Button text="Save" onAction="#saveCurrent"/>
+                <Button text="Cancel" onAction="#cancel"/>
+            </FlowPane>
+        </bottom>
+    </BorderPane>
+    <stylesheets>
+        <URL value="@/org/obehave/view/components/obehave.css"/>
+    </stylesheets>
+</AnchorPane>

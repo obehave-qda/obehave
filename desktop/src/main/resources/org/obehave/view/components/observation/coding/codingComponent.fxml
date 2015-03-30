@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import org.obehave.view.components.observation.coding.EventsPane?>
+<?import org.obehave.view.components.observation.coding.SubjectsList?>
+<?import org.obehave.view.components.observation.coding.TimelinePane?>
+<fx:root type="javafx.scene.control.ScrollPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+         hbarPolicy="NEVER" pannable="true" prefWidth="600">
+    <Pane fx:id="codingPane">
+        <SubjectsList fx:id="subjectsList"/>
+        <EventsPane fx:id="eventsPane"/>
+        <TimelinePane fx:id="timelinePane"/>
+        <Rectangle fx:id="cover"/>
+    </Pane>
+</fx:root>
