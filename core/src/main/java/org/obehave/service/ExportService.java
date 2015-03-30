@@ -8,7 +8,7 @@ import java.io.File;
 import java.util.List;
 
 /**
- * @author Markus Möslinger
+ * @author Stefan Lamprecht
  */
 public class ExportService {
     private static final Logger log = LoggerFactory.getLogger(ExportService.class);
@@ -23,7 +23,7 @@ public class ExportService {
     }
 
     public void exportAction(List<Observation> observations, List<Subject> subjects, Action action) {
-        // matrix erstellen mit subjects.size() länge
+        // matrix erstellen mit subjects.size() lï¿½nge
 
         for (Observation o : observations) {
             for (Coding c : o.getCodings()) {
