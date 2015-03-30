@@ -1,4 +1,4 @@
-package org.obehave.view.components.tree.edit;
+package org.obehave.view.controller.components.edit;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -58,7 +58,7 @@ public class ObservationEditControl {
         FileChooser chooser = new FileChooser();
         chooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Video files", "*.mp4", "*.m4a", "*.m4v",
                 "*.m3u8", "*.fxm", "*.flv"));
-        setVideoPath(chooser.showOpenDialog(Obehave.STAGE));
+        setVideoPath(chooser.showOpenDialog(video.getScene().getWindow()));
     }
 
     public void setVideoPath(File path) {
