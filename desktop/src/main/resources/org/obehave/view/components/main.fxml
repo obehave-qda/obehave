@@ -9,8 +9,17 @@
       fx:controller="org.obehave.view.components.MainController" fx:id="vbox">
     <MenuBar fx:id="menubar">
         <Menu text="File">
-            <MenuItem onAction="#loadVideo" text="Load Video"/>
+            <MenuItem onAction="#changeStudyName" text="Change Study Name"/>
+            <SeparatorMenuItem />
             <MenuItem onAction="#close" text="Close"/>
+        </Menu>
+        <Menu text="Options">
+            <MenuItem onAction="#settings" text="Settings"/>
+        </Menu>
+        <Menu text="Help">
+            <MenuItem onAction="#manual" text="Manual"/>
+            <SeparatorMenuItem />
+            <MenuItem onAction="#about" text="About"/>
         </Menu>
     </MenuBar>
     <SplitPane dividerPositions="0.25" fx:id="splitpane">

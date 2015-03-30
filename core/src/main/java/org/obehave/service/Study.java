@@ -4,6 +4,7 @@ import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import org.obehave.events.ChangeEvent;
 import org.obehave.events.ChangeType;
 import org.obehave.events.EventBusHolder;
+import org.obehave.events.RepaintStudyEvent;
 import org.obehave.exceptions.Validate;
 import org.obehave.model.*;
 import org.obehave.model.modifier.ModifierFactory;
@@ -207,6 +208,8 @@ public class Study implements Displayable {
         log.debug("Setting study name to {}", name);
         this.name = name;
         DatabaseProperties.set(DatabaseProperties.STUDY_NAME, name);
+
+        EventBusHolder.post(new RepaintStudyEvent());
     }
 
     // ONLY FOR TEMPORARILY TESTING!

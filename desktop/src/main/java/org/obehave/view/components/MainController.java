@@ -8,6 +8,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.controlsfx.dialog.CommandLinksDialog;
+import org.obehave.persistence.Daos;
 import org.obehave.service.Study;
 import org.obehave.util.I18n;
 import org.obehave.util.Properties;
@@ -55,6 +56,8 @@ public class MainController {
     @FXML
     void close(ActionEvent event) {
         log.info("Closing application");
+
+        Daos.closeAll();
         System.exit(0);
     }
 
@@ -108,7 +111,11 @@ public class MainController {
                 try {
                     if (create) {
                         study = Study.create(chosenFile);
-                        showStudyNameDialog();
+                        Optional<String> name;
+                        do {
+                            name = showStudyNameDialog();
+                        } while (!name.isPresent() || name.get().isEmpty());
+                        study.setName(name.get());
                     } else {
                         study = Study.load(chosenFile);
                     }
@@ -147,24 +154,40 @@ public class MainController {
         this.stage = stage;
     }
 
-    public void showStudyNameDialog() {
-        Optional<String> name;
-        do {
-            name = AlertUtil.askForString(I18n.get("ui.study.dialog.name.title"),
-                    I18n.get("ui.study.dialog.name.description"));
-        } while (!name.isPresent() || name.get().isEmpty());
-
-        study.setName(name.get());
+    private Optional<String> showStudyNameDialog() {
+        return AlertUtil.askForString(I18n.get("ui.study.dialog.name.title"),
+                I18n.get("ui.study.dialog.name.description"),
+                study.getName());
     }
 
     @FXML
-    void loadVideo(ActionEvent event) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle(I18n.get("ui.video.open.title"));
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter(I18n.get("ui.filefilter.video"), "*.mp4"),
-                new FileChooser.ExtensionFilter(I18n.get("ui.filefilter.all"), "*.*"));
+    void changeStudyName(ActionEvent event) {
+        log.trace("Changing study name");
 
-        observationControl.loadVideo(fileChooser.showOpenDialog(stage));
+        Optional<String> name = showStudyNameDialog();
+        if (name.isPresent() && !name.get().isEmpty()) {
+            study.setName(name.get());
+        }
+    }
+
+    @FXML
+    void settings(ActionEvent event) {
+        log.trace("Showing settings");
+
+        // TODO show settings
+    }
+
+    @FXML
+    void manual(ActionEvent event) {
+        log.trace("Showing manual");
+
+        // TODO show manual
+    }
+
+    @FXML
+    void about(ActionEvent event) {
+        log.trace("Showing about popup");
+
+        // TODO show about popup
     }
 }

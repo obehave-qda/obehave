@@ -45,9 +45,14 @@ public class AlertUtil {
     }
 
     public static Optional<String> askForString(String title, String description) {
+        return askForString(title, description, null);
+    }
+
+    public static Optional<String> askForString(String title, String description, String text) {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle(title);
         dialog.setContentText(description);
+        dialog.getEditor().setText(text != null ? text : "");
 
         return dialog.showAndWait();
     }
