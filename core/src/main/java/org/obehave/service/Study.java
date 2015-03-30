@@ -84,7 +84,11 @@ public class Study implements Displayable {
 
     private void load() throws SQLException {
         log.info("Starting loading of entities");
-        long start = System.currentTimeMillis();
+        long startLoad = System.currentTimeMillis();
+
+        // we want to load a single value first to establish a database connection
+        name = DatabaseProperties.get(DatabaseProperties.STUDY_NAME);
+        final long startEntities = System.currentTimeMillis();
 
         subjects = Validate.hasOnlyOneElement(Daos.get().node().getRoot(Subject.class)).get(0);
         actions = Validate.hasOnlyOneElement(Daos.get().node().getRoot(Action.class)).get(0);
@@ -96,11 +100,9 @@ public class Study implements Displayable {
         removeEmptyNodes(modifierFactories);
         removeEmptyNodes(observations);
 
-        final String studyName = DatabaseProperties.get(DatabaseProperties.STUDY_NAME);
-        setName(studyName);
-
-        long duration = System.currentTimeMillis() - start;
-        log.info("Took {}ms for loading of entities", duration);
+        final long durationEntities = System.currentTimeMillis() - startEntities;
+        final long durationLoad = System.currentTimeMillis() - startLoad;
+        log.info("Took {}ms for loading of entities ({}ms in total for loading)", durationEntities, durationLoad);
     }
 
     private void removeEmptyNodes(Node node) {
