@@ -1,4 +1,4 @@
-package org.obehave.view.controller.components.edit;
+package org.obehave.view.components.tree.edit;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -10,7 +10,6 @@ import org.obehave.model.Node;
 import org.obehave.model.Observation;
 import org.obehave.service.NodeService;
 import org.obehave.service.ObservationService;
-import org.obehave.view.Obehave;
 import org.obehave.view.util.AlertUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
