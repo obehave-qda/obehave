@@ -25,7 +25,7 @@ public class ObservationControl extends BorderPane {
     public ObservationControl() {
         super();
         FXMLLoader fxmlLoader = new FXMLLoader(
-                getClass().getClassLoader().getResource("org/obehave/view/components/observation/observationComponent.fxml"));
+                getClass().getClassLoader().getResource("org/obehave/view/components/observation/observationControl.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
 
