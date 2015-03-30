@@ -69,7 +69,7 @@ public class CodingControl extends ScrollPane implements Initializable {
         super();
         EventBusHolder.register(this);
 
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("org/obehave/view/components/observation/coding/codingComponent.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("org/obehave/view/components/observation/coding/codingControl.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
 

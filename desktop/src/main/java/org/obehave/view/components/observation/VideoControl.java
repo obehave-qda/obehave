@@ -25,7 +25,7 @@ public class VideoControl extends BorderPane {
 
     public VideoControl() {
         super();
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("org/obehave/view/components/observation/videoComponent.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("org/obehave/view/components/observation/videoControl.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
 
