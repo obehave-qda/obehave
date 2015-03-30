@@ -15,6 +15,7 @@ public class DatabaseProperties {
     private static final Logger log = LoggerFactory.getLogger(DatabaseProperties.class);
 
     public static final String STUDY_NAME = "study.name";
+    public static final String OBEHAVE_VERSION = "obehave.version";
 
     private DatabaseProperties() {
         throw new AssertionError(I18n.get("exception.constructor.utility"));
