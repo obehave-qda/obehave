@@ -1,7 +1,6 @@
 package org.obehave.view.components.observation.coding;
 
 
-import com.google.common.eventbus.Subscribe;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.fxml.FXML;
@@ -10,8 +9,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
-import org.obehave.events.ChangeEvent;
-import org.obehave.events.EventBusHolder;
 import org.obehave.model.Observation;
 import org.obehave.model.Subject;
 import org.slf4j.Logger;
@@ -67,7 +64,6 @@ public class CodingControl extends ScrollPane implements Initializable {
 
     public CodingControl() {
         super();
-        EventBusHolder.register(this);
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("org/obehave/view/components/observation/coding/codingControl.fxml"));
         fxmlLoader.setRoot(this);
@@ -151,24 +147,6 @@ public class CodingControl extends ScrollPane implements Initializable {
             timelinePane.layoutYProperty().set(newY);
             cover.layoutYProperty().set(newY);
         });
-    }
-
-    @Subscribe
-    public void changeEvent(ChangeEvent<?> change) {
-        log.trace("Received event {}", change);
-        if (change.getChanged() instanceof Subject) {
-            Subject s = (Subject) change.getChanged();
-            switch (change.getChangeType()) {
-                case CREATE:
-                    addSubject(s);
-                    break;
-                case DELETE:
-                    removeSubject(s);
-                    break;
-                default:
-                    break;
-            }
-        }
     }
 
     public void addSubject(Subject subject) {
