@@ -99,11 +99,13 @@ CREATE TABLE PUBLIC.Node
   subject INT,
   action INT,
   actionType VARCHAR2(100),
+  initialAction INT,
   modifierFactory INT,
   observation INT,
   FOREIGN KEY (parent) REFERENCES (id),
   FOREIGN KEY (subject) REFERENCES Public.Subject(id),
   FOREIGN KEY (action) REFERENCES Public.Action(id),
+  FOREIGN KEY (initialAction) REFERENCES Public.Action(id),
   FOREIGN KEY (modifierFactory) REFERENCES Public.ModifierFactory(id),
   FOREIGN KEY (observation) REFERENCES Public.Observation(id)
 );

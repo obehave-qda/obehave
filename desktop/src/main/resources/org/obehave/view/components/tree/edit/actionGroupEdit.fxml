@@ -27,10 +27,12 @@
         <TextField fx:id="name" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="0"/>
         <CheckBox fx:id="exclusive" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
         <Label text="Exclusive" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-
-        <Button text="Save" onAction="#saveCurrent" GridPane.columnIndex="0" GridPane.rowIndex="2"
+        <Label text="Initial Action" fx:id="initialActionLabel" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+        <ComboBox fx:id="initialAction" GridPane.columnIndex="1" GridPane.halignment="CENTER"
+                  GridPane.rowIndex="2"/>
+        <Button text="Save" onAction="#saveCurrent" GridPane.columnIndex="0" GridPane.rowIndex="3"
                 GridPane.halignment="LEFT"/>
-        <Button text="Cancel" onAction="#cancel" GridPane.columnIndex="1" GridPane.rowIndex="2"
+        <Button text="Cancel" onAction="#cancel" GridPane.columnIndex="1" GridPane.rowIndex="3"
                 GridPane.halignment="RIGHT"/>
     </GridPane>
 </AnchorPane>
