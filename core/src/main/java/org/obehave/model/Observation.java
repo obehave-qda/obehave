@@ -81,7 +81,7 @@ public class Observation extends BaseEntity implements Displayable {
     }
 
     public List<Coding> getCodings() {
-        return Collections.unmodifiableList(new ArrayList<Coding>(codings));
+        return Collections.unmodifiableList(new ArrayList<>(codings));
     }
 
     @Override

@@ -2,11 +2,14 @@ package org.obehave.view.components.tree.edit;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import org.obehave.exceptions.ServiceException;
 import org.obehave.model.Action;
 import org.obehave.model.Node;
 import org.obehave.service.Study;
+import org.obehave.util.DisplayWrapper;
 import org.obehave.view.util.AlertUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +34,12 @@ public class ActionGroupEditControl {
     @FXML
     private CheckBox exclusive;
 
+    @FXML
+    private Label initialActionLabel;
+
+    @FXML
+    private ComboBox<DisplayWrapper<Action>> initialAction;
+
     public String getName() {
         return name.getText();
     }
@@ -46,6 +55,16 @@ public class ActionGroupEditControl {
         setName(node.getTitle());
         exclusive.setSelected(node.getExclusivity() != Node.Exclusivity.NOT_EXCLUSIVE);
 
+        if (node.getExclusivity() == Node.Exclusivity.EXCLUSIVE) {
+            initialAction.setVisible(true);
+            initialActionLabel.setVisible(true);
+            buildInitialActionCombobox(node);
+        } else {
+            initialAction.setVisible(false);
+            initialActionLabel.setVisible(false);
+        }
+
+
         name.requestFocus();
     }
 
@@ -55,6 +74,9 @@ public class ActionGroupEditControl {
 
         setName("");
         exclusive.setSelected(false);
+
+        initialAction.setVisible(false);
+        initialActionLabel.setVisible(false);
 
         name.requestFocus();
     }
@@ -83,8 +105,9 @@ public class ActionGroupEditControl {
             node.setExclusivity(Node.Exclusivity.NOT_EXCLUSIVE);
         }
 
-        try {
+        node.setInitialAction(initialAction.getSelectionModel().getSelectedItem().get());
 
+        try {
             study.getNodeService().save(study.getActions());
 
             loadedActionNode = null;
@@ -104,5 +127,16 @@ public class ActionGroupEditControl {
 
     public void setStudy(Study study) {
         this.study = study;
+    }
+
+    private void buildInitialActionCombobox(Node node) {
+        initialAction.getItems().clear();
+        initialAction.getItems().add(DisplayWrapper.of((Action) null));
+
+        for (Node child : node.getChildren()) {
+            initialAction.getItems().add(DisplayWrapper.of((Action) child.getData()));
+        }
+
+        initialAction.getSelectionModel().select(DisplayWrapper.of((Action) node.getData()));
     }
 }

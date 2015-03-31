@@ -34,6 +34,7 @@ public class Study implements Displayable {
     private ModifierFactoryService modifierFactoryService;
     private ObservationService observationService;
     private SubjectService subjectService;
+    private CodingService.CodingServiceBuilder codingServiceBuilder;
 
     private File savePath;
 
@@ -208,5 +209,13 @@ public class Study implements Displayable {
         }
 
         return subjectService;
+    }
+
+    public CodingService.CodingServiceBuilder getCodingServiceBuilder() {
+        if (codingServiceBuilder == null) {
+            codingServiceBuilder = new CodingService.CodingServiceBuilder(this);
+        }
+
+        return codingServiceBuilder;
     }
 }

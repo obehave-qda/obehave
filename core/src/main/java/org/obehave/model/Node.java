@@ -39,6 +39,9 @@ public class Node extends BaseEntity implements Iterable<Displayable>, Displayab
     @DatabaseField(columnName = "actionType")
     private Exclusivity exclusivity;
 
+    @DatabaseField(columnName = "initialAction", foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
+    private Action initialAction;
+
     @ForeignCollectionField(eager = true)
     private Collection<Node> children = new ArrayList<>();
 
@@ -197,6 +200,25 @@ public class Node extends BaseEntity implements Iterable<Displayable>, Displayab
         this.parent = parent;
     }
 
+    public Node getParentOf(Displayable data) {
+        if (getChildren().isEmpty()) {
+            return null;
+        }
+
+        for (Node child : getChildren()) {
+            if (child.getData() != null && child.getData().equals(data)) {
+                return this;
+            }
+
+            Node parent = child.getParentOf(data);
+            if (parent != null) {
+                return parent;
+            }
+        }
+
+        return null;
+    }
+
     public boolean remove(Node node) {
         return children.remove(node);
     }
@@ -267,6 +289,18 @@ public class Node extends BaseEntity implements Iterable<Displayable>, Displayab
         }
 
         this.exclusivity = exclusivity;
+    }
+
+    public Action getInitialAction() {
+        validateActionNode();
+
+        return initialAction;
+    }
+
+    public void setInitialAction(Action initialAction) {
+        validateActionNode();
+
+        this.initialAction = initialAction;
     }
 
     public Class<?> getDataType() {
