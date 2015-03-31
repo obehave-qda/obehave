@@ -36,8 +36,9 @@
             <RadioButton fx:id="radioState" toggleGroup="$toggleGroup"/>
             <Label text="State"/>
         </HBox>
-        <ComboBox fx:id="modifierFactoryCombo" GridPane.columnIndex="0" GridPane.columnSpan="2"
-                  GridPane.halignment="CENTER" GridPane.rowIndex="3"/>
+        <Label text="Modifier" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+        <ComboBox fx:id="modifierFactoryCombo" GridPane.columnIndex="1" GridPane.halignment="CENTER"
+                  GridPane.rowIndex="3"/>
         <Button text="Save" onAction="#saveCurrent" GridPane.columnIndex="0" GridPane.rowIndex="4"
                 GridPane.halignment="LEFT"/>
         <Button text="Cancel" onAction="#cancel" GridPane.columnIndex="1" GridPane.rowIndex="4"
