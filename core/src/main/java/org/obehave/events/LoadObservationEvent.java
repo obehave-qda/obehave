@@ -4,7 +4,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.obehave.model.Observation;
 
 /**
- * @author Markus Möslinger
+ * @author Markus Moeslinger
  */
 public class LoadObservationEvent {
     private final Observation observation;
