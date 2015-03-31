@@ -6,6 +6,7 @@ import org.obehave.events.EventBusHolder;
 import org.obehave.events.LoadObservationEvent;
 import org.obehave.model.Node;
 import org.obehave.model.Observation;
+import org.obehave.service.Study;
 import org.obehave.util.DisplayWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,9 +17,11 @@ import org.slf4j.LoggerFactory;
 public class EntityEditTreeCell extends TextFieldTreeCell<DisplayWrapper<?>> {
     private static final Logger log = LoggerFactory.getLogger(EntityEditTreeCell.class);
 
-    private PopOverHolder popOverHolder;
+    private final Study study;
+    private final PopOverHolder popOverHolder;
 
-    public EntityEditTreeCell(PopOverHolder popOverHolder) {
+    public EntityEditTreeCell(Study study, PopOverHolder popOverHolder) {
+        this.study = study;
         this.popOverHolder = popOverHolder;
 
         addEventHandler(MouseEvent.MOUSE_CLICKED, this::handle);
@@ -47,7 +50,7 @@ public class EntityEditTreeCell extends TextFieldTreeCell<DisplayWrapper<?>> {
         super.updateItem(item, empty);
 
         if (!empty && getTreeItem().getParent() != null) {
-            setContextMenu(ContextMenuBuilder.forItem(popOverHolder, getTreeItem(), this::getNode));
+            setContextMenu(ContextMenuBuilder.forItem(study, popOverHolder, getTreeItem(), this::getNode));
         }
     }
 

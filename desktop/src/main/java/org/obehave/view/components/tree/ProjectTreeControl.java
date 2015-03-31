@@ -37,7 +37,7 @@ public class ProjectTreeControl extends TreeView<DisplayWrapper<?>> {
         this.study = study;
 
         PopOverHolder popOverHolder = new PopOverHolder(study);
-        setCellFactory(param -> new EntityEditTreeCell(popOverHolder));
+        setCellFactory(param -> new EntityEditTreeCell(study, popOverHolder));
 
         redoTree();
     }

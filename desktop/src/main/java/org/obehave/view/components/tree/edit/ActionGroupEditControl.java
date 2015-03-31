@@ -5,8 +5,6 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import org.obehave.model.Action;
 import org.obehave.model.Node;
-import org.obehave.service.ActionService;
-import org.obehave.service.NodeService;
 import org.obehave.service.Study;
 import org.obehave.view.util.AlertUtil;
 import org.slf4j.Logger;
@@ -18,8 +16,6 @@ import org.slf4j.LoggerFactory;
  */
 public class ActionGroupEditControl {
     private static final Logger log = LoggerFactory.getLogger(ActionGroupEditControl.class);
-    private static final ActionService actionService = ActionService.getInstance();
-    private static final NodeService nodeService = NodeService.getInstance();
 
     private Node loadedActionNode;
     private Runnable saveCallback;
@@ -86,7 +82,7 @@ public class ActionGroupEditControl {
             node.setExclusivity(Node.Exclusivity.NOT_EXCLUSIVE);
         }
 
-        nodeService.save(study.getActions());
+        study.getNodeService().save(study.getActions());
 
         loadedActionNode = null;
         saveCallback.run();

@@ -8,8 +8,7 @@ import javafx.stage.FileChooser;
 import org.joda.time.DateTime;
 import org.obehave.model.Node;
 import org.obehave.model.Observation;
-import org.obehave.service.NodeService;
-import org.obehave.service.ObservationService;
+import org.obehave.service.Study;
 import org.obehave.view.util.AlertUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,12 +21,12 @@ import java.time.LocalDate;
  */
 public class ObservationEditControl {
     private static final Logger log = LoggerFactory.getLogger(ObservationEditControl.class);
-    private static final ObservationService observationService = ObservationService.getInstance();
-    private static final NodeService nodeService = NodeService.getInstance();
 
     private Node loadedObservationNode;
 
     private Runnable saveCallback;
+
+    private Study study;
 
     @FXML
     private TextField name;
@@ -124,11 +123,11 @@ public class ObservationEditControl {
             o.setDateTime(dt);
         }
 
-        observationService.save(o);
+        study.getObservationService().save(o);
         if (loadedObservationNode.getData() == null) {
             loadedObservationNode.addChild(o);
         }
-        nodeService.save(loadedObservationNode);
+        study.getNodeService().save(loadedObservationNode);
 
         loadedObservationNode = null;
         saveCallback.run();
@@ -140,5 +139,9 @@ public class ObservationEditControl {
 
     public void setSaveCallback(Runnable saveCallback) {
         this.saveCallback = saveCallback;
+    }
+
+    public void setStudy(Study study) {
+        this.study = study;
     }
 }

@@ -201,7 +201,7 @@ public class ModifierFactory extends BaseEntity implements Displayable {
     private Modifier createEnumerationModifier(String input) throws FactoryException {
         validateType(Type.ENUMERATION_MODIFIER_FACTORY);
 
-        // check if input is in validValues
+        // checkBeforeSave if input is in validValues
         for (EnumerationItem item : validValues) {
             if (item.getValue().equals(input)) {
                 return new Modifier(this, input);

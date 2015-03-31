@@ -6,8 +6,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import org.obehave.model.Node;
 import org.obehave.model.Subject;
-import org.obehave.service.NodeService;
-import org.obehave.service.SubjectService;
+import org.obehave.service.Study;
 import org.obehave.view.util.AlertUtil;
 import org.obehave.view.util.ColorConverter;
 import org.slf4j.Logger;
@@ -19,8 +18,8 @@ import org.slf4j.LoggerFactory;
  */
 public class SubjectEditControl {
     private static final Logger log = LoggerFactory.getLogger(SubjectEditControl.class);
-    private static final SubjectService subjectService = SubjectService.getInstance();
-    private static final NodeService nodeService = NodeService.getInstance();
+
+    private Study study;
 
     private Node loadedSubjectNode;
     private Runnable saveCallback;
@@ -94,11 +93,11 @@ public class SubjectEditControl {
         subject.setAlias(getAlias());
         subject.setColor(ColorConverter.convertToObehave(colorPicker.getValue()));
 
-        subjectService.save(subject);
+        study.getSubjectService().save(subject);
         if (loadedSubjectNode.getData() == null) {
             loadedSubjectNode.addChild(subject);
         }
-        nodeService.save(loadedSubjectNode);
+        study.getNodeService().save(loadedSubjectNode);
 
         loadedSubjectNode = null;
         saveCallback.run();
@@ -110,5 +109,9 @@ public class SubjectEditControl {
 
     public void setSaveCallback(Runnable saveCallback) {
         this.saveCallback = saveCallback;
+    }
+
+    public void setStudy(Study study) {
+        this.study = study;
     }
 }
