@@ -3,7 +3,7 @@ package org.obehave.view.components.tree;
 import javafx.scene.control.cell.TextFieldTreeCell;
 import javafx.scene.input.MouseEvent;
 import org.obehave.events.EventBusHolder;
-import org.obehave.events.LoadObservationEvent;
+import org.obehave.events.UiEvent;
 import org.obehave.model.Node;
 import org.obehave.model.Observation;
 import org.obehave.service.Study;
@@ -40,7 +40,7 @@ public class EntityEditTreeCell extends TextFieldTreeCell<DisplayWrapper<?>> {
             if (event.isShortcutDown() && node.getData() != null) {
                 popOverHolder.get(node).show(ownerNode);
             } else if (event.getClickCount() >= 2 && node.getData() != null && node.getDataType() == Observation.class) {
-                EventBusHolder.post(new LoadObservationEvent((Observation) node.getData()));
+                EventBusHolder.post(new UiEvent.LoadObservation((Observation) node.getData()));
             }
         }
     }

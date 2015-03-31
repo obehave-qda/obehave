@@ -7,7 +7,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import org.controlsfx.control.textfield.TextFields;
 import org.obehave.events.EventBusHolder;
-import org.obehave.events.LoadObservationEvent;
+import org.obehave.events.UiEvent;
 import org.obehave.model.Observation;
 import org.obehave.service.Study;
 import org.obehave.view.components.observation.coding.CodingControl;
@@ -67,7 +67,7 @@ public class ObservationControl extends BorderPane {
     }
 
     @Subscribe
-    public void loadObservation(LoadObservationEvent event) {
+    public void loadObservation(UiEvent.LoadObservation event) {
         log.debug("Loading observation, because of {}", event);
 
         Observation observation = event.getObservation();

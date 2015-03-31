@@ -2,7 +2,7 @@ package org.obehave.service;
 
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import org.obehave.events.EventBusHolder;
-import org.obehave.events.RepaintStudyEvent;
+import org.obehave.events.UiEvent;
 import org.obehave.exceptions.Validate;
 import org.obehave.model.*;
 import org.obehave.model.modifier.ModifierFactory;
@@ -147,7 +147,7 @@ public class Study implements Displayable {
         this.name = name;
         DatabaseProperties.set(DatabaseProperties.STUDY_NAME, name);
 
-        EventBusHolder.post(new RepaintStudyEvent());
+        EventBusHolder.post(new UiEvent.RepaintStudyTree());
     }
 
     public File getSavePath() {
