@@ -7,7 +7,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import org.obehave.events.EventBusHolder;
-import org.obehave.events.RepaintStudyEvent;
+import org.obehave.events.UiEvent;
 import org.obehave.exceptions.ServiceException;
 import org.obehave.model.Action;
 import org.obehave.model.Displayable;
@@ -159,7 +159,7 @@ public class ActionEditControl {
     }
 
     @Subscribe
-    public void refreshModifierFactories(RepaintStudyEvent event) {
+    public void refreshModifierFactories(UiEvent.RepaintStudyTree event) {
         modifierFactoryCombo.getItems().clear();
         modifierFactoryCombo.getItems().add(DisplayWrapper.of(null));
 

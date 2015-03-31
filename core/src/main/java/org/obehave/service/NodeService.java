@@ -1,7 +1,7 @@
 package org.obehave.service;
 
 import org.obehave.events.EventBusHolder;
-import org.obehave.events.RepaintStudyEvent;
+import org.obehave.events.UiEvent;
 import org.obehave.exceptions.ServiceException;
 import org.obehave.model.Node;
 import org.obehave.persistence.Daos;
@@ -25,7 +25,7 @@ public class NodeService {
             throw new ServiceException(e);
         }
 
-        EventBusHolder.post(new RepaintStudyEvent());
+        EventBusHolder.post(new UiEvent.RepaintStudyTree());
     }
 
     public void delete(Node node) throws ServiceException {
@@ -35,6 +35,6 @@ public class NodeService {
             throw new ServiceException(e);
         }
 
-        EventBusHolder.post(new RepaintStudyEvent());
+        EventBusHolder.post(new UiEvent.RepaintStudyTree());
     }
 }

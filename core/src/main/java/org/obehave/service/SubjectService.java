@@ -1,7 +1,7 @@
 package org.obehave.service;
 
 import org.obehave.events.EventBusHolder;
-import org.obehave.events.RepaintStudyEvent;
+import org.obehave.events.UiEvent;
 import org.obehave.exceptions.ServiceException;
 import org.obehave.model.Displayable;
 import org.obehave.model.Subject;
@@ -26,7 +26,7 @@ public class SubjectService extends BaseEntityService<Subject> {
             throw new ServiceException(e);
         }
 
-        EventBusHolder.post(new RepaintStudyEvent());
+        EventBusHolder.post(new UiEvent.RepaintStudyTree());
     }
 
     @Override
@@ -47,6 +47,6 @@ public class SubjectService extends BaseEntityService<Subject> {
             throw new ServiceException(e);
         }
 
-        EventBusHolder.post(new RepaintStudyEvent());
+        EventBusHolder.post(new UiEvent.RepaintStudyTree());
     }
 }
