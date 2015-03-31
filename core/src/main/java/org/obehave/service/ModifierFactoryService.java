@@ -18,6 +18,8 @@ public class ModifierFactoryService extends BaseEntityService<ModifierFactory> {
     }
 
     public void save(ModifierFactory mf) throws ServiceException {
+        checkBeforeSave(mf);
+
         try {
             Daos.get().modifierFactory().createOrUpdate(mf);
         } catch (SQLException e) {
