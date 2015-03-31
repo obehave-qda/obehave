@@ -19,6 +19,7 @@ dependencies {
         versionGson = "2.3.1"
 
         versionH2 = "1.4.184"
+        versionApachePoi = "3.11"
     }
 
     compile "org.apache.commons:commons-lang3:$versionCommonsLang"
@@ -39,5 +40,9 @@ dependencies {
     compile "joda-time:joda-time:$versionJoda"
 
     compile "com.google.code.gson:gson:$versionGson"
+
+    compile "org.apache.poi:poi:$versionApachePoi"
+
+    compile "org.apache.poi:poi-ooxml:$versionApachePoi"
 }
 
