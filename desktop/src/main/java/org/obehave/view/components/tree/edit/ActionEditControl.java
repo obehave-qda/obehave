@@ -8,6 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import org.obehave.events.EventBusHolder;
 import org.obehave.events.RepaintStudyEvent;
+import org.obehave.exceptions.ServiceException;
 import org.obehave.model.Action;
 import org.obehave.model.Displayable;
 import org.obehave.model.Node;
@@ -130,14 +131,18 @@ public class ActionEditControl {
         action.setModifierFactory(modifierFactoryCombo.getSelectionModel().getSelectedItem().get());
 
 
-        study.getActionService().save(action);
-        if (!edit) {
-            loadedActionNode.addChild(action);
-        }
-        study.getNodeService().save(loadedActionNode);
+        try {
+            study.getActionService().save(action);
+            if (!edit) {
+                loadedActionNode.addChild(action);
+            }
+            study.getNodeService().save(loadedActionNode);
 
-        loadedActionNode = null;
-        saveCallback.run();
+            loadedActionNode = null;
+            saveCallback.run();
+        } catch (ServiceException exception) {
+            AlertUtil.showError("Error", exception.getMessage());
+        }
     }
 
     public void cancel() {

@@ -29,10 +29,12 @@ public class ModifierFactoryService extends BaseEntityService<ModifierFactory> {
 
     @Override
     protected void checkBeforeSave(ModifierFactory mf) throws ServiceException {
-        for (Displayable existingSubject : getStudy().getModifierFactories().flatten()) {
-            ModifierFactory existing = (ModifierFactory) existingSubject;
-            if (existing.getName().equals(mf.getName()) || existing.getAlias().equals(mf.getAlias())) {
-                throw new ServiceException("Name and alias have to be unique!");
+        for (Displayable existingModifierFactory : getStudy().getModifierFactories().flatten()) {
+            ModifierFactory existing = (ModifierFactory) existingModifierFactory;
+            if (!existing.getId().equals(mf.getId()) &&
+                    (existing.getName().equals(mf.getName()) || existing.getAlias().equals(mf.getAlias()))) {
+                throw new ServiceException("Name and alias have to be unique! Found in: " +
+                        existingModifierFactory.getDisplayString());
             }
         }
     }

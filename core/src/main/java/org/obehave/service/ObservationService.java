@@ -30,11 +30,12 @@ public class ObservationService extends BaseEntityService<Observation> {
     }
 
     @Override
-    protected void checkBeforeSave(Observation subject) throws ServiceException {
-        for (Displayable existingSubject : getStudy().getObservations().flatten()) {
-            Observation existing = (Observation) existingSubject;
-            if (existing.getName().equals(subject.getName())) {
-                throw new ServiceException("Name has to be unique!");
+    protected void checkBeforeSave(Observation observation) throws ServiceException {
+        for (Displayable existingObservation : getStudy().getObservations().flatten()) {
+            Observation existing = (Observation) existingObservation;
+            if (!existing.getId().equals(observation.getId()) &&
+                    (existing.getName().equals(observation.getName()))) {
+                throw new ServiceException("Name has to be unique! Found in " + existingObservation.getDisplayString());
             }
         }
     }

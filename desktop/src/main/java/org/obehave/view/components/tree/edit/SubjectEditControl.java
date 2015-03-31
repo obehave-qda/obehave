@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
+import org.obehave.exceptions.ServiceException;
 import org.obehave.model.Node;
 import org.obehave.model.Subject;
 import org.obehave.service.Study;
@@ -93,14 +94,18 @@ public class SubjectEditControl {
         subject.setAlias(getAlias());
         subject.setColor(ColorConverter.convertToObehave(colorPicker.getValue()));
 
-        study.getSubjectService().save(subject);
-        if (loadedSubjectNode.getData() == null) {
-            loadedSubjectNode.addChild(subject);
-        }
-        study.getNodeService().save(loadedSubjectNode);
+        try {
+            study.getSubjectService().save(subject);
+            if (loadedSubjectNode.getData() == null) {
+                loadedSubjectNode.addChild(subject);
+            }
+            study.getNodeService().save(loadedSubjectNode);
 
-        loadedSubjectNode = null;
-        saveCallback.run();
+            loadedSubjectNode = null;
+            saveCallback.run();
+        } catch (ServiceException exception) {
+            AlertUtil.showError("Error", exception.getMessage());
+        }
     }
 
     public void cancel() {
