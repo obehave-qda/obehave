@@ -53,9 +53,11 @@ public class ObservationControl extends BorderPane {
         codingControl.maxHeightProperty().bind(heightProperty().divide(3));
 
         TextFields.bindAutoCompletion(inputSubject,
-                p -> (study.getSuggestionService().getSubjectSuggestions(p.getUserText())));
+                p -> (study.getSuggestionService().getSubjectSuggestions(p.getUserText())))
+                .setOnAutoCompleted(e -> inputAction.requestFocus());
         TextFields.bindAutoCompletion(inputAction,
-                p -> (study.getSuggestionService().getActionSuggestions(p.getUserText())));
+                p -> (study.getSuggestionService().getActionSuggestions(p.getUserText())))
+                .setOnAutoCompleted(e -> inputModifier.requestFocus());
         TextFields.bindAutoCompletion(inputModifier,
                 p -> (study.getSuggestionService().getModifierSuggestions(inputAction.getText(), p.getUserText())));
     }
