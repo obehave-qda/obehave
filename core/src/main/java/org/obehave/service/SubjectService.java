@@ -3,6 +3,7 @@ package org.obehave.service;
 import org.obehave.events.EventBusHolder;
 import org.obehave.events.RepaintStudyEvent;
 import org.obehave.exceptions.ServiceException;
+import org.obehave.model.Displayable;
 import org.obehave.model.Subject;
 import org.obehave.persistence.Daos;
 
@@ -11,25 +12,31 @@ import java.sql.SQLException;
 /**
  * @author Markus Möslinger
  */
-public class SubjectService {
-    private static final SubjectService instance = new SubjectService();
-
-    private SubjectService() {
-
+public class SubjectService extends BaseEntityService<Subject> {
+    protected SubjectService(Study study) {
+        super(study, study.getSubjects());
     }
 
-    public static SubjectService getInstance() {
-        return instance;
-    }
+    public void save(Subject subject) throws ServiceException {
+        checkBeforeSave(subject);
 
-    public void save(Subject s) throws ServiceException {
         try {
-            Daos.get().subject().createOrUpdate(s);
+            Daos.get().subject().createOrUpdate(subject);
         } catch (SQLException e) {
             throw new ServiceException(e);
         }
 
         EventBusHolder.post(new RepaintStudyEvent());
+    }
+
+    @Override
+    protected void checkBeforeSave(Subject subject) throws ServiceException {
+        for (Displayable existingSubject : getStudy().getSubjects().flatten()) {
+            Subject existing = (Subject) existingSubject;
+            if (existing.getName().equals(subject.getName()) || existing.getAlias().equals(subject.getAlias())) {
+                throw new ServiceException("Name and alias have to be unique!");
+            }
+        }
     }
 
     public void delete(Subject s) throws ServiceException {

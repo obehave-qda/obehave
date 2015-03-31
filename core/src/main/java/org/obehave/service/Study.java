@@ -30,6 +30,13 @@ public class Study implements Displayable {
     private Node observations = new Node(Observation.class);
     private Node modifierFactories = new Node(ModifierFactory.class);
 
+    private SuggestionService suggestionService = new SuggestionService(this);
+    private ActionService actionService = new ActionService(this);
+    private NodeService nodeService = new NodeService(this);
+    private ModifierFactoryService modifierFactoryService = new ModifierFactoryService(this);
+    private ObservationService observationService = new ObservationService(this);
+    private SubjectService subjectService = new SubjectService(this);
+
     private File savePath;
 
     private Study() {
@@ -243,5 +250,29 @@ public class Study implements Displayable {
     @Override
     public String getDisplayString() {
         return getName();
+    }
+
+    public SuggestionService getSuggestionService() {
+        return suggestionService;
+    }
+
+    public ActionService getActionService() {
+        return actionService;
+    }
+
+    public ObservationService getObservationService() {
+        return observationService;
+    }
+
+    public ModifierFactoryService getModifierFactoryService() {
+        return modifierFactoryService;
+    }
+
+    public NodeService getNodeService() {
+        return nodeService;
+    }
+
+    public SubjectService getSubjectService() {
+        return subjectService;
     }
 }

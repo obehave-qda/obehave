@@ -12,8 +12,6 @@ import org.obehave.model.Action;
 import org.obehave.model.Displayable;
 import org.obehave.model.Node;
 import org.obehave.model.modifier.ModifierFactory;
-import org.obehave.service.ActionService;
-import org.obehave.service.NodeService;
 import org.obehave.service.Study;
 import org.obehave.util.DisplayWrapper;
 import org.obehave.view.util.AlertUtil;
@@ -26,8 +24,6 @@ import org.slf4j.LoggerFactory;
  */
 public class ActionEditControl {
     private static final Logger log = LoggerFactory.getLogger(ActionEditControl.class);
-    private static final ActionService actionService = ActionService.getInstance();
-    private static final NodeService nodeService = NodeService.getInstance();
 
     private Node loadedActionNode;
     private Runnable saveCallback;
@@ -134,11 +130,11 @@ public class ActionEditControl {
         action.setModifierFactory(modifierFactoryCombo.getSelectionModel().getSelectedItem().get());
 
 
-        actionService.save(action);
+        study.getActionService().save(action);
         if (!edit) {
             loadedActionNode.addChild(action);
         }
-        nodeService.save(loadedActionNode);
+        study.getNodeService().save(loadedActionNode);
 
         loadedActionNode = null;
         saveCallback.run();

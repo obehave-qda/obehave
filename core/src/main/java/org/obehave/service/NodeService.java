@@ -12,14 +12,10 @@ import java.sql.SQLException;
  * @author Markus Möslinger
  */
 public class NodeService {
-    private static final NodeService instance = new NodeService();
+    private final Study study;
 
-    private NodeService() {
-
-    }
-
-    public static NodeService getInstance() {
-        return instance;
+    protected NodeService(Study study) {
+        this.study = study;
     }
 
     public void save(Node node) throws ServiceException {

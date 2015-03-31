@@ -3,6 +3,7 @@ package org.obehave.service;
 import org.obehave.events.EventBusHolder;
 import org.obehave.events.RepaintStudyEvent;
 import org.obehave.exceptions.ServiceException;
+import org.obehave.model.Displayable;
 import org.obehave.model.modifier.ModifierFactory;
 import org.obehave.persistence.Daos;
 
@@ -11,15 +12,9 @@ import java.sql.SQLException;
 /**
  * @author Markus Möslinger
  */
-public class ModifierFactoryService {
-    private static final ModifierFactoryService instance = new ModifierFactoryService();
-
-    private ModifierFactoryService() {
-
-    }
-
-    public static ModifierFactoryService getInstance() {
-        return instance;
+public class ModifierFactoryService extends BaseEntityService<ModifierFactory> {
+    protected ModifierFactoryService(Study study) {
+        super(study, study.getModifierFactories());
     }
 
     public void save(ModifierFactory mf) throws ServiceException {
@@ -30,6 +25,16 @@ public class ModifierFactoryService {
         }
 
         EventBusHolder.post(new RepaintStudyEvent());
+    }
+
+    @Override
+    protected void checkBeforeSave(ModifierFactory mf) throws ServiceException {
+        for (Displayable existingSubject : getStudy().getModifierFactories().flatten()) {
+            ModifierFactory existing = (ModifierFactory) existingSubject;
+            if (existing.getName().equals(mf.getName()) || existing.getAlias().equals(mf.getAlias())) {
+                throw new ServiceException("Name and alias have to be unique!");
+            }
+        }
     }
 
     public void delete(ModifierFactory mf) throws ServiceException {
