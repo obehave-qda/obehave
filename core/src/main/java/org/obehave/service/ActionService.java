@@ -33,8 +33,9 @@ public class ActionService extends BaseEntityService<Action> {
     protected void checkBeforeSave(Action action) throws ServiceException {
         for (Displayable existingAction : getStudy().getActions().flatten()) {
             Action existing = (Action) existingAction;
-            if (existing.getName().equals(action.getName()) || existing.getAlias().equals(action.getAlias())) {
-                throw new ServiceException("Name and alias have to be unique!");
+            if (!existing.getId().equals(action.getId()) &&
+                    (existing.getName().equals(action.getName()) || existing.getAlias().equals(action.getAlias()))) {
+                throw new ServiceException("Name and alias have to be unique! Found in " + existingAction.getDisplayString());
             }
         }
     }

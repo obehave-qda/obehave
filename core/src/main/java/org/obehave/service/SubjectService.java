@@ -33,8 +33,9 @@ public class SubjectService extends BaseEntityService<Subject> {
     protected void checkBeforeSave(Subject subject) throws ServiceException {
         for (Displayable existingSubject : getStudy().getSubjects().flatten()) {
             Subject existing = (Subject) existingSubject;
-            if (existing.getName().equals(subject.getName()) || existing.getAlias().equals(subject.getAlias())) {
-                throw new ServiceException("Name and alias have to be unique!");
+            if (!existing.getId().equals(subject.getId()) &&
+                    (existing.getName().equals(subject.getName()) || existing.getAlias().equals(subject.getAlias()))) {
+                throw new ServiceException("Name and alias have to be unique! Found in: " + existingSubject.getDisplayString());
             }
         }
     }

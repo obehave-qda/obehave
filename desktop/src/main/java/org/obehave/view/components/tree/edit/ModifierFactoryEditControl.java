@@ -12,6 +12,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import org.controlsfx.control.CheckListView;
+import org.obehave.exceptions.ServiceException;
 import org.obehave.model.Displayable;
 import org.obehave.model.Node;
 import org.obehave.model.Subject;
@@ -179,14 +180,18 @@ public class ModifierFactoryEditControl implements Initializable {
 
         mf.setName(name.getText());
 
-        study.getModifierFactoryService().save(mf);
-        if (mfNull) {
-            loadedModifierFactoryNode.addChild(mf);
-        }
-        study.getNodeService().save(loadedModifierFactoryNode);
+        try {
+            study.getModifierFactoryService().save(mf);
+            if (mfNull) {
+                loadedModifierFactoryNode.addChild(mf);
+            }
+            study.getNodeService().save(loadedModifierFactoryNode);
 
-        loadedModifierFactoryNode = null;
-        saveCallback.run();
+            loadedModifierFactoryNode = null;
+            saveCallback.run();
+        } catch (ServiceException exception) {
+            AlertUtil.showError("Error", exception.getMessage());
+        }
     }
 
     private String[] getAddedValues() {

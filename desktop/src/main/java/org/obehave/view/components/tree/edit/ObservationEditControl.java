@@ -6,6 +6,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import org.joda.time.DateTime;
+import org.obehave.exceptions.ServiceException;
 import org.obehave.model.Node;
 import org.obehave.model.Observation;
 import org.obehave.service.Study;
@@ -123,14 +124,18 @@ public class ObservationEditControl {
             o.setDateTime(dt);
         }
 
-        study.getObservationService().save(o);
-        if (loadedObservationNode.getData() == null) {
-            loadedObservationNode.addChild(o);
-        }
-        study.getNodeService().save(loadedObservationNode);
+        try {
+            study.getObservationService().save(o);
+            if (loadedObservationNode.getData() == null) {
+                loadedObservationNode.addChild(o);
+            }
+            study.getNodeService().save(loadedObservationNode);
 
-        loadedObservationNode = null;
-        saveCallback.run();
+            loadedObservationNode = null;
+            saveCallback.run();
+        } catch (ServiceException exception) {
+            AlertUtil.showError("Error", exception.getMessage());
+        }
     }
 
     public void cancel() {

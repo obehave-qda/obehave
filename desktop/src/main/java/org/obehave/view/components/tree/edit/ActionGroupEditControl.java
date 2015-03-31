@@ -3,6 +3,7 @@ package org.obehave.view.components.tree.edit;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
+import org.obehave.exceptions.ServiceException;
 import org.obehave.model.Action;
 import org.obehave.model.Node;
 import org.obehave.service.Study;
@@ -82,10 +83,15 @@ public class ActionGroupEditControl {
             node.setExclusivity(Node.Exclusivity.NOT_EXCLUSIVE);
         }
 
-        study.getNodeService().save(study.getActions());
+        try {
 
-        loadedActionNode = null;
-        saveCallback.run();
+            study.getNodeService().save(study.getActions());
+
+            loadedActionNode = null;
+            saveCallback.run();
+        } catch (ServiceException exception) {
+            AlertUtil.showError("Error", exception.getMessage());
+        }
     }
 
     public void cancel() {
