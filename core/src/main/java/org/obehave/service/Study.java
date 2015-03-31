@@ -30,12 +30,12 @@ public class Study implements Displayable {
     private Node observations = new Node(Observation.class);
     private Node modifierFactories = new Node(ModifierFactory.class);
 
-    private SuggestionService suggestionService = new SuggestionService(this);
-    private ActionService actionService = new ActionService(this);
-    private NodeService nodeService = new NodeService(this);
-    private ModifierFactoryService modifierFactoryService = new ModifierFactoryService(this);
-    private ObservationService observationService = new ObservationService(this);
-    private SubjectService subjectService = new SubjectService(this);
+    private SuggestionService suggestionService;
+    private ActionService actionService;
+    private NodeService nodeService;
+    private ModifierFactoryService modifierFactoryService;
+    private ObservationService observationService;
+    private SubjectService subjectService;
 
     private File savePath;
 
@@ -253,26 +253,50 @@ public class Study implements Displayable {
     }
 
     public SuggestionService getSuggestionService() {
+        if (suggestionService == null) {
+            suggestionService = new SuggestionService(this);
+        }
+
         return suggestionService;
     }
 
     public ActionService getActionService() {
+        if (actionService == null) {
+            actionService = new ActionService(this);
+        }
+
         return actionService;
     }
 
     public ObservationService getObservationService() {
+        if (observationService == null) {
+            observationService = new ObservationService(this);
+        }
+
         return observationService;
     }
 
     public ModifierFactoryService getModifierFactoryService() {
+        if (modifierFactoryService == null) {
+            modifierFactoryService = new ModifierFactoryService(this);
+        }
+
         return modifierFactoryService;
     }
 
     public NodeService getNodeService() {
+        if (nodeService == null) {
+            nodeService = new NodeService(this);
+        }
+
         return nodeService;
     }
 
     public SubjectService getSubjectService() {
+        if (subjectService == null) {
+            subjectService = new SubjectService(this);
+        }
+
         return subjectService;
     }
 }

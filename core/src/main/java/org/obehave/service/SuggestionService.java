@@ -62,7 +62,7 @@ public class SuggestionService {
     }
 
     public Collection<String> getModifierSuggestions(String enteredAction, String enteredText) {
-        List<String> suggestedActions = new ArrayList<>();
+        List<String> validValues = new ArrayList<>();
         Action action = study.getActionService().getForName(enteredAction);
 
         if (action != null && action.getModifierFactory() != null) {
@@ -70,18 +70,29 @@ public class SuggestionService {
 
             switch (mf.getType()) {
                 case ENUMERATION_MODIFIER_FACTORY:
-                    suggestedActions.addAll(buildEnumerationSuggestions(mf));
+                    validValues.addAll(buildEnumerationSuggestions(mf));
                     break;
                 case SUBJECT_MODIFIER_FACTORY:
-                    suggestedActions.addAll(buildSubjectListSuggestions(mf));
+                    validValues.addAll(buildSubjectListSuggestions(mf));
                     break;
                 case DECIMAL_RANGE_MODIFIER_FACTORY:
-                    suggestedActions.addAll(buildDecimalRangeSuggestions(mf));
+                    validValues.addAll(buildDecimalRangeSuggestions(mf));
                     break;
             }
         }
 
-        return suggestedActions;
+        if (enteredText != null && !enteredText.isEmpty()) {
+            List<String> filteredValues = new ArrayList<>();
+            for (String value : validValues) {
+                if (value.contains(enteredText)) {
+                    filteredValues.add(value);
+                }
+            }
+
+            validValues = filteredValues;
+        }
+
+        return validValues;
     }
 
     private Collection<String> buildEnumerationSuggestions(ModifierFactory mf) {

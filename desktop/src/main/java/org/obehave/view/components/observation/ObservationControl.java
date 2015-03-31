@@ -56,6 +56,8 @@ public class ObservationControl extends BorderPane {
                 p -> (study.getSuggestionService().getSubjectSuggestions(p.getUserText())));
         TextFields.bindAutoCompletion(inputAction,
                 p -> (study.getSuggestionService().getActionSuggestions(p.getUserText())));
+        TextFields.bindAutoCompletion(inputModifier,
+                p -> (study.getSuggestionService().getModifierSuggestions(inputAction.getText(), p.getUserText())));
     }
 
     public void loadVideo(File video) {
