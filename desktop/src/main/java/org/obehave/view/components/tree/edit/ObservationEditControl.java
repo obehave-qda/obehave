@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.stage.FileChooser;
 import org.joda.time.DateTime;
 import org.obehave.exceptions.ServiceException;
@@ -65,8 +66,11 @@ public class ObservationEditControl {
 
         if (videoPath != null) {
             video.setText(videoPath.getName());
+            video.setTooltip(new Tooltip(videoPath.getAbsolutePath()));
+            video.getTooltip().setStyle("-fx-background-color: white;");
         } else {
             video.setText("Select video...");
+            video.setTooltip(null);
         }
     }
 
