@@ -128,7 +128,6 @@ public class SubjectAdapter extends BaseAdapter{
             convertView.setTag(holder);
         }
 
-
         return convertView;
     }
 
@@ -155,9 +154,12 @@ public class SubjectAdapter extends BaseAdapter{
 
     private void fillViewHolder(ViewHolderSubject holder, Subject subject){
         if(subject != null){
-            int red = subject.getColor().getRed();
-            int blue = subject.getColor().getBlue();
-            int green = subject.getColor().getGreen();
+            int red = 0, blue = 0, green = 0;
+            if(subject.getColor() != null) {
+                red = subject.getColor().getRed();
+                blue = subject.getColor().getBlue();
+                green = subject.getColor().getGreen();
+            }
 
             holder.txtView.setText(subject.getDisplayString());
             holder.circle.setCircleColor(Color.rgb(red, green, blue));
@@ -177,7 +179,4 @@ public class SubjectAdapter extends BaseAdapter{
 
         this.notifyDataSetChanged();
     }
-
-
-
 }

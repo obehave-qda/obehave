@@ -7,7 +7,7 @@ public class ApplicationServiceTest {
 
     @Before
     public void setup(){
-        ApplicationService.reset();
+       // Application.reset();
     }
 
     @Test

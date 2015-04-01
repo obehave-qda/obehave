@@ -14,7 +14,7 @@ import org.obehave.android.R;
 import org.obehave.android.ui.events.TimerStartEvent;
 import org.obehave.android.ui.events.TimerStopEvent;
 import org.obehave.android.ui.events.TimerTaskEvent;
-import org.obehave.android.ui.util.DateTimeHelper;
+import org.obehave.android.util.DateTimeHelper;
 import org.obehave.events.EventBusHolder;
 
 public class RunningCodingsFragment extends CodingListBaseFragment {

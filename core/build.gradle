@@ -18,7 +18,7 @@ dependencies {
 
         versionGson = "2.3.1"
 
-        versionH2 = "1.4.184"
+        versionH2 = "1.3.176"
     }
 
     compile "org.apache.commons:commons-lang3:$versionCommonsLang"
