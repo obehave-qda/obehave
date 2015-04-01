@@ -30,7 +30,7 @@ public class Study implements Displayable {
     private Node observations = new Node(Observation.class);
     private Node modifierFactories = new Node(ModifierFactory.class);
 
-    private SuggestionService suggestionService;
+    private SuggestionService.SuggestionServiceBuilder suggestionServiceBuilder;
     private ActionService actionService;
     private NodeService nodeService;
     private ModifierFactoryService modifierFactoryService;
@@ -175,12 +175,12 @@ public class Study implements Displayable {
         return getName();
     }
 
-    public SuggestionService getSuggestionService() {
-        if (suggestionService == null) {
-            suggestionService = new SuggestionService(this);
+    public SuggestionService.SuggestionServiceBuilder getSuggestionServiceBuilder() {
+        if (suggestionServiceBuilder == null) {
+            suggestionServiceBuilder = new SuggestionService.SuggestionServiceBuilder(this);
         }
 
-        return suggestionService;
+        return suggestionServiceBuilder;
     }
 
     public ActionService getActionService() {

@@ -21,6 +21,7 @@ public class ObservationControl extends BorderPane {
     private final Logger log = LoggerFactory.getLogger(ObservationControl.class);
 
     private Study study;
+    private Observation observation;
 
     @FXML
     private VideoControl videoControl;
@@ -53,13 +54,13 @@ public class ObservationControl extends BorderPane {
         codingControl.maxHeightProperty().bind(heightProperty().divide(3));
 
         TextFields.bindAutoCompletion(inputSubject,
-                p -> (study.getSuggestionService().getSubjectSuggestions(p.getUserText())))
+                p -> (study.getSuggestionServiceBuilder().build(observation).getSubjectSuggestions(p.getUserText())))
                 .setOnAutoCompleted(e -> inputAction.requestFocus());
         TextFields.bindAutoCompletion(inputAction,
-                p -> (study.getSuggestionService().getActionSuggestions(p.getUserText())))
+                p -> (study.getSuggestionServiceBuilder().build(observation).getActionSuggestions(p.getUserText())))
                 .setOnAutoCompleted(e -> inputModifier.requestFocus());
         TextFields.bindAutoCompletion(inputModifier,
-                p -> (study.getSuggestionService().getModifierSuggestions(inputAction.getText(), p.getUserText())));
+                p -> (study.getSuggestionServiceBuilder().build(observation).getModifierSuggestions(inputAction.getText(), p.getUserText())));
     }
 
     public void loadVideo(File video) {
@@ -70,7 +71,7 @@ public class ObservationControl extends BorderPane {
     public void loadObservation(UiEvent.LoadObservation event) {
         log.debug("Loading observation, because of {}", event);
 
-        Observation observation = event.getObservation();
+        observation = event.getObservation();
         if (observation.getVideo() != null) {
             loadVideo(observation.getVideo());
 
