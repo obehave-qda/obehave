@@ -71,7 +71,7 @@ public class EventsPane extends Pane {
     }
 
     public void addSubject(Subject subject) {
-        SubjectPane pane = new SubjectPane(subject);
+        SubjectPane pane = new SubjectPane();
         int currentSubjectPanes = subjectPanes.size();
 
         pane.setId("subjectPane" + currentSubjectPanes);
@@ -96,6 +96,8 @@ public class EventsPane extends Pane {
     }
 
     public void clear() {
+        log.trace("Clearing pane");
+
         subjectPanes.values().forEach(sp -> getChildren().remove(sp));
         subjectPanes.clear();
 
@@ -103,6 +105,8 @@ public class EventsPane extends Pane {
     }
 
     public void addCoding(Coding coding) {
+        log.trace("Adding coding to pane: {}", coding);
+
         subjectPanes.get(coding.getSubject()).drawCoding(coding);
     }
 

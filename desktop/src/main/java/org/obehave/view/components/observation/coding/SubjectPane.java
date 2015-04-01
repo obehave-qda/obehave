@@ -8,7 +8,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import org.obehave.model.Action;
 import org.obehave.model.Coding;
-import org.obehave.model.Subject;
 import org.obehave.view.util.ColorConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,22 +21,15 @@ import java.util.Map;
 public class SubjectPane extends Pane {
     private static final Logger log = LoggerFactory.getLogger(SubjectPane.class);
 
-    private final Subject subject;
     private DoubleProperty secondWidthProperty = new SimpleDoubleProperty(this, "secondWidthProperty");
     private DoubleProperty currentTimeProperty = new SimpleDoubleProperty(this, "currentTimeProperty");
     private DoubleProperty subjectHeightProperty = new SimpleDoubleProperty(this, "subjectHeightProperty");
 
     private Map<Coding, Rectangle> openCodings = new HashMap<>();
 
-    public SubjectPane(Subject subject) {
-        this.subject = subject;
-    }
-
-    public Subject getSubject() {
-        return subject;
-    }
-
     private void drawPointCoding(Coding coding) {
+        log.trace("Drawing rectangle for point coding {}", coding);
+
         final double position = secondWidthProperty.get() * (coding.getStartMs() / 1000);
         final double x = position - subjectHeightProperty.get() / 2;
 
@@ -48,22 +40,27 @@ public class SubjectPane extends Pane {
     }
 
     private void drawStateCoding(Coding coding) {
+        log.trace("Drawing rectangle for finished state coding {}", coding);
+
         final double positionStart = secondWidthProperty.get() * (coding.getStartMs() / 1000);
         final double positionEnd = secondWidthProperty.get() * (coding.getDuration() / 1000);
 
-        Rectangle rectangle = getRectangle(positionStart, 0, subjectHeightProperty.get(), positionEnd,
+        Rectangle rectangle = getRectangle(positionStart, 0, positionEnd, subjectHeightProperty.get(),
                 coding.getSubject().getColor());
 
         getChildren().add(rectangle);
     }
 
     private void startStateCoding(Coding coding) {
-        final double positionStart = secondWidthProperty.get() * (coding.getStartMs() / 1000);
-        final DoubleBinding positionEnd = secondWidthProperty.multiply(currentTimeProperty);
+        log.trace("Drawing growing rectangle for state coding {}", coding);
 
-        Rectangle rectangle = getRectangle(positionStart, 0, subjectHeightProperty.get(), positionEnd.get(),
+        final double positionStart = secondWidthProperty.get() * (coding.getStartMs() / 1000);
+
+        final DoubleBinding width = new GrowingDoubleBinding(secondWidthProperty.multiply(currentTimeProperty).subtract(positionStart));
+
+        Rectangle rectangle = getRectangle(positionStart, 0, 0, subjectHeightProperty.get(),
                 coding.getSubject().getColor());
-        rectangle.widthProperty().bind(positionEnd);
+        rectangle.widthProperty().bind(width);
 
         getChildren().add(rectangle);
 
@@ -92,6 +89,8 @@ public class SubjectPane extends Pane {
     }
 
     public void endCoding(Coding coding) {
+        log.trace("Stopping rectanlge for coding {}", coding);
+
         final double positionEnd = secondWidthProperty.get() * (coding.getDuration() / 1000);
 
         openCodings.get(coding).setWidth(positionEnd);
@@ -107,5 +106,24 @@ public class SubjectPane extends Pane {
 
     public DoubleProperty subjectHeightProperty() {
         return subjectHeightProperty;
+    }
+
+    private static class GrowingDoubleBinding extends DoubleBinding {
+        private final DoubleBinding binding;
+
+        public GrowingDoubleBinding(DoubleBinding binding) {
+            this.binding = binding;
+            binding.addListener(observable -> invalidate());
+        }
+
+        @Override
+        protected double computeValue() {
+            final double bindingValue = binding.get();
+            if (bindingValue < 0) {
+                return 0;
+            } else {
+                return bindingValue;
+            }
+        }
     }
 }

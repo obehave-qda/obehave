@@ -106,7 +106,12 @@ public class ObservationControl extends BorderPane {
     public void code(KeyEvent event) {
         if (event.getCode() == KeyCode.ENTER) {
             try {
-                codingService.startCoding(inputSubject.getText(), inputAction.getText(), inputModifier.getText(), (long) (currentTimeProperty.get() * 1000));
+                final String subject = inputSubject.getText();
+                final String action = inputAction.getText();
+
+                if (subject != null && !subject.isEmpty() && action != null && !action.isEmpty()) {
+                    codingService.startCoding(subject, action, inputModifier.getText(), (long) (currentTimeProperty.get() * 1000));
+                }
             } catch (ServiceException e) {
                 AlertUtil.showError("Error while coding", "Couldn't code, because " + e.getMessage(), e);
             }

@@ -4,6 +4,8 @@ import org.obehave.events.EventBusHolder;
 import org.obehave.events.UiEvent;
 import org.obehave.exceptions.FactoryException;
 import org.obehave.exceptions.ServiceException;
+import org.obehave.exceptions.Validate;
+import org.obehave.exceptions.ValidationException;
 import org.obehave.model.*;
 import org.obehave.persistence.Daos;
 
@@ -60,6 +62,13 @@ public class CodingService {
     }
 
     public Coding startCoding(String subject, String action, String modifierInput, long startMs) throws ServiceException {
+        try {
+            Validate.isNotEmpty(subject, "Subject");
+            Validate.isNotEmpty(action, "Action");
+        } catch (ValidationException e) {
+            throw new ServiceException(e);
+        }
+
         final Subject s = study.getSubjectService().getForName(subject);
         final Action a = study.getActionService().getForName(action);
 
@@ -67,6 +76,13 @@ public class CodingService {
     }
 
     public Coding startCoding(Subject subject, Action action, String modifierInput, long startMs) throws ServiceException {
+        try {
+            Validate.isNotNull(subject, "Subject");
+            Validate.isNotNull(action, "Action");
+        } catch (ValidationException e) {
+            throw new ServiceException(e);
+        }
+
         Coding coding;
 
         try {
@@ -84,7 +100,7 @@ public class CodingService {
             // this could become a bottleneck. Keep care.
             Node actionParent = study.getActions().getParentOf(action);
             if (actionParent.getExclusivity() != Node.Exclusivity.NOT_EXCLUSIVE) {
-                for (Coding openCoding : openCodings) {
+                for (Coding openCoding : new ArrayList<>(openCodings)) {
                     Node codingParent = study.getActions().getParentOf(openCoding.getAction());
                     if (actionParent.equals(codingParent)) {
                         endCoding(subject, action, startMs);
