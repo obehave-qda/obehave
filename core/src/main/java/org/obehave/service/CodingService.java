@@ -59,11 +59,22 @@ public class CodingService {
         return initialActions;
     }
 
+    public Coding startCoding(String subject, String action, String modifierInput, long startMs) throws ServiceException {
+        final Subject s = study.getSubjectService().getForName(subject);
+        final Action a = study.getActionService().getForName(action);
+
+        return startCoding(s, a, modifierInput, startMs);
+    }
+
     public Coding startCoding(Subject subject, Action action, String modifierInput, long startMs) throws ServiceException {
         Coding coding;
 
         try {
-            coding = new Coding(subject, action, modifierInput, startMs);
+            if (action.getModifierFactory() != null) {
+                coding = new Coding(subject, action, modifierInput, startMs);
+            } else {
+                coding = new Coding(subject, action, startMs);
+            }
 
             if (action.getType() == Action.Type.STATE) {
                 openCodings.add(coding);
