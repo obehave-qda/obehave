@@ -10,7 +10,7 @@ import org.obehave.persistence.impl.CodingDaoImpl;
  * @author Markus Möslinger
  */
 @DatabaseTable(tableName = "Coding", daoClass = CodingDaoImpl.class)
-public class Coding extends BaseEntity {
+public class Coding extends BaseEntity{
     @DatabaseField(columnName = "subject", foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
     private Subject subject;
     @DatabaseField(columnName = "action", foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)

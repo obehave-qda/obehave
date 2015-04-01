@@ -6,13 +6,15 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.joda.time.DateTime;
 
+import java.io.Serializable;
+
 
 /**
  * Serves as a base class for all entities, which will be persisted into sql databases.
  * Provides basic functionality to determin new instances as well as support for optimistic locking.
  */
-public abstract class BaseEntity {
-
+public abstract class BaseEntity implements Serializable {
+    private static final long serialVersionUID = 1L;
     /**
      * Represents the primary key for an object in the sql database.
      * Must be unique within a table, but NOT a subsequent sequence WITHOUT gaps

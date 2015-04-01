@@ -11,7 +11,7 @@ import org.obehave.persistence.impl.PropertyDaoImpl;
  * @author Markus Möslinger
  */
 @DatabaseTable(tableName = "Property", daoClass = PropertyDaoImpl.class)
-public class Property extends BaseEntity {
+public class Property extends BaseEntity{
     public static final String COLUMN_KEY = "key";
     public static final String COLUMN_VALUE = "value";
 

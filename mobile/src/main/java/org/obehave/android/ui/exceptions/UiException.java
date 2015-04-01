@@ -16,7 +16,7 @@ public class UiException extends Exception{
         super(message);
     }
 
-    private Exception getInnerException(){
+    public Exception getInnerException(){
         return innerException;
     }
 }

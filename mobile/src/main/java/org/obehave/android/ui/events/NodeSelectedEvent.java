@@ -1,4 +1,4 @@
-package org.obehave.android.events;
+package org.obehave.android.ui.events;
 
 import org.obehave.android.ui.events.GuiEvent;
 import org.obehave.model.Node;
