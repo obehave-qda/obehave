@@ -6,14 +6,14 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
+import org.obehave.model.Coding;
 import org.obehave.model.Subject;
 import org.obehave.view.util.NodeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The EventsPane contains a list of SubjectPanes, to draw their events correclty
@@ -21,7 +21,7 @@ import java.util.List;
 public class EventsPane extends Pane {
     private static final Logger log = LoggerFactory.getLogger(EventsPane.class);
 
-    private final List<SubjectPane> subjectPanes = new ArrayList<>();
+    private final Map<Subject, SubjectPane> subjectPanes = new HashMap<>();
     private final IntegerProperty subjectPanesSize = new SimpleIntegerProperty(this, "subjectPanesSize");
 
     private DoubleProperty msProperty = new SimpleDoubleProperty(this, "msProperty");
@@ -71,27 +71,34 @@ public class EventsPane extends Pane {
 
         pane.setId("subjectPane" + currentSubjectPanes);
 
+        pane.secondWidthProperty().bind(secondWidthProperty);
+        pane.currentTimeProperty().bind(currentTime);
+
         pane.layoutXProperty().set(0);
         pane.layoutYProperty().bind(subjectHeightProperty.multiply(currentSubjectPanes));
-        pane.prefHeightProperty().bind(subjectHeightProperty);
+        pane.subjectHeightProperty().bind(subjectHeightProperty);
         pane.prefWidthProperty().bind(widthProperty());
 
         getChildren().add(pane);
-        subjectPanes.add(pane);
+        subjectPanes.put(subject, pane);
         subjectPanesSize.setValue(subjectPanes.size());
     }
 
     public void removeSubject(Subject subject) {
-        Iterator<SubjectPane> iter = subjectPanes.iterator();
-        while (iter.hasNext()) {
-            SubjectPane pane = iter.next();
-            if (pane.getSubject().equals(subject)) {
-                getChildren().remove(pane);
-                iter.remove();
-                break;
-            }
-        }
+        subjectPanes.remove(subject);
+
         subjectPanesSize.setValue(subjectPanes.size());
+    }
+
+    public void clear() {
+        subjectPanes.values().forEach(sp -> getChildren().remove(sp));
+        subjectPanes.clear();
+
+        subjectPanesSize.setValue(subjectPanes.size());
+    }
+
+    public void addCoding(Coding coding) {
+        subjectPanes.get(coding.getSubject()).drawCoding(coding);
     }
 
     public void refresh() {

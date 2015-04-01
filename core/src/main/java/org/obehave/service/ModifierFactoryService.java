@@ -3,7 +3,6 @@ package org.obehave.service;
 import org.obehave.events.EventBusHolder;
 import org.obehave.events.UiEvent;
 import org.obehave.exceptions.ServiceException;
-import org.obehave.model.Displayable;
 import org.obehave.model.modifier.ModifierFactory;
 import org.obehave.persistence.Daos;
 
@@ -31,12 +30,13 @@ public class ModifierFactoryService extends BaseEntityService<ModifierFactory> {
 
     @Override
     protected void checkBeforeSave(ModifierFactory mf) throws ServiceException {
-        for (Displayable existingModifierFactory : getStudy().getModifierFactories().flatten()) {
-            ModifierFactory existing = (ModifierFactory) existingModifierFactory;
-            if (!existing.getId().equals(mf.getId()) &&
-                    (existing.getName().equals(mf.getName()) || existing.getAlias().equals(mf.getAlias()))) {
-                throw new ServiceException("Name and alias have to be unique! Found in: " +
-                        existingModifierFactory.getDisplayString());
+        for (ModifierFactory existing : getStudy().getModifierFactoryList()) {
+            if (!existing.getId().equals(mf.getId())) {
+                if (existing.getName().equals(mf.getName())) {
+                    throw new ServiceException("Name has to be unique! Already found in " + existing.getDisplayString());
+                } else if (existing.getAlias() != null && !existing.getAlias().isEmpty() && existing.getAlias().equals(mf.getAlias())) {
+                    throw new ServiceException("Alias has to be unique! Already found in " + existing.getDisplayString());
+                }
             }
         }
     }

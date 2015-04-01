@@ -4,7 +4,6 @@ import org.obehave.events.EventBusHolder;
 import org.obehave.events.UiEvent;
 import org.obehave.exceptions.ServiceException;
 import org.obehave.model.Action;
-import org.obehave.model.Displayable;
 import org.obehave.persistence.Daos;
 
 import java.sql.SQLException;
@@ -31,11 +30,13 @@ public class ActionService extends BaseEntityService<Action> {
 
     @Override
     protected void checkBeforeSave(Action action) throws ServiceException {
-        for (Displayable existingAction : getStudy().getActions().flatten()) {
-            Action existing = (Action) existingAction;
-            if (!existing.getId().equals(action.getId()) &&
-                    (existing.getName().equals(action.getName()) || existing.getAlias().equals(action.getAlias()))) {
-                throw new ServiceException("Name and alias have to be unique! Found in " + existingAction.getDisplayString());
+        for (Action existing : getStudy().getActionList()) {
+            if (!existing.getId().equals(action.getId())) {
+                if (existing.getName().equals(action.getName())) {
+                    throw new ServiceException("Name has to be unique! Already found in " + existing.getDisplayString());
+                } else if (existing.getAlias() != null && !existing.getAlias().isEmpty() && existing.getAlias().equals(action.getAlias())) {
+                    throw new ServiceException("Alias has to be unique! Already found in " + existing.getDisplayString());
+                }
             }
         }
     }

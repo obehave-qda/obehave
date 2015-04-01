@@ -152,6 +152,7 @@ public class CodingControl extends ScrollPane implements Initializable {
     public void addSubject(Subject subject) {
         eventsPane.addSubject(subject);
         subjectsList.addSubject(subject);
+
     }
 
     public void removeSubject(Subject subject) {
@@ -159,8 +160,16 @@ public class CodingControl extends ScrollPane implements Initializable {
         subjectsList.removeSubject(subject);
     }
 
-    public void loadCodings(Observation observation) {
-        // TODO actually load codings and stuff
+    public void clear() {
+        eventsPane.clear();
+        subjectsList.clear();
+    }
+
+    public void loadObservation(Observation observation) {
+        clear();
+
+        observation.getParticipatingSubjects().forEach(this::addSubject);
+        observation.getCodings().forEach(eventsPane::addCoding);
     }
 
     public DoubleProperty currentTime() {

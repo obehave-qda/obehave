@@ -113,7 +113,11 @@ public class Coding extends BaseEntity {
     }
 
     public boolean isStateCoding() {
-        return endMs > startMs;
+        return action.getType() == Action.Type.STATE;
+    }
+
+    public boolean isRunning() {
+        return isStateCoding() && endMs < startMs;
     }
 
     private void validateStateCoding() {
