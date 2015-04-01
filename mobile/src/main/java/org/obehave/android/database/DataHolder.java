@@ -23,6 +23,10 @@ public class DataHolder {
     private DataHolder() {
     }
 
+    public static boolean isStudyLoaded(){
+        return study != null;
+    }
+
     /**
      * Holds the SubjectDataHolder
      * @param srcFilename

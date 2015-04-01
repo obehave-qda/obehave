@@ -1,7 +1,9 @@
 package org.obehave.android.ui.activities;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -13,11 +15,13 @@ import android.view.MenuItem;
 import com.google.common.eventbus.Subscribe;
 import org.obehave.android.R;
 import org.obehave.android.application.MyApplication;
-import org.obehave.android.events.NodeSelectedEvent;
+import org.obehave.android.database.DataHolder;
 import org.obehave.android.ui.adapters.SectionsPagerAdapter;
 import org.obehave.android.ui.events.*;
 import org.obehave.android.ui.exceptions.UiException;
-import org.obehave.android.ui.fragments.*;
+import org.obehave.android.ui.fragments.ActionFragment;
+import org.obehave.android.ui.fragments.SubjectFragment;
+import org.obehave.android.ui.fragments.SubjectModifierFragment;
 import org.obehave.android.util.ErrorDialog;
 import org.obehave.events.EventBusHolder;
 import org.obehave.exceptions.FactoryException;
@@ -28,40 +32,77 @@ import org.obehave.model.modifier.ModifierFactory;
 import java.util.List;
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
-
+    // constants
+    private static final int REQUEST_CODE_LOAD_STUDY = 1;
     private static final int CODING_FRAGMENT_POSITION = 2;
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
+
+    // membes
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
+    private ActionBar mActionBar;
 
     @Subscribe
-    public void onSubjectSelected(SubjectSelectedEvent event) {
-        mSectionsPagerAdapter.switchToNextCodingFragment(ActionFragment.newInstance(CODING_FRAGMENT_POSITION));
-    }
-
-    @Subscribe
-    public void onActionSelected(ActionSelectedEvent event) {
-        Action action = event.getAction();
-        Log.d(LOG_TAG, "onActionSelected");
-        Log.d(LOG_TAG, action.getDisplayString());
-        try {
-            MyApplication.selectItem(action);
-            ModifierFactory modifierFactory = MyApplication.getModifierFactoryOfSelectedAction();
-            if (modifierFactory == null) {
-                MyApplication.createCoding();
-            } else if (modifierFactory.getType() == ModifierFactory.Type.SUBJECT_MODIFIER_FACTORY) {
-                replaceFragment(SubjectModifierFragment.newInstance(CODING_FRAGMENT_POSITION, (modifierFactory).getValidSubjects()));
-            } else if (modifierFactory.getType() == ModifierFactory.Type.ENUMERATION_MODIFIER_FACTORY) {
-                replaceFragment(EnumerationModifierFragment.newInstance(CODING_FRAGMENT_POSITION, (modifierFactory).getValidValues()));
-            } else if (modifierFactory.getType() == ModifierFactory.Type.DECIMAL_RANGE_MODIFIER_FACTORY) {
-                replaceFragment(DecimalRangeModifierFragment.newInstance(CODING_FRAGMENT_POSITION, modifierFactory.getFrom(), modifierFactory.getTo()));
-            }
-        } catch (UiException ex) {
-            ErrorDialog ed = new ErrorDialog(ex.getMessage(), this);
-            ed.invoke();
+    public void onItemSelected(ItemSelectedEvent event) {
+        if (event.getItem() instanceof Subject) {
+            mSectionsPagerAdapter.switchToNextCodingFragment(ActionFragment.newInstance(CODING_FRAGMENT_POSITION));
+        } else if (event.getItem() instanceof Action) {
+            callModifierFragmentByAction((Action) event.getItem());
         }
     }
 
+    private void callModifierFragmentByAction(Action action) {
+        Fragment fragment = null;
+
+        if (action.getModifierFactory() == null) {
+            return;
+        }
+
+        if (action.getModifierFactory().getType() == ModifierFactory.Type.SUBJECT_MODIFIER_FACTORY) {
+            fragment = SubjectModifierFragment.newInstance(CODING_FRAGMENT_POSITION, action);
+        } else if (action.getModifierFactory().getType() == ModifierFactory.Type.DECIMAL_RANGE_MODIFIER_FACTORY) {
+            //fragment = DecimalRangeModifierFragment.newInstance(CODING_FRAGMENT_POSITION, action);
+        } else if (action.getModifierFactory().getType() == ModifierFactory.Type.ENUMERATION_MODIFIER_FACTORY) {
+            //fragment = EnumerationModifierFragment.newInstance(CODING_FRAGMENT_POSITION, action);
+        }
+
+        mSectionsPagerAdapter.switchToNextCodingFragment(fragment);
+
+        resetState();
+        resetFragmentPosition();
+    }
+
+    private void resetState() {
+
+    }
+
+    private void resetFragmentPosition() {
+    }
+
+    /*
+        @Subscribe
+        public void onActionSelected(ActionSelectedEvent event) {
+            Action action = event.getAction();
+            Log.d(LOG_TAG, "onActionSelected");
+            Log.d(LOG_TAG, action.getDisplayString());
+            try {
+                MyApplication.selectItem(action);
+                ModifierFactory modifierFactory = MyApplication.getModifierFactoryOfSelectedAction();
+                if (modifierFactory == null) {
+                    MyApplication.createCoding();
+                } else if (modifierFactory.getType() == ModifierFactory.Type.SUBJECT_MODIFIER_FACTORY) {
+                    replaceFragment(SubjectModifierFragment.newInstance(CODING_FRAGMENT_POSITION, (modifierFactory).getValidSubjects()));
+                } else if (modifierFactory.getType() == ModifierFactory.Type.ENUMERATION_MODIFIER_FACTORY) {
+                    replaceFragment(EnumerationModifierFragment.newInstance(CODING_FRAGMENT_POSITION, (modifierFactory).getValidValues()));
+                } else if (modifierFactory.getType() == ModifierFactory.Type.DECIMAL_RANGE_MODIFIER_FACTORY) {
+                    replaceFragment(DecimalRangeModifierFragment.newInstance(CODING_FRAGMENT_POSITION, modifierFactory.getFrom(), modifierFactory.getTo()));
+                }
+            } catch (UiException ex) {
+                ErrorDialog ed = new ErrorDialog(ex.getMessage(), this);
+                ed.invoke();
+            }
+        }
+    */
     @Subscribe
     public void onSubjectModifierSelected(SubjectModifierSelectedEvent event) {
         List<Subject> subjects = event.getSubjects();
@@ -154,12 +195,11 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
     @Override
     public void onBackPressed() {
-        if(getActionBar().getSelectedTab().getPosition() == CODING_FRAGMENT_POSITION){
-            if(!mSectionsPagerAdapter.back()){
+        if (getActionBar().getSelectedTab().getPosition() == CODING_FRAGMENT_POSITION) {
+            if (!mSectionsPagerAdapter.back()) {
                 finish();
             }
-        }
-        else {
+        } else {
             super.onBackPressed();
         }
 
@@ -168,23 +208,64 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(LOG_TAG, "create");
         //if(savedInstanceState == null
 
         setContentView(R.layout.activity_main);
 
-        final ActionBar actionBar = getActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        mActionBar = getActionBar();
+        mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
         mViewPager = (ViewPager) findViewById(R.id.pager);
-        mSectionsPagerAdapter = new SectionsPagerAdapter(actionBar, mViewPager, getSupportFragmentManager(), SubjectFragment.newInstance(CODING_FRAGMENT_POSITION));
-        mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                actionBar.setSelectedNavigationItem(position);
+                mActionBar.setSelectedNavigationItem(position);
             }
         });
 
+        if (!DataHolder.isStudyLoaded()) {
+            openStudyChooserActivity();
+        }
+        else {
+            initPageAdapter();
+        }
+    }
+    public void openStudyChooserActivity() {
+        Intent intent = new Intent(this, OpenStudyActivity.class);
+        startActivityForResult(intent, REQUEST_CODE_LOAD_STUDY);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CODE_LOAD_STUDY) {
+            if (resultCode == Activity.RESULT_OK) {
+                try {
+                    String filename = data.getStringExtra(OpenStudyActivity.ARG_FILENAME);
+                    DataHolder.loadStudy(filename);
+                    initPageAdapter();
+
+
+                } catch (UiException e) {
+                    ErrorDialog ed = new ErrorDialog(e, this);
+                    ed.invoke();
+                    // if study not loaded open dialog again.
+                    openStudyChooserActivity();
+                }
+                Log.d(LOG_TAG, "RESULT_OK");
+            } else {
+                // if
+                openStudyChooserActivity();
+                Log.d(LOG_TAG, "RESULT_NOK");
+            }
+        }
+    }
+
+    private void initPageAdapter() {
+        // init sections pager
+        mSectionsPagerAdapter = new SectionsPagerAdapter(mActionBar, mViewPager, getSupportFragmentManager(), SubjectFragment.newInstance(CODING_FRAGMENT_POSITION));
         for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
             String title = "";
             Integer resourceTitle = mSectionsPagerAdapter.getPageTitleResource(i);
@@ -192,12 +273,15 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                 title = getString(resourceTitle);
             }
 
-            actionBar.addTab(
-                    actionBar.newTab()
+            mActionBar.addTab(
+                    mActionBar.newTab()
                             .setText(title)
                             .setTabListener(this));
         }
+
+        mViewPager.setAdapter(mSectionsPagerAdapter);
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
