@@ -62,7 +62,7 @@ public class DirectoryListFragment extends MyListFragment {
 
 
     private void initListView(){
-        adapter = new FileAdapter(getActivity(), ExternalStorageHelper.listFiles(DATABASE_FOLDER));
+        adapter = new FileAdapter(getActivity(), ExternalStorageHelper.listFiles(DATABASE_FOLDER, ".h2.db"));
         setListAdapter(adapter);
     }
 

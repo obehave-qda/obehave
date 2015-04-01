@@ -8,21 +8,18 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import org.obehave.android.R;
 import org.obehave.android.ui.adapters.SubjectModifierAdapter;
+import org.obehave.android.ui.events.ModifierSelectedEvent;
+import org.obehave.android.ui.events.ModifierType;
 import org.obehave.events.EventBusHolder;
 import org.obehave.model.Action;
 import org.obehave.model.Subject;
-import org.obehave.model.modifier.ModifierFactory;
 
-import java.util.List;
+public class SubjectModifierFragment extends BaseModifierFragment {
 
-public class SubjectModifierFragment extends MyListFragment {
-
-    private static final String ARG_SECTION_NUMBER = "section_number";
     private static final String ARG_ACTION = "org.obehave.action";
 
     private Action action;
     private ListAdapter adapter;
-    private List<Subject> subjects;
 
     public static SubjectModifierFragment newInstance(int sectionNumber, Action action) {
         SubjectModifierFragment fragment = new SubjectModifierFragment();
@@ -40,7 +37,7 @@ public class SubjectModifierFragment extends MyListFragment {
                              Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        View rootView = inflater.inflate(R.layout.fragment_subject_modifier, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_modifier_listview, container, false);
 
         initArgs();
         initListview();
@@ -62,6 +59,6 @@ public class SubjectModifierFragment extends MyListFragment {
         super.onListItemClick(listView, view, position, id);
         Subject subject = (Subject) getListAdapter().getItem(position);
 
-        EventBusHolder.post(new ModifierFactory(subject));
+        EventBusHolder.post(new ModifierSelectedEvent(subject, ModifierType.SUBJECT_MODIFIER));
     }
 }

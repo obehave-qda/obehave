@@ -60,7 +60,6 @@ public class FileAdapter extends BaseAdapter{
             holder.txtTitle = (TextView) convertView.findViewById(R.id.liListHeader);
             holder.txtDate = (TextView) convertView.findViewById(R.id.liListText);
 
-
             // associate the holder with the view for later lookup
             convertView.setTag(holder);
         }

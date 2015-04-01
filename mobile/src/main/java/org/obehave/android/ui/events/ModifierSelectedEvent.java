@@ -1,16 +1,22 @@
 package org.obehave.android.ui.events;
 
 
-import org.obehave.model.modifier.Modifier;
-
 public class ModifierSelectedEvent {
-    private final Modifier item;
+    private final Object item;
+    private final ModifierType type;
 
-    public ModifierSelectedEvent(final Modifier item){
+
+
+    public ModifierSelectedEvent(final Object item, final ModifierType type){
         this.item = item;
+        this.type = type;
     }
 
-    public Modifier getItem(){
+    public Object getItem(){
         return item;
+    }
+
+    public ModifierType getType(){
+        return type;
     }
 }
