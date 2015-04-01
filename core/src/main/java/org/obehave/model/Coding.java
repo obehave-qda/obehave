@@ -11,7 +11,6 @@ import org.obehave.persistence.impl.CodingDaoImpl;
  */
 @DatabaseTable(tableName = "Coding", daoClass = CodingDaoImpl.class)
 public class Coding extends BaseEntity{
-    private static final long serialVersionUID = 1L;
     @DatabaseField(columnName = "subject", foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
     private Subject subject;
     @DatabaseField(columnName = "action", foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
