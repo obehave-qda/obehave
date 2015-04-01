@@ -108,8 +108,6 @@ public class MyApplication  extends Application{
         EventBusHolder.post(new TimerTaskEvent(startTime));
     }
 
-
-
     /**
      *
      * @returns ModifierFactory

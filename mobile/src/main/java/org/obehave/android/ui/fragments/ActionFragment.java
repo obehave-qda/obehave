@@ -11,18 +11,18 @@ import com.google.common.eventbus.Subscribe;
 import org.obehave.android.R;
 import org.obehave.android.application.MyApplication;
 import org.obehave.android.database.DataHolder;
-import org.obehave.android.events.NodeSelectedEvent;
+import org.obehave.android.ui.events.NodeSelectedEvent;
+import org.obehave.android.ui.adapters.ActionAdapter;
 import org.obehave.android.ui.adapters.NameAscendingComparator;
 import org.obehave.android.ui.adapters.NameDescendingComparator;
-import org.obehave.android.ui.adapters.ActionAdapter;
-import org.obehave.android.ui.events.ActionSelectedEvent;
+import org.obehave.android.ui.events.ItemSelectedEvent;
 import org.obehave.android.ui.fragments.behaviors.FragmentBehavior;
 import org.obehave.android.ui.fragments.behaviors.SortType;
 import org.obehave.android.ui.fragments.behaviors.SortableBehavior;
 import org.obehave.android.ui.fragments.events.SortingChangedEvent;
 import org.obehave.events.EventBusHolder;
-import org.obehave.model.Node;
 import org.obehave.model.Action;
+import org.obehave.model.Node;
 
 public class ActionFragment extends MyListFragment {
 
@@ -94,7 +94,8 @@ public class ActionFragment extends MyListFragment {
 
         if (object instanceof Action) {
             Action action = (Action) object;
-            EventBusHolder.post(new ActionSelectedEvent(action));
+            MyApplication.selectItem(action);
+            EventBusHolder.post(new ItemSelectedEvent(action));
         } else if (object instanceof Node) {
             Node node = (Node) object;
             EventBusHolder.post(new NodeSelectedEvent(node, NodeSelectedEvent.NodeType.ACTION));

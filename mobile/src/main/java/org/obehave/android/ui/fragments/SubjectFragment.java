@@ -11,11 +11,11 @@ import com.google.common.eventbus.Subscribe;
 import org.obehave.android.R;
 import org.obehave.android.application.MyApplication;
 import org.obehave.android.database.DataHolder;
-import org.obehave.android.events.NodeSelectedEvent;
+import org.obehave.android.ui.events.NodeSelectedEvent;
 import org.obehave.android.ui.adapters.NameAscendingComparator;
 import org.obehave.android.ui.adapters.NameDescendingComparator;
 import org.obehave.android.ui.adapters.SubjectAdapter;
-import org.obehave.android.ui.events.SubjectSelectedEvent;
+import org.obehave.android.ui.events.ItemSelectedEvent;
 import org.obehave.android.ui.fragments.behaviors.FragmentBehavior;
 import org.obehave.android.ui.fragments.behaviors.SortType;
 import org.obehave.android.ui.fragments.behaviors.SortableBehavior;
@@ -95,7 +95,7 @@ public class SubjectFragment extends MyListFragment {
         if (object instanceof Subject) {
             Subject subject = (Subject) object;
             MyApplication.selectItem(subject);
-            EventBusHolder.post(new SubjectSelectedEvent(subject));
+            EventBusHolder.post(new ItemSelectedEvent(subject));
         } else if (object instanceof Node) {
             Node node = (Node) object;
             EventBusHolder.post(new NodeSelectedEvent(node, NodeSelectedEvent.NodeType.SUBJECT));
