@@ -35,6 +35,9 @@ public class Observation extends BaseEntity implements Displayable {
     @ForeignCollectionField
     private Collection<Coding> codings = new ArrayList<>();
 
+    @ForeignCollectionField(eager = false)
+    private Collection<SubjectInObservation> participatingSubjects = new ArrayList<>();
+
     public Observation() {
     }
 
@@ -103,6 +106,27 @@ public class Observation extends BaseEntity implements Displayable {
         Observation rhs = (Observation) obj;
 
         return new EqualsBuilder().append(name, rhs.name).isEquals();
+    }
+
+    public void setParticipatingSubjects(List<Subject> subjects) {
+        participatingSubjects.clear();
+
+        for (Subject subject : subjects) {
+            addParticipatingSubject(subject);
+        }
+    }
+
+    public void addParticipatingSubject(Subject subject) {
+        participatingSubjects.add(new SubjectInObservation(this, subject));
+    }
+
+    public List<Subject> getParticipatingSubjects() {
+        List<Subject> subjects = new ArrayList<>();
+        for (SubjectInObservation participatingSubject : participatingSubjects) {
+            subjects.add(participatingSubject.getSubject());
+        }
+
+        return Collections.unmodifiableList(subjects);
     }
 
     @Override

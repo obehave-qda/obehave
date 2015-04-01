@@ -18,6 +18,16 @@ CREATE TABLE PUBLIC.Observation
   date DATETIME
 );
 
+CREATE TABLE PUBLIC.SubjectInObservation
+(
+  id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+  modified TIMESTAMP NOT NULL,
+  observation INT NOT NULL,
+  subject INT NOT NULL,
+  FOREIGN KEY (observation) REFERENCES Public.Observation(id),
+  FOREIGN KEY (subject) REFERENCES Public.Subject(id)
+);
+
 CREATE TABLE PUBLIC.ModifierFactory
 (
   id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,

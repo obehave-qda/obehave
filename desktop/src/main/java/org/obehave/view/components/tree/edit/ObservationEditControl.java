@@ -6,17 +6,22 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.stage.FileChooser;
+import org.controlsfx.control.CheckListView;
 import org.joda.time.DateTime;
 import org.obehave.exceptions.ServiceException;
 import org.obehave.model.Node;
 import org.obehave.model.Observation;
+import org.obehave.model.Subject;
 import org.obehave.service.Study;
+import org.obehave.util.DisplayWrapper;
 import org.obehave.view.util.AlertUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Markus Möslinger
@@ -45,6 +50,9 @@ public class ObservationEditControl {
     private TextField hour;
     @FXML
     private TextField minute;
+
+    @FXML
+    private CheckListView<DisplayWrapper<Subject>> checkedSubjects;
 
     public String getName() {
         return name.getText();
@@ -81,9 +89,11 @@ public class ObservationEditControl {
         if (o == null) {
             setName("");
             setVideoPath(null);
+            checkedSubjects.getCheckModel().clearChecks();
         } else {
             setName(o.getName());
             setVideoPath(o.getVideo());
+            o.getParticipatingSubjects().forEach(s -> checkedSubjects.getCheckModel().check(DisplayWrapper.of(s)));
         }
 
         if (o != null && o.getDateTime() != null) {
@@ -121,6 +131,8 @@ public class ObservationEditControl {
         o.setVideo(videoPath);
         LocalDate pickedDate = date.getValue();
 
+        o.setParticipatingSubjects(getCheckedSubjects());
+
         if (pickedDate != null) {
             DateTime dt = new DateTime(pickedDate.getYear(), pickedDate.getMonthValue(), pickedDate.getDayOfMonth(),
                     Integer.valueOf(hour.getText()), Integer.valueOf(minute.getText()));
@@ -138,7 +150,7 @@ public class ObservationEditControl {
             loadedObservationNode = null;
             saveCallback.run();
         } catch (ServiceException exception) {
-            AlertUtil.showError("Error", exception.getMessage());
+            AlertUtil.showError("Error", exception.getMessage(), exception);
         }
     }
 
@@ -152,5 +164,17 @@ public class ObservationEditControl {
 
     public void setStudy(Study study) {
         this.study = study;
+
+        checkedSubjects.getItems().clear();
+        study.getSubjectsList().forEach(s -> checkedSubjects.getItems().add(DisplayWrapper.of(s)));
+    }
+
+    private List<Subject> getCheckedSubjects() {
+        final List<DisplayWrapper<Subject>> checkedItems = checkedSubjects.getCheckModel().getCheckedItems();
+        List<Subject> subjects = new ArrayList<>(checkedItems.size());
+
+        checkedItems.forEach(subjectDisplayWrapper -> subjects.add(subjectDisplayWrapper.get()));
+
+        return subjects;
     }
 }

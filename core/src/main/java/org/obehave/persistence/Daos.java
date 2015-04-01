@@ -42,6 +42,7 @@ public class Daos {
     private EnumerationItemDao enumerationItemDao;
     private ValidSubjectDao validSubjectDao;
     private PropertyDao propertyDao;
+    private SubjectInObservationDao subjectInObservationDao;
 
     private Daos(ConnectionSource connectionSource) {
         this.connectionSource = connectionSource;
@@ -59,6 +60,7 @@ public class Daos {
      * Retrieves the default instance of this class, previously set via
      * {@link org.obehave.persistence.Daos#asDefault(com.j256.ormlite.support.ConnectionSource)} or
      * {@link org.obehave.persistence.Daos#asDefault()}
+     *
      * @return the default instance, if previously set
      * @throws java.lang.IllegalStateException if no default instance was previously set
      */
@@ -72,6 +74,7 @@ public class Daos {
 
     /**
      * Retrieves the cached instance configured with {@code connectionSource}, or a new one if there wasn't any before
+     *
      * @param connectionSource the connectionSource to get the intance of {@code Daos} with
      * @return a new or already existing instance of {@code Daos}
      */
@@ -89,6 +92,7 @@ public class Daos {
 
     /**
      * Retrieves the matching instance for {@code connectionSource} and sets it as default, if there was none before.
+     *
      * @param connectionSource the connectionsource to set as default
      * @throws java.lang.IllegalStateException if there was already another default
      */
@@ -101,6 +105,7 @@ public class Daos {
 
     /**
      * Sets this instance as a default for further calls to {@link org.obehave.persistence.Daos#get()}
+     *
      * @return this
      * @throws java.lang.IllegalStateException if there was already another default
      */
@@ -124,10 +129,11 @@ public class Daos {
 
     /**
      * Checks if there is already a default instance set. If so, calls to
+     *
+     * @return true, if a default instance was already set
      * @{@link org.obehave.persistence.Daos#get()} will work,
      * while calls to {@link org.obehave.persistence.Daos#asDefault()} or
      * {@link Daos#asDefault(com.j256.ormlite.support.ConnectionSource)} won't.
-     * @return true, if a default instance was already set
      */
     public static boolean hasDefault() {
         return defaultInstance != null;
@@ -141,6 +147,7 @@ public class Daos {
     /**
      * Closing all registered ConnectionSources. In case of an exception, the other connections will be closed
      * and the last exception will be thrown afterwards as a runtime exception
+     *
      * @throws SQLException the last {@link java.sql.SQLException} that was thrown
      */
     public static void closeAll() {
@@ -239,5 +246,13 @@ public class Daos {
         }
 
         return propertyDao;
+    }
+
+    public SubjectInObservationDao subjectInObservation() throws SQLException {
+        if (subjectInObservationDao == null) {
+            subjectInObservationDao = DaoManager.createDao(connectionSource, SubjectInObservation.class);
+        }
+
+        return subjectInObservationDao;
     }
 }
