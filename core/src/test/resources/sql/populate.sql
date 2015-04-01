@@ -137,25 +137,19 @@ INSERT INTO PUBLIC.PROPERTY (MODIFIED, KEY, VALUE) VALUES (sysdate, 'study.name'
 -- Nodes
 --- root for subjects
 INSERT INTO PUBLIC.NODE (MODIFIED, PARENT, TITLE, TYPE, SUBJECT, ACTION, ACTIONTYPE, MODIFIERFACTORY, OBSERVATION)
-  VALUES (sysdate, null, 'Subjects', 'org.obehave.model.Subject', null, null, null, null, null);
-INSERT INTO PUBLIC.NODE (MODIFIED, PARENT, TITLE, TYPE, SUBJECT, ACTION, ACTIONTYPE, MODIFIERFACTORY, OBSERVATION)
   VALUES (sysdate, (SELECT id FROM NODE WHERE TITLE = 'Subjects'), null, 'org.obehave.model.Subject',
   (SELECT id FROM SUBJECT WHERE NAME = 'Subject1'), null, null, null, null);
 INSERT INTO PUBLIC.NODE (MODIFIED, PARENT, TITLE, TYPE, SUBJECT, ACTION, ACTIONTYPE, MODIFIERFACTORY, OBSERVATION)
-  VALUES (sysdate, (SELECT id FROM NODE WHERE TITLE = 'Subjects'), 'Parent of Subject 2 & 3', 'org.obehave.model.Subject', null, null, null, null, null);
-INSERT INTO PUBLIC.NODE (MODIFIED, PARENT, TITLE, TYPE, SUBJECT, ACTION, ACTIONTYPE, MODIFIERFACTORY, OBSERVATION)
-  VALUES (sysdate, (SELECT id FROM NODE WHERE TITLE = 'Parent of Subject 2 & 3'), null, 'org.obehave.model.Subject',
+  VALUES (sysdate, (SELECT id FROM NODE WHERE TITLE = 'Subjects'), null, 'org.obehave.model.Subject',
   (SELECT id FROM SUBJECT WHERE NAME = 'Subject2'), null, null, null, null);
 INSERT INTO PUBLIC.NODE (MODIFIED, PARENT, TITLE, TYPE, SUBJECT, ACTION, ACTIONTYPE, MODIFIERFACTORY, OBSERVATION)
-  VALUES (sysdate, (SELECT id FROM NODE WHERE TITLE = 'Parent of Subject 2 & 3'), null, 'org.obehave.model.Subject',
+  VALUES (sysdate, (SELECT id FROM NODE WHERE TITLE = 'Subjects'), null, 'org.obehave.model.Subject',
   (SELECT id FROM SUBJECT WHERE NAME = 'Subject3'), null, null, null, null);
 INSERT INTO PUBLIC.NODE (MODIFIED, PARENT, TITLE, TYPE, SUBJECT, ACTION, ACTIONTYPE, MODIFIERFACTORY, OBSERVATION)
   VALUES (sysdate, (SELECT id FROM NODE WHERE TITLE = 'Subjects'), null, 'org.obehave.model.Subject',
   (SELECT id FROM SUBJECT WHERE NAME = 'Subject4'), null, null, null, null);
 
 --- root for actions
-INSERT INTO PUBLIC.NODE (MODIFIED, PARENT, TITLE, TYPE, SUBJECT, ACTION, ACTIONTYPE, MODIFIERFACTORY, OBSERVATION)
-  VALUES (sysdate, null, 'Actions', 'org.obehave.model.Action', null, null, null, null, null);
 INSERT INTO PUBLIC.NODE (MODIFIED, PARENT, TITLE, TYPE, SUBJECT, ACTION, ACTIONTYPE, MODIFIERFACTORY, OBSERVATION)
   VALUES (sysdate, (SELECT id FROM NODE WHERE TITLE = 'Actions'), 'Point Actions', 'org.obehave.model.Action', null, null, null, null, null);
 INSERT INTO PUBLIC.NODE (MODIFIED, PARENT, TITLE, TYPE, SUBJECT, ACTION, ACTIONTYPE, MODIFIERFACTORY, OBSERVATION)
@@ -181,20 +175,16 @@ INSERT INTO PUBLIC.NODE (MODIFIED, PARENT, TITLE, TYPE, SUBJECT, ACTION, ACTIONT
 
 --- root for modifierfactories
 INSERT INTO PUBLIC.NODE (MODIFIED, PARENT, TITLE, TYPE, SUBJECT, ACTION, ACTIONTYPE, MODIFIERFACTORY, OBSERVATION)
-  VALUES (sysdate, null, 'ModifierFactory', 'org.obehave.model.modifier.ModifierFactory', null, null, null, null, null);
-INSERT INTO PUBLIC.NODE (MODIFIED, PARENT, TITLE, TYPE, SUBJECT, ACTION, ACTIONTYPE, MODIFIERFACTORY, OBSERVATION)
-  VALUES (sysdate, (SELECT id FROM NODE WHERE TITLE = 'ModifierFactory'), null, 'org.obehave.model.modifier.ModifierFactory',
+  VALUES (sysdate, (SELECT id FROM NODE WHERE TITLE = 'Modifiers'), null, 'org.obehave.model.modifier.ModifierFactory',
   null, null, null, (SELECT id FROM MODIFIERFACTORY WHERE NAME = 'One To Five'), null);
 INSERT INTO PUBLIC.NODE (MODIFIED, PARENT, TITLE, TYPE, SUBJECT, ACTION, ACTIONTYPE, MODIFIERFACTORY, OBSERVATION)
-  VALUES (sysdate, (SELECT id FROM NODE WHERE TITLE = 'ModifierFactory'), null, 'org.obehave.model.modifier.ModifierFactory',
+  VALUES (sysdate, (SELECT id FROM NODE WHERE TITLE = 'Modifiers'), null, 'org.obehave.model.modifier.ModifierFactory',
   null, null, null, (SELECT id FROM MODIFIERFACTORY WHERE NAME = 'Subject One Or Two'), null);
 INSERT INTO PUBLIC.NODE (MODIFIED, PARENT, TITLE, TYPE, SUBJECT, ACTION, ACTIONTYPE, MODIFIERFACTORY, OBSERVATION)
-  VALUES (sysdate, (SELECT id FROM NODE WHERE TITLE = 'ModifierFactory'), null, 'org.obehave.model.modifier.ModifierFactory',
+  VALUES (sysdate, (SELECT id FROM NODE WHERE TITLE = 'Modifiers'), null, 'org.obehave.model.modifier.ModifierFactory',
   null, null, null, (SELECT id FROM MODIFIERFACTORY WHERE NAME = 'Slow Or Fast'), null);
 
 --- root for observations
-INSERT INTO PUBLIC.NODE (MODIFIED, PARENT, TITLE, TYPE, SUBJECT, ACTION, ACTIONTYPE, MODIFIERFACTORY, OBSERVATION)
-  VALUES (sysdate, null, 'Observations', 'org.obehave.model.Observation', null, null, null, null, null);
 INSERT INTO PUBLIC.NODE (MODIFIED, PARENT, TITLE, TYPE, SUBJECT, ACTION, ACTIONTYPE, MODIFIERFACTORY, OBSERVATION)
   VALUES (sysdate, (SELECT id FROM NODE WHERE TITLE = 'Observations'), null, 'org.obehave.model.Observation',
   null, null, null, null, (SELECT id FROM OBSERVATION WHERE NAME = 'Observation1'));

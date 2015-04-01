@@ -140,10 +140,10 @@ public class Daos {
 
     /**
      * Closing all registered ConnectionSources. In case of an exception, the other connections will be closed
-     * and the last exception will be thrown afterwards
+     * and the last exception will be thrown afterwards as a runtime exception
      * @throws SQLException the last {@link java.sql.SQLException} that was thrown
      */
-    public static void closeAll() throws SQLException {
+    public static void closeAll() {
         SQLException lastException = null;
 
         // avoiding ConcurrentModificationExceptions
@@ -157,7 +157,7 @@ public class Daos {
         }
 
         if (lastException != null) {
-            throw lastException;
+            throw new RuntimeException(lastException);
         }
     }
 

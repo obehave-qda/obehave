@@ -14,19 +14,7 @@ import java.sql.SQLException;
 public class TestStudyCreator {
     private static final Logger log = LoggerFactory.getLogger(TestStudyCreator.class);
 
-    private void create(File path) throws SQLException {
-        log.info("Creating teststudy at {}", path.getAbsolutePath());
-
-        Daos.asDefault(new JdbcConnectionSource(Properties.getDatabaseConnectionStringWithInit(path)));
-        Daos.get().node().executeRaw("runscript from 'classpath:sql/populate.sql'");
-        Daos.closeAll();
-
-        log.info("Done creating teststudy at {}", path.getAbsolutePath());
-    }
-
-    // just uncomment the next line and execute the test
-    //@Test
-    public void createStudy() throws SQLException {
+    public TestStudyCreator() throws SQLException {
         // We want to create the file @ obehave/studies instead of obehave/core/studies
         final File folder = new File("../studies");
 
@@ -41,5 +29,19 @@ public class TestStudyCreator {
         }
 
         create(path);
+    }
+
+    private void create(File path) throws SQLException {
+        log.info("Creating teststudy at {}", path.getAbsolutePath());
+
+        Daos.asDefault(new JdbcConnectionSource(Properties.getDatabaseConnectionStringWithInit(path)));
+        Daos.get().node().executeRaw("runscript from 'classpath:sql/populate.sql'");
+        Daos.closeAll();
+
+        log.info("Done creating teststudy at {}", path.getAbsolutePath());
+    }
+
+    public static void main() throws SQLException {
+        new TestStudyCreator();
     }
 }

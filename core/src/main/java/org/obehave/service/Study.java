@@ -4,7 +4,7 @@ import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import org.obehave.events.ChangeEvent;
 import org.obehave.events.ChangeType;
 import org.obehave.events.EventBusHolder;
-import org.obehave.events.LoadedEvent;
+import org.obehave.events.RepaintStudyEvent;
 import org.obehave.exceptions.Validate;
 import org.obehave.model.*;
 import org.obehave.model.modifier.ModifierFactory;
@@ -55,8 +55,21 @@ public class Study implements Displayable {
     public static Study create(File savePath) throws SQLException {
         log.info("Creating new study at {}", savePath);
 
+        if (savePath.exists()) {
+            log.info("File {} exists already, creating new one at same path", savePath);
+            if (!savePath.delete()) {
+                log.error("Couldn't delete file {}!" + savePath);
+            }
+        }
+
         final Study study = new Study(savePath);
         Daos.asDefault(new JdbcConnectionSource(Properties.getDatabaseConnectionStringWithInit(savePath)));
+
+        study.subjects = Validate.hasOnlyOneElement(Daos.get().node().getRoot(Subject.class)).get(0);
+        study.actions = Validate.hasOnlyOneElement(Daos.get().node().getRoot(Action.class)).get(0);
+        study.modifierFactories = Validate.hasOnlyOneElement(Daos.get().node().getRoot(ModifierFactory.class)).get(0);
+        study.observations = Validate.hasOnlyOneElement(Daos.get().node().getRoot(Observation.class)).get(0);
+
         return study;
     }
 
@@ -78,13 +91,27 @@ public class Study implements Displayable {
         modifierFactories = Validate.hasOnlyOneElement(Daos.get().node().getRoot(ModifierFactory.class)).get(0);
         observations = Validate.hasOnlyOneElement(Daos.get().node().getRoot(Observation.class)).get(0);
 
+        removeEmptyNodes(subjects);
+        removeEmptyNodes(actions);
+        removeEmptyNodes(modifierFactories);
+        removeEmptyNodes(observations);
+
         final String studyName = DatabaseProperties.get(DatabaseProperties.STUDY_NAME);
         setName(studyName);
 
         long duration = System.currentTimeMillis() - start;
         log.info("Took {}ms for loading of entities", duration);
+    }
 
-        EventBusHolder.post(new LoadedEvent());
+    private void removeEmptyNodes(Node node) {
+        if (node.getData() == null && (node.getTitle() == null || node.getTitle().isEmpty())) {
+            node.getParent().remove(node);
+            log.warn("Why is there an empty node at all? Look! " + node);
+        } else {
+            for (Node child : node.getChildren()) {
+                removeEmptyNodes(child);
+            }
+        }
     }
 
     public Node getSubjects() {
@@ -181,6 +208,8 @@ public class Study implements Displayable {
         log.debug("Setting study name to {}", name);
         this.name = name;
         DatabaseProperties.set(DatabaseProperties.STUDY_NAME, name);
+
+        EventBusHolder.post(new RepaintStudyEvent());
     }
 
     // ONLY FOR TEMPORARILY TESTING!

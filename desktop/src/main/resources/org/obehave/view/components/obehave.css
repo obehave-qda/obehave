@@ -1,0 +1,24 @@
+.fivesecondsline, .fifteensecondsline {
+	-fx-stroke: #ababab;
+	-fx-fill: transparent;
+}
+
+.fivesecondsline {
+	-fx-stroke-dash-array: 4 8;
+}
+
+.minuteline {
+	-fx-fill: BLACK;
+}
+
+#codingPane, #codingPane > * {
+	-fx-background-color: white;
+}
+
+#codingPane Rectangle#cover {
+	-fx-fill: white;
+}
+
+.popover Label {
+    -fx-text-fill: black;
+}

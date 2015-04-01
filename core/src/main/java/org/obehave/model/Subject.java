@@ -23,8 +23,7 @@ public class Subject extends BaseEntity implements Displayable {
     @DatabaseField(columnName = "color")
     private Color color;
 
-    private Subject() {
-        // used by frameworks
+    public Subject() {
     }
 
     public Subject(String name) {
