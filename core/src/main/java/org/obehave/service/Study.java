@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -129,25 +128,31 @@ public class Study implements Displayable {
     }
 
     public List<Subject> getSubjectsList() {
-        List<Subject> subjects = new ArrayList<>();
-
-        for (Displayable subject : getSubjects().flatten()) {
-            subjects.add((Subject) subject);
-        }
-
-        return subjects;
+        return subjects.flattenAs(Subject.class);
     }
 
     public Node getActions() {
         return actions;
     }
 
+    public List<Action> getActionList() {
+        return actions.flattenAs(Action.class);
+    }
+
     public Node getObservations() {
         return observations;
     }
 
+    public List<Observation> getObservationsList() {
+        return observations.flattenAs(Observation.class);
+    }
+
     public Node getModifierFactories() {
         return modifierFactories;
+    }
+
+    public List<ModifierFactory> getModifierFactoryList() {
+        return modifierFactories.flattenAs(ModifierFactory.class);
     }
 
     public String getName() {

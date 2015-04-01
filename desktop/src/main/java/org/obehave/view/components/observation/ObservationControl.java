@@ -80,7 +80,7 @@ public class ObservationControl extends BorderPane {
             });
         }
 
-        codingControl.loadCodings(observation);
+        codingControl.loadObservation(observation);
     }
 
     public void setStudy(Study study) {

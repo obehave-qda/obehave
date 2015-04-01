@@ -258,6 +258,17 @@ public class Node extends BaseEntity implements Iterable<Displayable>, Displayab
         return Collections.unmodifiableList(flattened);
     }
 
+    @SuppressWarnings("unchecked")
+    public <T> List<T> flattenAs(Class<T> type) {
+        List<T> items = new ArrayList<>();
+
+        for (Displayable displayable : flatten()) {
+            items.add((T) displayable);
+        }
+
+        return items;
+    }
+
     @Override
     public Iterator<Displayable> iterator() {
         // there could be a better way than to flatten the group first. But I don't want to implement a new Iterator...

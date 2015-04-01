@@ -3,7 +3,6 @@ package org.obehave.service;
 import org.obehave.events.EventBusHolder;
 import org.obehave.events.UiEvent;
 import org.obehave.exceptions.ServiceException;
-import org.obehave.model.Displayable;
 import org.obehave.model.Subject;
 import org.obehave.persistence.Daos;
 
@@ -31,11 +30,13 @@ public class SubjectService extends BaseEntityService<Subject> {
 
     @Override
     protected void checkBeforeSave(Subject subject) throws ServiceException {
-        for (Displayable existingSubject : getStudy().getSubjects().flatten()) {
-            Subject existing = (Subject) existingSubject;
-            if (!existing.getId().equals(subject.getId()) &&
-                    (existing.getName().equals(subject.getName()) || existing.getAlias().equals(subject.getAlias()))) {
-                throw new ServiceException("Name and alias have to be unique! Found in: " + existingSubject.getDisplayString());
+        for (Subject existing : getStudy().getSubjectsList()) {
+            if (!existing.getId().equals(subject.getId())) {
+                if (existing.getName().equals(subject.getName())) {
+                    throw new ServiceException("Name has to be unique! Already found in " + existing.getDisplayString());
+                } else if (existing.getAlias() != null && !existing.getAlias().isEmpty() && existing.getAlias().equals(subject.getAlias())) {
+                    throw new ServiceException("Alias has to be unique! Already found in " + existing.getDisplayString());
+                }
             }
         }
     }
