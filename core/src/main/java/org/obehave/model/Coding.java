@@ -83,7 +83,9 @@ public class Coding extends BaseEntity {
             throw new FactoryException("This action has no modifier factory!");
         }
 
-        this.modifier = action.getModifierFactory().create(input);
+        if (!input.isEmpty()) {
+            this.modifier = action.getModifierFactory().create(input);
+        }
     }
 
     public long getStartMs() {

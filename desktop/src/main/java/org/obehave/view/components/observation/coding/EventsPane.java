@@ -1,11 +1,14 @@
 package org.obehave.view.components.observation.coding;
 
+import com.google.common.eventbus.Subscribe;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
+import org.obehave.events.EventBusHolder;
+import org.obehave.events.UiEvent;
 import org.obehave.model.Coding;
 import org.obehave.model.Subject;
 import org.obehave.view.util.NodeUtil;
@@ -33,6 +36,8 @@ public class EventsPane extends Pane {
     private DoubleProperty currentTime = new SimpleDoubleProperty(this, "currentTimeProperty");
 
     public EventsPane() {
+        EventBusHolder.register(this);
+
         prefHeightProperty().bind(subjectHeightProperty().multiply(subjectPanesSize).add(subjectHeightProperty().divide(2)));
 
         msProperty.addListener((observable, oldValue, newValue) -> refresh());
@@ -99,6 +104,11 @@ public class EventsPane extends Pane {
 
     public void addCoding(Coding coding) {
         subjectPanes.get(coding.getSubject()).drawCoding(coding);
+    }
+
+    @Subscribe
+    public void newCodingSubscriber(UiEvent.NewCoding event) {
+        addCoding(event.getCoding());
     }
 
     public void refresh() {

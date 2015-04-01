@@ -1,16 +1,23 @@
 package org.obehave.view.components.observation;
 
 import com.google.common.eventbus.Subscribe;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import org.controlsfx.control.textfield.TextFields;
 import org.obehave.events.EventBusHolder;
 import org.obehave.events.UiEvent;
+import org.obehave.exceptions.ServiceException;
 import org.obehave.model.Observation;
+import org.obehave.service.CodingService;
 import org.obehave.service.Study;
 import org.obehave.view.components.observation.coding.CodingControl;
+import org.obehave.view.util.AlertUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +30,8 @@ public class ObservationControl extends BorderPane {
     private Study study;
     private Observation observation;
 
+    private CodingService codingService;
+
     @FXML
     private VideoControl videoControl;
     @FXML
@@ -34,6 +43,8 @@ public class ObservationControl extends BorderPane {
     private TextField inputAction;
     @FXML
     private TextField inputModifier;
+
+    private DoubleProperty currentTimeProperty = new SimpleDoubleProperty(this, "currentTimeProperty");
 
     public ObservationControl() {
         super();
@@ -72,13 +83,16 @@ public class ObservationControl extends BorderPane {
         log.debug("Loading observation, because of {}", event);
 
         observation = event.getObservation();
+        codingService = study.getCodingServiceBuilder().build(observation);
+
         if (observation.getVideo() != null) {
             loadVideo(observation.getVideo());
 
             // FIXME there is some stupid bug with the seconds line
             videoControl.currentTime().addListener((observable, oldValue, newValue) -> {
-                codingControl.currentTime().setValue(newValue.toSeconds());
+                currentTimeProperty.setValue(newValue.toSeconds());
             });
+            codingControl.currentTime().bind(currentTimeProperty);
         }
 
         codingControl.loadObservation(observation);
@@ -86,5 +100,16 @@ public class ObservationControl extends BorderPane {
 
     public void setStudy(Study study) {
         this.study = study;
+    }
+
+    @FXML
+    public void code(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER) {
+            try {
+                codingService.startCoding(inputSubject.getText(), inputAction.getText(), inputModifier.getText(), (long) (currentTimeProperty.get() * 1000));
+            } catch (ServiceException e) {
+                AlertUtil.showError("Error while coding", "Couldn't code, because " + e.getMessage(), e);
+            }
+        }
     }
 }

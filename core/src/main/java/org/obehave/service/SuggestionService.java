@@ -38,7 +38,7 @@ public class SuggestionService {
 
         if (enteredText != null && !enteredText.isEmpty()) {
             for (Subject subject : observation.getParticipatingSubjects()) {
-                if (subject.getAlias().contains(enteredText)) {
+                if (subject.getAlias() != null && subject.getAlias().contains(enteredText)) {
                     // rank matching aliases before normal matches
                     suggestedSubjects.add(0, subject.getDisplayString());
                 } else if (subject.getName().contains(enteredText)) {
@@ -59,7 +59,7 @@ public class SuggestionService {
             for (Displayable action : actions) {
                 Action a = (Action) action;
 
-                if (a.getAlias().contains(enteredText)) {
+                if (a.getAlias() != null && a.getAlias().contains(enteredText)) {
                     // rank matching aliases before normal matches
                     suggestedActions.add(0, a.getDisplayString());
                 } else if (a.getName().contains(enteredText)) {
