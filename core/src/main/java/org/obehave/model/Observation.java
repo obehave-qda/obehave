@@ -35,8 +35,7 @@ public class Observation extends BaseEntity implements Displayable {
     @ForeignCollectionField
     private Collection<Coding> codings = new ArrayList<>();
 
-    private Observation() {
-        // for frameworks
+    public Observation() {
     }
 
     public Observation(String name) {

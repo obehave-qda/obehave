@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import org.obehave.view.components.observation.coding.CodingControl?>
+<?import org.obehave.view.components.observation.VideoControl?>
+<fx:root type="javafx.scene.layout.BorderPane" xmlns="http://javafx.com/javafx/8"
+         xmlns:fx="http://javafx.com/fxml/1" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0"
+         AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+    <center>
+        <AnchorPane>
+            <VideoControl fx:id="videoControl"/>
+        </AnchorPane>
+    </center>
+    <bottom>
+        <AnchorPane>
+            <CodingControl AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0"
+                              AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" fx:id="codingControl"/>
+        </AnchorPane>
+    </bottom>
+</fx:root>

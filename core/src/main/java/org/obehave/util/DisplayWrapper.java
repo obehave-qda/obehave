@@ -2,7 +2,6 @@ package org.obehave.util;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.obehave.exceptions.Validate;
 import org.obehave.model.Displayable;
 
 /**
@@ -15,12 +14,10 @@ public class DisplayWrapper<T> {
     private final T object;
 
     private DisplayWrapper(T object) {
-        Validate.isNotNull(object, "Displayable");
-
         this.object = object;
     }
 
-    public static <U> DisplayWrapper<U> of(U object) {
+    public static <T> DisplayWrapper<T> of(T object) {
         return new DisplayWrapper<>(object);
     }
 
@@ -30,7 +27,9 @@ public class DisplayWrapper<T> {
 
     @Override
     public String toString() {
-        if (object instanceof Displayable) {
+        if (object == null) {
+            return "";
+        } else if (object instanceof Displayable) {
             return ((Displayable) object).getDisplayString();
         } else {
             return object.toString();

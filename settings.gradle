@@ -1,4 +1,4 @@
 rootProject.name = 'obehave'
 
-include 'core', 'desktop', 'mobile', 'playground'
+include 'core', 'desktop', 'mobile'
 

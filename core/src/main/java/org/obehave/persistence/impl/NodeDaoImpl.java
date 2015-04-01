@@ -26,13 +26,13 @@ public class NodeDaoImpl extends BaseDaoImpl<Node, Long> implements NodeDao {
     @Override
     public int create(Node data) throws SQLException {
         final int id = super.create(data);
-        log.debug("Autocreate children of {}", data);
         autoCreateChildren(data);
         return id;
     }
 
     @SuppressWarnings("unchecked")
     private void autoCreateChildren(Node data) throws SQLException {
+        log.debug("Autocreate children of {}", data);
         try {
             Field childrenField = data.getClass().getDeclaredField("children");
             childrenField.setAccessible(true);
@@ -40,8 +40,8 @@ public class NodeDaoImpl extends BaseDaoImpl<Node, Long> implements NodeDao {
 
             for (Node child : children) {
                 // a createOrUpdate could be more appropriate
-                Daos.get(getConnectionSource()).node().create(child);
-                log.trace("Created {}", child);
+                Daos.get(getConnectionSource()).node().createOrUpdate(child);
+                log.trace("Created/updated {}", child);
             }
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new SQLException("Couldn't create children", e);
