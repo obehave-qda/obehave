@@ -104,7 +104,7 @@ public class SubjectEditControl {
             loadedSubjectNode = null;
             saveCallback.run();
         } catch (ServiceException exception) {
-            AlertUtil.showError("Error", exception.getMessage());
+            AlertUtil.showError("Error", exception.getMessage(), exception);
         }
     }
 

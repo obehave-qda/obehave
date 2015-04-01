@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A study contains multiple subjects, actions and observations.
@@ -123,6 +125,16 @@ public class Study implements Displayable {
     }
 
     public Node getSubjects() {
+        return subjects;
+    }
+
+    public List<Subject> getSubjectsList() {
+        List<Subject> subjects = new ArrayList<>();
+
+        for (Displayable subject : getSubjects().flatten()) {
+            subjects.add((Subject) subject);
+        }
+
         return subjects;
     }
 

@@ -113,7 +113,7 @@ public class ActionGroupEditControl {
             loadedActionNode = null;
             saveCallback.run();
         } catch (ServiceException exception) {
-            AlertUtil.showError("Error", exception.getMessage());
+            AlertUtil.showError("Error", exception.getMessage(), exception);
         }
     }
 
