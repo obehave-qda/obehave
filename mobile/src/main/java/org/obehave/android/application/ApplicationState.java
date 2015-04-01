@@ -5,13 +5,9 @@ import org.obehave.android.ui.fragments.behaviors.SortType;
 import org.obehave.model.Action;
 import org.obehave.model.Subject;
 import org.obehave.model.modifier.Modifier;
-import org.obehave.service.Study;
 
 public class ApplicationState {
     private static ApplicationState ourInstance = new ApplicationState();
-
-    private Study loadedStudy;
-
     private Subject subject;
     private Action action;
     private Modifier modifier;

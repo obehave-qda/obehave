@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.TextView;
 import org.obehave.android.R;
 import org.obehave.android.ui.views.Circle;
@@ -20,7 +19,6 @@ public class SubjectModifierAdapter extends ArrayAdapter{
 
     static class ViewHolder{
         public Circle circle;
-        public CheckBox checkBox;
         public TextView txtView;
     }
 
@@ -37,10 +35,9 @@ public class SubjectModifierAdapter extends ArrayAdapter{
 
         if (convertView == null) {
             LayoutInflater inflater = ((Activity)mContext).getLayoutInflater();
-            convertView = inflater.inflate(R.layout.list_item_subject_modifier, null);
+            convertView = inflater.inflate(R.layout.list_item_subject, null);
             // cache view fields into the holder
             holder = new ViewHolder();
-            holder.checkBox = (CheckBox) convertView.findViewById(R.id.lvCheckbox);
             holder.txtView = (TextView) convertView.findViewById(R.id.liListHeader);
             holder.circle = (Circle) convertView.findViewById(R.id.circle);
 
@@ -55,11 +52,15 @@ public class SubjectModifierAdapter extends ArrayAdapter{
 
         Subject subject = (Subject) getItem(position);
         if(subject != null){
-            int red = subject.getColor().getRed();
-            int blue = subject.getColor().getBlue();
-            int green = subject.getColor().getGreen();
+            int red = 0;
+            int blue = 0;
+            int green = 0;
+            if(subject.getColor() != null) {
+                red = subject.getColor().getRed();
+                blue = subject.getColor().getBlue();
+                green = subject.getColor().getGreen();
+            }
 
-            holder.checkBox.setChecked(false);
             holder.txtView.setText(subject.getDisplayString());
             holder.circle.setCircleColor(Color.rgb(red, green, blue));
         }
