@@ -2,6 +2,7 @@ package org.obehave.service;
 
 import org.obehave.model.Action;
 import org.obehave.model.Displayable;
+import org.obehave.model.Observation;
 import org.obehave.model.Subject;
 import org.obehave.model.modifier.ModifierFactory;
 
@@ -10,29 +11,38 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * @author Markus Möslinger
+ * @author Markus MÃ¶slinger
  */
 public class SuggestionService {
-    private final Study study;
+    public static class SuggestionServiceBuilder {
+        private final Study study;
+        protected SuggestionServiceBuilder(Study study) {
+            this.study = study;
+        }
 
-    protected SuggestionService(Study study) {
+        public SuggestionService build(Observation observation) {
+            return new SuggestionService(study, observation);
+        }
+    }
+
+    private final Study study;
+    private final Observation observation;
+
+    protected SuggestionService(Study study, Observation observation) {
         this.study = study;
+        this.observation = observation;
     }
 
     public Collection<String> getSubjectSuggestions(String enteredText) {
         List<String> suggestedSubjects = new ArrayList<>();
 
         if (enteredText != null && !enteredText.isEmpty()) {
-            List<Displayable> subjects = study.getSubjects().flatten();
-
-            for (Displayable subject : subjects) {
-                Subject s = (Subject) subject;
-
-                if (s.getAlias().contains(enteredText)) {
+            for (Subject subject : observation.getParticipatingSubjects()) {
+                if (subject.getAlias().contains(enteredText)) {
                     // rank matching aliases before normal matches
-                    suggestedSubjects.add(0, s.getDisplayString());
-                } else if (s.getName().contains(enteredText)) {
-                    suggestedSubjects.add(s.getDisplayString());
+                    suggestedSubjects.add(0, subject.getDisplayString());
+                } else if (subject.getName().contains(enteredText)) {
+                    suggestedSubjects.add(subject.getDisplayString());
                 }
             }
         }
@@ -111,9 +121,12 @@ public class SuggestionService {
 
     private Collection<String> buildSubjectListSuggestions(ModifierFactory mf) {
         List<String> suggestions = new ArrayList<>();
+        List<Subject> participatingSubjects = observation.getParticipatingSubjects();
 
         for (Subject s : mf.getValidSubjects()) {
-            suggestions.add(s.getDisplayString());
+            if (participatingSubjects.contains(s)) {
+                suggestions.add(s.getDisplayString());
+            }
         }
 
         return suggestions;
