@@ -50,10 +50,27 @@ public class VideoControl extends BorderPane {
         }
     }
 
+    @FXML
+    void slower(ActionEvent event) {
+        final double oldRate = mediaView.getMediaPlayer().getRate();
+        final double newRate = oldRate / 2;
+
+        log.trace("Slowing playback down from {} to {}", oldRate, newRate);
+        mediaView.getMediaPlayer().setRate(newRate);
+    }
+
+    @FXML
+    void faster(ActionEvent faster) {
+        final double oldRate = mediaView.getMediaPlayer().getRate();
+        final double newRate = oldRate * 2;
+
+        log.trace("Speeding playback up from {} to {}", oldRate, newRate);
+        mediaView.getMediaPlayer().setRate(newRate);
+    }
+
     private Media toMedia(File file) {
         Validate.isNotNull(file, "File");
 
-        log.debug("Converting {} to Media", file);
         return new Media(file.toURI().toString());
     }
 

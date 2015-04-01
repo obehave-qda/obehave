@@ -166,6 +166,7 @@ public class CodingControl extends ScrollPane implements Initializable {
     }
 
     public void loadObservation(Observation observation) {
+        log.trace("Loading observation {}", observation);
         clear();
 
         observation.getParticipatingSubjects().forEach(this::addSubject);
