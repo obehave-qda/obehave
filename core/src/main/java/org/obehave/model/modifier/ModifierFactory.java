@@ -23,7 +23,7 @@ import java.util.*;
 public class ModifierFactory extends BaseEntity implements Displayable {
     public static final String COLUMN_NAME = "name";
 
-    public static enum Type {
+    public enum Type {
         // this sucks. Due to ORMLite's incapability of handling inheritance strategies, ie. one table per class hierarchy,
         // we are flattening the class hierarchy to only only class.
         SUBJECT_MODIFIER_FACTORY, ENUMERATION_MODIFIER_FACTORY, DECIMAL_RANGE_MODIFIER_FACTORY
@@ -153,7 +153,7 @@ public class ModifierFactory extends BaseEntity implements Displayable {
         try {
             value = stringToBigDecimal(input);
             if (value.compareTo(BigDecimal.valueOf(from)) >= 0 && value.compareTo(BigDecimal.valueOf(to)) <= 0) {
-                return new Modifier(this, value);
+                return new Modifier(this, value, input);
             } else {
                 throw new FactoryException("Value not in range");
             }
@@ -236,7 +236,7 @@ public class ModifierFactory extends BaseEntity implements Displayable {
 
         for (ValidSubject validSubject : validSubjects) {
             if (subjectName.equals(validSubject.getSubject().getName()) || subjectName.equals(validSubject.getSubject().getAlias())) {
-                return new Modifier(this, validSubject.getSubject());
+                return new Modifier(this, validSubject.getSubject(), subjectName);
             }
         }
 

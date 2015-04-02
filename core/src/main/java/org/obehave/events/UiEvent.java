@@ -5,7 +5,7 @@ import org.obehave.model.Coding;
 import org.obehave.model.Observation;
 
 /**
- * @author Markus M�slinger
+ * @author Markus Möslinger
  */
 public class UiEvent {
     public static class NewCoding {
@@ -23,6 +23,10 @@ public class UiEvent {
         private final Coding coding;
         public FinishedCoding(Coding coding) {
             this.coding = coding;
+        }
+
+        public Coding getCoding() {
+            return coding;
         }
     }
 

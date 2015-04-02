@@ -31,16 +31,20 @@ public class Modifier extends BaseEntity {
     @DatabaseField(columnName = "subject", foreign = true, foreignAutoRefresh = true)
     private Subject subject;
 
+    @DatabaseField(columnName = "buildString")
+    private String buildString;
+
     private Modifier() {
         // for frameworks
     }
 
-    public Modifier(ModifierFactory modifierFactory, BigDecimal value) {
+    public Modifier(ModifierFactory modifierFactory, BigDecimal value, String buildString) {
         type = Type.DECIMAL_MODIFIER;
         setModifierFactory(modifierFactory);
 
         Validate.isNotNull(value, I18n.get("validate.modifier.bigdecimal"));
         decimalValue = value;
+        this.buildString = buildString;
     }
 
 
@@ -50,14 +54,16 @@ public class Modifier extends BaseEntity {
 
         Validate.isNotNull(value, I18n.get("validate.modifier.string"));
         this.enumerationValue = value;
+        buildString = value;
     }
 
-    public Modifier(ModifierFactory modifierFactory, Subject subject) {
+    public Modifier(ModifierFactory modifierFactory, Subject subject, String buildString) {
         type = Type.SUBJECT_MODIFIER;
         setModifierFactory(modifierFactory);
 
         Validate.isNotNull(subject, I18n.get("validate.modifier.subject"));
         this.subject = subject;
+        this.buildString = buildString;
     }
 
     /**
@@ -88,7 +94,11 @@ public class Modifier extends BaseEntity {
         this.modifierFactory = modifierFactory;
     }
 
-    public static enum Type {
+    public String getBuildString() {
+        return buildString;
+    }
+
+    public enum Type {
         // this sucks. Due to ORMLite's incapability of handling inheritance strategies, ie. one table per class hierarchy,
         // we are flattening the class hierarchy to only only class.
         DECIMAL_MODIFIER, ENUMERATION_MODIFIER, SUBJECT_MODIFIER

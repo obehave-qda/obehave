@@ -8,6 +8,8 @@ import org.obehave.exceptions.Validate;
 import org.obehave.exceptions.ValidationException;
 import org.obehave.model.*;
 import org.obehave.persistence.Daos;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -17,8 +19,11 @@ import java.util.List;
  * @author Markus Möslinger
  */
 public class CodingService {
+    private static final Logger log = LoggerFactory.getLogger(CodingService.class);
+
     public static class CodingServiceBuilder {
         private final Study study;
+
         public CodingServiceBuilder(Study study) {
             this.study = study;
         }
@@ -38,6 +43,8 @@ public class CodingService {
     }
 
     public void initializeObservation() throws ServiceException {
+        log.info("Initializing state codings for observation {}", observation);
+
         final List<Action> initialActions = getInitialActions();
 
         for (Displayable d : study.getSubjects().flatten()) {
@@ -83,6 +90,8 @@ public class CodingService {
             throw new ServiceException(e);
         }
 
+        log.info("Starting coding for subject {}, action {}, input {} and start time {}", subject, action, modifierInput, startMs);
+
         Coding coding;
 
         try {
@@ -92,10 +101,6 @@ public class CodingService {
                 coding = new Coding(subject, action, startMs);
             }
 
-            if (action.getType() == Action.Type.STATE) {
-                openCodings.add(coding);
-            }
-
             // ending all open codings from the same group for the same subject
             // this could become a bottleneck. Keep care.
             Node actionParent = study.getActions().getParentOf(action);
@@ -103,9 +108,14 @@ public class CodingService {
                 for (Coding openCoding : new ArrayList<>(openCodings)) {
                     Node codingParent = study.getActions().getParentOf(openCoding.getAction());
                     if (actionParent.equals(codingParent)) {
-                        endCoding(subject, action, startMs);
+                        // FIXME this won't work, I guess, because of modifier input
+                        endCoding(subject, action, null, startMs);
                     }
                 }
+            }
+
+            if (action.getType() == Action.Type.STATE) {
+                openCodings.add(coding);
             }
 
             observation.addCoding(coding);
@@ -123,25 +133,75 @@ public class CodingService {
         return coding;
     }
 
-    private Coding getOpenCoding(Subject subject, Action action) {
+    private Coding getOpenCoding(Subject subject, Action action, String modifierBuildString) {
+        List<Coding> matchingCodings = new ArrayList<>();
+
         for (Coding openCoding : openCodings) {
             if (openCoding.getSubject().equals(subject) && openCoding.getAction().equals(action)) {
-                return openCoding;
+                matchingCodings.add(openCoding);
             }
         }
 
-        return null;
+        if (matchingCodings.size() == 0) {
+            return null;
+        } else if (matchingCodings.size() == 1) {
+            return matchingCodings.get(0);
+        } else {
+            return filterCodingsForModifier(matchingCodings, modifierBuildString);
+        }
     }
 
-    public void endCoding(Subject subject, Action action, long endMs) throws ServiceException {
-        Coding coding = getOpenCoding(subject, action);
+    private Coding filterCodingsForModifier(List<Coding> codings, String buildString) {
+        List<Coding> matchingCodings = new ArrayList<>();
+
+        for (Coding coding : matchingCodings) {
+            if (coding.getModifier().getBuildString().equals(buildString)) {
+                matchingCodings.add(coding);
+            }
+        }
+
+        if (matchingCodings.size() == 0) {
+            return null;
+        } else if (matchingCodings.size() == 1) {
+            return matchingCodings.get(0);
+        } else {
+            throw new IllegalArgumentException("Foudn multiple matching codings for build string " + buildString);
+        }
+    }
+
+    public void endCoding(String subject, String action, String modifierInput, long endMs) throws ServiceException {
+        try {
+            Validate.isNotEmpty(subject, "Subject");
+            Validate.isNotEmpty(action, "Action");
+        } catch (ValidationException e) {
+            throw new ServiceException(e);
+        }
+
+        final Subject s = study.getSubjectService().getForName(subject);
+        final Action a = study.getActionService().getForName(action);
+
+        endCoding(s, a, modifierInput, endMs);
+    }
+
+    public void endCoding(Subject subject, Action action, String modifierInput, long endMs) throws ServiceException {
+        log.info("Stopping coding for subject {}, action {}, input {} and stop time {}", subject, action, modifierInput, endMs);
+
+        try {
+            Validate.isNotNull(subject, "Subject");
+            Validate.isNotNull(action, "Action");
+        } catch (ValidationException e) {
+            throw new ServiceException(e);
+        }
+
+        Coding coding = getOpenCoding(subject, action, modifierInput);
 
         if (coding == null) {
             throw new ServiceException("Couldn't find a running coding for subject " + subject.getDisplayString()
-             + " and action " + action.getDisplayString());
+                    + " and action " + action.getDisplayString());
         }
 
         try {
+            coding.setEndMs(endMs);
             Daos.get().coding().update(coding);
             openCodings.remove(coding);
             EventBusHolder.post(new UiEvent.FinishedCoding(coding));
@@ -152,17 +212,5 @@ public class CodingService {
 
     public List<Coding> getOpenCodings() {
         return openCodings;
-    }
-
-    public long getEndOfLastCoding() {
-        long max = 0;
-
-        for (Coding coding : observation.getCodings()) {
-            if (coding.getEndMs() > max) {
-                max = coding.getEndMs();
-            }
-        }
-
-        return max;
     }
 }
