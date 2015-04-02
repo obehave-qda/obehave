@@ -6,7 +6,7 @@
         </Console>
 
         <RollingFile name="fileLogger" fileName="log/obehave.log"
-                     filePattern="log/obehave-%i-%d{MM-dd-yyyy HH:mm}.log.gz">
+                     filePattern="log/obehave-%i-%d{MM-dd-yyyy-HH:mm}.log.gz">
             <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n"/>
             <Policies>
                 <OnStartupTriggeringPolicy/>
