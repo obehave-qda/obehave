@@ -32,9 +32,9 @@ public class ActionService extends BaseEntityService<Action> {
     protected void checkBeforeSave(Action action) throws ServiceException {
         for (Action existing : getStudy().getActionList()) {
             if (!existing.getId().equals(action.getId())) {
-                if (existing.getName().equals(action.getName())) {
+                if (existing.getName().equalsIgnoreCase(action.getName())) {
                     throw new ServiceException("Name has to be unique! Already found in " + existing.getDisplayString());
-                } else if (existing.getAlias() != null && !existing.getAlias().isEmpty() && existing.getAlias().equals(action.getAlias())) {
+                } else if (existing.getAlias() != null && !existing.getAlias().isEmpty() && existing.getAlias().equalsIgnoreCase(action.getAlias())) {
                     throw new ServiceException("Alias has to be unique! Already found in " + existing.getDisplayString());
                 }
             }

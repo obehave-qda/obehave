@@ -5,6 +5,8 @@ import javafx.scene.control.TextInputDialog;
 import org.controlsfx.dialog.Dialogs;
 import org.obehave.util.I18n;
 import org.obehave.util.Properties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
@@ -12,6 +14,8 @@ import java.util.Optional;
  * @author Markus Möslinger
  */
 public class AlertUtil {
+    private static final Logger log = LoggerFactory.getLogger(AlertUtil.class);
+
     private AlertUtil() {
         throw new AssertionError(I18n.get("exception.constructor.utility"));
     }
@@ -37,6 +41,8 @@ public class AlertUtil {
      *          Otherwise, it will be ignored
      */
     public static void showError(String title, String content, Throwable t) {
+        log.error("Showing error popup\nTitle:\t{}\nContent:\t{}", title, content, t);
+
         if (Properties.isUiErrorExceptionsShow()) {
             Dialogs.create().title(title).message(content).showException(t);
         } else {

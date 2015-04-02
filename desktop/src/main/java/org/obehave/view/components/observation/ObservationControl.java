@@ -13,7 +13,9 @@ import org.controlsfx.control.textfield.TextFields;
 import org.obehave.events.EventBusHolder;
 import org.obehave.events.UiEvent;
 import org.obehave.exceptions.ServiceException;
+import org.obehave.model.Action;
 import org.obehave.model.Observation;
+import org.obehave.service.ActionService;
 import org.obehave.service.CodingService;
 import org.obehave.service.Study;
 import org.obehave.view.components.observation.coding.CodingControl;
@@ -31,6 +33,7 @@ public class ObservationControl extends BorderPane {
     private Observation observation;
 
     private CodingService codingService;
+    private ActionService actionService;
 
     @FXML
     private VideoControl videoControl;
@@ -72,6 +75,10 @@ public class ObservationControl extends BorderPane {
                 .setOnAutoCompleted(e -> inputModifier.requestFocus());
         TextFields.bindAutoCompletion(inputModifier,
                 p -> (study.getSuggestionServiceBuilder().build(observation).getModifierSuggestions(inputAction.getText(), p.getUserText())));
+
+        inputAction.textProperty().addListener((observable, oldValue, newValue) -> handleActionValue(newValue));
+        inputModifier.setText("No valid action entered");
+        inputModifier.setDisable(true);
     }
 
     public void loadVideo(File video) {
@@ -100,21 +107,47 @@ public class ObservationControl extends BorderPane {
 
     public void setStudy(Study study) {
         this.study = study;
+        this.actionService = study.getActionService();
+    }
+
+    private void handleActionValue(String newValue) {
+        Action a = actionService.getForName(newValue);
+
+        if (a != null) {
+            if (a.getModifierFactory() == null && !inputModifier.isDisabled()) {
+                log.trace("Disabling text field - no modifier factory for action {}", a);
+                inputModifier.setText("No modifier for " + a.getDisplayString());
+                inputModifier.setDisable(true);
+            } else if (a.getModifierFactory() != null && inputModifier.isDisabled()) {
+                log.trace("Enabling text field - action has a modifier factory {}", a);
+                inputModifier.clear();
+                inputModifier.setDisable(false);
+            }
+        } else {
+            inputModifier.setText("No valid action entered");
+            inputModifier.setDisable(true);
+        }
     }
 
     @FXML
     public void code(KeyEvent event) {
         if (event.getCode() == KeyCode.ENTER) {
-            try {
-                final String subject = inputSubject.getText();
-                final String action = inputAction.getText();
+            code();
+        }
+    }
 
-                if (subject != null && !subject.isEmpty() && action != null && !action.isEmpty()) {
-                    codingService.startCoding(subject, action, inputModifier.getText(), (long) (currentTimeProperty.get() * 1000));
-                }
-            } catch (ServiceException e) {
-                AlertUtil.showError("Error while coding", "Couldn't code, because " + e.getMessage(), e);
+    private void code() {
+        try {
+            final String subject = inputSubject.getText();
+            final String action = inputAction.getText();
+
+            if (subject != null && !subject.isEmpty() && action != null && !action.isEmpty()) {
+                final String modifier = !inputModifier.isDisabled() ? inputModifier.getText() : null;
+
+                codingService.startCoding(subject, action, modifier, (long) (currentTimeProperty.get() * 1000));
             }
+        } catch (ServiceException e) {
+            AlertUtil.showError("Error while coding", "Couldn't code, because " + e.getMessage(), e);
         }
     }
 }
