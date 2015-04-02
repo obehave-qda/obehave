@@ -38,6 +38,9 @@ public class Observation extends BaseEntity implements Displayable {
     @ForeignCollectionField(eager = false)
     private Collection<SubjectInObservation> participatingSubjects = new ArrayList<>();
 
+    @DatabaseField(columnName = "focalSubject", foreign = true)
+    private Subject focalSubject;
+
     public Observation() {
     }
 
@@ -127,6 +130,14 @@ public class Observation extends BaseEntity implements Displayable {
         }
 
         return Collections.unmodifiableList(subjects);
+    }
+
+    public Subject getFocalSubject() {
+        return focalSubject;
+    }
+
+    public void setFocalSubject(Subject focalSubject) {
+        this.focalSubject = focalSubject;
     }
 
     @Override
