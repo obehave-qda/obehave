@@ -1,7 +1,6 @@
 package org.obehave.service;
 
 import org.obehave.model.Action;
-import org.obehave.model.Displayable;
 import org.obehave.model.Observation;
 import org.obehave.model.Subject;
 import org.obehave.model.modifier.ModifierFactory;
@@ -38,10 +37,12 @@ public class SuggestionService {
 
         if (enteredText != null && !enteredText.isEmpty()) {
             for (Subject subject : observation.getParticipatingSubjects()) {
-                if (subject.getAlias() != null && subject.getAlias().contains(enteredText)) {
-                    // rank matching aliases before normal matches
+                final String enteredTextLower = enteredText.toLowerCase();
+
+                if (subject.getAlias() != null && subject.getAlias().toLowerCase().contains(enteredTextLower)) {
+                    // rank matching aliases before matching names
                     suggestedSubjects.add(0, subject.getDisplayString());
-                } else if (subject.getName().contains(enteredText)) {
+                } else if (subject.getName().toLowerCase().contains(enteredTextLower)) {
                     suggestedSubjects.add(subject.getDisplayString());
                 }
             }
@@ -54,15 +55,13 @@ public class SuggestionService {
         List<String> suggestedActions = new ArrayList<>();
 
         if (enteredText != null && !enteredText.isEmpty()) {
-            List<Displayable> actions = study.getActions().flatten();
+            for (Action a : study.getActionList()) {
+                final String enteredTextLower = enteredText.toLowerCase();
 
-            for (Displayable action : actions) {
-                Action a = (Action) action;
-
-                if (a.getAlias() != null && a.getAlias().contains(enteredText)) {
-                    // rank matching aliases before normal matches
+                if (a.getAlias() != null && a.getAlias().toLowerCase().contains(enteredTextLower)) {
+                    // rank matching aliases before matching names
                     suggestedActions.add(0, a.getDisplayString());
-                } else if (a.getName().contains(enteredText)) {
+                } else if (a.getName().toLowerCase().contains(enteredTextLower)) {
                     suggestedActions.add(a.getDisplayString());
                 }
             }
@@ -94,7 +93,7 @@ public class SuggestionService {
         if (enteredText != null && !enteredText.isEmpty()) {
             List<String> filteredValues = new ArrayList<>();
             for (String value : validValues) {
-                if (value.contains(enteredText)) {
+                if (value.toLowerCase().contains(enteredText.toLowerCase())) {
                     filteredValues.add(value);
                 }
             }

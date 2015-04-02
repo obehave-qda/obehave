@@ -5,7 +5,7 @@ import org.obehave.model.Displayable;
 import org.obehave.model.Node;
 
 /**
- * @author Markus Möslinger
+ * @author Markus MÃ¶slinger
  */
 abstract class BaseEntityService<T> {
     private final Study study;
@@ -18,14 +18,23 @@ abstract class BaseEntityService<T> {
 
     protected abstract void checkBeforeSave(T entity) throws ServiceException;
 
+    /**
+     * Since entities {@link org.obehave.model.Subject}, {@link org.obehave.model.Action},
+     * {@link org.obehave.model.modifier.ModifierFactory} and  {@link org.obehave.model.Observation} must have a unique
+     * name, this service method can fetch the entity of a study with a given name.
+     * <p/>
+     * This method is case in-sensitive.
+     * @param name The name to look forr
+     * @return the entity, or null if none found
+     */
     @SuppressWarnings("unchecked")
-    protected T getForName(String name) {
+    public T getForName(String name) {
         if (name == null || name.isEmpty()) {
             return null;
         }
 
         for (Displayable d : parent.flatten()) {
-            if (d.getDisplayString().equals(name)) {
+            if (d.getDisplayString().equalsIgnoreCase(name)) {
                 return (T) d;
             }
         }

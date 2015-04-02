@@ -13,7 +13,7 @@
                 <VideoControl fx:id="videoControl"/>
                 <HBox>
                     <TextField fx:id="inputSubject" styleClass="codinginput"/>
-                    <TextField fx:id="inputAction" styleClass="codinginput" onKeyReleased="#code"/>
+                    <TextField fx:id="inputAction" styleClass="codinginput" onKeyReleased="#code" />
                     <TextField fx:id="inputModifier" styleClass="codinginput" onKeyReleased="#code"/>
                 </HBox>
             </VBox>

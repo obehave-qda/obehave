@@ -76,14 +76,11 @@ public class Coding extends BaseEntity {
     }
 
     public void setModifier(String input) throws FactoryException {
-        if (input == null) {
-            throw new IllegalArgumentException("Input must not be null");
-        }
         if (action.getModifierFactory() == null) {
             throw new FactoryException("This action has no modifier factory!");
         }
 
-        if (!input.isEmpty()) {
+        if (input != null && !input.isEmpty()) {
             this.modifier = action.getModifierFactory().create(input);
         }
     }
