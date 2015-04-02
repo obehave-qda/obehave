@@ -11,10 +11,7 @@ import org.obehave.exceptions.Validate;
 import org.obehave.persistence.impl.ObservationDaoImpl;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * During an observation, it's possible to code subjects and actions.
@@ -138,6 +135,53 @@ public class Observation extends BaseEntity implements Displayable {
 
     public void setFocalSubject(Subject focalSubject) {
         this.focalSubject = focalSubject;
+    }
+
+    public long getEndOfLastCoding() {
+        long max = 0;
+
+        for (Coding coding : getCodings()) {
+            if (coding.getEndMs() > max) {
+                max = coding.getEndMs();
+            }
+        }
+
+        return max;
+    }
+
+    public List<Coding> getOpenCodings() {
+        List<Coding> openCodings = new ArrayList<>();
+
+        for (Coding coding : getCodings()) {
+            if (coding.isRunning()) {
+                openCodings.add(coding);
+            }
+        }
+
+        return openCodings;
+    }
+
+    public List<Subject> getSubjectsWithOpenCodings() {
+        Set<Subject> subjects = new HashSet<>();
+
+        for (Coding coding : getOpenCodings()) {
+            subjects.add(coding.getSubject());
+        }
+
+        return new ArrayList<>(subjects);
+    }
+
+    public List<Action> getActionsFromOpenCodingsOfSubject(Subject subject) {
+        Set<Action> actions = new HashSet<>();
+
+        if (subject != null) {
+            for (Coding coding : getOpenCodings()) {
+                if (coding.getSubject().equals(subject))
+                    actions.add(coding.getAction());
+            }
+        }
+
+        return new ArrayList<>(actions);
     }
 
     @Override

@@ -81,6 +81,7 @@ CREATE TABLE PUBLIC.Modifier
   subject INT,
   enumerationValue VARCHAR2(255),
   number INT,
+  buildString VARCHAR(255),
   FOREIGN KEY (subject) REFERENCES Public.Subject(id),
   FOREIGN KEY (modifierFactory) REFERENCES Public.ModifierFactory(id)
 );

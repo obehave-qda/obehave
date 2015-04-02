@@ -93,7 +93,9 @@ public class SubjectPane extends Pane {
 
         final double positionEnd = secondWidthProperty.get() * (coding.getDuration() / 1000);
 
-        openCodings.get(coding).setWidth(positionEnd);
+        final Rectangle codingRectangle = openCodings.get(coding);
+        codingRectangle.widthProperty().unbind();
+        codingRectangle.setWidth(positionEnd);
     }
 
     public DoubleProperty secondWidthProperty() {

@@ -68,10 +68,10 @@ public class ObservationControl extends BorderPane {
         codingControl.maxHeightProperty().bind(heightProperty().divide(3));
 
         TextFields.bindAutoCompletion(inputSubject,
-                p -> (study.getSuggestionServiceBuilder().build(observation).getSubjectSuggestions(p.getUserText())))
+                p -> (study.getSuggestionServiceBuilder().build(observation).getSubjectSuggestions(p.getUserText(), isEndCodingMode())))
                 .setOnAutoCompleted(e -> inputAction.requestFocus());
         TextFields.bindAutoCompletion(inputAction,
-                p -> (study.getSuggestionServiceBuilder().build(observation).getActionSuggestions(p.getUserText())))
+                p -> (study.getSuggestionServiceBuilder().build(observation).getActionSuggestions(p.getUserText(), isEndCodingMode(), inputSubject.getText())))
                 .setOnAutoCompleted(e -> inputModifier.requestFocus());
         TextFields.bindAutoCompletion(inputModifier,
                 p -> (study.getSuggestionServiceBuilder().build(observation).getModifierSuggestions(inputAction.getText(), p.getUserText())));
@@ -104,7 +104,7 @@ public class ObservationControl extends BorderPane {
                     codingControl.lengthMsProperty().setValue(newValue.toMillis()));
         } else {
             codingControl.currentTime().unbind();
-            codingControl.lengthMsProperty().setValue(codingService.getEndOfLastCoding());
+            codingControl.lengthMsProperty().setValue(observation.getEndOfLastCoding());
         }
 
         codingControl.loadObservation(observation);
@@ -149,10 +149,18 @@ public class ObservationControl extends BorderPane {
             if (subject != null && !subject.isEmpty() && action != null && !action.isEmpty()) {
                 final String modifier = !inputModifier.isDisabled() ? inputModifier.getText() : null;
 
-                codingService.startCoding(subject, action, modifier, (long) (currentTimeProperty.get() * 1000));
+                if (!isEndCodingMode()) {
+                    codingService.startCoding(subject, action, modifier, (long) (currentTimeProperty.get() * 1000));
+                } else {
+                    codingService.endCoding(subject.substring(1), action, modifier, (long) (currentTimeProperty.get() * 1000));
+                }
             }
         } catch (ServiceException e) {
             AlertUtil.showError("Error while coding", "Couldn't code, because " + e.getMessage(), e);
         }
+    }
+
+    private boolean isEndCodingMode() {
+        return inputSubject.getText().length() >= 1 && inputSubject.getText().charAt(0) == '/';
     }
 }

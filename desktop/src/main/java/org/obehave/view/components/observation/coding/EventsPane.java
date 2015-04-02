@@ -107,12 +107,37 @@ public class EventsPane extends Pane {
     public void addCoding(Coding coding) {
         log.trace("Adding coding to pane: {}", coding);
 
-        subjectPanes.get(coding.getSubject()).drawCoding(coding);
+        final Subject subject = coding.getSubject();
+        final SubjectPane subjectPane = subjectPanes.get(subject);
+
+        if (subjectPane != null) {
+            subjectPane.drawCoding(coding);
+        } else {
+            log.warn("Couldn't find a subject pane for subject {} - is it participating in this observation?", subject);
+        }
+    }
+
+    public void stopCoding(Coding coding) {
+        log.trace("Ending coding: {}", coding);
+
+        final Subject subject = coding.getSubject();
+        final SubjectPane subjectPane = subjectPanes.get(subject);
+
+        if (subjectPane != null) {
+            subjectPane.endCoding(coding);
+        } else {
+            log.warn("Couldn't find a subject pane for subject {} - is it participating in this observation?", subject);
+        }
     }
 
     @Subscribe
     public void newCodingSubscriber(UiEvent.NewCoding event) {
         addCoding(event.getCoding());
+    }
+
+    @Subscribe
+    public void finishedCodingSubscriber(UiEvent.FinishedCoding event) {
+        stopCoding(event.getCoding());
     }
 
     public void refresh() {
