@@ -36,6 +36,7 @@ public class CodingControl extends ScrollPane implements Initializable {
     private DoubleProperty secondWithProperty = new SimpleDoubleProperty(this, "secondWithProperty", 15);
 
     private DoubleProperty currentTime = new SimpleDoubleProperty(this, "currentTime");
+    private DoubleProperty lengthMs = new SimpleDoubleProperty(this, "lengthMs", 180 * 1000);
 
     /**
      * A property containing the current visible x value of the view port
@@ -82,7 +83,7 @@ public class CodingControl extends ScrollPane implements Initializable {
         // *** eventsPane: properties
         eventsPane.subjectHeightProperty().bind(subjectHeightProperty);
         eventsPane.secondWidthProperty().bind(secondWithProperty);
-        eventsPane.msProperty().setValue(180 * 1000);
+        eventsPane.msProperty().bind(lengthMs);
 
         // *** eventsPane: layout
         eventsPane.toBack();
@@ -105,7 +106,7 @@ public class CodingControl extends ScrollPane implements Initializable {
         timelinePane.subjectHeightProperty().bind(subjectHeightProperty);
         timelinePane.secondWidthProperty().bind(secondWithProperty);
         timelinePane.timelineHeightProperty().bind(timelineHeightProperty);
-        timelinePane.msProperty().setValue(180 * 1000);
+        timelinePane.msProperty().bind(lengthMs);
 
         // *** timelinePane: layout
         timelinePane.toFront();
@@ -175,5 +176,9 @@ public class CodingControl extends ScrollPane implements Initializable {
 
     public DoubleProperty currentTime() {
         return currentTime;
+    }
+
+    public DoubleProperty lengthMsProperty() {
+        return lengthMs;
     }
 }

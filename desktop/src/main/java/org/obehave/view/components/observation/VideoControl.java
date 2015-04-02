@@ -85,4 +85,8 @@ public class VideoControl extends BorderPane {
     public ReadOnlyObjectProperty<Duration> currentTime() {
         return mediaView.getMediaPlayer().currentTimeProperty();
     }
+
+    public ReadOnlyObjectProperty<Duration> totalDurationProperty() {
+        return mediaView.getMediaPlayer().totalDurationProperty();
+    }
 }

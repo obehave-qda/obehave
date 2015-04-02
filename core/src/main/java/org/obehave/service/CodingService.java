@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Markus Möslinger
+ * @author Markus MÃ¶slinger
  */
 public class CodingService {
     public static class CodingServiceBuilder {
@@ -152,5 +152,17 @@ public class CodingService {
 
     public List<Coding> getOpenCodings() {
         return openCodings;
+    }
+
+    public long getEndOfLastCoding() {
+        long max = 0;
+
+        for (Coding coding : observation.getCodings()) {
+            if (coding.getEndMs() > max) {
+                max = coding.getEndMs();
+            }
+        }
+
+        return max;
     }
 }
