@@ -32,10 +32,10 @@
 
     <string name="title_activity_start">Choose Study</string>
     <string name="hello_world">Hello world!</string>
-    <string name="info_start">Before you can start coding, you must choose a study. Please click the button below.
-    </string>
+    <string name="info_start">Before you can start coding, you must choose a study. Please click the button below.</string>
     <string name="btn_choose_study">Choose Study</string>
     <string name="btn_choose_study_from_file">Choose Study from File</string>
     <string name="btn_choose_study_wlan">Import File from WLAN</string>
+    <string name="title_activity_observation">ObservationActivity</string>
 
 </resources>
