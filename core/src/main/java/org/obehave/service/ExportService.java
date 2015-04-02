@@ -106,7 +106,7 @@ public class ExportService {
             }
         }
 
-        export(subjects, action.getName(), countsPerAction, totalDurationPerAction);
+        export(subjects, action.getDisplayString(), countsPerAction, totalDurationPerAction);
 
     }
 
