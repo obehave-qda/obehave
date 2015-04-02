@@ -129,7 +129,7 @@ public class ExportService {
         return (c.getModifier().getType() == Modifier.Type.SUBJECT_MODIFIER) && subjects.contains(c.getModifier().get());
     }
 
-    private XSSFSheet generateExcelSheet(XSSFWorkbook wb, Map<String, ArrayList<Long>> data, String action, List<Subject> finalSubjects, String type) {
+    private void generateExcelSheet(XSSFWorkbook wb, Map<String, ArrayList<Long>> data, String action, List<Subject> finalSubjects, String type) {
 
         //Create a blank sheet and set name like the action
         XSSFSheet sheet = wb.createSheet(type);
@@ -166,8 +166,6 @@ public class ExportService {
                 cell.setCellValue(values);
             }
         }
-        return sheet;
-
     }
 
     public void writeExcelSheetToDisk(XSSFWorkbook workbook, String title) {
