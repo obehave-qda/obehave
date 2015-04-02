@@ -15,7 +15,9 @@ CREATE TABLE PUBLIC.Observation
   modified TIMESTAMP NOT NULL,
   name VARCHAR2(255) NOT NULL,
   video VARCHAR(255),
-  date DATETIME
+  date DATETIME,
+  focalSubject INT,
+  FOREIGN KEY (focalSubject) REFERENCES Public.Subject(id)
 );
 
 CREATE TABLE PUBLIC.SubjectInObservation

@@ -1,10 +1,7 @@
 package org.obehave.view.components.tree.edit;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import org.controlsfx.control.CheckListView;
 import org.joda.time.DateTime;
@@ -52,6 +49,9 @@ public class ObservationEditControl {
     private TextField minute;
 
     @FXML
+    private ChoiceBox<DisplayWrapper<Subject>> focalSubject;
+
+    @FXML
     private CheckListView<DisplayWrapper<Subject>> checkedSubjects;
 
     public String getName() {
@@ -86,14 +86,18 @@ public class ObservationEditControl {
         loadedObservationNode = node;
         Observation o = (Observation) node.getData();
 
+        fillFocalSubjects();
+
         if (o == null) {
             setName("");
             setVideoPath(null);
             checkedSubjects.getCheckModel().clearChecks();
+            focalSubject.getSelectionModel().select(null);
         } else {
             setName(o.getName());
             setVideoPath(o.getVideo());
             o.getParticipatingSubjects().forEach(s -> checkedSubjects.getCheckModel().check(DisplayWrapper.of(s)));
+            focalSubject.getSelectionModel().select(DisplayWrapper.of(o.getFocalSubject()));
         }
 
         if (o != null && o.getDateTime() != null) {
@@ -132,6 +136,8 @@ public class ObservationEditControl {
         LocalDate pickedDate = date.getValue();
 
         o.setParticipatingSubjects(getCheckedSubjects());
+        final DisplayWrapper<Subject> selectedFocalSubject = focalSubject.getSelectionModel().getSelectedItem();
+        o.setFocalSubject(selectedFocalSubject != null ? selectedFocalSubject.get() : null);
 
         if (pickedDate != null) {
             DateTime dt = new DateTime(pickedDate.getYear(), pickedDate.getMonthValue(), pickedDate.getDayOfMonth(),
@@ -176,5 +182,15 @@ public class ObservationEditControl {
         checkedItems.forEach(subjectDisplayWrapper -> subjects.add(subjectDisplayWrapper.get()));
 
         return subjects;
+    }
+
+    private void fillFocalSubjects() {
+        List<DisplayWrapper<Subject>> subjects = new ArrayList<>();
+        subjects.add(null);
+
+        study.getSubjectsList().forEach(s -> subjects.add(DisplayWrapper.of(s)));
+
+        focalSubject.getItems().clear();
+        focalSubject.getItems().addAll(subjects);
     }
 }
