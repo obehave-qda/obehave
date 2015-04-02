@@ -41,7 +41,7 @@ public class AlertUtil {
      *          Otherwise, it will be ignored
      */
     public static void showError(String title, String content, Throwable t) {
-        log.error("Showing error popup\nTitle:\t{}\nContent:\t{}", title, content, t);
+        log.error("Showing error popup\nTitle:\t\t{}\nContent:\t{}", title, content, t);
 
         if (Properties.isUiErrorExceptionsShow()) {
             Dialogs.create().title(title).message(content).showException(t);
