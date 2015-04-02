@@ -40,7 +40,9 @@ public class TestStudyCreator {
 
         if (path.exists()) {
             log.info("Deleting {} - it already exists", path.getAbsolutePath());
-            path.delete();
+            if (!path.delete()) {
+                log.warn("Couldn't delete study at {}", path);
+            }
         }
 
         create(path);
