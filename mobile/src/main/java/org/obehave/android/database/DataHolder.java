@@ -77,4 +77,8 @@ public class DataHolder {
         return actionDataHolder;
     }
 
+    public static Study getStudy(){
+        return study;
+    }
+
 }

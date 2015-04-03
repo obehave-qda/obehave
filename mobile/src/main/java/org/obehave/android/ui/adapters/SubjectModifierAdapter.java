@@ -40,8 +40,6 @@ public class SubjectModifierAdapter extends ArrayAdapter{
             holder = new ViewHolder();
             holder.txtView = (TextView) convertView.findViewById(R.id.liListHeader);
             holder.circle = (Circle) convertView.findViewById(R.id.circle);
-
-
             // associate the holder with the view for later lookup
             convertView.setTag(holder);
         }
