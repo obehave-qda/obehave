@@ -19,11 +19,11 @@ import java.util.*;
  * TODO: refactor
  * @author Stefan Lamprecht
  */
-public class ExportService {
-    private static final Logger log = LoggerFactory.getLogger(ExportService.class);
+public class ExcelExporter {
+    private static final Logger log = LoggerFactory.getLogger(ExcelExporter.class);
     private File savePath;
 
-    public ExportService(File savePath) {
+    public ExcelExporter(File savePath) {
         this.savePath = savePath;
     }
 

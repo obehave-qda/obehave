@@ -11,12 +11,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExportServiceTest {
+public class ExcelExporterTest {
 
     private List<Coding> codings;
     private Action action;
     private List<Subject> subjects;
-    private ExportService exportService;
+    private ExcelExporter excelExporter;
     private List<Observation> observations;
     private Observation observation;
 
@@ -47,8 +47,8 @@ public class ExportServiceTest {
     public void testExportService(){
         prepareData();
 
-        exportService = new ExportService(new File("/Users/xeno/Desktop"));
-        exportService.exportAction(observations,subjects,action);
+        excelExporter = new ExcelExporter(new File("/Users/xeno/Desktop"));
+        excelExporter.exportAction(observations,subjects,action);
 
     }
 }
