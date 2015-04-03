@@ -16,10 +16,11 @@
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
         </columnConstraints>
         <rowConstraints>
-            <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES"/>
-            <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES"/>
-            <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES"/>
-            <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
         </rowConstraints>
         <fx:define>
             <ToggleGroup fx:id="toggleGroup"/>
@@ -36,8 +37,9 @@
             <RadioButton fx:id="radioState" toggleGroup="$toggleGroup"/>
             <Label text="State"/>
         </HBox>
-        <ComboBox fx:id="modifierFactoryCombo" GridPane.columnIndex="0" GridPane.columnSpan="2"
-                  GridPane.halignment="CENTER" GridPane.rowIndex="3"/>
+        <Label text="Modifier" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+        <ComboBox fx:id="modifierFactoryCombo" GridPane.columnIndex="1" GridPane.halignment="CENTER"
+                  GridPane.rowIndex="3"/>
         <Button text="Save" onAction="#saveCurrent" GridPane.columnIndex="0" GridPane.rowIndex="4"
                 GridPane.halignment="LEFT"/>
         <Button text="Cancel" onAction="#cancel" GridPane.columnIndex="1" GridPane.rowIndex="4"

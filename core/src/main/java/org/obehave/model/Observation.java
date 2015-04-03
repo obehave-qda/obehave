@@ -11,10 +11,7 @@ import org.obehave.exceptions.Validate;
 import org.obehave.persistence.impl.ObservationDaoImpl;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * During an observation, it's possible to code subjects and actions.
@@ -34,6 +31,12 @@ public class Observation extends BaseEntity implements Displayable {
 
     @ForeignCollectionField
     private Collection<Coding> codings = new ArrayList<>();
+
+    @ForeignCollectionField(eager = false)
+    private Collection<SubjectInObservation> participatingSubjects = new ArrayList<>();
+
+    @DatabaseField(columnName = "focalSubject", foreign = true)
+    private Subject focalSubject;
 
     public Observation() {
     }
@@ -81,7 +84,7 @@ public class Observation extends BaseEntity implements Displayable {
     }
 
     public List<Coding> getCodings() {
-        return Collections.unmodifiableList(new ArrayList<Coding>(codings));
+        return Collections.unmodifiableList(new ArrayList<>(codings));
     }
 
     @Override
@@ -103,6 +106,82 @@ public class Observation extends BaseEntity implements Displayable {
         Observation rhs = (Observation) obj;
 
         return new EqualsBuilder().append(name, rhs.name).isEquals();
+    }
+
+    public void setParticipatingSubjects(List<Subject> subjects) {
+        participatingSubjects.clear();
+
+        for (Subject subject : subjects) {
+            addParticipatingSubject(subject);
+        }
+    }
+
+    public void addParticipatingSubject(Subject subject) {
+        participatingSubjects.add(new SubjectInObservation(this, subject));
+    }
+
+    public List<Subject> getParticipatingSubjects() {
+        List<Subject> subjects = new ArrayList<>();
+        for (SubjectInObservation participatingSubject : participatingSubjects) {
+            subjects.add(participatingSubject.getSubject());
+        }
+
+        return Collections.unmodifiableList(subjects);
+    }
+
+    public Subject getFocalSubject() {
+        return focalSubject;
+    }
+
+    public void setFocalSubject(Subject focalSubject) {
+        this.focalSubject = focalSubject;
+    }
+
+    public long getEndOfLastCoding() {
+        long max = 0;
+
+        for (Coding coding : getCodings()) {
+            if (coding.getEndMs() > max) {
+                max = coding.getEndMs();
+            }
+        }
+
+        return max;
+    }
+
+    public List<Coding> getOpenCodings() {
+        List<Coding> openCodings = new ArrayList<>();
+
+        for (Coding coding : getCodings()) {
+            if (coding.isOpen()) {
+                openCodings.add(coding);
+            }
+        }
+
+        return openCodings;
+    }
+
+    public List<Subject> getSubjectsWithOpenCodings() {
+        Set<Subject> subjects = new HashSet<>();
+
+        for (Coding coding : getOpenCodings()) {
+            subjects.add(coding.getSubject());
+        }
+
+        return new ArrayList<>(subjects);
+    }
+
+    public List<Action> getActionsFromOpenCodingsOfSubject(Subject subject) {
+        Set<Action> actions = new HashSet<>();
+
+        if (subject != null) {
+            for (Coding coding : getOpenCodings()) {
+                if (coding.getSubject().equals(subject))
+                    actions.add(coding.getAction());
+            }
+        }
+
+        return new ArrayList<>(actions);
     }
 
     @Override

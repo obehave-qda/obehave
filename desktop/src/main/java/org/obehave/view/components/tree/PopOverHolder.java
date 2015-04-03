@@ -40,6 +40,7 @@ public class PopOverHolder {
         popOver.setContentNode(getSubjectParent());
 
         SubjectEditControl controller = subjectLoader.getController();
+        controller.setStudy(study);
         controller.setSaveCallback(this::hidePopOver);
         controller.loadSubject(node);
 
@@ -111,6 +112,7 @@ public class PopOverHolder {
         popOver.setContentNode(getObservationParent());
 
         ObservationEditControl controller = observationLoader.getController();
+        controller.setStudy(study);
         controller.setSaveCallback(this::hidePopOver);
         controller.loadObservation(node);
 

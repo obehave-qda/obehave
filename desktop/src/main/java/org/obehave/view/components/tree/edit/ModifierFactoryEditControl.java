@@ -12,12 +12,11 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import org.controlsfx.control.CheckListView;
+import org.obehave.exceptions.ServiceException;
 import org.obehave.model.Displayable;
 import org.obehave.model.Node;
 import org.obehave.model.Subject;
 import org.obehave.model.modifier.ModifierFactory;
-import org.obehave.service.ModifierFactoryService;
-import org.obehave.service.NodeService;
 import org.obehave.service.Study;
 import org.obehave.util.DisplayWrapper;
 import org.obehave.util.I18n;
@@ -37,12 +36,11 @@ import java.util.ResourceBundle;
 public class ModifierFactoryEditControl implements Initializable {
     private static final Logger log = LoggerFactory.getLogger(ModifierFactoryEditControl.class);
 
-    private static final ModifierFactoryService modifierFactoryService = ModifierFactoryService.getInstance();
-    private static final NodeService nodeService = NodeService.getInstance();
-
     private static final String COMBO_SUBJECT_LIST = I18n.get("ui.modifierfactory.edit.combo.subjectlist");
     private static final String COMBO_ENUMERATION_LIST = I18n.get("ui.modifierfactory.edit.combo.enumerationlist");
     private static final String COMBO_NUMBER_RANGE = I18n.get("ui.modifierfactory.edit.combo.numberrange");
+
+    private Study study;
 
     private Runnable saveCallback;
 
@@ -102,7 +100,7 @@ public class ModifierFactoryEditControl implements Initializable {
             log.debug("Selected indizes to remove: {}", selectedIndexes);
             Collections.reverse(selectedIndexes);
 
-            for(Integer i : selectedIndexes) {
+            for (Integer i : selectedIndexes) {
                 log.trace("Removing index {}", i);
                 enumerationList.getItems().remove((int) i);
             }
@@ -182,14 +180,18 @@ public class ModifierFactoryEditControl implements Initializable {
 
         mf.setName(name.getText());
 
-        modifierFactoryService.save(mf);
-        if (mfNull) {
-            loadedModifierFactoryNode.addChild(mf);
-        }
-        nodeService.save(loadedModifierFactoryNode);
+        try {
+            study.getModifierFactoryService().save(mf);
+            if (mfNull) {
+                loadedModifierFactoryNode.addChild(mf);
+            }
+            study.getNodeService().save(loadedModifierFactoryNode);
 
-        loadedModifierFactoryNode = null;
-        saveCallback.run();
+            loadedModifierFactoryNode = null;
+            saveCallback.run();
+        } catch (ServiceException exception) {
+            AlertUtil.showError("Error", exception.getMessage(), exception);
+        }
     }
 
     private String[] getAddedValues() {
@@ -242,6 +244,8 @@ public class ModifierFactoryEditControl implements Initializable {
     }
 
     public void setStudy(Study study) {
+        this.study = study;
+
         checkedSubjects.getItems().clear();
         Node subjectNode = study.getSubjects();
 

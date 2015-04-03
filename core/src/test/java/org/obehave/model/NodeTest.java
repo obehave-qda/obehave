@@ -125,4 +125,12 @@ public class NodeTest {
         Node n = new Node(SUBJECT1, Subject.class);
         n.setExclusivity(Node.Exclusivity.TOTAL_EXCLUSIVE);
     }
+
+    @Test
+    public void displayStringReturnsNameOfAction() {
+        Action action = new Action("Testaction");
+        Node node = new Node(action, Action.class);
+
+        assertEquals("Testaction", node.getDisplayString());
+    }
 }
