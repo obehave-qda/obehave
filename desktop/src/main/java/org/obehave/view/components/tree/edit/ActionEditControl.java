@@ -7,13 +7,12 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import org.obehave.events.EventBusHolder;
-import org.obehave.events.RepaintStudyEvent;
+import org.obehave.events.UiEvent;
+import org.obehave.exceptions.ServiceException;
 import org.obehave.model.Action;
 import org.obehave.model.Displayable;
 import org.obehave.model.Node;
 import org.obehave.model.modifier.ModifierFactory;
-import org.obehave.service.ActionService;
-import org.obehave.service.NodeService;
 import org.obehave.service.Study;
 import org.obehave.util.DisplayWrapper;
 import org.obehave.view.util.AlertUtil;
@@ -26,8 +25,6 @@ import org.slf4j.LoggerFactory;
  */
 public class ActionEditControl {
     private static final Logger log = LoggerFactory.getLogger(ActionEditControl.class);
-    private static final ActionService actionService = ActionService.getInstance();
-    private static final NodeService nodeService = NodeService.getInstance();
 
     private Node loadedActionNode;
     private Runnable saveCallback;
@@ -134,14 +131,18 @@ public class ActionEditControl {
         action.setModifierFactory(modifierFactoryCombo.getSelectionModel().getSelectedItem().get());
 
 
-        actionService.save(action);
-        if (!edit) {
-            loadedActionNode.addChild(action);
-        }
-        nodeService.save(loadedActionNode);
+        try {
+            study.getActionService().save(action);
+            if (!edit) {
+                loadedActionNode.addChild(action);
+            }
+            study.getNodeService().save(loadedActionNode);
 
-        loadedActionNode = null;
-        saveCallback.run();
+            loadedActionNode = null;
+            saveCallback.run();
+        } catch (ServiceException exception) {
+            AlertUtil.showError("Error", exception.getMessage(), exception);
+        }
     }
 
     public void cancel() {
@@ -158,7 +159,7 @@ public class ActionEditControl {
     }
 
     @Subscribe
-    public void refreshModifierFactories(RepaintStudyEvent event) {
+    public void refreshModifierFactories(UiEvent.RepaintStudyTree event) {
         modifierFactoryCombo.getItems().clear();
         modifierFactoryCombo.getItems().add(DisplayWrapper.of(null));
 

@@ -3,10 +3,12 @@ package org.obehave.view.components.tree;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeItem;
+import org.obehave.exceptions.ServiceException;
 import org.obehave.model.Action;
 import org.obehave.model.Node;
-import org.obehave.service.NodeService;
+import org.obehave.service.Study;
 import org.obehave.util.DisplayWrapper;
+import org.obehave.view.util.AlertUtil;
 import org.obehave.view.util.TreeUtil;
 
 import java.util.function.Supplier;
@@ -19,7 +21,8 @@ public class ContextMenuBuilder {
     private Node node;
     private int hierarchyLevel;
     private Supplier<javafx.scene.Node> nodeAnchor;
-    private NodeService nodeService = NodeService.getInstance();
+
+    private Study study;
 
     private ContextMenu cm = new ContextMenu();
 
@@ -27,9 +30,11 @@ public class ContextMenuBuilder {
         this.popOverHolder = popOverHolder;
     }
 
-    public static ContextMenu forItem(PopOverHolder popOverHolder, TreeItem<DisplayWrapper<?>> treeItem,
+    public static ContextMenu forItem(Study study, PopOverHolder popOverHolder,
+                                      TreeItem<DisplayWrapper<?>> treeItem,
                                       Supplier<javafx.scene.Node> ownerNodeSupplier) {
         ContextMenuBuilder builder = new ContextMenuBuilder(popOverHolder);
+        builder.study = study;
 
         builder.node = (Node) treeItem.getValue().get();
         builder.hierarchyLevel = TreeUtil.getHierarchyLevel(treeItem);
@@ -90,8 +95,12 @@ public class ContextMenuBuilder {
             final MenuItem menuItem = new MenuItem("Delete item");
             menuItem.setOnAction(event -> {
                 node.getParent().remove(node);
-                nodeService.save(node.getParent());
-                nodeService.delete(node);
+                try {
+                    study.getNodeService().save(node.getParent());
+                    study.getNodeService().delete(node);
+                } catch (ServiceException exception) {
+                    AlertUtil.showError("Error", exception.getMessage());
+                }
             });
 
             cm.getItems().add(menuItem);

@@ -25,20 +25,23 @@ public class TestStudyCreator {
         log.info("Done creating teststudy at {}", path.getAbsolutePath());
     }
 
-    // just uncomment the next line and execute the test
+    // if you want to keep your teststudy intact after running unit tests, ignore this test
+    // @Ignore
     @Test
     public void createStudy() throws SQLException {
         // We want to create the file @ obehave/studies instead of obehave/core/studies
         final File folder = new File("../studies");
 
         // change the filename if you don't want to override stuff!
-        final String file = "neuevers1_3.h2.db";
+        final String file = "teststudy.h2.db";
 
         final File path = new File(folder, file);
 
         if (path.exists()) {
             log.info("Deleting {} - it already exists", path.getAbsolutePath());
-            path.delete();
+            if (!path.delete()) {
+                log.warn("Couldn't delete study at {}", path);
+            }
         }
 
         create(path);

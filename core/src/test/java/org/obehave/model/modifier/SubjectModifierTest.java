@@ -16,12 +16,12 @@ public class SubjectModifierTest {
     @Before
     public void prepare() {
         modifierFactory = new ModifierFactory(SUBJECT);
-        modifier = new Modifier(modifierFactory, SUBJECT);
+        modifier = new Modifier(modifierFactory, SUBJECT, "Sub");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void noConstructionWithNull() {
-        new Modifier(modifierFactory, (Subject) null);
+        new Modifier(modifierFactory, (Subject) null, null);
     }
 
     @Test

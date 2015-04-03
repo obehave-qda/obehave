@@ -3,12 +3,9 @@ package org.obehave.view.components.tree;
 import com.google.common.eventbus.Subscribe;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import org.obehave.events.ChangeEvent;
-import org.obehave.events.ChangeType;
 import org.obehave.events.EventBusHolder;
-import org.obehave.events.RepaintStudyEvent;
-import org.obehave.model.*;
-import org.obehave.model.modifier.ModifierFactory;
+import org.obehave.events.UiEvent;
+import org.obehave.model.Node;
 import org.obehave.service.Study;
 import org.obehave.util.DisplayWrapper;
 import org.slf4j.Logger;
@@ -21,12 +18,6 @@ public class ProjectTreeControl extends TreeView<DisplayWrapper<?>> {
 
     private Study study;
 
-    private TreeItem root;
-    private TreeItem<DisplayWrapper<Node>> subjectNode;
-    private TreeItem<DisplayWrapper<Node>> actionNode;
-    private TreeItem<DisplayWrapper<Node>> modifierFactoryNode;
-    private TreeItem<DisplayWrapper<Node>> observationsNode;
-
     public ProjectTreeControl() {
         super();
 
@@ -37,23 +28,25 @@ public class ProjectTreeControl extends TreeView<DisplayWrapper<?>> {
         this.study = study;
 
         PopOverHolder popOverHolder = new PopOverHolder(study);
-        setCellFactory(param -> new EntityEditTreeCell(popOverHolder));
+        setCellFactory(param -> new EntityEditTreeCell(study, popOverHolder));
 
         redoTree();
     }
 
     @Subscribe
-    public void repaintStudy(RepaintStudyEvent event) {
+    public void repaintStudy(UiEvent.RepaintStudyTree event) {
         redoTree();
     }
 
     private void redoTree() {
-        root = new TreeItem<>(DisplayWrapper.of(study.getName()));
+        log.trace("Redoing project tree");
 
-        subjectNode = createTreeItem(study.getSubjects());
-        actionNode = createTreeItem(study.getActions());
-        modifierFactoryNode = createTreeItem(study.getModifierFactories());
-        observationsNode = createTreeItem(study.getObservations());
+        TreeItem root = new TreeItem(DisplayWrapper.of(study.getName()));
+
+        TreeItem<DisplayWrapper<Node>> subjectNode = createTreeItem(study.getSubjects());
+        TreeItem<DisplayWrapper<Node>> actionNode = createTreeItem(study.getActions());
+        TreeItem<DisplayWrapper<Node>> modifierFactoryNode = createTreeItem(study.getModifierFactories());
+        TreeItem<DisplayWrapper<Node>> observationsNode = createTreeItem(study.getObservations());
 
         root.getChildren().addAll(subjectNode, actionNode, modifierFactoryNode, observationsNode);
         root.setExpanded(true);
@@ -73,27 +66,5 @@ public class ProjectTreeControl extends TreeView<DisplayWrapper<?>> {
         }
 
         return treeItem;
-    }
-
-    @Subscribe
-    public void changeEvent(ChangeEvent<?> change) {
-        if (change.getChanged() instanceof Displayable) {
-            Displayable d = (Displayable) change.getChanged();
-
-            if (d instanceof Subject) {
-                handleEntityChange(d, change.getChangeType(), subjectNode);
-            } else if (d instanceof Action) {
-                handleEntityChange(d, change.getChangeType(), actionNode);
-            } else if (d instanceof ModifierFactory) {
-                handleEntityChange(d, change.getChangeType(), modifierFactoryNode);
-            } else if (d instanceof Observation) {
-                handleEntityChange(d, change.getChangeType(), observationsNode);
-            }
-        }
-    }
-
-    private void handleEntityChange(Displayable displayable, ChangeType changeType, TreeItem node) {
-        // TODO make something better here!
-        redoTree();
     }
 }

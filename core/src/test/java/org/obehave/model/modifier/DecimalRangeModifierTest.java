@@ -17,12 +17,12 @@ public class DecimalRangeModifierTest {
     @Before
     public void prepare() {
         modifierFactory = new ModifierFactory(0, 10);
-        modifier = new Modifier(modifierFactory, BigDecimal.valueOf(5.5));
+        modifier = new Modifier(modifierFactory, BigDecimal.valueOf(5.5), "5.5");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void cannotCreateModifierWithNull() {
-        new Modifier(modifierFactory, (BigDecimal) null);
+        new Modifier(modifierFactory, (BigDecimal) null, null);
     }
 
     @Test

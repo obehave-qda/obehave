@@ -1,10 +1,8 @@
 package org.obehave.service;
 
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
-import org.obehave.events.ChangeEvent;
-import org.obehave.events.ChangeType;
 import org.obehave.events.EventBusHolder;
-import org.obehave.events.RepaintStudyEvent;
+import org.obehave.events.UiEvent;
 import org.obehave.exceptions.Validate;
 import org.obehave.model.*;
 import org.obehave.model.modifier.ModifierFactory;
@@ -16,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * A study contains multiple subjects, actions and observations.
@@ -29,6 +28,14 @@ public class Study implements Displayable {
     private Node actions = new Node(Action.class);
     private Node observations = new Node(Observation.class);
     private Node modifierFactories = new Node(ModifierFactory.class);
+
+    private SuggestionService.SuggestionServiceBuilder suggestionServiceBuilder;
+    private ActionService actionService;
+    private NodeService nodeService;
+    private ModifierFactoryService modifierFactoryService;
+    private ObservationService observationService;
+    private SubjectService subjectService;
+    private CodingService.CodingServiceBuilder codingServiceBuilder;
 
     private File savePath;
 
@@ -93,7 +100,11 @@ public class Study implements Displayable {
 
     private void load() throws SQLException {
         log.info("Starting loading of entities");
-        long start = System.currentTimeMillis();
+        long startLoad = System.currentTimeMillis();
+
+        // we want to load a single value first to establish a database connection
+        name = DatabaseProperties.get(DatabaseProperties.STUDY_NAME);
+        final long startEntities = System.currentTimeMillis();
 
         subjects = Validate.hasOnlyOneElement(Daos.get().node().getRoot(Subject.class)).get(0);
         actions = Validate.hasOnlyOneElement(Daos.get().node().getRoot(Action.class)).get(0);
@@ -105,11 +116,9 @@ public class Study implements Displayable {
         removeEmptyNodes(modifierFactories);
         removeEmptyNodes(observations);
 
-        final String studyName = DatabaseProperties.get(DatabaseProperties.STUDY_NAME);
-        setName(studyName);
-
-        long duration = System.currentTimeMillis() - start;
-        log.info("Took {}ms for loading of entities", duration);
+        final long durationEntities = System.currentTimeMillis() - startEntities;
+        final long durationLoad = System.currentTimeMillis() - startLoad;
+        log.info("Took {}ms for loading of entities ({}ms in total for loading)", durationEntities, durationLoad);
     }
 
     private void removeEmptyNodes(Node node) {
@@ -127,86 +136,32 @@ public class Study implements Displayable {
         return subjects;
     }
 
-    public boolean addSubject(Subject subject) {
-        if (subjects.contains(subject)) {
-            log.debug("Won't setData another {}", subject);
-            return false;
-        }
-
-        log.debug("Adding subject {}", subject);
-
-        subjects.addChild(subject);
-        EventBusHolder.post(new ChangeEvent<>(subject, ChangeType.CREATE));
-        return true;
-    }
-
-    public boolean removeSubject(Subject subject) {
-        log.debug("Removing subject {}", subject);
-        final boolean deleted = subjects.remove(subject);
-        EventBusHolder.post(new ChangeEvent<>(subject, ChangeType.DELETE));
-        return deleted;
+    public List<Subject> getSubjectsList() {
+        return subjects.flattenAs(Subject.class);
     }
 
     public Node getActions() {
         return actions;
     }
 
-    public boolean addAction(Action action) {
-        if (actions.contains(action)) {
-            log.debug("Won't setData another {}", action);
-            return false;
-        }
-
-        log.debug("Adding action {}", action);
-        actions.addChild(action);
-        EventBusHolder.post(new ChangeEvent<>(action, ChangeType.CREATE));
-        return true;
-    }
-
-    public boolean removeAction(Action action) {
-        log.debug("Removing action {}", action);
-        final boolean deleted = actions.remove(action);
-        EventBusHolder.post(new ChangeEvent<>(action, ChangeType.DELETE));
-        return deleted;
+    public List<Action> getActionList() {
+        return actions.flattenAs(Action.class);
     }
 
     public Node getObservations() {
         return observations;
     }
 
+    public List<Observation> getObservationsList() {
+        return observations.flattenAs(Observation.class);
+    }
+
     public Node getModifierFactories() {
         return modifierFactories;
     }
 
-    public boolean addObservation(Observation observation) {
-        if (observations.contains(observation)) {
-            log.debug("Won't setData another {}", observation);
-            return false;
-        }
-
-        log.debug("Adding observation {}", observation);
-        observations.addChild(observation);
-        EventBusHolder.post(new ChangeEvent<>(observation, ChangeType.CREATE));
-        return true;
-    }
-
-    public boolean addModifierFactory(ModifierFactory modifierFactory) {
-        if (modifierFactories.contains(modifierFactory)) {
-            log.debug("Won't setData another {}", modifierFactory);
-            return false;
-        }
-
-        log.debug("Adding modifierFactory {}", modifierFactory);
-        modifierFactories.addChild(modifierFactory);
-        EventBusHolder.post(new ChangeEvent<>(modifierFactory, ChangeType.CREATE));
-        return true;
-    }
-
-    public boolean removeObservation(Observation observation) {
-        log.debug("Removing observation {}", observation);
-        final boolean deleted = observations.remove(observation);
-        EventBusHolder.post(new ChangeEvent<>(observation, ChangeType.DELETE));
-        return deleted;
+    public List<ModifierFactory> getModifierFactoryList() {
+        return modifierFactories.flattenAs(ModifierFactory.class);
     }
 
     public String getName() {
@@ -218,25 +173,7 @@ public class Study implements Displayable {
         this.name = name;
         DatabaseProperties.set(DatabaseProperties.STUDY_NAME, name);
 
-        EventBusHolder.post(new RepaintStudyEvent());
-    }
-
-    // ONLY FOR TEMPORARILY TESTING!
-    public void addRandomSubject(String key) {
-        addSubject(new Subject(getRandomString("Wolf " + key)));
-    }
-
-    public void addRandomAction(String key) {
-        addAction(new Action(getRandomString("Action " + key)));
-    }
-
-    public void addRandomObservation(String key) {
-        addObservation(new Observation(getRandomString("Observation " + key)));
-    }
-
-    private static String getRandomString(String prefix) {
-        int number = (int) (Math.random() * 5);
-        return prefix + " " + number;
+        EventBusHolder.post(new UiEvent.RepaintStudyTree());
     }
 
     public File getSavePath() {
@@ -250,5 +187,61 @@ public class Study implements Displayable {
     @Override
     public String getDisplayString() {
         return getName();
+    }
+
+    public SuggestionService.SuggestionServiceBuilder getSuggestionServiceBuilder() {
+        if (suggestionServiceBuilder == null) {
+            suggestionServiceBuilder = new SuggestionService.SuggestionServiceBuilder(this);
+        }
+
+        return suggestionServiceBuilder;
+    }
+
+    public ActionService getActionService() {
+        if (actionService == null) {
+            actionService = new ActionService(this);
+        }
+
+        return actionService;
+    }
+
+    public ObservationService getObservationService() {
+        if (observationService == null) {
+            observationService = new ObservationService(this);
+        }
+
+        return observationService;
+    }
+
+    public ModifierFactoryService getModifierFactoryService() {
+        if (modifierFactoryService == null) {
+            modifierFactoryService = new ModifierFactoryService(this);
+        }
+
+        return modifierFactoryService;
+    }
+
+    public NodeService getNodeService() {
+        if (nodeService == null) {
+            nodeService = new NodeService(this);
+        }
+
+        return nodeService;
+    }
+
+    public SubjectService getSubjectService() {
+        if (subjectService == null) {
+            subjectService = new SubjectService(this);
+        }
+
+        return subjectService;
+    }
+
+    public CodingService.CodingServiceBuilder getCodingServiceBuilder() {
+        if (codingServiceBuilder == null) {
+            codingServiceBuilder = new CodingService.CodingServiceBuilder(this);
+        }
+
+        return codingServiceBuilder;
     }
 }

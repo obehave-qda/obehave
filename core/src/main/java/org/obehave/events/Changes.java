@@ -6,7 +6,7 @@ import org.obehave.model.Subject;
 import org.obehave.model.modifier.ModifierFactory;
 
 /**
- * @author Markus Möslinger
+ * Class to summarize change events for different entities
  */
 public class Changes {
     public static class SubjectChange extends ChangeEvent<Subject> {

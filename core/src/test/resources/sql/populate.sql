@@ -82,10 +82,10 @@ VALUES (sysdate, 'Running', 'Ru', 5, (SELECT ID
                                             'Slow Or Fast'), 'STATE');
 INSERT INTO PUBLIC.ACTION (MODIFIED, NAME, ALIAS, RECURRING, MODIFIERFACTORY, TYPE)
 VALUES (sysdate, 'Crouching', 'Cro', 0, (SELECT ID
-                                      FROM
-                                        PUBLIC.MODIFIERFACTORY
-                                      WHERE NAME =
-                                            'One To Five'), 'STATE');
+                                         FROM
+                                           PUBLIC.MODIFIERFACTORY
+                                         WHERE NAME =
+                                               'One To Five'), 'STATE');
 INSERT INTO PUBLIC.ACTION (MODIFIED, NAME, ALIAS, RECURRING, MODIFIERFACTORY, TYPE)
 VALUES (sysdate, 'Looking', 'Look', 0, (SELECT ID
                                         FROM
@@ -94,102 +94,215 @@ VALUES (sysdate, 'Looking', 'Look', 0, (SELECT ID
                                               'Subject One Or Two'), 'POINT');
 
 -- Coding
-INSERT INTO PUBLIC.Coding (MODIFIED, SUBJECT, ACTION, MODIFIER, OBSERVATION, START, END) VALUES (sysdate, (SELECT ID
-                                                                                                           FROM
-                                                                                                             PUBLIC.SUBJECT
-                                                                                                           WHERE NAME =
-                                                                                                                 'Subject1'),
-                                                                                                 (SELECT ID
-                                                                                                  FROM PUBLIC.ACTION
-                                                                                                  WHERE
-                                                                                                    NAME = 'Howling'),
-                                                                                                 NULL, (SELECT ID
-                                                                                                        FROM
-                                                                                                          PUBLIC.OBSERVATION
-                                                                                                        WHERE NAME =
-                                                                                                              'Observation1'),
-                                                                                                 300, NULL);
-INSERT INTO PUBLIC.Coding (MODIFIED, SUBJECT, ACTION, MODIFIER, OBSERVATION, START, END) VALUES (sysdate, (SELECT ID
-                                                                                                           FROM
-                                                                                                             PUBLIC.SUBJECT
-                                                                                                           WHERE NAME =
-                                                                                                                 'Subject1'),
-                                                                                                 (SELECT ID
-                                                                                                  FROM PUBLIC.ACTION
-                                                                                                  WHERE
-                                                                                                    NAME = 'Running'),
-                                                                                                 (SELECT ID
-                                                                                                  FROM PUBLIC.MODIFIER
-                                                                                                  WHERE
-                                                                                                    ENUMERATIONVALUE =
-                                                                                                    'Slow'), (SELECT ID
-                                                                                                              FROM
-                                                                                                                PUBLIC.OBSERVATION
-                                                                                                              WHERE
-                                                                                                                NAME =
-                                                                                                                'Observation1'),
-                                                                                                 500, 700);
+INSERT INTO PUBLIC.Coding (MODIFIED, SUBJECT, ACTION, MODIFIER, OBSERVATION, START, END)
+VALUES (sysdate,
+        (SELECT ID
+         FROM
+           PUBLIC.SUBJECT
+         WHERE NAME =
+               'Subject1'),
+        (SELECT ID
+         FROM PUBLIC.ACTION
+         WHERE
+           NAME = 'Howling'),
+        NULL,
+        (SELECT ID
+         FROM
+           PUBLIC.OBSERVATION
+         WHERE NAME =
+               'Observation1'),
+        300, NULL);
+INSERT INTO PUBLIC.Coding (MODIFIED, SUBJECT, ACTION, MODIFIER, OBSERVATION, START, END)
+VALUES (sysdate,
+        (SELECT ID
+         FROM
+           PUBLIC.SUBJECT
+         WHERE NAME =
+               'Subject1'),
+        (SELECT ID
+         FROM PUBLIC.ACTION
+         WHERE
+           NAME = 'Running'),
+        (SELECT ID
+         FROM PUBLIC.MODIFIER
+         WHERE
+           ENUMERATIONVALUE =
+           'Slow'),
+        (SELECT ID
+         FROM
+           PUBLIC.OBSERVATION
+         WHERE
+           NAME =
+           'Observation1'),
+        500, 700);
+
+-- Participating subjects
+INSERT INTO PUBLIC.SUBJECTINOBSERVATION (MODIFIED, OBSERVATION, SUBJECT) VALUES (sysdate,
+                                                                                 (SELECT ID
+                                                                                  FROM
+                                                                                    PUBLIC.OBSERVATION
+                                                                                  WHERE
+                                                                                    NAME =
+                                                                                    'Observation1'),
+                                                                                 (SELECT ID
+                                                                                  FROM
+                                                                                    PUBLIC.SUBJECT
+                                                                                  WHERE
+                                                                                    NAME =
+                                                                                    'Subject1'));
 
 -- Property
 INSERT INTO PUBLIC.PROPERTY (MODIFIED, KEY, VALUE) VALUES (sysdate, 'existingkey', 'existingvalue');
 INSERT INTO PUBLIC.PROPERTY (MODIFIED, KEY, VALUE) VALUES (sysdate, 'study.name', 'Teststudy');
+INSERT INTO PUBLIC.PROPERTY (MODIFIED, KEY, VALUE) VALUES (sysdate, 'obehave.version', '0.2');
 
 -- Nodes
 --- root for subjects
 INSERT INTO PUBLIC.NODE (MODIFIED, PARENT, TITLE, TYPE, SUBJECT, ACTION, ACTIONTYPE, MODIFIERFACTORY, OBSERVATION)
-  VALUES (sysdate, (SELECT id FROM NODE WHERE TITLE = 'Subjects'), null, 'org.obehave.model.Subject',
-  (SELECT id FROM SUBJECT WHERE NAME = 'Subject1'), null, null, null, null);
+VALUES (sysdate,
+        (SELECT id
+         FROM NODE
+         WHERE TITLE = 'Subjects'), NULL, 'org.obehave.model.Subject',
+        (SELECT id
+         FROM SUBJECT
+         WHERE NAME = 'Subject1'), NULL, NULL, NULL, NULL);
 INSERT INTO PUBLIC.NODE (MODIFIED, PARENT, TITLE, TYPE, SUBJECT, ACTION, ACTIONTYPE, MODIFIERFACTORY, OBSERVATION)
-  VALUES (sysdate, (SELECT id FROM NODE WHERE TITLE = 'Subjects'), null, 'org.obehave.model.Subject',
-  (SELECT id FROM SUBJECT WHERE NAME = 'Subject2'), null, null, null, null);
+VALUES (sysdate,
+        (SELECT id
+         FROM NODE
+         WHERE TITLE = 'Subjects'), NULL, 'org.obehave.model.Subject',
+        (SELECT id
+         FROM SUBJECT
+         WHERE NAME = 'Subject2'), NULL, NULL, NULL, NULL);
 INSERT INTO PUBLIC.NODE (MODIFIED, PARENT, TITLE, TYPE, SUBJECT, ACTION, ACTIONTYPE, MODIFIERFACTORY, OBSERVATION)
-  VALUES (sysdate, (SELECT id FROM NODE WHERE TITLE = 'Subjects'), null, 'org.obehave.model.Subject',
-  (SELECT id FROM SUBJECT WHERE NAME = 'Subject3'), null, null, null, null);
+VALUES (sysdate,
+        (SELECT id
+         FROM NODE
+         WHERE TITLE = 'Subjects'), NULL, 'org.obehave.model.Subject',
+        (SELECT id
+         FROM SUBJECT
+         WHERE NAME = 'Subject3'), NULL, NULL, NULL, NULL);
 INSERT INTO PUBLIC.NODE (MODIFIED, PARENT, TITLE, TYPE, SUBJECT, ACTION, ACTIONTYPE, MODIFIERFACTORY, OBSERVATION)
-  VALUES (sysdate, (SELECT id FROM NODE WHERE TITLE = 'Subjects'), null, 'org.obehave.model.Subject',
-  (SELECT id FROM SUBJECT WHERE NAME = 'Subject4'), null, null, null, null);
+VALUES (sysdate,
+        (SELECT id
+         FROM NODE
+         WHERE TITLE = 'Subjects'), NULL, 'org.obehave.model.Subject',
+        (SELECT id
+         FROM SUBJECT
+         WHERE NAME = 'Subject4'), NULL, NULL, NULL, NULL);
 
 --- root for actions
 INSERT INTO PUBLIC.NODE (MODIFIED, PARENT, TITLE, TYPE, SUBJECT, ACTION, ACTIONTYPE, MODIFIERFACTORY, OBSERVATION)
-  VALUES (sysdate, (SELECT id FROM NODE WHERE TITLE = 'Actions'), 'Point Actions', 'org.obehave.model.Action', null, null, null, null, null);
+VALUES (sysdate,
+        (SELECT id
+         FROM NODE
+         WHERE TITLE = 'Actions'), 'Point Actions', 'org.obehave.model.Action', NULL, NULL, NULL, NULL, NULL);
 INSERT INTO PUBLIC.NODE (MODIFIED, PARENT, TITLE, TYPE, SUBJECT, ACTION, ACTIONTYPE, MODIFIERFACTORY, OBSERVATION)
-  VALUES (sysdate, (SELECT id FROM NODE WHERE TITLE = 'Actions'), 'State Actions', 'org.obehave.model.Action', null, null, null, null, null);
+VALUES (sysdate,
+        (SELECT id
+         FROM NODE
+         WHERE TITLE = 'Actions'), 'State Actions', 'org.obehave.model.Action', NULL, NULL, NULL, NULL, NULL);
 INSERT INTO PUBLIC.NODE (MODIFIED, PARENT, TITLE, TYPE, SUBJECT, ACTION, ACTIONTYPE, MODIFIERFACTORY, OBSERVATION)
-  VALUES (sysdate, (SELECT id FROM NODE WHERE TITLE = 'State Actions'), null, 'org.obehave.model.Action',
-  null, (SELECT id FROM "ACTION" WHERE NAME = 'Fighting'), null, null, null);
+VALUES (sysdate,
+        (SELECT id
+         FROM NODE
+         WHERE TITLE = 'State Actions'), NULL, 'org.obehave.model.Action',
+        NULL,
+        (SELECT id
+         FROM "ACTION"
+         WHERE NAME = 'Fighting'), NULL, NULL, NULL);
 INSERT INTO PUBLIC.NODE (MODIFIED, PARENT, TITLE, TYPE, SUBJECT, ACTION, ACTIONTYPE, MODIFIERFACTORY, OBSERVATION)
-  VALUES (sysdate, (SELECT id FROM NODE WHERE TITLE = 'State Actions'), null, 'org.obehave.model.Action',
-  null, (SELECT id FROM "ACTION" WHERE NAME = 'Scratching'), null, null, null);
+VALUES (sysdate,
+        (SELECT id
+         FROM NODE
+         WHERE TITLE = 'State Actions'), NULL, 'org.obehave.model.Action',
+        NULL,
+        (SELECT id
+         FROM "ACTION"
+         WHERE NAME = 'Scratching'), NULL, NULL, NULL);
 INSERT INTO PUBLIC.NODE (MODIFIED, PARENT, TITLE, TYPE, SUBJECT, ACTION, ACTIONTYPE, MODIFIERFACTORY, OBSERVATION)
-  VALUES (sysdate, (SELECT id FROM NODE WHERE TITLE = 'State Actions'), null, 'org.obehave.model.Action',
-  null, (SELECT id FROM "ACTION" WHERE NAME = 'Running'), null, null, null);
+VALUES (sysdate,
+        (SELECT id
+         FROM NODE
+         WHERE TITLE = 'State Actions'), NULL, 'org.obehave.model.Action',
+        NULL,
+        (SELECT id
+         FROM "ACTION"
+         WHERE NAME = 'Running'), NULL, NULL, NULL);
 INSERT INTO PUBLIC.NODE (MODIFIED, PARENT, TITLE, TYPE, SUBJECT, ACTION, ACTIONTYPE, MODIFIERFACTORY, OBSERVATION)
-  VALUES (sysdate, (SELECT id FROM NODE WHERE TITLE = 'State Actions'), null, 'org.obehave.model.Action',
-  null, (SELECT id FROM "ACTION" WHERE NAME = 'Crouching'), null, null, null);
+VALUES (sysdate,
+        (SELECT id
+         FROM NODE
+         WHERE TITLE = 'State Actions'), NULL, 'org.obehave.model.Action',
+        NULL,
+        (SELECT id
+         FROM "ACTION"
+         WHERE NAME = 'Crouching'), NULL, NULL, NULL);
 INSERT INTO PUBLIC.NODE (MODIFIED, PARENT, TITLE, TYPE, SUBJECT, ACTION, ACTIONTYPE, MODIFIERFACTORY, OBSERVATION)
-  VALUES (sysdate, (SELECT id FROM NODE WHERE TITLE = 'Point Actions'), null, 'org.obehave.model.Action',
-  null, (SELECT id FROM "ACTION" WHERE NAME = 'Looking'), null, null, null);
+VALUES (sysdate,
+        (SELECT id
+         FROM NODE
+         WHERE TITLE = 'Point Actions'), NULL, 'org.obehave.model.Action',
+        NULL,
+        (SELECT id
+         FROM "ACTION"
+         WHERE NAME = 'Looking'), NULL, NULL, NULL);
 INSERT INTO PUBLIC.NODE (MODIFIED, PARENT, TITLE, TYPE, SUBJECT, ACTION, ACTIONTYPE, MODIFIERFACTORY, OBSERVATION)
-  VALUES (sysdate, (SELECT id FROM NODE WHERE TITLE = 'Point Actions'), null, 'org.obehave.model.Action',
-  null, (SELECT id FROM "ACTION" WHERE NAME = 'Howling'), null, null, null);
+VALUES (sysdate,
+        (SELECT id
+         FROM NODE
+         WHERE TITLE = 'Point Actions'), NULL, 'org.obehave.model.Action',
+        NULL,
+        (SELECT id
+         FROM "ACTION"
+         WHERE NAME = 'Howling'), NULL, NULL, NULL);
 
 --- root for modifierfactories
 INSERT INTO PUBLIC.NODE (MODIFIED, PARENT, TITLE, TYPE, SUBJECT, ACTION, ACTIONTYPE, MODIFIERFACTORY, OBSERVATION)
-  VALUES (sysdate, (SELECT id FROM NODE WHERE TITLE = 'Modifiers'), null, 'org.obehave.model.modifier.ModifierFactory',
-  null, null, null, (SELECT id FROM MODIFIERFACTORY WHERE NAME = 'One To Five'), null);
+VALUES (sysdate,
+        (SELECT id
+         FROM NODE
+         WHERE TITLE = 'Modifiers'), NULL, 'org.obehave.model.modifier.ModifierFactory',
+        NULL, NULL, NULL,
+        (SELECT id
+         FROM MODIFIERFACTORY
+         WHERE NAME = 'One To Five'), NULL);
 INSERT INTO PUBLIC.NODE (MODIFIED, PARENT, TITLE, TYPE, SUBJECT, ACTION, ACTIONTYPE, MODIFIERFACTORY, OBSERVATION)
-  VALUES (sysdate, (SELECT id FROM NODE WHERE TITLE = 'Modifiers'), null, 'org.obehave.model.modifier.ModifierFactory',
-  null, null, null, (SELECT id FROM MODIFIERFACTORY WHERE NAME = 'Subject One Or Two'), null);
+VALUES (sysdate,
+        (SELECT id
+         FROM NODE
+         WHERE TITLE = 'Modifiers'), NULL, 'org.obehave.model.modifier.ModifierFactory',
+        NULL, NULL, NULL,
+        (SELECT id
+         FROM MODIFIERFACTORY
+         WHERE NAME = 'Subject One Or Two'), NULL);
 INSERT INTO PUBLIC.NODE (MODIFIED, PARENT, TITLE, TYPE, SUBJECT, ACTION, ACTIONTYPE, MODIFIERFACTORY, OBSERVATION)
-  VALUES (sysdate, (SELECT id FROM NODE WHERE TITLE = 'Modifiers'), null, 'org.obehave.model.modifier.ModifierFactory',
-  null, null, null, (SELECT id FROM MODIFIERFACTORY WHERE NAME = 'Slow Or Fast'), null);
+VALUES (sysdate,
+        (SELECT id
+         FROM NODE
+         WHERE TITLE = 'Modifiers'), NULL, 'org.obehave.model.modifier.ModifierFactory',
+        NULL, NULL, NULL,
+        (SELECT id
+         FROM MODIFIERFACTORY
+         WHERE NAME = 'Slow Or Fast'), NULL);
 
 --- root for observations
 INSERT INTO PUBLIC.NODE (MODIFIED, PARENT, TITLE, TYPE, SUBJECT, ACTION, ACTIONTYPE, MODIFIERFACTORY, OBSERVATION)
-  VALUES (sysdate, (SELECT id FROM NODE WHERE TITLE = 'Observations'), null, 'org.obehave.model.Observation',
-  null, null, null, null, (SELECT id FROM OBSERVATION WHERE NAME = 'Observation1'));
+VALUES (sysdate,
+        (SELECT id
+         FROM NODE
+         WHERE TITLE = 'Observations'), NULL, 'org.obehave.model.Observation',
+        NULL, NULL, NULL, NULL,
+        (SELECT id
+         FROM OBSERVATION
+         WHERE NAME = 'Observation1'));
 INSERT INTO PUBLIC.NODE (MODIFIED, PARENT, TITLE, TYPE, SUBJECT, ACTION, ACTIONTYPE, MODIFIERFACTORY, OBSERVATION)
-  VALUES (sysdate, (SELECT id FROM NODE WHERE TITLE = 'Observations'), null, 'org.obehave.model.Observation',
-  null, null, null, null, (SELECT id FROM OBSERVATION WHERE NAME = 'Observation2'));
+VALUES (sysdate, (SELECT id
+                  FROM NODE
+                  WHERE TITLE = 'Observations'), NULL, 'org.obehave.model.Observation',
+        NULL, NULL, NULL, NULL,
+        (SELECT id
+         FROM OBSERVATION
+         WHERE NAME = 'Observation2'));
 
 COMMIT;

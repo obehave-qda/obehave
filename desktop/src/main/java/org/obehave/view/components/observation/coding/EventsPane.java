@@ -1,19 +1,22 @@
 package org.obehave.view.components.observation.coding;
 
+import com.google.common.eventbus.Subscribe;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
+import org.obehave.events.EventBusHolder;
+import org.obehave.events.UiEvent;
+import org.obehave.model.Coding;
 import org.obehave.model.Subject;
 import org.obehave.view.util.NodeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The EventsPane contains a list of SubjectPanes, to draw their events correclty
@@ -21,7 +24,7 @@ import java.util.List;
 public class EventsPane extends Pane {
     private static final Logger log = LoggerFactory.getLogger(EventsPane.class);
 
-    private final List<SubjectPane> subjectPanes = new ArrayList<>();
+    private final Map<Subject, SubjectPane> subjectPanes = new HashMap<>();
     private final IntegerProperty subjectPanesSize = new SimpleIntegerProperty(this, "subjectPanesSize");
 
     private DoubleProperty msProperty = new SimpleDoubleProperty(this, "msProperty");
@@ -33,6 +36,8 @@ public class EventsPane extends Pane {
     private DoubleProperty currentTime = new SimpleDoubleProperty(this, "currentTimeProperty");
 
     public EventsPane() {
+        EventBusHolder.register(this);
+
         prefHeightProperty().bind(subjectHeightProperty().multiply(subjectPanesSize).add(subjectHeightProperty().divide(2)));
 
         msProperty.addListener((observable, oldValue, newValue) -> refresh());
@@ -66,32 +71,73 @@ public class EventsPane extends Pane {
     }
 
     public void addSubject(Subject subject) {
-        SubjectPane pane = new SubjectPane(subject);
+        SubjectPane pane = new SubjectPane();
         int currentSubjectPanes = subjectPanes.size();
 
         pane.setId("subjectPane" + currentSubjectPanes);
 
+        pane.secondWidthProperty().bind(secondWidthProperty);
+        pane.currentTimeProperty().bind(currentTime);
+
         pane.layoutXProperty().set(0);
         pane.layoutYProperty().bind(subjectHeightProperty.multiply(currentSubjectPanes));
-        pane.prefHeightProperty().bind(subjectHeightProperty);
+        pane.subjectHeightProperty().bind(subjectHeightProperty);
         pane.prefWidthProperty().bind(widthProperty());
 
         getChildren().add(pane);
-        subjectPanes.add(pane);
+        subjectPanes.put(subject, pane);
         subjectPanesSize.setValue(subjectPanes.size());
     }
 
     public void removeSubject(Subject subject) {
-        Iterator<SubjectPane> iter = subjectPanes.iterator();
-        while (iter.hasNext()) {
-            SubjectPane pane = iter.next();
-            if (pane.getSubject().equals(subject)) {
-                getChildren().remove(pane);
-                iter.remove();
-                break;
-            }
-        }
+        subjectPanes.remove(subject);
+
         subjectPanesSize.setValue(subjectPanes.size());
+    }
+
+    public void clear() {
+        log.trace("Clearing pane");
+
+        subjectPanes.values().forEach(sp -> getChildren().remove(sp));
+        subjectPanes.clear();
+
+        subjectPanesSize.setValue(subjectPanes.size());
+    }
+
+    public void addCoding(Coding coding) {
+        log.trace("Adding coding to pane: {}", coding);
+
+        final Subject subject = coding.getSubject();
+        final SubjectPane subjectPane = subjectPanes.get(subject);
+
+        if (subjectPane != null) {
+            subjectPane.drawCoding(coding);
+        } else {
+            log.warn("Couldn't find a subject pane for subject {} - is it participating in this observation?", subject);
+        }
+    }
+
+    public void stopCoding(Coding coding) {
+        log.trace("Ending coding: {}", coding);
+
+        final Subject subject = coding.getSubject();
+        final SubjectPane subjectPane = subjectPanes.get(subject);
+
+        if (subjectPane != null) {
+            subjectPane.endCoding(coding);
+        } else {
+            log.warn("Couldn't find a subject pane for subject {} - is it participating in this observation?", subject);
+        }
+    }
+
+    @Subscribe
+    public void newCodingSubscriber(UiEvent.NewCoding event) {
+        addCoding(event.getCoding());
+    }
+
+    @Subscribe
+    public void finishedCodingSubscriber(UiEvent.FinishedCoding event) {
+        stopCoding(event.getCoding());
     }
 
     public void refresh() {
