@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.*?>
 <?import org.obehave.view.components.observation.coding.CodingControl?>
 <?import org.obehave.view.components.observation.VideoControl?>
@@ -8,13 +9,20 @@
          AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
     <center>
         <AnchorPane>
-            <VideoControl fx:id="videoControl"/>
+            <VBox>
+                <VideoControl fx:id="videoControl"/>
+                <HBox>
+                    <TextField fx:id="inputSubject" styleClass="codinginput"/>
+                    <TextField fx:id="inputAction" styleClass="codinginput" onKeyReleased="#code" />
+                    <TextField fx:id="inputModifier" styleClass="codinginput" onKeyReleased="#code"/>
+                </HBox>
+            </VBox>
         </AnchorPane>
     </center>
     <bottom>
         <AnchorPane>
             <CodingControl AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0"
-                              AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" fx:id="codingControl"/>
+                           AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" fx:id="codingControl"/>
         </AnchorPane>
     </bottom>
 </fx:root>

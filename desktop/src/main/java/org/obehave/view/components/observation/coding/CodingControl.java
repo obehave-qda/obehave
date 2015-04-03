@@ -1,7 +1,6 @@
 package org.obehave.view.components.observation.coding;
 
 
-import com.google.common.eventbus.Subscribe;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.fxml.FXML;
@@ -10,8 +9,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
-import org.obehave.events.ChangeEvent;
-import org.obehave.events.EventBusHolder;
 import org.obehave.model.Observation;
 import org.obehave.model.Subject;
 import org.slf4j.Logger;
@@ -39,6 +36,7 @@ public class CodingControl extends ScrollPane implements Initializable {
     private DoubleProperty secondWithProperty = new SimpleDoubleProperty(this, "secondWithProperty", 15);
 
     private DoubleProperty currentTime = new SimpleDoubleProperty(this, "currentTime");
+    private DoubleProperty lengthMs = new SimpleDoubleProperty(this, "lengthMs", 180 * 1000);
 
     /**
      * A property containing the current visible x value of the view port
@@ -67,9 +65,8 @@ public class CodingControl extends ScrollPane implements Initializable {
 
     public CodingControl() {
         super();
-        EventBusHolder.register(this);
 
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("org/obehave/view/components/observation/coding/codingComponent.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("org/obehave/view/components/observation/coding/codingControl.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
 
@@ -86,7 +83,7 @@ public class CodingControl extends ScrollPane implements Initializable {
         // *** eventsPane: properties
         eventsPane.subjectHeightProperty().bind(subjectHeightProperty);
         eventsPane.secondWidthProperty().bind(secondWithProperty);
-        eventsPane.msProperty().setValue(180 * 1000);
+        eventsPane.msProperty().bind(lengthMs);
 
         // *** eventsPane: layout
         eventsPane.toBack();
@@ -109,7 +106,7 @@ public class CodingControl extends ScrollPane implements Initializable {
         timelinePane.subjectHeightProperty().bind(subjectHeightProperty);
         timelinePane.secondWidthProperty().bind(secondWithProperty);
         timelinePane.timelineHeightProperty().bind(timelineHeightProperty);
-        timelinePane.msProperty().setValue(180 * 1000);
+        timelinePane.msProperty().bind(lengthMs);
 
         // *** timelinePane: layout
         timelinePane.toFront();
@@ -153,27 +150,10 @@ public class CodingControl extends ScrollPane implements Initializable {
         });
     }
 
-    @Subscribe
-    public void changeEvent(ChangeEvent<?> change) {
-        log.trace("Received event {}", change);
-        if (change.getChanged() instanceof Subject) {
-            Subject s = (Subject) change.getChanged();
-            switch (change.getChangeType()) {
-                case CREATE:
-                    addSubject(s);
-                    break;
-                case DELETE:
-                    removeSubject(s);
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
     public void addSubject(Subject subject) {
         eventsPane.addSubject(subject);
         subjectsList.addSubject(subject);
+
     }
 
     public void removeSubject(Subject subject) {
@@ -181,11 +161,24 @@ public class CodingControl extends ScrollPane implements Initializable {
         subjectsList.removeSubject(subject);
     }
 
-    public void loadCodings(Observation observation) {
-        // TODO actually load codings and stuff
+    public void clear() {
+        eventsPane.clear();
+        subjectsList.clear();
+    }
+
+    public void loadObservation(Observation observation) {
+        log.trace("Loading observation {}", observation);
+        clear();
+
+        observation.getParticipatingSubjects().forEach(this::addSubject);
+        observation.getCodings().forEach(eventsPane::addCoding);
     }
 
     public DoubleProperty currentTime() {
         return currentTime;
+    }
+
+    public DoubleProperty lengthMsProperty() {
+        return lengthMs;
     }
 }

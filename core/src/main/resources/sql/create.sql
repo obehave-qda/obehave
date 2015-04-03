@@ -15,7 +15,19 @@ CREATE TABLE PUBLIC.Observation
   modified TIMESTAMP NOT NULL,
   name VARCHAR2(255) NOT NULL,
   video VARCHAR(255),
-  date DATETIME
+  date DATETIME,
+  focalSubject INT,
+  FOREIGN KEY (focalSubject) REFERENCES Public.Subject(id)
+);
+
+CREATE TABLE PUBLIC.SubjectInObservation
+(
+  id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+  modified TIMESTAMP NOT NULL,
+  observation INT NOT NULL,
+  subject INT NOT NULL,
+  FOREIGN KEY (observation) REFERENCES Public.Observation(id),
+  FOREIGN KEY (subject) REFERENCES Public.Subject(id)
 );
 
 CREATE TABLE PUBLIC.ModifierFactory
@@ -69,6 +81,7 @@ CREATE TABLE PUBLIC.Modifier
   subject INT,
   enumerationValue VARCHAR2(255),
   number INT,
+  buildString VARCHAR(255),
   FOREIGN KEY (subject) REFERENCES Public.Subject(id),
   FOREIGN KEY (modifierFactory) REFERENCES Public.ModifierFactory(id)
 );
@@ -99,11 +112,13 @@ CREATE TABLE PUBLIC.Node
   subject INT,
   action INT,
   actionType VARCHAR2(100),
+  initialAction INT,
   modifierFactory INT,
   observation INT,
   FOREIGN KEY (parent) REFERENCES (id),
   FOREIGN KEY (subject) REFERENCES Public.Subject(id),
   FOREIGN KEY (action) REFERENCES Public.Action(id),
+  FOREIGN KEY (initialAction) REFERENCES Public.Action(id),
   FOREIGN KEY (modifierFactory) REFERENCES Public.ModifierFactory(id),
   FOREIGN KEY (observation) REFERENCES Public.Observation(id)
 );

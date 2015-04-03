@@ -25,7 +25,7 @@ public class VideoControl extends BorderPane {
 
     public VideoControl() {
         super();
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("org/obehave/view/components/observation/videoComponent.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("org/obehave/view/components/observation/videoControl.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
 
@@ -50,10 +50,27 @@ public class VideoControl extends BorderPane {
         }
     }
 
+    @FXML
+    void slower(ActionEvent event) {
+        final double oldRate = mediaView.getMediaPlayer().getRate();
+        final double newRate = oldRate / 2;
+
+        log.trace("Slowing playback down from {} to {}", oldRate, newRate);
+        mediaView.getMediaPlayer().setRate(newRate);
+    }
+
+    @FXML
+    void faster(ActionEvent faster) {
+        final double oldRate = mediaView.getMediaPlayer().getRate();
+        final double newRate = oldRate * 2;
+
+        log.trace("Speeding playback up from {} to {}", oldRate, newRate);
+        mediaView.getMediaPlayer().setRate(newRate);
+    }
+
     private Media toMedia(File file) {
         Validate.isNotNull(file, "File");
 
-        log.debug("Converting {} to Media", file);
         return new Media(file.toURI().toString());
     }
 
@@ -67,5 +84,9 @@ public class VideoControl extends BorderPane {
 
     public ReadOnlyObjectProperty<Duration> currentTime() {
         return mediaView.getMediaPlayer().currentTimeProperty();
+    }
+
+    public ReadOnlyObjectProperty<Duration> totalDurationProperty() {
+        return mediaView.getMediaPlayer().totalDurationProperty();
     }
 }

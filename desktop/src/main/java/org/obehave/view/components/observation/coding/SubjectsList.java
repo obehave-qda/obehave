@@ -64,4 +64,10 @@ public class SubjectsList extends Pane {
         subjectCount.setValue(subjects.size());
         refresh();
     }
+
+    public void clear() {
+        subjects.clear();
+        subjectCount.setValue(subjects.size());
+        refresh();
+    }
 }

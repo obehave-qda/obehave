@@ -25,7 +25,7 @@ public class SubjectModifierDaoTest extends ModifierDaoTest {
         Subject subject = new Subject("Subject for Modifier Test");
         subjectDao.create(subject);
 
-        Modifier modifier = new Modifier(queryModifierFactory("Subject One Or Two"), subject);
+        Modifier modifier = new Modifier(queryModifierFactory("Subject One Or Two"), subject, "Subject for Modifier Test");
 
         dao.create(modifier);
 

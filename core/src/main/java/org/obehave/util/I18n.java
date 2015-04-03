@@ -5,7 +5,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
- * @author Markus Möslinger
+ * Simple wrapper for {@link ResourceBundle}, to shorten access to I18n strings
  */
 public class I18n {
     private static final Locale configuredLocale = new Locale(Properties.getLanguage());
