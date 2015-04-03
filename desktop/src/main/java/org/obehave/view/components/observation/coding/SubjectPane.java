@@ -80,7 +80,7 @@ public class SubjectPane extends Pane {
         if (coding.getAction().getType() == Action.Type.POINT) {
             drawPointCoding(coding);
         } else {
-            if (!coding.isRunning()) {
+            if (!coding.isOpen()) {
                 drawStateCoding(coding);
             } else {
                 startStateCoding(coding);

@@ -115,7 +115,7 @@ public class Coding extends BaseEntity {
         return action.getType() == Action.Type.STATE;
     }
 
-    public boolean isRunning() {
+    public boolean isOpen() {
         return isStateCoding() && endMs < startMs;
     }
 

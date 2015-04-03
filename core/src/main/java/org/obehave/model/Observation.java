@@ -153,7 +153,7 @@ public class Observation extends BaseEntity implements Displayable {
         List<Coding> openCodings = new ArrayList<>();
 
         for (Coding coding : getCodings()) {
-            if (coding.isRunning()) {
+            if (coding.isOpen()) {
                 openCodings.add(coding);
             }
         }
