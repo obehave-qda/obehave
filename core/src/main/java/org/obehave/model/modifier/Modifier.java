@@ -57,7 +57,7 @@ public class Modifier extends BaseEntity {
         buildString = value;
     }
 
-    public Modifier(ModifierFactory modifierFactory, Subject subject) {
+    public Modifier(ModifierFactory modifierFactory, Subject subject, String buildString) {
         type = Type.SUBJECT_MODIFIER;
         setModifierFactory(modifierFactory);
 
