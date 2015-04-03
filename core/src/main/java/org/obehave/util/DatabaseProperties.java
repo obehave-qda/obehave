@@ -9,7 +9,9 @@ import org.slf4j.LoggerFactory;
 import java.sql.SQLException;
 
 /**
- * @author Markus Möslinger
+ * Helper class to {@code get} and {@code set} properties from the {@code Property} table.
+ * <p/>
+ * The usage of this class differs from {@link Properties} - they could get streamlined in the future
  */
 public class DatabaseProperties {
     private static final Logger log = LoggerFactory.getLogger(DatabaseProperties.class);

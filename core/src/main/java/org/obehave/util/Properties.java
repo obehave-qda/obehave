@@ -8,7 +8,9 @@ import java.io.IOException;
 import java.text.MessageFormat;
 
 /**
- * @author Markus Möslinger
+ * Class to retrieve properties either from environment or from properties file
+ * <p/>
+ * The usage of this class differs from {@link DatabaseProperties} - they could get streamlined in the future
  */
 public class Properties {
     private static final String TRUE = "true";
@@ -39,8 +41,8 @@ public class Properties {
     }
 
     public static String getDatabaseConnectionString(File path) {
-        path = FileUtil.removeSuffixIfThere(path, getDatabaseSuffix());
-        return trySystemPropertyFirst("database.connectionstring", path.getAbsolutePath());
+        String absolutePath = FileUtil.removeSuffixIfThere(path, getDatabaseSuffix());
+        return trySystemPropertyFirst("database.connectionstring", absolutePath);
     }
 
     public static String getDatabaseConnectionStringWithInit(File path) {

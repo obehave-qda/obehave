@@ -5,9 +5,12 @@ import org.obehave.model.Coding;
 import org.obehave.model.Observation;
 
 /**
- * @author Markus Möslinger
+ * Class to summarize all events which are created in {@code core} and handled in the presentation layer
  */
 public class UiEvent {
+    /**
+     * Created when a coding (either a state or a point coding) was created
+     */
     public static class NewCoding {
         private final Coding coding;
         public NewCoding(Coding coding) {
@@ -19,6 +22,9 @@ public class UiEvent {
         }
     }
 
+    /**
+     * Created when a state coding is finished
+     */
     public static class FinishedCoding {
         private final Coding coding;
         public FinishedCoding(Coding coding) {
@@ -33,6 +39,9 @@ public class UiEvent {
     public static class RepaintStudyTree {
     }
 
+    /**
+     * Created when an observation was successfully loaded
+     */
     public static class LoadObservation {
         private final Observation observation;
 

@@ -2,7 +2,6 @@ package org.obehave.util;
 
 /**
  * A class to hold a simple value - the current version of the compiled code.
- *
  */
 public class Version {
     private Version() {
