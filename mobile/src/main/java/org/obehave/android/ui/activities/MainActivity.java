@@ -26,12 +26,13 @@ import org.obehave.model.Subject;
 import org.obehave.model.modifier.ModifierFactory;
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
+
     // constants
     private static final int REQUEST_CODE_LOAD_STUDY = 1;
     private static final int CODING_FRAGMENT_POSITION = 2;
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
-    // membes
+    // members
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     private ActionBar mActionBar;
@@ -79,6 +80,11 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     @Subscribe
     public void onTimerStartEvent(TimerStartEvent event) {
         Log.d(LOG_TAG, "onTimerStartEvent");
+        Intent intent = new Intent(this, ObservationActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(ObservationActivity.ARG_STUDY, DataHolder.getStudy());
+        intent.putExtras(bundle);
+        startActivity(intent);
         MyApplication.startTimer();
     }
 

@@ -15,12 +15,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.Serializable;
 import java.sql.SQLException;
 
 /**
  * A study contains multiple subjects, actions and observations.
  */
-public class Study implements Displayable {
+public class Study implements Displayable, Serializable {
+    private static final long serialVersionUID = 1L;
     private static final Logger log = LoggerFactory.getLogger(Study.class);
 
     private String name;

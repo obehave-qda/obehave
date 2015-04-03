@@ -1,29 +1,31 @@
 package org.obehave.android.ui.activities;
 
-import android.app.Activity;
-import android.app.ActionBar;
-import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.os.Build;
-
 import org.obehave.android.R;
+import org.obehave.android.ui.fragments.ObservationFragment;
+import org.obehave.service.Study;
 
-public class ObservationActivity extends Activity {
+public class ObservationActivity extends FragmentActivity {
 
+    public final static String ARG_STUDY = "org.obehave.observation";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_observation);
         if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
+            Intent intent = getIntent();
+            Bundle bundle = intent.getExtras();
+            Study study = (Study) bundle.getSerializable(ARG_STUDY);
+
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.container, ObservationFragment.newInstance(study))
                     .commit();
         }
+
     }
 
 
@@ -49,19 +51,5 @@ public class ObservationActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
 
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_observation_info, container, false);
-            return rootView;
-        }
-    }
 }

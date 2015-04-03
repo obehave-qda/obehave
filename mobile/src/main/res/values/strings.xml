@@ -37,5 +37,6 @@
     <string name="btn_choose_study_from_file">Choose Study from File</string>
     <string name="btn_choose_study_wlan">Import File from WLAN</string>
     <string name="title_activity_observation">ObservationActivity</string>
+    <string name="choose_main_subject">Choose Main Subject</string>
 
 </resources>
