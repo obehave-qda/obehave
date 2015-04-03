@@ -40,6 +40,8 @@ public class CodingService {
     private CodingService(Study study, Observation observation) {
         this.study = study;
         this.observation = observation;
+
+        openCodings.addAll(observation.getOpenCodings());
     }
 
     public void initializeObservation() throws ServiceException {
