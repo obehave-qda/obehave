@@ -57,7 +57,7 @@ public class Modifier extends BaseEntity {
         buildString = value;
     }
 
-    public Modifier(ModifierFactory modifierFactory, Subject subject, String buildString) {
+    public Modifier(ModifierFactory modifierFactory, Subject subject) {
         type = Type.SUBJECT_MODIFIER;
         setModifierFactory(modifierFactory);
 
@@ -82,6 +82,10 @@ public class Modifier extends BaseEntity {
             default:
                 throw new IllegalStateException(I18n.get("exception.illegalstate", this));
         }
+    }
+
+    public Type getType() {
+        return type;
     }
 
     public ModifierFactory getModifierFactory() {
