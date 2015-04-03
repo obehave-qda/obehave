@@ -127,7 +127,9 @@ public class MainController {
         } while (study == null);
 
         stage.setTitle(stage.getTitle() + " - " + study.getName() + " - " + study.getSavePath());
+
         tree.setStudy(study);
+        observationControl.setStudy(study);
     }
 
     private CommandLinksDialog getCommandLinksDialog() {

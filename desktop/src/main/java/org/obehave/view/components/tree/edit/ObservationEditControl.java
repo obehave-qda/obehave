@@ -1,33 +1,36 @@
 package org.obehave.view.components.tree.edit;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.FileChooser;
+import org.controlsfx.control.CheckListView;
 import org.joda.time.DateTime;
+import org.obehave.exceptions.ServiceException;
 import org.obehave.model.Node;
 import org.obehave.model.Observation;
-import org.obehave.service.NodeService;
-import org.obehave.service.ObservationService;
+import org.obehave.model.Subject;
+import org.obehave.service.Study;
+import org.obehave.util.DisplayWrapper;
 import org.obehave.view.util.AlertUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Markus Möslinger
  */
 public class ObservationEditControl {
     private static final Logger log = LoggerFactory.getLogger(ObservationEditControl.class);
-    private static final ObservationService observationService = ObservationService.getInstance();
-    private static final NodeService nodeService = NodeService.getInstance();
 
     private Node loadedObservationNode;
 
     private Runnable saveCallback;
+
+    private Study study;
 
     @FXML
     private TextField name;
@@ -44,6 +47,12 @@ public class ObservationEditControl {
     private TextField hour;
     @FXML
     private TextField minute;
+
+    @FXML
+    private ChoiceBox<DisplayWrapper<Subject>> focalSubject;
+
+    @FXML
+    private CheckListView<DisplayWrapper<Subject>> checkedSubjects;
 
     public String getName() {
         return name.getText();
@@ -65,8 +74,11 @@ public class ObservationEditControl {
 
         if (videoPath != null) {
             video.setText(videoPath.getName());
+            video.setTooltip(new Tooltip(videoPath.getAbsolutePath()));
+            video.getTooltip().setStyle("-fx-background-color: white;");
         } else {
             video.setText("Select video...");
+            video.setTooltip(null);
         }
     }
 
@@ -74,12 +86,18 @@ public class ObservationEditControl {
         loadedObservationNode = node;
         Observation o = (Observation) node.getData();
 
+        fillFocalSubjects();
+
         if (o == null) {
             setName("");
             setVideoPath(null);
+            checkedSubjects.getCheckModel().clearChecks();
+            focalSubject.getSelectionModel().select(null);
         } else {
             setName(o.getName());
             setVideoPath(o.getVideo());
+            o.getParticipatingSubjects().forEach(s -> checkedSubjects.getCheckModel().check(DisplayWrapper.of(s)));
+            focalSubject.getSelectionModel().select(DisplayWrapper.of(o.getFocalSubject()));
         }
 
         if (o != null && o.getDateTime() != null) {
@@ -117,6 +135,10 @@ public class ObservationEditControl {
         o.setVideo(videoPath);
         LocalDate pickedDate = date.getValue();
 
+        o.setParticipatingSubjects(getCheckedSubjects());
+        final DisplayWrapper<Subject> selectedFocalSubject = focalSubject.getSelectionModel().getSelectedItem();
+        o.setFocalSubject(selectedFocalSubject != null ? selectedFocalSubject.get() : null);
+
         if (pickedDate != null) {
             DateTime dt = new DateTime(pickedDate.getYear(), pickedDate.getMonthValue(), pickedDate.getDayOfMonth(),
                     Integer.valueOf(hour.getText()), Integer.valueOf(minute.getText()));
@@ -124,14 +146,18 @@ public class ObservationEditControl {
             o.setDateTime(dt);
         }
 
-        observationService.save(o);
-        if (loadedObservationNode.getData() == null) {
-            loadedObservationNode.addChild(o);
-        }
-        nodeService.save(loadedObservationNode);
+        try {
+            study.getObservationService().save(o);
+            if (loadedObservationNode.getData() == null) {
+                loadedObservationNode.addChild(o);
+            }
+            study.getNodeService().save(loadedObservationNode);
 
-        loadedObservationNode = null;
-        saveCallback.run();
+            loadedObservationNode = null;
+            saveCallback.run();
+        } catch (ServiceException exception) {
+            AlertUtil.showError("Error", exception.getMessage(), exception);
+        }
     }
 
     public void cancel() {
@@ -140,5 +166,31 @@ public class ObservationEditControl {
 
     public void setSaveCallback(Runnable saveCallback) {
         this.saveCallback = saveCallback;
+    }
+
+    public void setStudy(Study study) {
+        this.study = study;
+
+        checkedSubjects.getItems().clear();
+        study.getSubjectsList().forEach(s -> checkedSubjects.getItems().add(DisplayWrapper.of(s)));
+    }
+
+    private List<Subject> getCheckedSubjects() {
+        final List<DisplayWrapper<Subject>> checkedItems = checkedSubjects.getCheckModel().getCheckedItems();
+        List<Subject> subjects = new ArrayList<>(checkedItems.size());
+
+        checkedItems.forEach(subjectDisplayWrapper -> subjects.add(subjectDisplayWrapper.get()));
+
+        return subjects;
+    }
+
+    private void fillFocalSubjects() {
+        List<DisplayWrapper<Subject>> subjects = new ArrayList<>();
+        subjects.add(null);
+
+        study.getSubjectsList().forEach(s -> subjects.add(DisplayWrapper.of(s)));
+
+        focalSubject.getItems().clear();
+        focalSubject.getItems().addAll(subjects);
     }
 }

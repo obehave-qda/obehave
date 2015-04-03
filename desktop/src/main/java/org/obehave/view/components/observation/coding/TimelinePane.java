@@ -8,13 +8,9 @@ import javafx.scene.text.Text;
 import org.joda.time.Duration;
 import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 // == Weekpane
 public class TimelinePane extends Pane {
-    private static final Logger log = LoggerFactory.getLogger(TimelinePane.class);
-
     private static final PeriodFormatter FORMATTER = new PeriodFormatterBuilder().
             appendMinutes().appendSuffix("m").appendSeconds().appendSuffix("s").toFormatter();
 

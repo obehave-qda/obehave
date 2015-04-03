@@ -12,7 +12,7 @@ import java.sql.SQLException;
 public class NumberModifierDaoTest extends ModifierDaoTest {
     @Test
     public void persistingModifier() throws SQLException {
-        Modifier modifier = new Modifier(queryModifierFactory("One To Five"), BigDecimal.valueOf(3));
+        Modifier modifier = new Modifier(queryModifierFactory("One To Five"), BigDecimal.valueOf(3), "3");
 
         dao.create(modifier);
         Modifier loadedModifier = dao.queryForSameId(modifier);

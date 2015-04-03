@@ -4,10 +4,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
+import org.obehave.exceptions.ServiceException;
 import org.obehave.model.Node;
 import org.obehave.model.Subject;
-import org.obehave.service.NodeService;
-import org.obehave.service.SubjectService;
+import org.obehave.service.Study;
 import org.obehave.view.util.AlertUtil;
 import org.obehave.view.util.ColorConverter;
 import org.slf4j.Logger;
@@ -19,8 +19,8 @@ import org.slf4j.LoggerFactory;
  */
 public class SubjectEditControl {
     private static final Logger log = LoggerFactory.getLogger(SubjectEditControl.class);
-    private static final SubjectService subjectService = SubjectService.getInstance();
-    private static final NodeService nodeService = NodeService.getInstance();
+
+    private Study study;
 
     private Node loadedSubjectNode;
     private Runnable saveCallback;
@@ -94,14 +94,18 @@ public class SubjectEditControl {
         subject.setAlias(getAlias());
         subject.setColor(ColorConverter.convertToObehave(colorPicker.getValue()));
 
-        subjectService.save(subject);
-        if (loadedSubjectNode.getData() == null) {
-            loadedSubjectNode.addChild(subject);
-        }
-        nodeService.save(loadedSubjectNode);
+        try {
+            study.getSubjectService().save(subject);
+            if (loadedSubjectNode.getData() == null) {
+                loadedSubjectNode.addChild(subject);
+            }
+            study.getNodeService().save(loadedSubjectNode);
 
-        loadedSubjectNode = null;
-        saveCallback.run();
+            loadedSubjectNode = null;
+            saveCallback.run();
+        } catch (ServiceException exception) {
+            AlertUtil.showError("Error", exception.getMessage(), exception);
+        }
     }
 
     public void cancel() {
@@ -110,5 +114,9 @@ public class SubjectEditControl {
 
     public void setSaveCallback(Runnable saveCallback) {
         this.saveCallback = saveCallback;
+    }
+
+    public void setStudy(Study study) {
+        this.study = study;
     }
 }

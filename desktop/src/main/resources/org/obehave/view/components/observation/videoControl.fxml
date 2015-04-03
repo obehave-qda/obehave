@@ -24,9 +24,9 @@
             <FlowPane alignment="CENTER" hgap="5.0" prefHeight="25.0" AnchorPane.bottomAnchor="0.0"
                       AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"
                       BorderPane.alignment="CENTER">
-                <Button maxWidth="75.0" text="Slower"/>
+                <Button maxWidth="75.0" text="Slower" onAction="#slower"/>
                 <Button maxWidth="75.0" text="Play/Pause" onAction="#playPause"/>
-                <Button maxWidth="75.0" text="Faster"/>
+                <Button maxWidth="75.0" text="Faster" onAction="#faster"/>
                 <BorderPane.margin>
                     <Insets/>
                 </BorderPane.margin>

@@ -76,14 +76,13 @@ public class Coding extends BaseEntity{
     }
 
     public void setModifier(String input) throws FactoryException {
-        if (input == null) {
-            throw new IllegalArgumentException("Input must not be null");
-        }
         if (action.getModifierFactory() == null) {
             throw new FactoryException("This action has no modifier factory!");
         }
 
-        this.modifier = action.getModifierFactory().create(input);
+        if (input != null && !input.isEmpty()) {
+            this.modifier = action.getModifierFactory().create(input);
+        }
     }
 
     public long getStartMs() {
@@ -113,7 +112,11 @@ public class Coding extends BaseEntity{
     }
 
     public boolean isStateCoding() {
-        return endMs > startMs;
+        return action.getType() == Action.Type.STATE;
+    }
+
+    public boolean isOpen() {
+        return isStateCoding() && endMs < startMs;
     }
 
     private void validateStateCoding() {
