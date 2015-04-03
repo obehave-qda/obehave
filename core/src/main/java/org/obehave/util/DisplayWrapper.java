@@ -17,10 +17,19 @@ public class DisplayWrapper<T> {
         this.object = object;
     }
 
+    /**
+     * Creates a new {@code DisplayWrapper} for the given object
+     * @param object the object to wrap
+     * @return a new {@code DisplayWrapper} instance, wrapping {@code object}
+     */
     public static <T> DisplayWrapper<T> of(T object) {
         return new DisplayWrapper<>(object);
     }
 
+    /**
+     * Returns the wrapped object
+     * @return the wrapped object
+     */
     public T get() {
         return object;
     }
