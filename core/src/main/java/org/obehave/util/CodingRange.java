@@ -36,8 +36,8 @@ public class CodingRange {
      * @return a list of overlapped codings
      */
     public List<Coding> overlappingCodings(Coding coding, long currentTime) {
-        Range<Long> codingRange = getRangeForCoding(coding);
         List<Coding> overlaps = new ArrayList<>();
+        final Range<Long> codingRange = getRangeForCoding(coding);
 
         for (Map.Entry<Coding, Range<Long>> entry : ranges.entrySet()) {
             if (!entry.getKey().equals(coding)) {
