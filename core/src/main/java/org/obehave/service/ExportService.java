@@ -17,6 +17,7 @@ import java.util.*;
 
 /**
  * @author Stefan Lamprecht
+ * TODO refactor
  */
 public class ExportService {
     private static final Logger log = LoggerFactory.getLogger(ExportService.class);
