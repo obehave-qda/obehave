@@ -13,11 +13,12 @@ import org.obehave.android.ui.events.FileChoosenEvent;
 import org.obehave.android.util.ErrorDialog;
 import org.obehave.android.util.ExternalStorageHelper;
 import org.obehave.events.EventBusHolder;
+import org.obehave.util.I18n;
 
 import java.io.File;
 import java.io.IOException;
 
-public class DirectoryListFragment extends MyListFragment {
+public class DirectoryListFragment extends BaseListFragment {
 
     private ListAdapter adapter;
     private String DATABASE_FOLDER = "obehave";
@@ -43,8 +44,7 @@ public class DirectoryListFragment extends MyListFragment {
         try {
             ExternalStorageHelper.createFolderIfNotExists(DATABASE_FOLDER);
         } catch (IOException e) {
-            ErrorDialog ed = new ErrorDialog("Der Ordner " + DATABASE_FOLDER + " konnte nicht erstellt werden, " +
-                    "bitte versuchen Sie den Ordner händisch zu erstellen!", getActivity());
+            ErrorDialog ed = new ErrorDialog(I18n.get("android.ui.study.error.notpossibletocreatedirectory", DATABASE_FOLDER), getActivity());
             ed.invoke();
         }
 

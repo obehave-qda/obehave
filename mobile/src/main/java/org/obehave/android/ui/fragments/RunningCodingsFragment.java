@@ -16,6 +16,7 @@ import org.obehave.android.ui.events.TimerStopEvent;
 import org.obehave.android.ui.events.TimerTaskEvent;
 import org.obehave.android.util.DateTimeHelper;
 import org.obehave.events.EventBusHolder;
+import org.obehave.events.UiEvent;
 
 public class RunningCodingsFragment extends CodingListBaseFragment {
 
@@ -89,6 +90,11 @@ public class RunningCodingsFragment extends CodingListBaseFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         // do something with the data
+    }
+
+    @Subscribe
+    public void newCodingCreated(UiEvent.NewCoding event){
+        Log.d(LOG_TAG, event.getCoding().toString());
     }
 
     @Subscribe

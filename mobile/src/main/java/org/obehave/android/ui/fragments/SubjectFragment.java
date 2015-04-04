@@ -24,7 +24,7 @@ import org.obehave.events.EventBusHolder;
 import org.obehave.model.Node;
 import org.obehave.model.Subject;
 
-public class SubjectFragment extends MyListFragment {
+public class SubjectFragment extends BaseListFragment {
 
     private static final String ARG_SECTION_NUMBER = "section_number";
     private static final String ARG_PARENT_NODE = "parent_node";

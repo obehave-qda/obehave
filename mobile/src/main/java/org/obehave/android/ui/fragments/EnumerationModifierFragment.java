@@ -8,10 +8,12 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import org.obehave.android.R;
 import org.obehave.android.ui.adapters.EnumerationModifierAdapter;
-import org.obehave.android.ui.events.ModifierSelectedEvent;
-import org.obehave.android.ui.events.ModifierType;
+import org.obehave.android.ui.events.ItemSelectedEvent;
+import org.obehave.android.util.ErrorDialog;
 import org.obehave.events.EventBusHolder;
+import org.obehave.exceptions.FactoryException;
 import org.obehave.model.Action;
+import org.obehave.model.modifier.Modifier;
 
 public class EnumerationModifierFragment extends BaseModifierFragment {
 
@@ -58,6 +60,12 @@ public class EnumerationModifierFragment extends BaseModifierFragment {
         super.onListItemClick(listView, view, position, id);
         String value = (String) getListAdapter().getItem(position);
 
-        EventBusHolder.post(new ModifierSelectedEvent(value, ModifierType.ENUMERATION_MODIFIER));
+        try {
+            Modifier modifier = action.getModifierFactory().create(value);
+            EventBusHolder.post(new ItemSelectedEvent(modifier));
+        } catch (FactoryException e) {
+            ErrorDialog ed = new ErrorDialog(e, this.getActivity());
+            ed.invoke();
+        }
     }
 }

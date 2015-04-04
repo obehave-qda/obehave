@@ -10,8 +10,9 @@ import org.obehave.android.ui.fragments.ObservationFragment;
 import org.obehave.service.Study;
 
 public class ObservationActivity extends FragmentActivity {
-
+    public static final String RESULT_OBSERVATION = "android.ui.observation";
     public final static String ARG_STUDY = "org.obehave.observation";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
