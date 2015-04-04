@@ -12,12 +12,12 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class ExportServiceTest {
+public class ExcelExporterTest {
 
 
     private Action action;
     private List<Subject> subjects;
-    private ExportService exportService = new ExportService(new File("../studies"));
+    private ExcelExporter exportService = new ExcelExporter(new File("../studies"));
     private List<Observation> observations;
     private Observation observation;
     private Node nodes;
@@ -36,8 +36,8 @@ public class ExportServiceTest {
 
         observations = new ArrayList<Observation>();
 
-        for (int i = 0 ; i < 10;i++){
-            observation.addCoding(new Coding(subjects.get(i), action, 1, i+10));
+        for (int i = 0; i < 10; i++) {
+            observation.addCoding(new Coding(subjects.get(i), action, 1, i + 10));
         }
         observations.add(observation);
 
@@ -45,32 +45,32 @@ public class ExportServiceTest {
 
 
     @Test
-    public void testExportServiceForActionData(){
+    public void testExportServiceForActionData() {
         prepareData();
         action.setName("boobling");
 
-        exportService.exportAction(observations,subjects,action);
+        exportService.exportAction(observations, subjects, action);
     }
 
     @Test
-    public void testExportServiceForNodeActionData(){
+    public void testExportServiceForNodeActionData() {
         prepareData();
         action.setName("soodling");
-        nodes = new Node(action,Action.class);
+        nodes = new Node(action, Action.class);
 
-        exportService.exportActionGroup(observations,subjects,nodes);
+        exportService.exportActionGroup(observations, subjects, nodes);
     }
 
     @Test
-    public void testExportServiceForNodeActionDataWithMoreThanOneNode(){
+    public void testExportServiceForNodeActionDataWithMoreThanOneNode() {
         prepareData();
 
-        nodes = new Node(action,Action.class);
+        nodes = new Node(action, Action.class);
         Action action2 = new Action("Doodling");
-        Node node2 = new Node(action2,Action.class);
+        Node node2 = new Node(action2, Action.class);
         nodes.addChild(node2);
         nodes.setTitle("playing and doodling");
-        exportService.exportActionGroup(observations,subjects,nodes);
+        exportService.exportActionGroup(observations, subjects, nodes);
     }
 
     @Test
@@ -80,21 +80,21 @@ public class ExportServiceTest {
         Subject sub = new Subject("sub");
         ModifierFactory mf = new ModifierFactory(sub);
 
-        for (Subject s : subjects){
+        for (Subject s : subjects) {
             mf.addValidSubjects(s);
         }
 
-        assertEquals(mf.getValidSubjects().size(),subjects.size()+1);
+        assertEquals(mf.getValidSubjects().size(), subjects.size() + 1);
         action.setModifierFactory(mf);
         action.setName("extralongshittynametotestifthereisanycharrestrictionwiththeapachecommonsapi");
 
-        for (Observation o : observations){
-            for (Coding c : o.getCodings()){
+        for (Observation o : observations) {
+            for (Coding c : o.getCodings()) {
                 c.setModifier("Subject1");
             }
         }
 
-        exportService.exportAction(observations,subjects,action);
+        exportService.exportAction(observations, subjects, action);
 
     }
 }
