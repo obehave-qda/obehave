@@ -4,7 +4,9 @@ import com.google.common.collect.BoundType;
 import com.google.common.collect.Range;
 import org.obehave.model.Coding;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,6 +25,35 @@ public class CodingRange {
     }
 
     /**
+     * Returns all codings {@code coding} overlaps at the specified time.
+     * A {@code coding} will overlap another, existing coding only when it has already started, meaning
+     * {@code currentTime >= coding.getStartMs()}
+     * <p/>
+     * A coding can't overlap itself.
+     *
+     * @param coding      the coding for which the overlaps should be counted
+     * @param currentTime the time to take into account when comparing with an open coding
+     * @return a list of overlapped codings
+     */
+    public List<Coding> overlappingCodings(Coding coding, long currentTime) {
+        Range<Long> codingRange = getRangeForCoding(coding);
+        List<Coding> overlaps = new ArrayList<>();
+
+        for (Map.Entry<Coding, Range<Long>> entry : ranges.entrySet()) {
+            if (!entry.getKey().equals(coding)) {
+                Range<Long> range = entry.getValue();
+
+                // if there is no upper bound, we have to take the current time into account
+                if ((range.hasUpperBound() || currentTime >= coding.getStartMs()) && overlapping(range, codingRange)) {
+                    overlaps.add(entry.getKey());
+                }
+            }
+        }
+
+        return overlaps;
+    }
+
+    /**
      * Calculates how many codings {@code coding} overlaps at the specified time.
      * A {@code coding} will overlap another, existing coding only when it has already started, meaning
      * {@code currentTime >= coding.getStartMs()}
@@ -34,21 +65,7 @@ public class CodingRange {
      * @return the count of overlappings at the given {@code currentTime} for coding
      */
     public int overlapCount(Coding coding, long currentTime) {
-        Range<Long> codingRange = getRangeForCoding(coding);
-        int overlaps = 0;
-
-        for (Map.Entry<Coding, Range<Long>> entry : ranges.entrySet()) {
-            if (!entry.getKey().equals(coding)) {
-                Range<Long> range = entry.getValue();
-
-                // if there is no upper bound, we have to take the current time into account
-                if ((range.hasUpperBound() || currentTime >= coding.getStartMs()) && overlapping(range, codingRange)) {
-                    overlaps++;
-                }
-            }
-        }
-
-        return overlaps;
+        return overlappingCodings(coding, currentTime).size();
     }
 
     /**
