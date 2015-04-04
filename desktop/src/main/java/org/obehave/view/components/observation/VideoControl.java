@@ -1,6 +1,7 @@
 package org.obehave.view.components.observation;
 
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -35,8 +36,10 @@ public class VideoControl extends BorderPane {
             throw new RuntimeException(exception);
         }
 
-        mediaView.fitWidthProperty().bind(prefWidthProperty());
-        mediaView.fitHeightProperty().bind(prefHeightProperty().subtract(30));
+        //TODO: subtract width until splitpane for tree is fixed
+        mediaView.fitWidthProperty().bind(Bindings.selectDouble(mediaView.sceneProperty(), "width").subtract(200));
+        mediaView.fitHeightProperty().bind(Bindings.selectDouble(mediaView.sceneProperty(), "height").subtract(30));
+        mediaView.setPreserveRatio(true);
     }
 
     @FXML
