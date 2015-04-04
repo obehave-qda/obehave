@@ -8,11 +8,13 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import org.obehave.android.R;
 import org.obehave.android.ui.adapters.SubjectModifierAdapter;
-import org.obehave.android.ui.events.ModifierSelectedEvent;
-import org.obehave.android.ui.events.ModifierType;
+import org.obehave.android.ui.events.ItemSelectedEvent;
+import org.obehave.android.util.ErrorDialog;
 import org.obehave.events.EventBusHolder;
+import org.obehave.exceptions.FactoryException;
 import org.obehave.model.Action;
 import org.obehave.model.Subject;
+import org.obehave.model.modifier.Modifier;
 
 public class SubjectModifierFragment extends BaseModifierFragment {
 
@@ -59,6 +61,13 @@ public class SubjectModifierFragment extends BaseModifierFragment {
         super.onListItemClick(listView, view, position, id);
         Subject subject = (Subject) getListAdapter().getItem(position);
 
-        EventBusHolder.post(new ModifierSelectedEvent(subject, ModifierType.SUBJECT_MODIFIER));
+        try {
+            Modifier modifier = action.getModifierFactory().create(subject.getName());
+            EventBusHolder.post(new ItemSelectedEvent(modifier));
+        } catch (FactoryException e) {
+            ErrorDialog ed = new ErrorDialog(e, this.getActivity());
+            ed.invoke();
+        }
+
     }
 }

@@ -44,10 +44,6 @@ public class Properties {
         return getDatabaseConnectionString(path) + trySystemPropertyFirst("database.connectionstring.initsuffix");
     }
 
-    public static String getAndroidDatabaseConnectionString(File path){
-        path = FileUtil.removeSuffixIfThere(path, getDatabaseSuffix());
-        return trySystemPropertyFirst("database.connectionstring.android", path.getAbsolutePath());
-    }
 
     public static String getDatabaseConnectionString(File path) {
         String absolutePath = FileUtil.removeSuffixIfThere(path, getDatabaseSuffix());

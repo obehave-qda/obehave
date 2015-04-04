@@ -38,7 +38,7 @@ public class DataHolder {
             try {
                 File srcFile = new File(srcFilename);
                 final boolean isAndroid = true;
-                study = study.load(new File(srcFilename), isAndroid);
+                study = study.load(new File(srcFilename));
             } catch (SQLException e) {
                 // TODO: I18n
                 throw new UiException("Die Study konnte nicht geladen werden.", e);

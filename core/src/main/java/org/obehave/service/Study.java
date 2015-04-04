@@ -83,19 +83,8 @@ public class Study implements Displayable, Serializable {
     }
 
     public static Study load(File savePath) throws SQLException {
-        return load(savePath, false);
-    }
-
-    public static Study load(File savePath, boolean isAndroid) throws SQLException {
-        log.info("Loading existing study from {}", savePath);
-
         final Study study = new Study(savePath);
-        if(!isAndroid) {
-            Daos.asDefault(new JdbcConnectionSource(Properties.getDatabaseConnectionString(savePath)));
-        }
-        else {
-            Daos.asDefault(new JdbcConnectionSource(Properties.getAndroidDatabaseConnectionString(savePath)));
-        }
+        Daos.asDefault(new JdbcConnectionSource(Properties.getDatabaseConnectionString(savePath)));
         study.load();
         return study;
     }
