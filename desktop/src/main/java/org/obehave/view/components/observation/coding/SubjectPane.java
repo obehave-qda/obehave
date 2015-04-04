@@ -8,6 +8,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import org.obehave.model.Action;
 import org.obehave.model.Coding;
+import org.obehave.util.CodingRange;
 import org.obehave.view.util.ColorConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,8 @@ public class SubjectPane extends Pane {
     private DoubleProperty currentTimeProperty = new SimpleDoubleProperty(this, "currentTimeProperty");
     private DoubleProperty subjectHeightProperty = new SimpleDoubleProperty(this, "subjectHeightProperty");
 
-    private Map<Coding, Rectangle> openCodings = new HashMap<>();
+    private CodingRange codingRange = new CodingRange();
+    private Map<Coding, Rectangle> codings = new HashMap<>();
 
     private void drawPointCoding(Coding coding) {
         log.trace("Drawing rectangle for point coding {}", coding);
@@ -37,6 +39,7 @@ public class SubjectPane extends Pane {
                 coding.getSubject().getColor());
 
         getChildren().add(rectangle);
+        codings.put(coding, rectangle);
     }
 
     private void drawStateCoding(Coding coding) {
@@ -49,6 +52,7 @@ public class SubjectPane extends Pane {
                 coding.getSubject().getColor());
 
         getChildren().add(rectangle);
+        codings.put(coding, rectangle);
     }
 
     private void startStateCoding(Coding coding) {
@@ -56,7 +60,7 @@ public class SubjectPane extends Pane {
 
         final double positionStart = secondWidthProperty.get() * (coding.getStartMs() / 1000);
 
-        final DoubleBinding width = new GrowingDoubleBinding(secondWidthProperty.multiply(currentTimeProperty).subtract(positionStart));
+        final DoubleBinding width = new AtLeastOneDoubleBinding(secondWidthProperty.multiply(currentTimeProperty).subtract(positionStart));
 
         Rectangle rectangle = getRectangle(positionStart, 0, 0, subjectHeightProperty.get(),
                 coding.getSubject().getColor());
@@ -64,7 +68,7 @@ public class SubjectPane extends Pane {
 
         getChildren().add(rectangle);
 
-        openCodings.put(coding, rectangle);
+        codings.put(coding, rectangle);
     }
 
     private Rectangle getRectangle(double x, double y, double width, double height, org.obehave.model.Color color) {
@@ -93,7 +97,7 @@ public class SubjectPane extends Pane {
 
         final double positionEnd = secondWidthProperty.get() * (coding.getDuration() / 1000);
 
-        final Rectangle codingRectangle = openCodings.get(coding);
+        final Rectangle codingRectangle = codings.get(coding);
         codingRectangle.widthProperty().unbind();
         codingRectangle.setWidth(positionEnd);
     }
@@ -110,10 +114,22 @@ public class SubjectPane extends Pane {
         return subjectHeightProperty;
     }
 
-    private static class GrowingDoubleBinding extends DoubleBinding {
+    private int getCodingsAtTime(long ms) {
+        int codingsAtTime = 0;
+
+        for (Coding c : codings.keySet()) {
+            if (!c.isStateCoding()) {
+
+            }
+        }
+
+        return codingsAtTime;
+    }
+
+    private static class AtLeastOneDoubleBinding extends DoubleBinding {
         private final DoubleBinding binding;
 
-        public GrowingDoubleBinding(DoubleBinding binding) {
+        public AtLeastOneDoubleBinding(DoubleBinding binding) {
             this.binding = binding;
             binding.addListener(observable -> invalidate());
         }
@@ -121,8 +137,8 @@ public class SubjectPane extends Pane {
         @Override
         protected double computeValue() {
             final double bindingValue = binding.get();
-            if (bindingValue < 0) {
-                return 0;
+            if (bindingValue <= 1) {
+                return 1;
             } else {
                 return bindingValue;
             }
