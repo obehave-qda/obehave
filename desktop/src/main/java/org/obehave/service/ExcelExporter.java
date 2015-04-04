@@ -18,6 +18,7 @@ import java.util.*;
 /**
  * TODO: refactor
  * @author Stefan Lamprecht
+ * TODO refactor
  */
 public class ExcelExporter {
     private static final Logger log = LoggerFactory.getLogger(ExcelExporter.class);
@@ -28,7 +29,45 @@ public class ExcelExporter {
     }
 
     public void exportActionGroup(List<Observation> observations, List<Subject> subjects, Node actionGroup) {
+        // Map contains counts per actions by subject, LinkedHashMap to preserve order
+        Map<String, ArrayList<Long>> countsPerAction = new LinkedHashMap<String, ArrayList<Long>>();
+        Map<String, ArrayList<Long>> totalDurationPerAction = new LinkedHashMap<String, ArrayList<Long>>();
 
+        // Initialize map key and values
+        for (Subject s : subjects) {
+            countsPerAction.put(s.getName(), new ArrayList<Long>(Collections.nCopies(subjects.size(), 0L)));
+            totalDurationPerAction.put(s.getName(), new ArrayList<Long>(Collections.nCopies(subjects.size(), 0L)));
+        }
+
+
+        //Iterates over observations and counts interesting actions of a actiongroup node
+        for (Observation o : observations) {
+            for (Coding c : o.getCodings()) {
+
+                // is this any good really?
+                Subject subject = c.getSubject();
+
+
+                //stirring for right stuff
+                if (isRequestedSubjectAndActionGroup(subjects, actionGroup, c, subject) && (c.getModifier() == null || c.getModifier().get().equals(subject))) {
+                    Long value = countsPerAction.get(subject.getName()).get(subjects.indexOf(subject));
+                    countsPerAction.get(subject.getName()).set(subjects.indexOf(subject),value+1);
+                    Long duration = totalDurationPerAction.get(subject.getName()).get(subjects.indexOf(subject));
+                    totalDurationPerAction.get(subject.getName()).set(subjects.indexOf(subject),duration+c.getDuration());
+
+                } else if (isRequestedSubjectAndActionGroup(subjects, actionGroup, c, subject) && isRequestedSubjectModifier(c, subjects)) {
+                    long value = countsPerAction.get(subject.getName()).get(subjects.indexOf(c.getModifier().get()));
+                    countsPerAction.get(subject.getName()).set(subjects.indexOf(c.getModifier().get()),value+1);
+                    Long duration = totalDurationPerAction.get(subject.getName()).get(subjects.indexOf(c.getModifier().get()));
+                    totalDurationPerAction.get(subject.getName()).set(subjects.indexOf(c.getModifier().get()),duration+c.getDuration());
+                }
+            }
+        }
+
+
+
+
+        export(subjects, actionGroup.getDisplayString(), countsPerAction, totalDurationPerAction);
     }
 
     public void exportAction(List<Observation> observations, List<Subject> subjects, Action action) {
@@ -54,7 +93,7 @@ public class ExcelExporter {
 
 
                 //stirring for right stuff
-                if (isRequestedSubjectAndAction(subjects, action, c, subject) && c.getModifier() == null) {
+                if (isRequestedSubjectAndAction(subjects, action, c, subject) && (c.getModifier() == null || c.getModifier().get().equals(subject))) {
                     Long value = countsPerAction.get(subject.getName()).get(subjects.indexOf(subject));
                     countsPerAction.get(subject.getName()).set(subjects.indexOf(subject),value+1);
                     Long duration = totalDurationPerAction.get(subject.getName()).get(subjects.indexOf(subject));
@@ -69,43 +108,53 @@ public class ExcelExporter {
             }
         }
 
-        XSSFWorkbook workbook = new XSSFWorkbook();
-        generateExcelSheet(workbook, countsPerAction, action, subjects, "totalCounts");
-        generateExcelSheet(workbook, totalDurationPerAction, action, subjects, "totalDuration");
-        writeExcelSheetToDisk(workbook, action);
+        export(subjects, action.getDisplayString(), countsPerAction, totalDurationPerAction);
 
+    }
+
+    private void export(List<Subject> subjects, String actionName, Map<String, ArrayList<Long>> countsPerAction, Map<String, ArrayList<Long>> totalDurationPerAction) {
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        generateExcelSheet(workbook, countsPerAction, actionName, subjects, "totalCounts");
+        generateExcelSheet(workbook, totalDurationPerAction, actionName, subjects, "totalDuration");
+        writeExcelSheetToDisk(workbook, actionName);
     }
 
     private boolean isRequestedSubjectAndAction(List<Subject> subjects, Action action, Coding c, Subject subject) {
         return subjects.contains(subject) && c.getAction().equals(action);
     }
 
-    private boolean isRequestedSubjectModifier(Coding c, List<Subject> subjects) {
-        return subjects.contains(((c.getModifier().getType() == Modifier.Type.SUBJECT_MODIFIER) && subjects.contains(c.getModifier().get())));
+    private boolean isRequestedSubjectAndActionGroup(List<Subject> subjects, Node actionGroup, Coding c, Subject subject) {
+        return subjects.contains(subject) && actionGroup.contains(c.getAction());
     }
 
-    private XSSFSheet generateExcelSheet(XSSFWorkbook wb, Map<String, ArrayList<Long>> data, Action action, List<Subject> finalSubjects, String type) {
+    private boolean isRequestedSubjectModifier(Coding c, List<Subject> subjects) {
+        return (c.getModifier().getType() == Modifier.Type.SUBJECT_MODIFIER) && subjects.contains(c.getModifier().get());
+    }
+
+    private void generateExcelSheet(XSSFWorkbook wb, Map<String, ArrayList<Long>> data, String action, List<Subject> finalSubjects, String type) {
 
         //Create a blank sheet and set name like the action
-        XSSFSheet sheet = wb.createSheet(action.getName() + "-" + type);
+        XSSFSheet sheet = wb.createSheet(type);
 
         //Iterate over data and write to sheet
         Set<String> keyset = data.keySet();
 
         int rownum = 0;
-
+        int cellnumtitle = 0;
         //set matrix title from left to right
         //TODO Set cell font color like subject color
-        Row row = sheet.createRow(rownum++);
+        Row rowtitle = sheet.createRow(rownum++);
+        Cell cellBlank = rowtitle.createCell(cellnumtitle++);
+        cellBlank.setCellValue(" ");
         for (Subject subject : finalSubjects) {
-            int cellNum = 1;
-            Cell cell = row.createCell(cellNum++);
+
+            Cell cell = rowtitle.createCell(cellnumtitle++);
             cell.setCellValue(subject.getName());
         }
 
         //set matrix title from top to bottom and set values
         for (String key : keyset) {
-            sheet.createRow(rownum++);
+            Row row = sheet.createRow(rownum++);
             ArrayList<Long> longArray = data.get(key);
             int cellnum = 0;
 
@@ -119,25 +168,23 @@ public class ExcelExporter {
                 cell.setCellValue(values);
             }
         }
-        return null;
     }
 
-    public void writeExcelSheetToDisk(XSSFWorkbook workbook, Action action) {
+    public void writeExcelSheetToDisk(XSSFWorkbook workbook, String title) {
 
         String fileSeparator = System.getProperty("file.separator");
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm");
         String blank = " ";
 
         try {
             log.debug("Start writing Excel to {}", savePath.getAbsolutePath());
             //Write the workbook to the file system
-            FileOutputStream out = new FileOutputStream(savePath + fileSeparator + "Export" + blank + dateFormat.format(new Date()) + blank + action.getName());
+            FileOutputStream out = new FileOutputStream(savePath + fileSeparator +  dateFormat.format(new Date()) + blank + "Export" + blank + title+".xlsx");
             workbook.write(out);
             out.close();
             log.debug("Excel successfully written to {}", savePath.getAbsolutePath());
         } catch (Exception e) {
             log.debug("Something has gone terribly wrong: {}", e.getMessage(), e);
-            e.printStackTrace();
         }
     }
 

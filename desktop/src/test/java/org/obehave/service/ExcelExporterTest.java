@@ -2,23 +2,25 @@ package org.obehave.service;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.obehave.model.Action;
-import org.obehave.model.Coding;
-import org.obehave.model.Observation;
-import org.obehave.model.Subject;
+import org.obehave.exceptions.FactoryException;
+import org.obehave.model.*;
+import org.obehave.model.modifier.ModifierFactory;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExcelExporterTest {
+import static org.junit.Assert.assertEquals;
 
-    private List<Coding> codings;
+public class ExportServiceTest {
+
+
     private Action action;
     private List<Subject> subjects;
-    private ExcelExporter excelExporter;
+    private ExportService exportService = new ExportService(new File("../studies"));
     private List<Observation> observations;
     private Observation observation;
+    private Node nodes;
 
     @Before
     public void prepareData() {
@@ -31,24 +33,68 @@ public class ExcelExporterTest {
 
         action = new Action("Playing");
         observation = new Observation();
-        codings = new ArrayList<Coding>();
+
         observations = new ArrayList<Observation>();
 
         for (int i = 0 ; i < 10;i++){
             observation.addCoding(new Coding(subjects.get(i), action, 1, i+10));
         }
-
         observations.add(observation);
 
     }
 
 
     @Test
-    public void testExportService(){
+    public void testExportServiceForActionData(){
+        prepareData();
+        action.setName("boobling");
+
+        exportService.exportAction(observations,subjects,action);
+    }
+
+    @Test
+    public void testExportServiceForNodeActionData(){
+        prepareData();
+        action.setName("soodling");
+        nodes = new Node(action,Action.class);
+
+        exportService.exportActionGroup(observations,subjects,nodes);
+    }
+
+    @Test
+    public void testExportServiceForNodeActionDataWithMoreThanOneNode(){
         prepareData();
 
-        excelExporter = new ExcelExporter(new File("/Users/xeno/Desktop"));
-        excelExporter.exportAction(observations,subjects,action);
+        nodes = new Node(action,Action.class);
+        Action action2 = new Action("Doodling");
+        Node node2 = new Node(action2,Action.class);
+        nodes.addChild(node2);
+        nodes.setTitle("playing and doodling");
+        exportService.exportActionGroup(observations,subjects,nodes);
+    }
+
+    @Test
+    public void testExportServiceWithSubjectModifier() throws FactoryException {
+
+        prepareData();
+        Subject sub = new Subject("sub");
+        ModifierFactory mf = new ModifierFactory(sub);
+
+        for (Subject s : subjects){
+            mf.addValidSubjects(s);
+        }
+
+        assertEquals(mf.getValidSubjects().size(),subjects.size()+1);
+        action.setModifierFactory(mf);
+        action.setName("extralongshittynametotestifthereisanycharrestrictionwiththeapachecommonsapi");
+
+        for (Observation o : observations){
+            for (Coding c : o.getCodings()){
+                c.setModifier("Subject1");
+            }
+        }
+
+        exportService.exportAction(observations,subjects,action);
 
     }
 }
