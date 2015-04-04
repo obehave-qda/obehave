@@ -12,6 +12,7 @@ import org.obehave.persistence.Daos;
 import org.obehave.service.Study;
 import org.obehave.util.I18n;
 import org.obehave.util.Properties;
+import org.obehave.view.components.dialogs.AboutDialog;
 import org.obehave.view.components.observation.ObservationControl;
 import org.obehave.view.components.tree.ProjectTreeControl;
 import org.obehave.view.util.AlertUtil;
@@ -29,6 +30,8 @@ import java.util.ResourceBundle;
 public class MainController {
     private static final Logger log = LoggerFactory.getLogger(MainController.class);
     private Study study;
+
+    private AboutDialog aboutDialog;
 
     @FXML
     private ResourceBundle resources;
@@ -190,6 +193,10 @@ public class MainController {
     void about(ActionEvent event) {
         log.trace("Showing about popup");
 
-        // TODO show about popup
+        if (aboutDialog == null) {
+            aboutDialog = new AboutDialog(stage);
+        }
+
+        aboutDialog.showAndWait();
     }
 }

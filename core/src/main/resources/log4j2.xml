@@ -5,7 +5,7 @@
             <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n"/>
         </Console>
 
-        <RollingFile name="fileLogger" fileName="log/obehave.log"
+        <RollingFile name="fileLogger" fileName="../log/obehave.log"
                      filePattern="log/obehave-%i-%d{MM-dd-yyyy-HH-mm}.log.gz">
             <PatternLayout pattern="%d{yy-MM-dd HH:mm:ss.SSS} %-5level %logger{36} - %msg%n"/>
             <Policies>
