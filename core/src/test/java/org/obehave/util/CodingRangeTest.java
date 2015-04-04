@@ -76,6 +76,15 @@ public class CodingRangeTest {
         codingRange.addOrUpdate(stateCoding(5));
 
         assertEquals(0, codingRange.overlapCount(pointCoding(10), 7));
+        assertEquals(1, codingRange.overlappingCodings(pointCoding(10), 7).getFutureOverlaps().size());
+    }
+
+    @Test
+    public void stateCodingWillOverlapPointCodingInTheFuture() {
+        codingRange.addOrUpdate(pointCoding(10));
+
+        assertEquals(0, codingRange.overlapCount(stateCoding(5), 7));
+        assertEquals(1, codingRange.overlappingCodings(stateCoding(5), 7).getFutureOverlaps().size());
     }
 
     @Test

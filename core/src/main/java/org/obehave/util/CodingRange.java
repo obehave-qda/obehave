@@ -35,17 +35,25 @@ public class CodingRange {
      * @param currentTime the time to take into account when comparing with an open coding
      * @return a list of overlapped codings
      */
-    public List<Coding> overlappingCodings(Coding coding, long currentTime) {
-        List<Coding> overlaps = new ArrayList<>();
+    public Overlappings overlappingCodings(Coding coding, long currentTime) {
+        Overlappings overlaps = new Overlappings(coding);
         final Range<Long> codingRange = getRangeForCoding(coding);
 
         for (Map.Entry<Coding, Range<Long>> entry : ranges.entrySet()) {
-            if (!entry.getKey().equals(coding)) {
+            final Coding forCoding = entry.getKey();
+
+            if (!forCoding.equals(coding)) {
                 Range<Long> range = entry.getValue();
 
-                // if there is no upper bound, we have to take the current time into account
-                if ((range.hasUpperBound() || currentTime >= coding.getStartMs()) && overlapping(range, codingRange)) {
-                    overlaps.add(entry.getKey());
+                if (overlapping(range, codingRange)) {
+                    if ((range.hasUpperBound() && codingRange.hasUpperBound())
+                            || currentTime >= coding.getStartMs() && currentTime >= forCoding.getStartMs()) {
+                        overlaps.addCurrentOverlapping(forCoding);
+                    } else if (!range.hasUpperBound() && currentTime < coding.getStartMs()) {
+                        overlaps.addFutureOverlapping(forCoding);
+                    } else if (!codingRange.hasUpperBound() && currentTime < forCoding.getStartMs()) {
+                        overlaps.addFutureOverlapping(forCoding);
+                    }
                 }
             }
         }
@@ -65,18 +73,20 @@ public class CodingRange {
      * @return the count of overlappings at the given {@code currentTime} for coding
      */
     public int overlapCount(Coding coding, long currentTime) {
-        return overlappingCodings(coding, currentTime).size();
+        return overlappingCodings(coding, currentTime).countCurrentOverlaps();
     }
 
     /**
-     * Checks if {@code r2} overlaps {@code r1}.
+     * Checks if two ranges overlap each other.
      */
     private boolean overlapping(Range<Long> r1, Range<Long> r2) {
         // singletons overlap
         if (isSingleton(r1) || isSingleton(r2)) {
             return r1.isConnected(r2);
         } else {
-            return r1.isConnected(r2) && !(r1.hasUpperBound() && r1.upperEndpoint().equals(r2.lowerEndpoint()));
+            return r1.isConnected(r2)
+                    && !(r1.hasUpperBound() && r1.upperEndpoint().equals(r2.lowerEndpoint()))
+                    && !(r2.hasUpperBound() && r2.upperEndpoint().equals(r1.lowerEndpoint()));
         }
 
     }
@@ -120,5 +130,43 @@ public class CodingRange {
         }
 
         return range;
+    }
+
+    /**
+     * This class helps to interprete the result of {@link CodingRange#overlappingCodings(Coding, long)}
+     */
+    public static class Overlappings {
+        private final Coding coding;
+        private final List<Coding> currentOverlaps = new ArrayList<>();
+        private final List<Coding> futureOverlaps = new ArrayList<>();
+
+        Overlappings(Coding coding) {
+            this.coding = coding;
+        }
+
+        public Coding getCoding() {
+            return coding;
+        }
+
+        public List<Coding> getCurrentOverlaps() {
+            return currentOverlaps;
+        }
+
+        public List<Coding> getFutureOverlaps() {
+            return futureOverlaps;
+        }
+
+        public void addCurrentOverlapping(Coding coding) {
+            currentOverlaps.add(coding);
+
+        }
+
+        public void addFutureOverlapping(Coding coding) {
+            futureOverlaps.add(coding);
+        }
+
+        public int countCurrentOverlaps() {
+            return currentOverlaps.size();
+        }
     }
 }
