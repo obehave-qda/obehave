@@ -9,14 +9,25 @@ import javafx.stage.Stage;
 import org.obehave.events.EventBusHolder;
 import org.obehave.util.I18n;
 import org.obehave.view.components.MainController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 
 public class Obehave extends Application {
+    private static final Logger log = LoggerFactory.getLogger(Obehave.class);
+
     public static Stage STAGE;
 
     @Override
     public void start(Stage stage) throws Exception {
+        final String implementationVersion = getClass().getPackage().getImplementationVersion();
+        if (implementationVersion != null) {
+            log.info("Starting obehave v{}", implementationVersion);
+        } else {
+            log.warn("Couldn't determine executed version of obehave. That could be because you started it from an IDE");
+        }
+
         final URL mainFxml = getClass().getClassLoader().getResource("org/obehave/view/components/main.fxml");
         if (mainFxml == null) {
             throw new IllegalStateException("Couldn't load main.fxml!");
