@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 import org.obehave.events.EventBusHolder;
 import org.obehave.util.I18n;
 import org.obehave.view.components.MainController;
+import org.obehave.view.util.HostServicesHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,6 +46,8 @@ public class Obehave extends Application {
         stage.setTitle("obehave");
         stage.setScene(scene);
         stage.setMaximized(true);
+
+        HostServicesHolder.initialize(getHostServices());
 
         stage.getIcons().addAll(new Image(getClass().getClassLoader().getResourceAsStream("org/obehave/view/icons/icon_16x16.png")),
                 new Image(getClass().getClassLoader().getResourceAsStream("org/obehave/view/icons/icon_32x32.png")),

@@ -1,4 +1,5 @@
 apply plugin: 'java'
+apply plugin: 'application'
 apply from: "http://dl.bintray.com/content/shemnon/javafx-gradle/0.4.0/javafx.plugin"
 
 sourceCompatibility = 1.8
@@ -9,8 +10,10 @@ jar {
     }
 }
 
+mainClassName = 'org.obehave.view.Obehave'
+
 javafx {
-    mainClass 'org.obehave.view.Obehave'
+    mainClass mainClassName
 }
 
 dependencies {
