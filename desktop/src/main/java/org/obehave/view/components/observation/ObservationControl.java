@@ -52,7 +52,7 @@ public class ObservationControl extends BorderPane {
 
     private AutoCompletionBinding<String> modifierCompletion;
 
-    private DoubleProperty currentTimeProperty = new SimpleDoubleProperty(this, "currentTimeProperty");
+    private DoubleProperty msPlayed = new SimpleDoubleProperty(this, "msPlayed");
 
     public ObservationControl() {
         super();
@@ -74,10 +74,10 @@ public class ObservationControl extends BorderPane {
 
 
         TextFields.bindAutoCompletion(inputSubject,
-                p -> (suggestionService.getSubjectSuggestions(p.getUserText(), isEndCodingMode(), (long) (currentTimeProperty.get() * 1000))))
+                p -> (suggestionService.getSubjectSuggestions(p.getUserText(), isEndCodingMode(), (long) (msPlayed.get() * 1000))))
                 .setOnAutoCompleted(e -> inputAction.requestFocus());
         TextFields.bindAutoCompletion(inputAction,
-                p -> (suggestionService.getActionSuggestions(p.getUserText(), isEndCodingMode(), inputSubject.getText(), (long) (currentTimeProperty.get() * 1000))))
+                p -> (suggestionService.getActionSuggestions(p.getUserText(), isEndCodingMode(), inputSubject.getText(), (long) (msPlayed.get() * 1000))))
                 .setOnAutoCompleted(e -> inputModifier.requestFocus());
 
         // we have to redo the completion binding later, so store it in a variable
@@ -114,13 +114,13 @@ public class ObservationControl extends BorderPane {
         if (observation.getVideo() != null) {
             loadVideo(observation.getVideo());
 
-            currentTimeProperty.bind(videoControl.currentTime());
-            codingControl.currentTime().bind(currentTimeProperty);
+            msPlayed.bind(videoControl.msPlayed());
+            codingControl.msPlayed().bind(msPlayed);
 
             videoControl.totalDurationProperty().addListener((observable, oldValue, newValue) ->
                     codingControl.lengthMsProperty().setValue(newValue.toMillis()));
         } else {
-            codingControl.currentTime().unbind();
+            codingControl.msPlayed().unbind();
             codingControl.lengthMsProperty().setValue(observation.getEndOfLastCoding());
         }
 
@@ -172,9 +172,9 @@ public class ObservationControl extends BorderPane {
                 final String modifier = !inputModifier.isDisabled() ? inputModifier.getText() : null;
 
                 if (!isEndCodingMode()) {
-                    codingService.startCoding(subject, action, modifier, (long) (currentTimeProperty.get() * 1000));
+                    codingService.startCoding(subject, action, modifier, (long) (msPlayed.get() * 1000));
                 } else {
-                    codingService.endCoding(subject.substring(1), action, modifier, (long) (currentTimeProperty.get() * 1000));
+                    codingService.endCoding(subject.substring(1), action, modifier, (long) (msPlayed.get() * 1000));
                 }
 
                 inputSubject.clear();

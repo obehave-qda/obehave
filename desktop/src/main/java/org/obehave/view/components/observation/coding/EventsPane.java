@@ -33,7 +33,7 @@ public class EventsPane extends Pane {
 
     private DoubleProperty subjectListWidthProperty = new SimpleDoubleProperty(this, "subjectListWidthProperty");
 
-    private DoubleProperty currentTime = new SimpleDoubleProperty(this, "currentTimeProperty");
+    private DoubleProperty msPlayed = new SimpleDoubleProperty(this, "msPlayed");
 
     public EventsPane() {
         EventBusHolder.register(this);
@@ -45,7 +45,7 @@ public class EventsPane extends Pane {
         Line secondsLine = new Line();
 
         secondsLine.startXProperty().bind(
-                NodeUtil.snapXY(secondWidthProperty.multiply(currentTime).add(subjectListWidthProperty)));
+                NodeUtil.snapXY(secondWidthProperty.multiply(msPlayed).add(subjectListWidthProperty)));
         secondsLine.endXProperty().bind(NodeUtil.snapXY(secondsLine.startXProperty()));
 
         secondsLine.startYProperty().setValue(0);
@@ -77,7 +77,7 @@ public class EventsPane extends Pane {
         pane.setId("subjectPane" + currentSubjectPanes);
 
         pane.secondWidthProperty().bind(secondWidthProperty);
-        pane.currentTimeProperty().bind(currentTime);
+        pane.currentTimeProperty().bind(msPlayed);
 
         pane.layoutXProperty().set(0);
         pane.layoutYProperty().bind(subjectHeightProperty.multiply(currentSubjectPanes));
@@ -173,7 +173,7 @@ public class EventsPane extends Pane {
         return line;
     }
 
-    public DoubleProperty currentTime() {
-        return currentTime;
+    public DoubleProperty msPlayed() {
+        return msPlayed;
     }
 }
