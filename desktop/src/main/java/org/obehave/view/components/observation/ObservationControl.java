@@ -95,9 +95,7 @@ public class ObservationControl extends BorderPane {
         if (observation.getVideo() != null) {
             loadVideo(observation.getVideo());
 
-            // FIXME there is some stupid bug with the seconds line
-            videoControl.currentTime().addListener((observable, oldValue, newValue) ->
-                currentTimeProperty.setValue(newValue.toSeconds()));
+            currentTimeProperty.bind(videoControl.currentTime());
             codingControl.currentTime().bind(currentTimeProperty);
 
             videoControl.totalDurationProperty().addListener((observable, oldValue, newValue) ->
