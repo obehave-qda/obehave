@@ -35,6 +35,8 @@ public class EventsPane extends Pane {
 
     private DoubleProperty msPlayed = new SimpleDoubleProperty(this, "msPlayed");
 
+    private Line secondsLine = new Line();
+
     public EventsPane() {
         EventBusHolder.register(this);
 
@@ -42,10 +44,6 @@ public class EventsPane extends Pane {
 
         msProperty.addListener((observable, oldValue, newValue) -> refresh());
 
-        Line secondsLine = new Line();
-
-        secondsLine.startXProperty().bind(
-                NodeUtil.snapXY(secondWidthProperty.multiply(msPlayed.divide(1000)).add(subjectListWidthProperty)));
         secondsLine.endXProperty().bind(NodeUtil.snapXY(secondsLine.startXProperty()));
 
         secondsLine.startYProperty().setValue(0);
@@ -71,13 +69,12 @@ public class EventsPane extends Pane {
     }
 
     public void addSubject(Subject subject) {
-        SubjectPane pane = new SubjectPane();
+        SubjectPane pane = new SubjectPane(msPlayed);
         int currentSubjectPanes = subjectPanes.size();
 
         pane.setId("subjectPane" + currentSubjectPanes);
 
         pane.secondWidthProperty().bind(secondWidthProperty);
-        pane.msPlayed().bind(msPlayed);
 
         pane.layoutXProperty().set(0);
         pane.layoutYProperty().bind(subjectHeightProperty.multiply(currentSubjectPanes));
@@ -173,7 +170,10 @@ public class EventsPane extends Pane {
         return line;
     }
 
-    public DoubleProperty msPlayed() {
-        return msPlayed;
+    public void setMsPlayed(DoubleProperty msPlayed) {
+        this.msPlayed = msPlayed;
+
+        secondsLine.startXProperty().bind(
+                NodeUtil.snapXY(secondWidthProperty.multiply(msPlayed.divide(1000)).add(subjectListWidthProperty)));
     }
 }

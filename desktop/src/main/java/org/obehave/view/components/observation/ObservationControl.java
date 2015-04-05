@@ -72,6 +72,8 @@ public class ObservationControl extends BorderPane {
         videoControl.maxHeightProperty().bind(heightProperty().divide(1.5));
         codingControl.maxHeightProperty().bind(heightProperty().divide(3));
 
+        msPlayed = videoControl.msPlayed();
+
 
         TextFields.bindAutoCompletion(inputSubject,
                 p -> (suggestionService.getSubjectSuggestions(p.getUserText(), isEndCodingMode(), (long) (msPlayed.get()))))
@@ -114,13 +116,12 @@ public class ObservationControl extends BorderPane {
         if (observation.getVideo() != null) {
             loadVideo(observation.getVideo());
 
-            msPlayed.bind(videoControl.msPlayed());
-            codingControl.msPlayed().bind(msPlayed);
+            codingControl.setMsPlayed(msPlayed);
 
             videoControl.totalDurationProperty().addListener((observable, oldValue, newValue) ->
                     codingControl.lengthMsProperty().setValue(newValue.toMillis()));
         } else {
-            codingControl.msPlayed().unbind();
+            codingControl.setMsPlayed(new SimpleDoubleProperty(this, "dummyDoubleProperty", 0));
             codingControl.lengthMsProperty().setValue(observation.getEndOfLastCoding());
         }
 
