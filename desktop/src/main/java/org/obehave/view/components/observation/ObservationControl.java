@@ -9,6 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 import org.obehave.events.EventBusHolder;
 import org.obehave.events.UiEvent;
@@ -47,6 +48,8 @@ public class ObservationControl extends BorderPane {
     @FXML
     private TextField inputModifier;
 
+    private AutoCompletionBinding<String> modifierCompletion;
+
     private DoubleProperty currentTimeProperty = new SimpleDoubleProperty(this, "currentTimeProperty");
 
     public ObservationControl() {
@@ -67,18 +70,38 @@ public class ObservationControl extends BorderPane {
         videoControl.maxHeightProperty().bind(heightProperty().divide(1.5));
         codingControl.maxHeightProperty().bind(heightProperty().divide(3));
 
-        TextFields.bindAutoCompletion(inputSubject,
-                p -> (study.getSuggestionServiceBuilder().build(observation).getSubjectSuggestions(p.getUserText(), isEndCodingMode())))
-                .setOnAutoCompleted(e -> inputAction.requestFocus());
-        TextFields.bindAutoCompletion(inputAction,
-                p -> (study.getSuggestionServiceBuilder().build(observation).getActionSuggestions(p.getUserText(), isEndCodingMode(), inputSubject.getText())))
-                .setOnAutoCompleted(e -> inputModifier.requestFocus());
-        TextFields.bindAutoCompletion(inputModifier,
-                p -> (study.getSuggestionServiceBuilder().build(observation).getModifierSuggestions(inputAction.getText(), p.getUserText())));
+        createSubjectAutocompletionBinding();
+        createActionAutocompletionBinding();
+
+        // we have to redo the completion binding later, so store it in a variable
+        modifierCompletion = createModifierAutocompletionBinding();
 
         inputAction.textProperty().addListener((observable, oldValue, newValue) -> handleActionValue(newValue));
         inputModifier.setText("No valid action entered");
         inputModifier.setDisable(true);
+    }
+
+    private AutoCompletionBinding<String> createSubjectAutocompletionBinding() {
+        AutoCompletionBinding<String> binding = TextFields.bindAutoCompletion(inputAction,
+                p -> (study.getSuggestionServiceBuilder().build(observation).getActionSuggestions(p.getUserText(), isEndCodingMode(), inputSubject.getText())));
+        binding.setOnAutoCompleted(e -> inputAction.requestFocus());
+
+        return binding;
+    }
+
+    private AutoCompletionBinding<String> createActionAutocompletionBinding() {
+        AutoCompletionBinding<String> binding = TextFields.bindAutoCompletion(inputSubject,
+                p -> (study.getSuggestionServiceBuilder().build(observation).getSubjectSuggestions(p.getUserText(), isEndCodingMode())));
+        binding.setOnAutoCompleted(e -> inputModifier.requestFocus());
+
+        return binding;
+    }
+
+    private AutoCompletionBinding<String> createModifierAutocompletionBinding() {
+        AutoCompletionBinding<String> binding = TextFields.bindAutoCompletion(inputModifier,
+                p -> (study.getSuggestionServiceBuilder().build(observation).getModifierSuggestions(inputAction.getText(), p.getUserText())));
+
+        return binding;
     }
 
     public void loadVideo(File video) {
@@ -117,14 +140,18 @@ public class ObservationControl extends BorderPane {
         Action a = actionService.getForName(newValue);
 
         if (a != null) {
-            if (a.getModifierFactory() == null && !inputModifier.isDisabled()) {
+            if (a.getModifierFactory() == null && !inputModifier.getText().startsWith("No modifier for")) {
                 log.trace("Disabling text field - no modifier factory for action {}", a);
                 inputModifier.setText("No modifier for " + a.getDisplayString());
                 inputModifier.setDisable(true);
             } else if (a.getModifierFactory() != null && inputModifier.isDisabled()) {
                 log.trace("Enabling text field - action has a modifier factory {}", a);
+                modifierCompletion.dispose();
+
                 inputModifier.clear();
                 inputModifier.setDisable(false);
+
+                modifierCompletion = createModifierAutocompletionBinding();
             }
         } else {
             inputModifier.setText("No valid action entered");
@@ -134,7 +161,7 @@ public class ObservationControl extends BorderPane {
 
     @FXML
     public void code(KeyEvent event) {
-        if (event.getCode() == KeyCode.ENTER) {
+        if (event.isShortcutDown() && event.getCode() == KeyCode.ENTER) {
             code();
         }
     }
@@ -152,6 +179,10 @@ public class ObservationControl extends BorderPane {
                 } else {
                     codingService.endCoding(subject.substring(1), action, modifier, (long) (currentTimeProperty.get() * 1000));
                 }
+
+                inputSubject.clear();
+                inputModifier.clear();
+                inputAction.clear();
             }
         } catch (ServiceException e) {
             AlertUtil.showError("Error while coding", "Couldn't code, because " + e.getMessage(), e);
