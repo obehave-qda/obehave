@@ -4,6 +4,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.obehave.exceptions.FactoryException;
 import org.obehave.model.modifier.Modifier;
 import org.obehave.persistence.impl.CodingDaoImpl;
@@ -163,5 +164,16 @@ public class Coding extends BaseEntity {
                 .append(startMs)
                 .append(observation)
                 .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("subject", subject)
+                .append("action", action)
+                .append("modifier", modifier)
+                .append("startMs", startMs)
+                .append("endMs", endMs)
+                .toString();
     }
 }

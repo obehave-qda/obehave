@@ -48,10 +48,10 @@ public class VideoControl extends BorderPane {
     @FXML
     void playPause(ActionEvent event) {
         if (mediaView.getMediaPlayer().getStatus() == MediaPlayer.Status.PLAYING) {
-            log.trace("Button clicked - pausing video");
+            log.trace("Pausing video at {}s", mediaView.getMediaPlayer().getCurrentTime().toSeconds());
             mediaView.getMediaPlayer().pause();
         } else {
-            log.trace("Button clicked - playing video");
+            log.trace("Playing video at {}s", mediaView.getMediaPlayer().getCurrentTime().toSeconds());
             mediaView.getMediaPlayer().play();
         }
     }
