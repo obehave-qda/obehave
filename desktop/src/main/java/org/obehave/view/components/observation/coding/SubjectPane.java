@@ -31,20 +31,25 @@ public class SubjectPane extends Pane {
     private Map<Coding, Rectangle> codings = new HashMap<>();
     private Map<Coding, Rectangle> openListener = new HashMap<>();
 
-    private void drawPointCoding(Coding coding) {
+    private void drawPointCoding(Coding coding, int i, int max) {
         log.trace("Drawing rectangle for point coding {}", coding);
 
-        final double position = secondWidthProperty.get() * (coding.getStartMs() / 1000);
-        final double x = position - subjectHeightProperty.get() / 2;
+        final double x = secondWidthProperty.get() * (coding.getStartMs() / 1000);
 
         Rectangle rectangle = getRectangle(x, 0, subjectHeightProperty.get(), subjectHeightProperty.get(),
                 coding.getSubject().getColor());
 
+        rectangle.widthProperty().bind(rectangle.heightProperty().multiply(0.75));
+        rectangle.translateXProperty().bind(rectangle.widthProperty().divide(-2));
+
+        adjustCodingRectangle(rectangle, i, max);
+
         getChildren().add(rectangle);
         codings.put(coding, rectangle);
+        codingRange.addOrUpdate(coding);
     }
 
-    private void drawStateCoding(Coding coding) {
+    private void drawStateCoding(Coding coding, int i, int max) {
         log.trace("Drawing rectangle for finished state coding {}", coding);
 
         final double positionStart = secondWidthProperty.get() * (coding.getStartMs() / 1000);
@@ -53,12 +58,14 @@ public class SubjectPane extends Pane {
         Rectangle rectangle = getRectangle(positionStart, 0, positionEnd, subjectHeightProperty.get(),
                 coding.getSubject().getColor());
 
+        adjustCodingRectangle(rectangle, i, max);
+
         getChildren().add(rectangle);
         codings.put(coding, rectangle);
         codingRange.addOrUpdate(coding);
     }
 
-    private void startStateCoding(Coding coding) {
+    private void startStateCoding(Coding coding, int i, int max) {
         log.trace("Drawing growing rectangle for state coding {}", coding);
 
         final double positionStart = secondWidthProperty.get() * (coding.getStartMs() / 1000);
@@ -69,17 +76,20 @@ public class SubjectPane extends Pane {
                 coding.getSubject().getColor());
         rectangle.widthProperty().bind(width);
 
-        getChildren().add(rectangle);
+        adjustCodingRectangle(rectangle, i, max);
 
+        getChildren().add(rectangle);
         codings.put(coding, rectangle);
         codingRange.addOrUpdate(coding);
     }
 
     private Rectangle getRectangle(double x, double y, double width, double height, org.obehave.model.Color color) {
         Rectangle rectangle = new Rectangle(x, y, width, height);
-        rectangle.setArcHeight(subjectHeightProperty().get());
-        rectangle.setArcWidth(subjectHeightProperty().get());
-        rectangle.setFill(color == null ? Color.BLACK : ColorConverter.convertToJavaFX(color));
+        rectangle.arcHeightProperty().bind(rectangle.heightProperty());
+        rectangle.arcWidthProperty().bind(rectangle.heightProperty());
+
+        rectangle.setFill(Color.BEIGE.deriveColor(0, 1, 1, 0.5));
+        rectangle.setStroke(color == null ? Color.BLACK : ColorConverter.convertToJavaFX(color));
 
         return rectangle;
     }
@@ -94,19 +104,21 @@ public class SubjectPane extends Pane {
         }
 
         if (coding.getAction().getType() == Action.Type.POINT) {
-            drawPointCoding(coding);
+            drawPointCoding(coding, currentOverlappings.size(), currentOverlappings.size() + 1);
         } else {
             if (!coding.isOpen()) {
-                drawStateCoding(coding);
+                drawStateCoding(coding, currentOverlappings.size(), currentOverlappings.size() + 1);
             } else {
-                startStateCoding(coding);
+                startStateCoding(coding, currentOverlappings.size(), currentOverlappings.size() + 1);
             }
         }
     }
 
     private void adjustCodingRectangle(Coding coding, int position, int size) {
-        Rectangle r = codings.get(coding);
+        adjustCodingRectangle(codings.get(coding), position, size);
+    }
 
+    private void adjustCodingRectangle(Rectangle r, int position, int size) {
         DoubleBinding height = subjectHeightProperty().divide(size);
         DoubleBinding y = height.multiply(position);
 

@@ -23,6 +23,7 @@ import java.util.Map;
 
 /**
  * Utility class for retrieving DAOs. Not sure if thread safe. Probably not.
+ * But who cares, threads are evil.
  */
 public class Daos {
     private static final Logger log = LoggerFactory.getLogger(Daos.class);
@@ -140,6 +141,7 @@ public class Daos {
     }
 
     public void close() throws SQLException {
+        log.trace("Closing connection {}", connectionSource);
         connectionSource.close();
         daos.remove(connectionSource);
     }
@@ -151,6 +153,7 @@ public class Daos {
      * @throws SQLException the last {@link java.sql.SQLException} that was thrown
      */
     public static void closeAll() {
+        log.debug("Closing all connections");
         SQLException lastException = null;
 
         // avoiding ConcurrentModificationExceptions
