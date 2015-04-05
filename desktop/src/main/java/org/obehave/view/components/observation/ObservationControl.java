@@ -156,13 +156,14 @@ public class ObservationControl extends BorderPane {
     }
 
     @FXML
-    public void code(KeyEvent event) {
+    public void codeEnter(KeyEvent event) {
         if (event.isShortcutDown() && event.getCode() == KeyCode.ENTER) {
             code();
         }
     }
 
-    private void code() {
+    @FXML
+    public void code() {
         try {
             final String subject = inputSubject.getText();
             final String action = inputAction.getText();
