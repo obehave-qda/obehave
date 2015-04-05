@@ -52,7 +52,7 @@ public class SuggestionService {
     private List<String> getSubjectSuggestions(List<Subject> subjects, String nameFilter, String prefix) {
         List<String> suggestedSubjects = new ArrayList<>();
 
-        if (nameFilter != null && !nameFilter.isEmpty()) {
+        if (nameFilter != null) {
             for (Subject subject : subjects) {
                 final String enteredTextLower = nameFilter.toLowerCase();
 
