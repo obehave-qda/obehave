@@ -83,6 +83,12 @@ public class ObservationControl extends BorderPane {
         // we have to redo the completion binding later, so store it in a variable
         modifierCompletion = createModifierAutocompletionBinding();
 
+        inputModifier.focusedProperty().addListener((observable1, oldFocused, newFocused) -> {
+            if (newFocused) {
+                modifierCompletion.setUserInput(inputModifier.getText());
+            }
+        });
+
         inputAction.textProperty().addListener((observable, oldValue, newValue) -> handleActionValue(newValue));
         inputModifier.setText("No valid action entered");
         inputModifier.setDisable(true);
