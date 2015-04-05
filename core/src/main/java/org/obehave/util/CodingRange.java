@@ -4,10 +4,7 @@ import com.google.common.collect.BoundType;
 import com.google.common.collect.Range;
 import org.obehave.model.Coding;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * A {@code CodingRange} is able to calculate how many codings a particular coding overlaps.
@@ -158,7 +155,6 @@ public class CodingRange {
 
         public void addCurrentOverlapping(Coding coding) {
             currentOverlaps.add(coding);
-
         }
 
         public void addFutureOverlapping(Coding coding) {
@@ -167,6 +163,59 @@ public class CodingRange {
 
         public int countCurrentOverlaps() {
             return currentOverlaps.size();
+        }
+
+        public List<List<Coding>> arrangeCurrentOverlaps() {
+            List<Coding> overlaps = new ArrayList<>(getCurrentOverlaps());
+            overlaps.add(coding);
+            Collections.sort(overlaps, new CodingStartTimeComparator());
+
+            List<List<Coding>> lanes = new ArrayList<>();
+            // at least one lane
+            lanes.add(new ArrayList<Coding>());
+
+            for (Coding c : overlaps) {
+                int lane = getLaneWithFreePosition(lanes, c);
+                if (lane >= 0) {
+                    lanes.get(lane).add(c);
+                } else {
+                    final ArrayList<Coding> newLane = new ArrayList<>();
+                    newLane.add(c);
+                    lanes.add(newLane);
+                }
+            }
+
+            return lanes;
+        }
+
+        private int getLaneWithFreePosition(List<List<Coding>> lanes, Coding coding) {
+            int currentLane = 0;
+
+            for (List<Coding> lane : lanes) {
+                CodingRange range = new CodingRange();
+
+                // add all codings of lane to range
+                for (Coding c : lane) {
+                    range.addOrUpdate(c);
+                }
+
+                // would there be any overlaps?
+                if (range.overlapCount(coding) == 0) {
+                    return currentLane;
+                }
+
+                currentLane++;
+            }
+
+
+            return -1;
+        }
+
+        private class CodingStartTimeComparator implements Comparator<Coding> {
+            @Override
+            public int compare(Coding o1, Coding o2) {
+                return (int) (o1.getStartMs() - o2.getStartMs());
+            }
         }
     }
 }

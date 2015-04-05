@@ -6,7 +6,11 @@ import org.obehave.model.Action;
 import org.obehave.model.Coding;
 import org.obehave.model.Subject;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class CodingRangeTest {
     private Subject subject = new Subject("Dummysubject");
@@ -181,6 +185,23 @@ public class CodingRangeTest {
         codingRange.clear();
 
         assertEquals(0, codingRange.overlapCount(pointCoding(5)));
+    }
+
+    @Test
+    public void arrangingOneStateAndThreePointActions() {
+        Coding l1c1 = stateCoding(0, 20);
+        Coding l2c1 = pointCoding(5);
+        Coding l2c2 = pointCoding(10);
+        Coding l2c3 = pointCoding(15);
+
+        codingRange.addOrUpdate(l2c1);
+        codingRange.addOrUpdate(l2c2);
+        codingRange.addOrUpdate(l2c3);
+
+        final List<List<Coding>> lanes = codingRange.overlappingCodings(l1c1, 30).arrangeCurrentOverlaps();
+        assertTrue(lanes.get(0).contains(l1c1));
+        assertTrue(lanes.get(1).containsAll(Arrays.asList(l2c1, l2c2, l2c3)));
+        assertEquals(2, lanes.size());
     }
 
     /**
