@@ -25,7 +25,7 @@ public class SubjectPane extends Pane {
     private static final Logger log = LoggerFactory.getLogger(SubjectPane.class);
 
     private DoubleProperty secondWidthProperty = new SimpleDoubleProperty(this, "secondWidthProperty");
-    private DoubleProperty currentTimeProperty = new SimpleDoubleProperty(this, "currentTimeProperty");
+    private DoubleProperty msPlayed = new SimpleDoubleProperty(this, "msPlayed");
     private DoubleProperty subjectHeightProperty = new SimpleDoubleProperty(this, "subjectHeightProperty");
 
     private CodingRange codingRange = new CodingRange();
@@ -67,7 +67,7 @@ public class SubjectPane extends Pane {
 
         final double positionStart = secondWidthProperty.get() * (coding.getStartMs() / 1000);
 
-        final DoubleBinding width = new MinimumDoubleBinding(secondWidthProperty.multiply(currentTimeProperty).subtract(positionStart));
+        final DoubleBinding width = new MinimumDoubleBinding(secondWidthProperty.multiply(msPlayed.divide(1000)).subtract(positionStart));
 
         Rectangle rectangle = getRectangle(positionStart, 0, 0, subjectHeightProperty.get(),
                 coding.getSubject().getColor());
@@ -106,7 +106,7 @@ public class SubjectPane extends Pane {
     }
 
     private void adjustCurrentOverlappingPositions(Coding coding) {
-        CodingRange.Overlappings overlappings = codingRange.overlappingCodings(coding, (long) (currentTimeProperty.get() * 1000));
+        CodingRange.Overlappings overlappings = codingRange.overlappingCodings(coding, (long) (msPlayed.get()));
 
         List<List<Coding>> lanes = overlappings.arrangeCurrentOverlaps();
         for (int row = 0; row < lanes.size(); row++) {
@@ -117,7 +117,7 @@ public class SubjectPane extends Pane {
     }
 
     private void planFutureAdjustments(Coding coding) {
-        CodingRange.Overlappings overlappings = codingRange.overlappingCodings(coding, (long) (currentTimeProperty.get() * 1000));
+        CodingRange.Overlappings overlappings = codingRange.overlappingCodings(coding, (long) (msPlayed.get()));
 
         final List<Coding> futureOverlappings = overlappings.getFutureOverlaps();
 
@@ -133,7 +133,7 @@ public class SubjectPane extends Pane {
             };
 
             openListener.put(futureOverlapping, adjustListener);
-            currentTimeProperty.addListener(adjustListener);
+            msPlayed.addListener(adjustListener);
         }
     }
 
@@ -164,8 +164,8 @@ public class SubjectPane extends Pane {
         return secondWidthProperty;
     }
 
-    public DoubleProperty currentTimeProperty() {
-        return currentTimeProperty;
+    public DoubleProperty msPlayed() {
+        return msPlayed;
     }
 
     public DoubleProperty subjectHeightProperty() {
@@ -209,7 +209,7 @@ public class SubjectPane extends Pane {
                 final ChangeListener<Number> listener = openListener.get(coding);
                 if (listener != null) {
                     log.trace("Found {} listeners; removing {}", openListener.size(), listener);
-                    currentTimeProperty.removeListener(listener);
+                    msPlayed.removeListener(listener);
                 }
 
                 adjusted = true;

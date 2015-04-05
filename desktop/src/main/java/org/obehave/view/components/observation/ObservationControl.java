@@ -74,10 +74,10 @@ public class ObservationControl extends BorderPane {
 
 
         TextFields.bindAutoCompletion(inputSubject,
-                p -> (suggestionService.getSubjectSuggestions(p.getUserText(), isEndCodingMode(), (long) (msPlayed.get() * 1000))))
+                p -> (suggestionService.getSubjectSuggestions(p.getUserText(), isEndCodingMode(), (long) (msPlayed.get()))))
                 .setOnAutoCompleted(e -> inputAction.requestFocus());
         TextFields.bindAutoCompletion(inputAction,
-                p -> (suggestionService.getActionSuggestions(p.getUserText(), isEndCodingMode(), inputSubject.getText(), (long) (msPlayed.get() * 1000))))
+                p -> (suggestionService.getActionSuggestions(p.getUserText(), isEndCodingMode(), inputSubject.getText(), (long) (msPlayed.get()))))
                 .setOnAutoCompleted(e -> inputModifier.requestFocus());
 
         // we have to redo the completion binding later, so store it in a variable
@@ -172,9 +172,9 @@ public class ObservationControl extends BorderPane {
                 final String modifier = !inputModifier.isDisabled() ? inputModifier.getText() : null;
 
                 if (!isEndCodingMode()) {
-                    codingService.startCoding(subject, action, modifier, (long) (msPlayed.get() * 1000));
+                    codingService.startCoding(subject, action, modifier, (long) (msPlayed.get()));
                 } else {
-                    codingService.endCoding(subject.substring(1), action, modifier, (long) (msPlayed.get() * 1000));
+                    codingService.endCoding(subject.substring(1), action, modifier, (long) (msPlayed.get()));
                 }
 
                 inputSubject.clear();

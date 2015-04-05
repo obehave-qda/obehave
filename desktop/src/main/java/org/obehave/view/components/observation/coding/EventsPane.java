@@ -45,7 +45,7 @@ public class EventsPane extends Pane {
         Line secondsLine = new Line();
 
         secondsLine.startXProperty().bind(
-                NodeUtil.snapXY(secondWidthProperty.multiply(msPlayed).add(subjectListWidthProperty)));
+                NodeUtil.snapXY(secondWidthProperty.multiply(msPlayed.divide(1000)).add(subjectListWidthProperty)));
         secondsLine.endXProperty().bind(NodeUtil.snapXY(secondsLine.startXProperty()));
 
         secondsLine.startYProperty().setValue(0);
@@ -77,7 +77,7 @@ public class EventsPane extends Pane {
         pane.setId("subjectPane" + currentSubjectPanes);
 
         pane.secondWidthProperty().bind(secondWidthProperty);
-        pane.currentTimeProperty().bind(msPlayed);
+        pane.msPlayed().bind(msPlayed);
 
         pane.layoutXProperty().set(0);
         pane.layoutYProperty().bind(subjectHeightProperty.multiply(currentSubjectPanes));
