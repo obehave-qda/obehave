@@ -30,7 +30,10 @@ public class SubjectPane extends Pane {
 
     private CodingRange codingRange = new CodingRange();
     private Map<Coding, Rectangle> codings = new HashMap<>();
-    private Map<Coding, ChangeListener<Number>> openListener = new HashMap<>();
+
+    public SubjectPane(DoubleProperty msPlayed) {
+        this.msPlayed = msPlayed;
+    }
 
     private void drawPointCoding(Coding coding) {
         log.trace("Drawing rectangle for point coding {}", coding);
@@ -127,12 +130,11 @@ public class SubjectPane extends Pane {
             final OneTimeFutureAdjuster adjuster = new OneTimeFutureAdjuster(futureOverlapping);
 
             final ChangeListener<Number> adjustListener = (observable, oldValue, newValue) -> {
-                if (newValue.longValue() * 1000 >= futureOverlapping.getStartMs()) {
+                if (newValue.longValue() >= futureOverlapping.getStartMs()) {
                     adjuster.adjust();
                 }
             };
 
-            openListener.put(futureOverlapping, adjustListener);
             msPlayed.addListener(adjustListener);
         }
     }
@@ -162,10 +164,6 @@ public class SubjectPane extends Pane {
 
     public DoubleProperty secondWidthProperty() {
         return secondWidthProperty;
-    }
-
-    public DoubleProperty msPlayed() {
-        return msPlayed;
     }
 
     public DoubleProperty subjectHeightProperty() {
@@ -203,14 +201,7 @@ public class SubjectPane extends Pane {
 
         public void adjust() {
             if (!adjusted) {
-                log.trace("Adjusting {}", coding);
                 adjustCurrentOverlappingPositions(coding);
-
-                final ChangeListener<Number> listener = openListener.get(coding);
-                if (listener != null) {
-                    log.trace("Found {} listeners; removing {}", openListener.size(), listener);
-                    msPlayed.removeListener(listener);
-                }
 
                 adjusted = true;
             }
