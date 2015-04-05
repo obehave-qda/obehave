@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,6 +29,7 @@ public class SubjectPane extends Pane {
 
     private CodingRange codingRange = new CodingRange();
     private Map<Coding, Rectangle> codings = new HashMap<>();
+    private Map<Coding, Rectangle> openListener = new HashMap<>();
 
     private void drawPointCoding(Coding coding) {
         log.trace("Drawing rectangle for point coding {}", coding);
@@ -53,6 +55,7 @@ public class SubjectPane extends Pane {
 
         getChildren().add(rectangle);
         codings.put(coding, rectangle);
+        codingRange.addOrUpdate(coding);
     }
 
     private void startStateCoding(Coding coding) {
@@ -69,6 +72,7 @@ public class SubjectPane extends Pane {
         getChildren().add(rectangle);
 
         codings.put(coding, rectangle);
+        codingRange.addOrUpdate(coding);
     }
 
     private Rectangle getRectangle(double x, double y, double width, double height, org.obehave.model.Color color) {
@@ -81,6 +85,14 @@ public class SubjectPane extends Pane {
     }
 
     public void drawCoding(Coding coding) {
+        CodingRange.Overlappings overlappings = codingRange.overlappingCodings(coding, (long) (currentTimeProperty.get() * 1000));
+
+        List<Coding> currentOverlappings = overlappings.getCurrentOverlaps();
+
+        for (int i = 0; i < currentOverlappings.size(); i++) {
+            adjustCodingRectangle(currentOverlappings.get(i), i, currentOverlappings.size() + 1);
+        }
+
         if (coding.getAction().getType() == Action.Type.POINT) {
             drawPointCoding(coding);
         } else {
@@ -92,6 +104,16 @@ public class SubjectPane extends Pane {
         }
     }
 
+    private void adjustCodingRectangle(Coding coding, int position, int size) {
+        Rectangle r = codings.get(coding);
+
+        DoubleBinding height = subjectHeightProperty().divide(size);
+        DoubleBinding y = height.multiply(position);
+
+        r.heightProperty().bind(height);
+        r.yProperty().bind(y);
+    }
+
     public void endCoding(Coding coding) {
         log.trace("Stopping rectanlge for coding {}", coding);
 
@@ -100,6 +122,7 @@ public class SubjectPane extends Pane {
         final Rectangle codingRectangle = codings.get(coding);
         codingRectangle.widthProperty().unbind();
         codingRectangle.setWidth(positionEnd);
+        codingRange.addOrUpdate(coding);
     }
 
     public DoubleProperty secondWidthProperty() {
@@ -112,18 +135,6 @@ public class SubjectPane extends Pane {
 
     public DoubleProperty subjectHeightProperty() {
         return subjectHeightProperty;
-    }
-
-    private int getCodingsAtTime(long ms) {
-        int codingsAtTime = 0;
-
-        for (Coding c : codings.keySet()) {
-            if (!c.isStateCoding()) {
-
-            }
-        }
-
-        return codingsAtTime;
     }
 
     private static class AtLeastOneDoubleBinding extends DoubleBinding {
