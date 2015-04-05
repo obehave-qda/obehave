@@ -33,11 +33,11 @@ public class SuggestionService {
         this.observation = observation;
     }
 
-    public Collection<String> getSubjectSuggestions(String enteredText, boolean endCoding) {
+    public Collection<String> getSubjectSuggestions(String enteredText, boolean endCoding, long atMs) {
         if (!endCoding) {
             return getAllSubjectSuggestions(enteredText);
         } else {
-            return getSubjectSuggestionsForOpenCodings(enteredText);
+            return getSubjectSuggestionsForOpenCodings(enteredText, atMs);
         }
     }
 
@@ -45,8 +45,8 @@ public class SuggestionService {
         return getSubjectSuggestions(observation.getParticipatingSubjects(), enteredText, null);
     }
 
-    private List<String> getSubjectSuggestionsForOpenCodings(String enteredText) {
-        return getSubjectSuggestions(observation.getSubjectsWithOpenCodings(), enteredText.substring(1), "/");
+    private List<String> getSubjectSuggestionsForOpenCodings(String enteredText, long atMs) {
+        return getSubjectSuggestions(observation.getSubjectsWithOpenCodings(atMs), enteredText.substring(1), "/");
     }
 
     private List<String> getSubjectSuggestions(List<Subject> subjects, String nameFilter, String prefix) {
@@ -77,11 +77,11 @@ public class SuggestionService {
         return suggestedSubjects;
     }
 
-    public Collection<String> getActionSuggestions(String enteredText, boolean endCoding, String enteredSubject) {
+    public Collection<String> getActionSuggestions(String enteredText, boolean endCoding, String enteredSubject, long atMs) {
         if (!endCoding) {
             return getAllActionSuggestions(enteredText);
         } else {
-            return getActionSuggestionsForSubjectWithOpenCoding(enteredText, enteredSubject.substring(1));
+            return getActionSuggestionsForSubjectWithOpenCoding(enteredText, enteredSubject.substring(1), atMs);
         }
     }
 
@@ -89,10 +89,10 @@ public class SuggestionService {
         return getActionSuggestions(study.getActionList(), enteredText);
     }
 
-    private List<String> getActionSuggestionsForSubjectWithOpenCoding(String enteredText, String enteredSubject) {
+    private List<String> getActionSuggestionsForSubjectWithOpenCoding(String enteredText, String enteredSubject, long atMs) {
         final Subject subject = study.getSubjectService().getForName(enteredSubject);
 
-        return getActionSuggestions(observation.getActionsFromOpenCodingsOfSubject(subject), enteredText);
+        return getActionSuggestions(observation.getActionsFromOpenCodingsOfSubject(subject, atMs), enteredText);
     }
 
     private List<String> getActionSuggestions(List<Action> actions, String nameFilter) {

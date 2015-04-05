@@ -74,10 +74,10 @@ public class ObservationControl extends BorderPane {
 
 
         TextFields.bindAutoCompletion(inputSubject,
-                p -> (suggestionService.getSubjectSuggestions(p.getUserText(), isEndCodingMode())))
+                p -> (suggestionService.getSubjectSuggestions(p.getUserText(), isEndCodingMode(), (long) (currentTimeProperty.get() * 1000))))
                 .setOnAutoCompleted(e -> inputAction.requestFocus());
         TextFields.bindAutoCompletion(inputAction,
-                p -> (suggestionService.getActionSuggestions(p.getUserText(), isEndCodingMode(), inputSubject.getText())))
+                p -> (suggestionService.getActionSuggestions(p.getUserText(), isEndCodingMode(), inputSubject.getText(), (long) (currentTimeProperty.get() * 1000))))
                 .setOnAutoCompleted(e -> inputModifier.requestFocus());
 
         // we have to redo the completion binding later, so store it in a variable
