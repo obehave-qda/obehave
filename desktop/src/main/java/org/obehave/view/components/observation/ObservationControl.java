@@ -19,6 +19,7 @@ import org.obehave.model.Observation;
 import org.obehave.service.ActionService;
 import org.obehave.service.CodingService;
 import org.obehave.service.Study;
+import org.obehave.service.SuggestionService;
 import org.obehave.view.components.observation.coding.CodingControl;
 import org.obehave.view.util.AlertUtil;
 import org.slf4j.Logger;
@@ -31,7 +32,8 @@ public class ObservationControl extends BorderPane {
     private final Logger log = LoggerFactory.getLogger(ObservationControl.class);
 
     private Study study;
-    private Observation observation;
+
+    private SuggestionService suggestionService;
 
     private CodingService codingService;
     private ActionService actionService;
@@ -70,8 +72,13 @@ public class ObservationControl extends BorderPane {
         videoControl.maxHeightProperty().bind(heightProperty().divide(1.5));
         codingControl.maxHeightProperty().bind(heightProperty().divide(3));
 
-        createSubjectAutocompletionBinding();
-        createActionAutocompletionBinding();
+
+        TextFields.bindAutoCompletion(inputSubject,
+                p -> (suggestionService.getSubjectSuggestions(p.getUserText(), isEndCodingMode())))
+                .setOnAutoCompleted(e -> inputAction.requestFocus());
+        TextFields.bindAutoCompletion(inputAction,
+                p -> (suggestionService.getActionSuggestions(p.getUserText(), isEndCodingMode(), inputSubject.getText())))
+                .setOnAutoCompleted(e -> inputModifier.requestFocus());
 
         // we have to redo the completion binding later, so store it in a variable
         modifierCompletion = createModifierAutocompletionBinding();
@@ -81,27 +88,9 @@ public class ObservationControl extends BorderPane {
         inputModifier.setDisable(true);
     }
 
-    private AutoCompletionBinding<String> createSubjectAutocompletionBinding() {
-        AutoCompletionBinding<String> binding = TextFields.bindAutoCompletion(inputAction,
-                p -> (study.getSuggestionServiceBuilder().build(observation).getActionSuggestions(p.getUserText(), isEndCodingMode(), inputSubject.getText())));
-        binding.setOnAutoCompleted(e -> inputAction.requestFocus());
-
-        return binding;
-    }
-
-    private AutoCompletionBinding<String> createActionAutocompletionBinding() {
-        AutoCompletionBinding<String> binding = TextFields.bindAutoCompletion(inputSubject,
-                p -> (study.getSuggestionServiceBuilder().build(observation).getSubjectSuggestions(p.getUserText(), isEndCodingMode())));
-        binding.setOnAutoCompleted(e -> inputModifier.requestFocus());
-
-        return binding;
-    }
-
     private AutoCompletionBinding<String> createModifierAutocompletionBinding() {
-        AutoCompletionBinding<String> binding = TextFields.bindAutoCompletion(inputModifier,
-                p -> (study.getSuggestionServiceBuilder().build(observation).getModifierSuggestions(inputAction.getText(), p.getUserText())));
-
-        return binding;
+        return TextFields.bindAutoCompletion(inputModifier,
+                p -> (suggestionService.getModifierSuggestions(inputAction.getText(), p.getUserText())));
     }
 
     public void loadVideo(File video) {
@@ -112,8 +101,9 @@ public class ObservationControl extends BorderPane {
     public void loadObservation(UiEvent.LoadObservation event) {
         log.debug("Loading observation, because of {}", event);
 
-        observation = event.getObservation();
+        final Observation observation = event.getObservation();
         codingService = study.getCodingServiceBuilder().build(observation);
+        suggestionService = study.getSuggestionServiceBuilder().build(observation);
 
         if (observation.getVideo() != null) {
             loadVideo(observation.getVideo());
