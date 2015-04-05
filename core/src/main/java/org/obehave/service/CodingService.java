@@ -202,6 +202,10 @@ public class CodingService {
                     + " and action " + action.getDisplayString());
         }
 
+        if (endMs < coding.getStartMs()) {
+            throw new ServiceException("Coding hasn't started yet!");
+        }
+
         try {
             coding.setEndMs(endMs);
             Daos.get().coding().update(coding);

@@ -161,22 +161,24 @@ public class Observation extends BaseEntity implements Displayable {
         return openCodings;
     }
 
-    public List<Subject> getSubjectsWithOpenCodings() {
+    public List<Subject> getSubjectsWithOpenCodings(long atMs) {
         Set<Subject> subjects = new HashSet<>();
 
         for (Coding coding : getOpenCodings()) {
-            subjects.add(coding.getSubject());
+            if (atMs >= coding.getStartMs()) {
+                subjects.add(coding.getSubject());
+            }
         }
 
         return new ArrayList<>(subjects);
     }
 
-    public List<Action> getActionsFromOpenCodingsOfSubject(Subject subject) {
+    public List<Action> getActionsFromOpenCodingsOfSubject(Subject subject, long atMs) {
         Set<Action> actions = new HashSet<>();
 
         if (subject != null) {
             for (Coding coding : getOpenCodings()) {
-                if (coding.getSubject().equals(subject))
+                if (atMs >= coding.getStartMs() && coding.getSubject().equals(subject))
                     actions.add(coding.getAction());
             }
         }
