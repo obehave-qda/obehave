@@ -22,9 +22,9 @@ import java.io.IOException;
 
 public class VideoControl extends BorderPane {
     private static final Logger log = LoggerFactory.getLogger(VideoControl.class);
-    private DoubleProperty currentTime = new SimpleDoubleProperty(this, "currentTime", 0);
+    private DoubleProperty msPlayed = new SimpleDoubleProperty(this, "msPlayed", 0);
 
-    ChangeListener<Duration> currentTimeListener = (observable, oldValue, newValue) -> currentTime.setValue(newValue.toSeconds());
+    private ChangeListener<Duration> currentTimeListener = (observable, oldValue, newValue) -> msPlayed.setValue(newValue.toMillis());
 
     @FXML
     private MediaView mediaView;
@@ -94,8 +94,8 @@ public class VideoControl extends BorderPane {
         mediaView.getMediaPlayer().play();
     }
 
-    public DoubleProperty currentTime() {
-        return currentTime;
+    public DoubleProperty msPlayed() {
+        return msPlayed;
     }
 
     public ReadOnlyObjectProperty<Duration> totalDurationProperty() {
