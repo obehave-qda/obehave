@@ -2,6 +2,7 @@ package org.obehave.persistence;
 
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.field.DataPersisterManager;
+import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import org.obehave.exceptions.Validate;
 import org.obehave.model.*;
@@ -141,7 +142,12 @@ public class Daos {
     }
 
     public void close() throws SQLException {
-        log.trace("Closing connection {}", connectionSource);
+        if (connectionSource instanceof JdbcConnectionSource) {
+            log.trace("Closing connection {}", ((JdbcConnectionSource) connectionSource).getUrl());
+        } else {
+            log.trace("Closing connection {}", connectionSource);
+        }
+
         connectionSource.close();
         daos.remove(connectionSource);
     }

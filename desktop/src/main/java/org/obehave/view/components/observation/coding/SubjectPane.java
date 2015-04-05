@@ -3,6 +3,7 @@ package org.obehave.view.components.observation.coding;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -29,9 +30,9 @@ public class SubjectPane extends Pane {
 
     private CodingRange codingRange = new CodingRange();
     private Map<Coding, Rectangle> codings = new HashMap<>();
-    private Map<Coding, Rectangle> openListener = new HashMap<>();
+    private Map<Coding, ChangeListener<Number>> openListener = new HashMap<>();
 
-    private void drawPointCoding(Coding coding, int i, int max) {
+    private void drawPointCoding(Coding coding) {
         log.trace("Drawing rectangle for point coding {}", coding);
 
         final double x = secondWidthProperty.get() * (coding.getStartMs() / 1000);
@@ -42,14 +43,12 @@ public class SubjectPane extends Pane {
         rectangle.widthProperty().bind(rectangle.heightProperty().multiply(0.75));
         rectangle.translateXProperty().bind(rectangle.widthProperty().divide(-2));
 
-        adjustCodingRectangle(rectangle, i, max);
-
         getChildren().add(rectangle);
         codings.put(coding, rectangle);
         codingRange.addOrUpdate(coding);
     }
 
-    private void drawStateCoding(Coding coding, int i, int max) {
+    private void drawStateCoding(Coding coding) {
         log.trace("Drawing rectangle for finished state coding {}", coding);
 
         final double positionStart = secondWidthProperty.get() * (coding.getStartMs() / 1000);
@@ -58,25 +57,21 @@ public class SubjectPane extends Pane {
         Rectangle rectangle = getRectangle(positionStart, 0, positionEnd, subjectHeightProperty.get(),
                 coding.getSubject().getColor());
 
-        adjustCodingRectangle(rectangle, i, max);
-
         getChildren().add(rectangle);
         codings.put(coding, rectangle);
         codingRange.addOrUpdate(coding);
     }
 
-    private void startStateCoding(Coding coding, int i, int max) {
+    private void startStateCoding(Coding coding) {
         log.trace("Drawing growing rectangle for state coding {}", coding);
 
         final double positionStart = secondWidthProperty.get() * (coding.getStartMs() / 1000);
 
-        final DoubleBinding width = new AtLeastOneDoubleBinding(secondWidthProperty.multiply(currentTimeProperty).subtract(positionStart));
+        final DoubleBinding width = new MinimumDoubleBinding(secondWidthProperty.multiply(currentTimeProperty).subtract(positionStart));
 
         Rectangle rectangle = getRectangle(positionStart, 0, 0, subjectHeightProperty.get(),
                 coding.getSubject().getColor());
         rectangle.widthProperty().bind(width);
-
-        adjustCodingRectangle(rectangle, i, max);
 
         getChildren().add(rectangle);
         codings.put(coding, rectangle);
@@ -90,27 +85,55 @@ public class SubjectPane extends Pane {
 
         rectangle.setFill(Color.BEIGE.deriveColor(0, 1, 1, 0.5));
         rectangle.setStroke(color == null ? Color.BLACK : ColorConverter.convertToJavaFX(color));
+        rectangle.setStrokeWidth(2);
 
         return rectangle;
     }
 
     public void drawCoding(Coding coding) {
-        CodingRange.Overlappings overlappings = codingRange.overlappingCodings(coding, (long) (currentTimeProperty.get() * 1000));
-
-        List<Coding> currentOverlappings = overlappings.getCurrentOverlaps();
-
-        for (int i = 0; i < currentOverlappings.size(); i++) {
-            adjustCodingRectangle(currentOverlappings.get(i), i, currentOverlappings.size() + 1);
-        }
-
         if (coding.getAction().getType() == Action.Type.POINT) {
-            drawPointCoding(coding, currentOverlappings.size(), currentOverlappings.size() + 1);
+            drawPointCoding(coding);
         } else {
             if (!coding.isOpen()) {
-                drawStateCoding(coding, currentOverlappings.size(), currentOverlappings.size() + 1);
+                drawStateCoding(coding);
             } else {
-                startStateCoding(coding, currentOverlappings.size(), currentOverlappings.size() + 1);
+                startStateCoding(coding);
             }
+        }
+
+        adjustCurrentOverlappingPositions(coding);
+        planFutureAdjustments(coding);
+    }
+
+    private void adjustCurrentOverlappingPositions(Coding coding) {
+        CodingRange.Overlappings overlappings = codingRange.overlappingCodings(coding, (long) (currentTimeProperty.get() * 1000));
+
+        List<List<Coding>> lanes = overlappings.arrangeCurrentOverlaps();
+        for (int row = 0; row < lanes.size(); row++) {
+            for (Coding c : lanes.get(row)) {
+                adjustCodingRectangle(c, row, lanes.size());
+            }
+        }
+    }
+
+    private void planFutureAdjustments(Coding coding) {
+        CodingRange.Overlappings overlappings = codingRange.overlappingCodings(coding, (long) (currentTimeProperty.get() * 1000));
+
+        final List<Coding> futureOverlappings = overlappings.getFutureOverlaps();
+
+        for (int i = 0; i < futureOverlappings.size(); i++) {
+            final Coding futureOverlapping = futureOverlappings.get(i);
+
+            final OneTimeFutureAdjuster adjuster = new OneTimeFutureAdjuster(futureOverlapping);
+
+            final ChangeListener<Number> adjustListener = (observable, oldValue, newValue) -> {
+                if (newValue.longValue() * 1000 >= futureOverlapping.getStartMs()) {
+                    adjuster.adjust();
+                }
+            };
+
+            openListener.put(futureOverlapping, adjustListener);
+            currentTimeProperty.addListener(adjustListener);
         }
     }
 
@@ -149,10 +172,11 @@ public class SubjectPane extends Pane {
         return subjectHeightProperty;
     }
 
-    private static class AtLeastOneDoubleBinding extends DoubleBinding {
+    private static class MinimumDoubleBinding extends DoubleBinding {
+        private static final double MIN = 5;
         private final DoubleBinding binding;
 
-        public AtLeastOneDoubleBinding(DoubleBinding binding) {
+        public MinimumDoubleBinding(DoubleBinding binding) {
             this.binding = binding;
             binding.addListener(observable -> invalidate());
         }
@@ -160,10 +184,35 @@ public class SubjectPane extends Pane {
         @Override
         protected double computeValue() {
             final double bindingValue = binding.get();
-            if (bindingValue <= 1) {
-                return 1;
+            if (bindingValue <= MIN) {
+                return MIN;
             } else {
                 return bindingValue;
+            }
+        }
+    }
+
+    private class OneTimeFutureAdjuster {
+        private final Coding coding;
+
+        private boolean adjusted = false;
+
+        public OneTimeFutureAdjuster(Coding coding) {
+            this.coding = coding;
+        }
+
+        public void adjust() {
+            if (!adjusted) {
+                log.trace("Adjusting {}", coding);
+                adjustCurrentOverlappingPositions(coding);
+
+                final ChangeListener<Number> listener = openListener.get(coding);
+                if (listener != null) {
+                    log.trace("Found {} listeners; removing {}", openListener.size(), listener);
+                    currentTimeProperty.removeListener(listener);
+                }
+
+                adjusted = true;
             }
         }
     }
