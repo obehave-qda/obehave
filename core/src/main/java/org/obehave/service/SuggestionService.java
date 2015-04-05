@@ -98,7 +98,7 @@ public class SuggestionService {
     private List<String> getActionSuggestions(List<Action> actions, String nameFilter) {
         List<String> suggestedActions = new ArrayList<>();
 
-        if (nameFilter != null && !nameFilter.isEmpty()) {
+        if (nameFilter != null) {
             for (Action a : actions) {
                 final String enteredTextLower = nameFilter.toLowerCase();
 
