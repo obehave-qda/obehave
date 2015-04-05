@@ -124,9 +124,7 @@ public class SubjectPane extends Pane {
 
         final List<Coding> futureOverlappings = overlappings.getFutureOverlaps();
 
-        for (int i = 0; i < futureOverlappings.size(); i++) {
-            final Coding futureOverlapping = futureOverlappings.get(i);
-
+        for (final Coding futureOverlapping : futureOverlappings) {
             final OneTimeFutureAdjuster adjuster = new OneTimeFutureAdjuster(futureOverlapping);
 
             final ChangeListener<Number> adjustListener = (observable, oldValue, newValue) -> {
