@@ -138,6 +138,8 @@ public class SubjectPane extends Pane {
         final Rectangle codingRectangle = codings.get(coding);
         codingRectangle.widthProperty().unbind();
         codingRectangle.setWidth(positionEnd);
+
+        adjustAll();
     }
 
     public DoubleProperty secondWidthProperty() {
