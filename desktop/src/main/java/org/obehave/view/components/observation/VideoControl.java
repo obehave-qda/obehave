@@ -25,6 +25,8 @@ public class VideoControl extends BorderPane {
     private static final Logger log = LoggerFactory.getLogger(VideoControl.class);
     private final DoubleProperty msPlayed = new SimpleDoubleProperty(this, "msPlayed", 0);
 
+    private ChangeListener<Duration> currentTimeListener = (observable, oldValue, newValue) -> msPlayed.setValue(newValue.toMillis());
+
     @FXML
     private MediaView mediaView;
 
