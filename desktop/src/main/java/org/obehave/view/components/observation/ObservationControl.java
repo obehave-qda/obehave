@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 public class ObservationControl extends BorderPane {
@@ -189,9 +190,7 @@ public class ObservationControl extends BorderPane {
                     codingService.endCoding(subject.substring(1), action, modifier, (long) (msPlayed.get()));
                 }
 
-                clearCompletionTextfield(inputSubject);
-                clearCompletionTextfield(inputModifier);
-                clearCompletionTextfield(inputAction);
+                clearAllCompletionTextFields();
 
                 createSubjectCompletionBinding();
                 createActionCompletionBinding();
@@ -211,5 +210,9 @@ public class ObservationControl extends BorderPane {
         completions.remove(textField);
 
         textField.clear();
+    }
+
+    private void clearAllCompletionTextFields() {
+        new HashSet<>(completions.keySet()).forEach(this::clearCompletionTextfield);
     }
 }
