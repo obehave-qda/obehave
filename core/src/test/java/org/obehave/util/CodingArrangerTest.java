@@ -21,7 +21,6 @@ public class CodingArrangerTest extends CodingBaseTest {
         codingArranger = new CodingArranger();
     }
 
-
     @Test
     public void arrangingOneStateAndThreePointActions() {
         Coding l1c1 = stateCoding(0, 20);
@@ -32,8 +31,9 @@ public class CodingArrangerTest extends CodingBaseTest {
         codingArranger.add(l2c1);
         codingArranger.add(l2c2);
         codingArranger.add(l2c3);
+        codingArranger.add(l1c1);
 
-        final List<List<Coding>> lanes = codingArranger.getCodingArrangement();
+        final List<List<Coding>> lanes = codingArranger.readjust();
         assertTrue(lanes.get(0).contains(l1c1));
         assertTrue(lanes.get(1).containsAll(Arrays.asList(l2c1, l2c2, l2c3)));
         assertEquals(2, lanes.size());
@@ -49,8 +49,9 @@ public class CodingArrangerTest extends CodingBaseTest {
         codingArranger.add(l1c1);
         codingArranger.add(l2c1);
         codingArranger.add(l3c1);
+        codingArranger.add(l1c2);
 
-        final List<List<Coding>> lanes = codingArranger.getCodingArrangement();
+        final List<List<Coding>> lanes = codingArranger.readjust();
         assertEquals(3, lanes.size());
         assertTrue(lanes.get(0).containsAll(Arrays.asList(l1c1, l1c2)));
         assertTrue(lanes.get(1).contains(l2c1));

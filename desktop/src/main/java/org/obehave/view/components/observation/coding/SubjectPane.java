@@ -3,15 +3,12 @@ package org.obehave.view.components.observation.coding;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import org.obehave.model.Action;
 import org.obehave.model.Coding;
 import org.obehave.util.CodingArranger;
-import org.obehave.util.CodingRange;
-import org.obehave.util.OneTimeAction;
 import org.obehave.view.util.ColorConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +27,6 @@ public class SubjectPane extends Pane {
     private DoubleProperty msPlayed = new SimpleDoubleProperty(this, "msPlayed");
     private DoubleProperty subjectHeightProperty = new SimpleDoubleProperty(this, "subjectHeightProperty");
 
-    private CodingRange codingRange = new CodingRange();
     private CodingArranger codingArranger = new CodingArranger();
     private Map<Coding, Rectangle> codings = new HashMap<>();
 
@@ -94,8 +90,6 @@ public class SubjectPane extends Pane {
     }
 
     public void drawCoding(Coding coding) {
-        codingRange.addOrUpdate(coding);
-
         if (coding.getAction().getType() == Action.Type.POINT) {
             drawPointCoding(coding);
         } else {
@@ -108,42 +102,19 @@ public class SubjectPane extends Pane {
 
         final int lane = codingArranger.add(coding);
 
-
-        adjustAll();
-        /**
         if (lane >= 0) {
             adjustCodingRectangle(coding, lane, codingArranger.getLaneCount());
         } else {
             adjustAll();
-        }*/
-
-        planFutureAdjustments(coding);
+        }
     }
 
     private void adjustAll() {
-        List<List<Coding>> lanes = codingArranger.getCodingArrangement();
+        List<List<Coding>> lanes = codingArranger.readjust();
         for (int row = 0; row < lanes.size(); row++) {
             for (Coding c : lanes.get(row)) {
                 adjustCodingRectangle(c, row, lanes.size());
             }
-        }
-    }
-
-    private void planFutureAdjustments(Coding coding) {
-        CodingRange.Overlappings overlappings = codingRange.overlappingCodings(coding, (long) (msPlayed.get()));
-
-        final List<Coding> futureOverlappings = overlappings.getFutureOverlaps();
-
-        for (final Coding futureOverlapping : futureOverlappings) {
-            final OneTimeAction adjuster = new OneTimeAction(this::adjustAll);
-
-            final ChangeListener<Number> adjustListener = (observable, oldValue, newValue) -> {
-                if (newValue.longValue() >= futureOverlapping.getStartMs()) {
-                    adjuster.execute();
-                }
-            };
-
-            msPlayed.addListener(adjustListener);
         }
     }
 
@@ -167,7 +138,6 @@ public class SubjectPane extends Pane {
         final Rectangle codingRectangle = codings.get(coding);
         codingRectangle.widthProperty().unbind();
         codingRectangle.setWidth(positionEnd);
-        codingRange.addOrUpdate(coding);
     }
 
     public DoubleProperty secondWidthProperty() {
