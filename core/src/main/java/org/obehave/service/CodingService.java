@@ -111,7 +111,10 @@ public class CodingService {
                     Node codingParent = study.getActions().getParentOf(openCoding.getAction());
                     if (actionParent.equals(codingParent)) {
                         // FIXME this won't work, I guess, because of modifier input
-                        endCoding(subject, action, null, startMs);
+                        if (openCoding.getStartMs() <= startMs) {
+                            endCoding(subject, action, null, startMs);
+                        }
+
                     }
                 }
             }
@@ -200,6 +203,10 @@ public class CodingService {
         if (coding == null) {
             throw new ServiceException("Couldn't find a running coding for subject " + subject.getDisplayString()
                     + " and action " + action.getDisplayString());
+        }
+
+        if (endMs < coding.getStartMs()) {
+            throw new ServiceException("Coding hasn't started yet!");
         }
 
         try {

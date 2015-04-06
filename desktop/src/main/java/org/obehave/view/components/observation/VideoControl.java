@@ -2,7 +2,10 @@ package org.obehave.view.components.observation;
 
 
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -20,6 +23,7 @@ import java.io.IOException;
 
 public class VideoControl extends BorderPane {
     private static final Logger log = LoggerFactory.getLogger(VideoControl.class);
+    private final DoubleProperty msPlayed = new SimpleDoubleProperty(this, "msPlayed", 0);
 
     @FXML
     private MediaView mediaView;
@@ -45,10 +49,10 @@ public class VideoControl extends BorderPane {
     @FXML
     void playPause(ActionEvent event) {
         if (mediaView.getMediaPlayer().getStatus() == MediaPlayer.Status.PLAYING) {
-            log.trace("Button clicked - pausing video");
+            log.trace("Pausing video at {}s", mediaView.getMediaPlayer().getCurrentTime().toSeconds());
             mediaView.getMediaPlayer().pause();
         } else {
-            log.trace("Button clicked - playing video");
+            log.trace("Playing video at {}s", mediaView.getMediaPlayer().getCurrentTime().toSeconds());
             mediaView.getMediaPlayer().play();
         }
     }
@@ -80,13 +84,19 @@ public class VideoControl extends BorderPane {
     public void loadVideo(File file) {
         Media media = toMedia(file);
 
+        if (mediaView.getMediaPlayer() != null) {
+            mediaView.getMediaPlayer().currentTimeProperty().removeListener(currentTimeListener);
+            mediaView.getMediaPlayer().dispose();
+        }
+
         mediaView.setMediaPlayer(new MediaPlayer(media));
 
+        mediaView.getMediaPlayer().currentTimeProperty().addListener(currentTimeListener);
         mediaView.getMediaPlayer().play();
     }
 
-    public ReadOnlyObjectProperty<Duration> currentTime() {
-        return mediaView.getMediaPlayer().currentTimeProperty();
+    public DoubleProperty msPlayed() {
+        return msPlayed;
     }
 
     public ReadOnlyObjectProperty<Duration> totalDurationProperty() {
