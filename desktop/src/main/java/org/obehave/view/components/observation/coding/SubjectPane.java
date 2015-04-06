@@ -9,7 +9,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import org.obehave.model.Action;
 import org.obehave.model.Coding;
+import org.obehave.util.CodingArranger;
 import org.obehave.util.CodingRange;
+import org.obehave.util.OneTimeAction;
 import org.obehave.view.util.ColorConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +31,7 @@ public class SubjectPane extends Pane {
     private DoubleProperty subjectHeightProperty = new SimpleDoubleProperty(this, "subjectHeightProperty");
 
     private CodingRange codingRange = new CodingRange();
+    private CodingArranger codingArranger = new CodingArranger();
     private Map<Coding, Rectangle> codings = new HashMap<>();
 
     public SubjectPane(DoubleProperty msPlayed) {
@@ -48,7 +51,6 @@ public class SubjectPane extends Pane {
 
         getChildren().add(rectangle);
         codings.put(coding, rectangle);
-        codingRange.addOrUpdate(coding);
     }
 
     private void drawStateCoding(Coding coding) {
@@ -62,7 +64,6 @@ public class SubjectPane extends Pane {
 
         getChildren().add(rectangle);
         codings.put(coding, rectangle);
-        codingRange.addOrUpdate(coding);
     }
 
     private void startStateCoding(Coding coding) {
@@ -78,7 +79,6 @@ public class SubjectPane extends Pane {
 
         getChildren().add(rectangle);
         codings.put(coding, rectangle);
-        codingRange.addOrUpdate(coding);
     }
 
     private Rectangle getRectangle(double x, double y, double width, double height, org.obehave.model.Color color) {
@@ -94,6 +94,8 @@ public class SubjectPane extends Pane {
     }
 
     public void drawCoding(Coding coding) {
+        codingRange.addOrUpdate(coding);
+
         if (coding.getAction().getType() == Action.Type.POINT) {
             drawPointCoding(coding);
         } else {
@@ -104,14 +106,22 @@ public class SubjectPane extends Pane {
             }
         }
 
-        adjustCurrentOverlappingPositions(coding);
+        final int lane = codingArranger.add(coding);
+
+
+        adjustAll();
+        /**
+        if (lane >= 0) {
+            adjustCodingRectangle(coding, lane, codingArranger.getLaneCount());
+        } else {
+            adjustAll();
+        }*/
+
         planFutureAdjustments(coding);
     }
 
-    private void adjustCurrentOverlappingPositions(Coding coding) {
-        CodingRange.Overlappings overlappings = codingRange.overlappingCodings(coding, (long) (msPlayed.get()));
-
-        List<List<Coding>> lanes = overlappings.arrangeCurrentOverlaps();
+    private void adjustAll() {
+        List<List<Coding>> lanes = codingArranger.getCodingArrangement();
         for (int row = 0; row < lanes.size(); row++) {
             for (Coding c : lanes.get(row)) {
                 adjustCodingRectangle(c, row, lanes.size());
@@ -125,11 +135,11 @@ public class SubjectPane extends Pane {
         final List<Coding> futureOverlappings = overlappings.getFutureOverlaps();
 
         for (final Coding futureOverlapping : futureOverlappings) {
-            final OneTimeFutureAdjuster adjuster = new OneTimeFutureAdjuster(futureOverlapping);
+            final OneTimeAction adjuster = new OneTimeAction(this::adjustAll);
 
             final ChangeListener<Number> adjustListener = (observable, oldValue, newValue) -> {
                 if (newValue.longValue() >= futureOverlapping.getStartMs()) {
-                    adjuster.adjust();
+                    adjuster.execute();
                 }
             };
 
@@ -184,24 +194,6 @@ public class SubjectPane extends Pane {
                 return MIN;
             } else {
                 return bindingValue;
-            }
-        }
-    }
-
-    private class OneTimeFutureAdjuster {
-        private final Coding coding;
-
-        private boolean adjusted = false;
-
-        public OneTimeFutureAdjuster(Coding coding) {
-            this.coding = coding;
-        }
-
-        public void adjust() {
-            if (!adjusted) {
-                adjustCurrentOverlappingPositions(coding);
-
-                adjusted = true;
             }
         }
     }
