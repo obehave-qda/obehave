@@ -8,8 +8,6 @@ import org.obehave.model.Subject;
 import static org.junit.Assert.assertEquals;
 
 public class CodingRangeTest extends CodingBaseTest {
-
-
     private CodingRange codingRange;
 
     @Before
@@ -21,111 +19,88 @@ public class CodingRangeTest extends CodingBaseTest {
     public void pointCodingOverlapsPointCoding() {
         final Coding coding = pointCoding(5);
         coding.setSubject(new Subject("We don't want equal point codings"));
-        codingRange.addOrUpdate(coding);
+        codingRange.add(coding);
 
         assertEquals(1, codingRange.overlapCount(pointCoding(5)));
     }
 
     @Test
     public void pointCodingOverlapsStateCoding() {
-        codingRange.addOrUpdate(stateCoding(0, 10));
+        codingRange.add(stateCoding(0, 10));
 
         assertEquals(1, codingRange.overlapCount(pointCoding(5)));
     }
 
     @Test
     public void stateCodingOverlapsPointCoding() {
-        codingRange.addOrUpdate(pointCoding(5));
+        codingRange.add(pointCoding(5));
 
         assertEquals(1, codingRange.overlapCount(stateCoding(0, 10)));
     }
 
     @Test
     public void stateCodingOverlapsStateCoding() {
-        codingRange.addOrUpdate(stateCoding(0, 10));
+        codingRange.add(stateCoding(0, 10));
 
         assertEquals(1, codingRange.overlapCount(stateCoding(5, 15)));
     }
 
     @Test
     public void stateCodingOverlapsOpenStateCoding() {
-        codingRange.addOrUpdate(stateCoding(5));
+        codingRange.add(stateCoding(5));
 
         assertEquals(1, codingRange.overlapCount(stateCoding(7, 15)));
     }
 
     @Test
     public void pointCodingOverlapsOpenStateCoding() {
-        codingRange.addOrUpdate(stateCoding(5));
+        codingRange.add(stateCoding(5));
 
         assertEquals(1, codingRange.overlapCount(pointCoding(7)));
     }
 
     @Test
-    public void futureStateCodingDoesntOverlapStateCoding() {
-        codingRange.addOrUpdate(stateCoding(5));
-
-        assertEquals(0, codingRange.overlapCount(stateCoding(10, 15), 7));
-    }
-
-    @Test
-    public void futurePointCodingDoesntOverlapStateCoding() {
-        codingRange.addOrUpdate(stateCoding(5));
-
-        assertEquals(0, codingRange.overlapCount(pointCoding(10), 7));
-        assertEquals(1, codingRange.overlappingCodings(pointCoding(10), 7).getFutureOverlaps().size());
-    }
-
-    @Test
-    public void stateCodingWillOverlapPointCodingInTheFuture() {
-        codingRange.addOrUpdate(pointCoding(10));
-
-        assertEquals(0, codingRange.overlapCount(stateCoding(5), 7));
-        assertEquals(1, codingRange.overlappingCodings(stateCoding(5), 7).getFutureOverlaps().size());
-    }
-
-    @Test
     public void pointCodingDoesntOverlapPointCoding() {
-        codingRange.addOrUpdate(pointCoding(5));
+        codingRange.add(pointCoding(5));
 
         assertEquals(0, codingRange.overlapCount(pointCoding(10)));
     }
 
     @Test
     public void pointCodingDoesntOverlapStateCoding() {
-        codingRange.addOrUpdate(stateCoding(0, 5));
+        codingRange.add(stateCoding(0, 5));
 
         assertEquals(0, codingRange.overlapCount(pointCoding(10)));
     }
 
     @Test
     public void stateCodingDoesntOverlapPointCoding() {
-        codingRange.addOrUpdate(pointCoding(5));
+        codingRange.add(pointCoding(5));
 
         assertEquals(0, codingRange.overlapCount(stateCoding(10, 15)));
     }
 
     @Test
     public void stateCodingDoesntOverlapStateCoding() {
-        codingRange.addOrUpdate(stateCoding(0, 5));
+        codingRange.add(stateCoding(0, 5));
 
         assertEquals(0, codingRange.overlapCount(stateCoding(10, 15)));
     }
 
     @Test
     public void pointCodingOverlapsTwoCodings() {
-        codingRange.addOrUpdate(pointCoding(0)); // no overlapping
-        codingRange.addOrUpdate(stateCoding(0, 10)); // overlapping
-        codingRange.addOrUpdate(stateCoding(3, 11)); // overlapping
+        codingRange.add(pointCoding(0)); // no overlapping
+        codingRange.add(stateCoding(0, 10)); // overlapping
+        codingRange.add(stateCoding(3, 11)); // overlapping
 
         assertEquals(2, codingRange.overlapCount(pointCoding(5)));
     }
 
     @Test
     public void stateCodingOverlapsTwoCodings() {
-        codingRange.addOrUpdate(pointCoding(0)); // no overlapping
-        codingRange.addOrUpdate(stateCoding(0, 10)); // overlapping
-        codingRange.addOrUpdate(stateCoding(3, 11)); // overlapping
+        codingRange.add(pointCoding(0)); // no overlapping
+        codingRange.add(stateCoding(0, 10)); // overlapping
+        codingRange.add(stateCoding(3, 11)); // overlapping
 
         assertEquals(2, codingRange.overlapCount(stateCoding(4, 15)));
     }
@@ -133,13 +108,13 @@ public class CodingRangeTest extends CodingBaseTest {
     @Test
     public void pointCodingOverlapsNowClosedStateCoding() {
         final Coding coding = stateCoding(0);
-        codingRange.addOrUpdate(coding);
+        codingRange.add(coding);
 
         assertEquals(0, codingRange.overlapCount(pointCoding(5)));
 
         coding.setEndMs(10);
         assertEquals(0, codingRange.overlapCount(pointCoding(5)));
-        codingRange.addOrUpdate(coding);
+        codingRange.add(coding);
 
         assertEquals(1, codingRange.overlapCount(pointCoding(5)));
     }
@@ -148,35 +123,22 @@ public class CodingRangeTest extends CodingBaseTest {
     public void codingDoesntOverlapItself() {
         final Coding coding = pointCoding(5);
 
-        codingRange.addOrUpdate(coding);
+        codingRange.add(coding);
 
         assertEquals(0, codingRange.overlapCount(coding));
     }
 
     @Test
     public void adjacentStateCodingsDontOverlap() {
-        codingRange.addOrUpdate(stateCoding(0, 10));
+        codingRange.add(stateCoding(0, 10));
 
         assertEquals(0, codingRange.overlapCount(stateCoding(10, 20)));
     }
 
     @Test
     public void adjacentPointCodingsDontOverlap() {
-        codingRange.addOrUpdate(pointCoding(5));
+        codingRange.add(pointCoding(5));
 
         assertEquals(0, codingRange.overlapCount(pointCoding(6)));
-    }
-
-    @Test
-    public void clearRemovesEntries() {
-        codingRange.addOrUpdate(pointCoding(0)); // no overlapping
-        codingRange.addOrUpdate(stateCoding(0, 10)); // overlapping
-        codingRange.addOrUpdate(stateCoding(3, 11)); // overlapping
-
-        assertEquals(2, codingRange.overlapCount(pointCoding(5)));
-
-        codingRange.clear();
-
-        assertEquals(0, codingRange.overlapCount(pointCoding(5)));
     }
 }

@@ -7,9 +7,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-/**
- * A {@code CodingRange} is able to calculate how many codings a particular coding overlaps.
- */
 public class CodingArranger {
     private TreeMultiset<Coding> codings = TreeMultiset.create(new CodingStartTimeComparator());
     private List<List<Coding>> lanes = new ArrayList<>();
@@ -27,6 +24,25 @@ public class CodingArranger {
     public int add(Coding coding) {
         codings.add(coding);
 
+        return addCodingToFreeLane(coding);
+    }
+
+    public int getLaneCount() {
+        return lanes.size();
+    }
+
+    public List<List<Coding>> readjust() {
+        lanes.clear();
+        lanes.add(new ArrayList<Coding>());
+
+        for (Coding coding : codings) {
+            addCodingToFreeLane(coding);
+        }
+
+        return lanes;
+    }
+
+    private int addCodingToFreeLane(Coding coding) {
         int lane = getLaneWithFreePosition(coding);
 
         if (lane >= 0) {
@@ -40,28 +56,6 @@ public class CodingArranger {
         return lane;
     }
 
-    public int getLaneForCoding(Coding coding) {
-        for (int i = 0; i < lanes.size(); i++) {
-            if (lanes.get(i).contains(coding)) {
-                return i;
-            }
-        }
-
-        throw new IllegalArgumentException("Coding couldn't be found in CodingArranger - you have to add it first");
-    }
-
-    public int getLaneCount() {
-        return lanes.size();
-    }
-
-    /**
-     * Returns the current coding arrangement
-     * @return the current coding arrangement
-     */
-    public List<List<Coding>> getCodingArrangement() {
-        return lanes;
-    }
-
     private int getLaneWithFreePosition(Coding coding) {
         int currentLane = 0;
 
@@ -70,7 +64,7 @@ public class CodingArranger {
 
             // add all codings of lane to range
             for (Coding c : lane) {
-                range.addOrUpdate(c);
+                range.add(c);
             }
 
             // would there be any overlaps?

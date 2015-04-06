@@ -111,7 +111,10 @@ public class CodingService {
                     Node codingParent = study.getActions().getParentOf(openCoding.getAction());
                     if (actionParent.equals(codingParent)) {
                         // FIXME this won't work, I guess, because of modifier input
-                        endCoding(subject, action, null, startMs);
+                        if (openCoding.getStartMs() <= startMs) {
+                            endCoding(subject, action, null, startMs);
+                        }
+
                     }
                 }
             }
