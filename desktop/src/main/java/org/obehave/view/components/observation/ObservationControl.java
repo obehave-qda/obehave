@@ -27,6 +27,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ObservationControl extends BorderPane {
     private final Logger log = LoggerFactory.getLogger(ObservationControl.class);
@@ -50,7 +52,7 @@ public class ObservationControl extends BorderPane {
     @FXML
     private TextField inputModifier;
 
-    private AutoCompletionBinding<String> modifierCompletion;
+    private Map<TextField, AutoCompletionBinding<String>> completions = new HashMap<>();
 
     private DoubleProperty msPlayed = new SimpleDoubleProperty(this, "msPlayed");
 
@@ -74,20 +76,14 @@ public class ObservationControl extends BorderPane {
 
         msPlayed = videoControl.msPlayed();
 
-
-        TextFields.bindAutoCompletion(inputSubject,
-                p -> (suggestionService.getSubjectSuggestions(p.getUserText(), isEndCodingMode(), (long) (msPlayed.get()))))
-                .setOnAutoCompleted(e -> inputAction.requestFocus());
-        TextFields.bindAutoCompletion(inputAction,
-                p -> (suggestionService.getActionSuggestions(p.getUserText(), isEndCodingMode(), inputSubject.getText(), (long) (msPlayed.get()))))
-                .setOnAutoCompleted(e -> inputModifier.requestFocus());
-
         // we have to redo the completion binding later, so store it in a variable
-        modifierCompletion = createModifierAutocompletionBinding();
+        createSubjectCompletionBinding();
+        createActionCompletionBinding();
+        createModifierCompletionBinding();
 
         inputModifier.focusedProperty().addListener((observable1, oldFocused, newFocused) -> {
             if (newFocused) {
-                modifierCompletion.setUserInput(inputModifier.getText());
+                completions.get(inputModifier).setUserInput(inputModifier.getText());
             }
         });
 
@@ -96,9 +92,25 @@ public class ObservationControl extends BorderPane {
         inputModifier.setDisable(true);
     }
 
-    private AutoCompletionBinding<String> createModifierAutocompletionBinding() {
-        return TextFields.bindAutoCompletion(inputModifier,
-                p -> (suggestionService.getModifierSuggestions(inputAction.getText(), p.getUserText())));
+    private void createSubjectCompletionBinding() {
+        final AutoCompletionBinding<String> binding = TextFields.bindAutoCompletion(inputSubject,
+                p -> (suggestionService.getSubjectSuggestions(p.getUserText(), isEndCodingMode(), (long) (msPlayed.get()))));
+        binding.setOnAutoCompleted(e -> inputAction.requestFocus());
+
+        completions.put(inputSubject, binding);
+    }
+
+    private void createActionCompletionBinding() {
+        final AutoCompletionBinding<String> binding = TextFields.bindAutoCompletion(inputAction,
+                p -> (suggestionService.getActionSuggestions(p.getUserText(), isEndCodingMode(), inputSubject.getText(), (long) (msPlayed.get()))));
+        binding.setOnAutoCompleted(e -> inputModifier.requestFocus());
+
+        completions.put(inputAction, binding);
+    }
+
+    private void createModifierCompletionBinding() {
+        completions.put(inputModifier, TextFields.bindAutoCompletion(inputModifier,
+                p -> (suggestionService.getModifierSuggestions(inputAction.getText(), p.getUserText()))));
     }
 
     public void loadVideo(File video) {
@@ -143,12 +155,11 @@ public class ObservationControl extends BorderPane {
                 inputModifier.setDisable(true);
             } else if (a.getModifierFactory() != null && inputModifier.isDisabled()) {
                 log.trace("Enabling text field - action has a modifier factory {}", a);
-                modifierCompletion.dispose();
 
-                inputModifier.clear();
+                clearCompletionTextfield(inputModifier);
                 inputModifier.setDisable(false);
 
-                modifierCompletion = createModifierAutocompletionBinding();
+                createModifierCompletionBinding();
             }
         } else {
             inputModifier.setText("No valid action entered");
@@ -178,9 +189,13 @@ public class ObservationControl extends BorderPane {
                     codingService.endCoding(subject.substring(1), action, modifier, (long) (msPlayed.get()));
                 }
 
-                inputSubject.clear();
-                inputModifier.clear();
-                inputAction.clear();
+                clearCompletionTextfield(inputSubject);
+                clearCompletionTextfield(inputModifier);
+                clearCompletionTextfield(inputAction);
+
+                createSubjectCompletionBinding();
+                createActionCompletionBinding();
+                createModifierCompletionBinding();
             }
         } catch (ServiceException e) {
             AlertUtil.showError("Error while coding", "Couldn't code, because " + e.getMessage(), e);
@@ -189,5 +204,12 @@ public class ObservationControl extends BorderPane {
 
     private boolean isEndCodingMode() {
         return inputSubject.getText().length() >= 1 && inputSubject.getText().charAt(0) == '/';
+    }
+
+    private void clearCompletionTextfield(TextField textField) {
+        completions.get(textField).dispose();
+        completions.remove(textField);
+
+        textField.clear();
     }
 }
