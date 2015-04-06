@@ -9,22 +9,30 @@
          xmlns:fx="http://javafx.com/fxml/1" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0"
          AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
     <center>
-        <AnchorPane>
-            <VBox>
-                <VideoControl fx:id="videoControl"/>
-                <HBox>
-                    <TextField fx:id="inputSubject"/>
-                    <TextField fx:id="inputAction" onKeyReleased="#codeEnter" />
-                    <TextField fx:id="inputModifier" onKeyReleased="#codeEnter"/>
-                    <Button text="Code" onAction="#code" />
-                </HBox>
-            </VBox>
-        </AnchorPane>
+        <GridPane>
+            <rowConstraints>
+                <RowConstraints percentHeight="75"/>
+                <RowConstraints percentHeight="25"/>
+            </rowConstraints>
+            <columnConstraints>
+                <ColumnConstraints percentWidth="100" />
+            </columnConstraints>
+            <AnchorPane GridPane.rowIndex="0" GridPane.columnIndex="0">
+                <VBox>
+                    <VideoControl fx:id="videoControl"/>
+                    <HBox>
+                        <TextField fx:id="inputSubject"/>
+                        <TextField fx:id="inputAction" onKeyReleased="#codeEnter"/>
+                        <TextField fx:id="inputModifier" onKeyReleased="#codeEnter"/>
+                        <Button text="Code" onAction="#code"/>
+                    </HBox>
+                </VBox>
+            </AnchorPane>
+            <AnchorPane GridPane.rowIndex="1" GridPane.columnIndex="0">
+                <CodingControl AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0"
+                               AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" fx:id="codingControl"/>
+            </AnchorPane>
+        </GridPane>
     </center>
-    <bottom>
-        <AnchorPane>
-            <CodingControl AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0"
-                           AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" fx:id="codingControl"/>
-        </AnchorPane>
-    </bottom>
+
 </fx:root>

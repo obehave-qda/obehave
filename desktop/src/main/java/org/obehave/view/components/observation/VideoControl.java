@@ -1,7 +1,6 @@
 package org.obehave.view.components.observation;
 
 
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -24,6 +23,7 @@ import java.io.IOException;
 public class VideoControl extends BorderPane {
     private static final Logger log = LoggerFactory.getLogger(VideoControl.class);
     private final DoubleProperty msPlayed = new SimpleDoubleProperty(this, "msPlayed", 0);
+    private final DoubleProperty codingHeight = new SimpleDoubleProperty(this, "codingHeight", 0);
 
     private ChangeListener<Duration> currentTimeListener = (observable, oldValue, newValue) -> msPlayed.setValue(newValue.toMillis());
 
@@ -42,9 +42,6 @@ public class VideoControl extends BorderPane {
             throw new RuntimeException(exception);
         }
 
-        //TODO: subtract width until splitpane for tree is fixed
-        mediaView.fitWidthProperty().bind(Bindings.selectDouble(mediaView.sceneProperty(), "width").subtract(200));
-        mediaView.fitHeightProperty().bind(Bindings.selectDouble(mediaView.sceneProperty(), "height").subtract(30));
         mediaView.setPreserveRatio(true);
     }
 
@@ -93,6 +90,11 @@ public class VideoControl extends BorderPane {
 
         mediaView.setMediaPlayer(new MediaPlayer(media));
 
+        //TODO: subtract width until splitpane for tree is fixed
+
+        mediaView.fitWidthProperty().bind(mediaView.getScene().widthProperty().subtract(200));
+        mediaView.fitHeightProperty().bind(mediaView.getScene().heightProperty().subtract(codingHeight));
+
         mediaView.getMediaPlayer().currentTimeProperty().addListener(currentTimeListener);
         mediaView.getMediaPlayer().play();
     }
@@ -103,5 +105,9 @@ public class VideoControl extends BorderPane {
 
     public ReadOnlyObjectProperty<Duration> totalDurationProperty() {
         return mediaView.getMediaPlayer().totalDurationProperty();
+    }
+
+    public DoubleProperty codingHeight() {
+        return codingHeight;
     }
 }
