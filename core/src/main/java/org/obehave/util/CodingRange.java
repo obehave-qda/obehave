@@ -4,10 +4,13 @@ import com.google.common.collect.BoundType;
 import com.google.common.collect.Range;
 import org.obehave.model.Coding;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
- * A {@code CodingRange} is able to calculate how many codings a particular coding overlaps.
+ * @author Markus Möslinger
  */
 public class CodingRange {
     private Map<Coding, Range<Long>> ranges = new HashMap<>();
@@ -17,8 +20,26 @@ public class CodingRange {
      *
      * @param coding the coding to add or update
      */
-    public void addOrUpdate(Coding coding) {
+    public int addOrUpdate(Coding coding) {
         ranges.put(coding, getRangeForCoding(coding));
+
+        return 0;
+    }
+
+    private Range<Long> getRangeForCoding(Coding coding) {
+        Range<Long> range;
+
+        if (!coding.isStateCoding()) {
+            range = Range.singleton(coding.getStartMs());
+        } else {
+            if (!coding.isOpen()) {
+                range = Range.closedOpen(coding.getStartMs(), coding.getEndMs());
+            } else {
+                range = Range.atLeast(coding.getStartMs());
+            }
+        }
+
+        return range;
     }
 
     /**
@@ -74,6 +95,25 @@ public class CodingRange {
     }
 
     /**
+     * Calculates how many codings {@code coding} overlaps.
+     * <p/>
+     * A coding can't overlap itself.
+     *
+     * @param coding the coding for which the overlaps should be counted
+     * @return the count of overlappings at the given {@code currentTime} for coding
+     */
+    public int overlapCount(Coding coding) {
+        return overlapCount(coding, Long.MAX_VALUE);
+    }
+
+    /**
+     * Removes all stored codings from this CodingRange.
+     */
+    public void clear() {
+        ranges.clear();
+    }
+
+    /**
      * Checks if two ranges overlap each other.
      */
     private boolean overlapping(Range<Long> r1, Range<Long> r2) {
@@ -94,44 +134,6 @@ public class CodingRange {
                 && range.lowerEndpoint().equals(range.upperEndpoint());
     }
 
-    /**
-     * Calculates how many codings {@code coding} overlaps.
-     * <p/>
-     * A coding can't overlap itself.
-     *
-     * @param coding the coding for which the overlaps should be counted
-     * @return the count of overlappings at the given {@code currentTime} for coding
-     */
-    public int overlapCount(Coding coding) {
-        return overlapCount(coding, Long.MAX_VALUE);
-    }
-
-    /**
-     * Removes all stored codings from this CodingRange.
-     */
-    public void clear() {
-        ranges.clear();
-    }
-
-    private Range<Long> getRangeForCoding(Coding coding) {
-        Range<Long> range;
-
-        if (!coding.isStateCoding()) {
-            range = Range.singleton(coding.getStartMs());
-        } else {
-            if (!coding.isOpen()) {
-                range = Range.closedOpen(coding.getStartMs(), coding.getEndMs());
-            } else {
-                range = Range.atLeast(coding.getStartMs());
-            }
-        }
-
-        return range;
-    }
-
-    /**
-     * This class helps to interprete the result of {@link CodingRange#overlappingCodings(Coding, long)}
-     */
     public static class Overlappings {
         private final Coding coding;
         private final List<Coding> currentOverlaps = new ArrayList<>();
@@ -163,59 +165,6 @@ public class CodingRange {
 
         public int countCurrentOverlaps() {
             return currentOverlaps.size();
-        }
-
-        public List<List<Coding>> arrangeCurrentOverlaps() {
-            List<Coding> overlaps = new ArrayList<>(getCurrentOverlaps());
-            overlaps.add(coding);
-            Collections.sort(overlaps, new CodingStartTimeComparator());
-
-            List<List<Coding>> lanes = new ArrayList<>();
-            // at least one lane
-            lanes.add(new ArrayList<Coding>());
-
-            for (Coding c : overlaps) {
-                int lane = getLaneWithFreePosition(lanes, c);
-                if (lane >= 0) {
-                    lanes.get(lane).add(c);
-                } else {
-                    final ArrayList<Coding> newLane = new ArrayList<>();
-                    newLane.add(c);
-                    lanes.add(newLane);
-                }
-            }
-
-            return lanes;
-        }
-
-        private int getLaneWithFreePosition(List<List<Coding>> lanes, Coding coding) {
-            int currentLane = 0;
-
-            for (List<Coding> lane : lanes) {
-                CodingRange range = new CodingRange();
-
-                // add all codings of lane to range
-                for (Coding c : lane) {
-                    range.addOrUpdate(c);
-                }
-
-                // would there be any overlaps?
-                if (range.overlapCount(coding) == 0) {
-                    return currentLane;
-                }
-
-                currentLane++;
-            }
-
-
-            return -1;
-        }
-
-        private class CodingStartTimeComparator implements Comparator<Coding> {
-            @Override
-            public int compare(Coding o1, Coding o2) {
-                return (int) (o1.getStartMs() - o2.getStartMs());
-            }
         }
     }
 }

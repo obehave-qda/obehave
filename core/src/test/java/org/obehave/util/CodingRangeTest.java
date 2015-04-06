@@ -2,20 +2,13 @@ package org.obehave.util;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.obehave.model.Action;
 import org.obehave.model.Coding;
 import org.obehave.model.Subject;
 
-import java.util.Arrays;
-import java.util.List;
-
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
-public class CodingRangeTest {
-    private Subject subject = new Subject("Dummysubject");
-    private Action pointAction = new Action("Point Action", Action.Type.POINT);
-    private Action stateAction = new Action("State Action", Action.Type.STATE);
+public class CodingRangeTest extends CodingBaseTest {
+
 
     private CodingRange codingRange;
 
@@ -185,50 +178,5 @@ public class CodingRangeTest {
         codingRange.clear();
 
         assertEquals(0, codingRange.overlapCount(pointCoding(5)));
-    }
-
-    @Test
-    public void arrangingOneStateAndThreePointActions() {
-        Coding l1c1 = stateCoding(0, 20);
-        Coding l2c1 = pointCoding(5);
-        Coding l2c2 = pointCoding(10);
-        Coding l2c3 = pointCoding(15);
-
-        codingRange.addOrUpdate(l2c1);
-        codingRange.addOrUpdate(l2c2);
-        codingRange.addOrUpdate(l2c3);
-
-        final List<List<Coding>> lanes = codingRange.overlappingCodings(l1c1, 30).arrangeCurrentOverlaps();
-        assertTrue(lanes.get(0).contains(l1c1));
-        assertTrue(lanes.get(1).containsAll(Arrays.asList(l2c1, l2c2, l2c3)));
-        assertEquals(2, lanes.size());
-    }
-
-    /**
-     * Creates a new point coding
-     * @param startMs startMs of the point coding
-     * @return a new Coding instance
-     */
-    private Coding pointCoding(int startMs) {
-        return new Coding(subject, pointAction, startMs);
-    }
-
-    /**
-     * Creates a new state coding
-     * @param startMs startMs of the state coding
-     * @return a new Coding instance
-     */
-    private Coding stateCoding(int startMs) {
-        return new Coding(subject, stateAction, startMs);
-    }
-
-    /**
-     * Creates a new state coding
-     * @param startMs startMs of the state coding
-     * @param endMs endMs of the state coding
-     * @return a new Coding instance
-     */
-    private Coding stateCoding(int startMs, int endMs) {
-        return new Coding(subject, stateAction, startMs, endMs);
     }
 }
