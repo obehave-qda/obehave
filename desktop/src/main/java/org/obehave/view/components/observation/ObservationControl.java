@@ -72,8 +72,9 @@ public class ObservationControl extends BorderPane {
 
         EventBusHolder.register(this);
 
-        videoControl.maxHeightProperty().bind(heightProperty().divide(1.5));
-        codingControl.maxHeightProperty().bind(heightProperty().divide(3));
+        videoControl.maxHeightProperty().bind(heightProperty().multiply(0.75));
+        codingControl.maxHeightProperty().bind(heightProperty().multiply(0.25));
+        videoControl.codingHeight().bind(codingControl.heightProperty());
 
         msPlayed = videoControl.msPlayed();
 
