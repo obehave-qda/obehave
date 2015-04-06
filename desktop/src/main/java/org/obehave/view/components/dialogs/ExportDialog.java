@@ -92,14 +92,15 @@ public class ExportDialog extends Stage {
     @FXML
     public void chooseFile() {
         FileChooser chooser = new FileChooser();
+        chooser.setTitle("Choose folder to export to");
         chooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Excel files", ".xlsx"));
 
-        path = chooser.showSaveDialog(labelPath.getScene().getWindow());
+        path = chooser.showOpenDialog(labelPath.getScene().getWindow());
 
         if (path != null) {
             labelPath.setText(path.getAbsolutePath());
         } else {
-            labelPath.setText("Click button to choose path");
+            labelPath.setText("Choose export directory...");
         }
     }
 
