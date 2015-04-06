@@ -9,7 +9,6 @@ import org.obehave.model.Node;
 import org.obehave.service.Study;
 import org.obehave.util.DisplayWrapper;
 import org.obehave.view.util.AlertUtil;
-import org.obehave.view.util.TreeUtil;
 
 import java.util.function.Supplier;
 
@@ -37,7 +36,7 @@ public class ContextMenuBuilder {
         builder.study = study;
 
         builder.node = (Node) treeItem.getValue().get();
-        builder.hierarchyLevel = TreeUtil.getHierarchyLevel(treeItem);
+        builder.hierarchyLevel = getHierarchyLevel(treeItem);
         builder.nodeAnchor = ownerNodeSupplier;
 
         builder.addNewItem();
@@ -105,5 +104,16 @@ public class ContextMenuBuilder {
 
             cm.getItems().add(menuItem);
         }
+    }
+
+    private static int getHierarchyLevel(TreeItem<?> treeItem) {
+        int level = 0;
+
+        while (treeItem.getParent() != null) {
+            treeItem = treeItem.getParent();
+            level++;
+        }
+
+        return level;
     }
 }

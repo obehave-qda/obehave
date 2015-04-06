@@ -10,7 +10,6 @@
          xmlns:fx="http://javafx.com/fxml/1" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0"
          AnchorPane.rightAnchor="20.0"
          AnchorPane.topAnchor="20.0">
-
     <center>
         <Group BorderPane.alignment="CENTER">
             <AnchorPane>

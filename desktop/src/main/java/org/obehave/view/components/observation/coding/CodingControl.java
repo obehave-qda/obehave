@@ -35,7 +35,6 @@ public class CodingControl extends ScrollPane implements Initializable {
     private DoubleProperty timelineHeightProperty = new SimpleDoubleProperty(this, "timelineHeightProperty", 30);
     private DoubleProperty secondWithProperty = new SimpleDoubleProperty(this, "secondWithProperty", 15);
 
-    private DoubleProperty currentTime = new SimpleDoubleProperty(this, "currentTime");
     private DoubleProperty lengthMs = new SimpleDoubleProperty(this, "lengthMs", 180 * 1000);
 
     /**
@@ -123,9 +122,6 @@ public class CodingControl extends ScrollPane implements Initializable {
         cover.setLayoutX(0);
         cover.setLayoutY(0);
 
-        eventsPane.currentTime().bind(currentTime);
-
-
         // ********* configuring scroll bindings
         viewPortX.bind(hvalueProperty().multiply(codingPane.widthProperty().subtract(new BoundsProperties.ScrollPaneViewPortWidthBinding(this))));
         viewPortY.bind(vvalueProperty().multiply(codingPane.heightProperty().subtract(new BoundsProperties.ScrollPaneViewPortHeightBinding(this))));
@@ -174,11 +170,11 @@ public class CodingControl extends ScrollPane implements Initializable {
         observation.getCodings().forEach(eventsPane::addCoding);
     }
 
-    public DoubleProperty currentTime() {
-        return currentTime;
-    }
-
     public DoubleProperty lengthMsProperty() {
         return lengthMs;
+    }
+
+    public void setMsPlayed(DoubleProperty msPlayed) {
+        eventsPane.setMsPlayed(msPlayed);
     }
 }
