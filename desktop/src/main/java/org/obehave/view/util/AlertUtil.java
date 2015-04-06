@@ -2,6 +2,8 @@ package org.obehave.view.util;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextInputDialog;
+import javafx.stage.Window;
+import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialogs;
 import org.obehave.util.I18n;
 import org.obehave.util.Properties;
@@ -61,5 +63,9 @@ public class AlertUtil {
         dialog.getEditor().setText(text != null ? text : "");
 
         return dialog.showAndWait();
+    }
+
+    public static Action showConfirm(String title, String text, Window owner) {
+        return Dialogs.create().owner(owner).title(title).message(text).showConfirm();
     }
 }
