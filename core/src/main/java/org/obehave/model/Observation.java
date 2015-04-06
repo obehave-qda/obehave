@@ -116,10 +116,14 @@ public class Observation extends BaseEntity implements Displayable {
         }
     }
 
-    public void addParticipatingSubject(Subject subject) {
+    private void addParticipatingSubject(Subject subject) {
         participatingSubjects.add(new SubjectInObservation(this, subject));
     }
 
+    /**
+     * Returns all subjects that are participating in this observation
+     * @return a list of the participating subjects
+     */
     public List<Subject> getParticipatingSubjects() {
         List<Subject> subjects = new ArrayList<>();
         for (SubjectInObservation participatingSubject : participatingSubjects) {
@@ -137,6 +141,10 @@ public class Observation extends BaseEntity implements Displayable {
         this.focalSubject = focalSubject;
     }
 
+    /**
+     * Returns the end of the last coding
+     * @return the end of the last coding
+     */
     public long getEndOfLastCoding() {
         long max = 0;
 
@@ -149,6 +157,10 @@ public class Observation extends BaseEntity implements Displayable {
         return max;
     }
 
+    /**
+     * Returns all open codings
+     * @return all open codings
+     */
     public List<Coding> getOpenCodings() {
         List<Coding> openCodings = new ArrayList<>();
 
@@ -161,6 +173,11 @@ public class Observation extends BaseEntity implements Displayable {
         return openCodings;
     }
 
+    /**
+     * Searches for all subjects with open codings at {@code atMs}
+     * @param atMs the time to look at
+     * @return a list of subjects with open codings
+     */
     public List<Subject> getSubjectsWithOpenCodings(long atMs) {
         Set<Subject> subjects = new HashSet<>();
 
@@ -173,6 +190,12 @@ public class Observation extends BaseEntity implements Displayable {
         return new ArrayList<>(subjects);
     }
 
+    /**
+     * Searches for all coded actions, that a subject has at {@code atMs}
+     * @param subject the subject to search actions for
+     * @param atMs the time when the actions should be open
+     * @return a list of actions a subject is doing at the given time
+     */
     public List<Action> getActionsFromOpenCodingsOfSubject(Subject subject, long atMs) {
         Set<Action> actions = new HashSet<>();
 
