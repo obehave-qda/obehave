@@ -1,6 +1,6 @@
 package org.obehave.util;
 
-public class OneTimeAction {
+public class OneTimeAction implements Runnable {
     private boolean executed = false;
     private final Runnable action;
 
@@ -16,5 +16,10 @@ public class OneTimeAction {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public void run() {
+        execute();
     }
 }
