@@ -141,6 +141,7 @@ public class ExportDialog extends Stage {
                             labelPath.getScene().getWindow());
 
             if (response == Dialog.ACTION_YES) {
+                // not sure if HostServicesHolder is able to open excel files. Let's try.
                 HostServicesHolder.get().showDocument(path.toURI().toString());
             }
             close();

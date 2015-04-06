@@ -3,6 +3,7 @@ package org.obehave.view.components.observation.coding;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -41,6 +42,7 @@ public class SubjectPane extends Pane {
 
         Rectangle rectangle = getRectangle(x, 0, subjectHeightProperty.get(), subjectHeightProperty.get(),
                 coding.getSubject().getColor());
+        installRectangleInfo(coding, rectangle);
 
         rectangle.widthProperty().bind(rectangle.heightProperty().multiply(0.75));
         rectangle.translateXProperty().bind(rectangle.widthProperty().divide(-2));
@@ -57,6 +59,7 @@ public class SubjectPane extends Pane {
 
         Rectangle rectangle = getRectangle(positionStart, 0, positionEnd, subjectHeightProperty.get(),
                 coding.getSubject().getColor());
+        installRectangleInfo(coding, rectangle);
 
         getChildren().add(rectangle);
         codings.put(coding, rectangle);
@@ -72,6 +75,7 @@ public class SubjectPane extends Pane {
         Rectangle rectangle = getRectangle(positionStart, 0, 0, subjectHeightProperty.get(),
                 coding.getSubject().getColor());
         rectangle.widthProperty().bind(width);
+        installRectangleInfo(coding, rectangle);
 
         getChildren().add(rectangle);
         codings.put(coding, rectangle);
@@ -87,6 +91,11 @@ public class SubjectPane extends Pane {
         rectangle.setStrokeWidth(2);
 
         return rectangle;
+    }
+
+    private void installRectangleInfo(Coding coding, Rectangle rectangle) {
+        Tooltip t = new Tooltip(coding.getAction().getDisplayString());
+        Tooltip.install(rectangle, t);
     }
 
     public void drawCoding(Coding coding) {
