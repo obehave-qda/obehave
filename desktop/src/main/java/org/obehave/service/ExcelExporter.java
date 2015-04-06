@@ -4,6 +4,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.obehave.exceptions.ServiceException;
 import org.obehave.model.*;
 import org.obehave.model.modifier.Modifier;
 import org.slf4j.Logger;
@@ -16,7 +17,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * TODO: refactor
  * @author Stefan Lamprecht
  * TODO refactor
  */
@@ -28,7 +28,7 @@ public class ExcelExporter {
         this.savePath = savePath;
     }
 
-    public void exportActionGroup(List<Observation> observations, List<Subject> subjects, Node actionGroup) {
+    public void exportActionGroup(List<Observation> observations, List<Subject> subjects, Node actionGroup) throws ServiceException {
         // Map contains counts per actions by subject, LinkedHashMap to preserve order
         Map<String, ArrayList<Long>> countsPerAction = new LinkedHashMap<String, ArrayList<Long>>();
         Map<String, ArrayList<Long>> totalDurationPerAction = new LinkedHashMap<String, ArrayList<Long>>();
@@ -70,7 +70,7 @@ public class ExcelExporter {
         export(subjects, actionGroup.getDisplayString(), countsPerAction, totalDurationPerAction);
     }
 
-    public void exportAction(List<Observation> observations, List<Subject> subjects, Action action) {
+    public void exportAction(List<Observation> observations, List<Subject> subjects, Action action) throws ServiceException {
 
 
         // Map contains counts per actions by subject, LinkedHashMap to preserve order
@@ -112,7 +112,7 @@ public class ExcelExporter {
 
     }
 
-    private void export(List<Subject> subjects, String actionName, Map<String, ArrayList<Long>> countsPerAction, Map<String, ArrayList<Long>> totalDurationPerAction) {
+    private void export(List<Subject> subjects, String actionName, Map<String, ArrayList<Long>> countsPerAction, Map<String, ArrayList<Long>> totalDurationPerAction) throws ServiceException {
         XSSFWorkbook workbook = new XSSFWorkbook();
         generateExcelSheet(workbook, countsPerAction, actionName, subjects, "totalCounts");
         generateExcelSheet(workbook, totalDurationPerAction, actionName, subjects, "totalDuration");
@@ -170,7 +170,7 @@ public class ExcelExporter {
         }
     }
 
-    public void writeExcelSheetToDisk(XSSFWorkbook workbook, String title) {
+    public void writeExcelSheetToDisk(XSSFWorkbook workbook, String title) throws ServiceException {
 
         String fileSeparator = System.getProperty("file.separator");
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm");
@@ -184,7 +184,7 @@ public class ExcelExporter {
             out.close();
             log.debug("Excel successfully written to {}", savePath.getAbsolutePath());
         } catch (Exception e) {
-            log.debug("Something has gone terribly wrong: {}", e.getMessage(), e);
+            throw new ServiceException(e);
         }
     }
 

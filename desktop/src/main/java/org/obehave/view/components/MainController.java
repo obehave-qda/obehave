@@ -8,11 +8,13 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.controlsfx.dialog.CommandLinksDialog;
+import org.obehave.exceptions.DatabaseUnavailableException;
 import org.obehave.persistence.Daos;
 import org.obehave.service.Study;
 import org.obehave.util.I18n;
 import org.obehave.util.Properties;
 import org.obehave.view.components.dialogs.AboutDialog;
+import org.obehave.view.components.dialogs.ExportDialog;
 import org.obehave.view.components.observation.ObservationControl;
 import org.obehave.view.components.tree.ProjectTreeControl;
 import org.obehave.view.util.AlertUtil;
@@ -32,6 +34,7 @@ public class MainController {
     private Study study;
 
     private AboutDialog aboutDialog;
+    private ExportDialog exportDialog;
 
     @FXML
     private ResourceBundle resources;
@@ -120,7 +123,11 @@ public class MainController {
                         } while (!name.isPresent() || name.get().isEmpty());
                         study.setName(name.get());
                     } else {
-                        study = Study.load(chosenFile);
+                        try {
+                            study = Study.load(chosenFile);
+                        } catch (DatabaseUnavailableException e) {
+                            AlertUtil.showError("Couldn't open database", "Database is already locked by another application");
+                        }
                     }
                 } catch (SQLException e) {
                     AlertUtil.showError(I18n.get("ui.study.error.database.title"),
@@ -187,6 +194,17 @@ public class MainController {
         log.trace("Showing manual");
 
         // TODO show manual
+    }
+
+    @FXML
+    void export() {
+        log.trace("Starting exporter");
+
+        if (exportDialog == null) {
+            exportDialog = new ExportDialog(stage);
+        }
+
+        exportDialog.showAndWait(study);
     }
 
     @FXML

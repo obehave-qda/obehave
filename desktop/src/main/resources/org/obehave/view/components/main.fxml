@@ -13,6 +13,9 @@
             <SeparatorMenuItem />
             <MenuItem onAction="#close" text="Close"/>
         </Menu>
+        <Menu text="Export">
+            <MenuItem text="Export Excel" onAction="#export"/>
+        </Menu>
         <Menu text="Options">
             <MenuItem onAction="#settings" text="Settings"/>
         </Menu>
