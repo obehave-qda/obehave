@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import org.obehave.view.components.tree.ProjectTreeControl?>
+<?import org.obehave.view.components.WelcomeControl?>
 <?import java.net.URL?>
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="org.obehave.view.components.MainController" fx:id="vbox" prefWidth="800">
@@ -27,7 +27,7 @@
     </MenuBar>
     <SplitPane dividerPositions="0.25" fx:id="splitpane">
         <ProjectTreeControl fx:id="tree" SplitPane.resizableWithParent="false"/>
-        <Pane fx:id="mainArea"/>
+        <WelcomeControl/>
     </SplitPane>
     <stylesheets>
         <URL value="@obehave.css"/>

@@ -124,7 +124,7 @@ public class CodingControl extends ScrollPane implements Initializable {
 
         // ********* configuring scroll bindings
         viewPortX.bind(hvalueProperty().multiply(codingPane.widthProperty().subtract(new BoundsProperties.ScrollPaneViewPortWidthBinding(this))));
-        viewPortY.bind(vvalueProperty().multiply(codingPane.heightProperty().subtract(new BoundsProperties.ScrollPaneViewPortHeightBinding(this))));
+        viewPortY.bind(vvalueProperty().multiply(heightProperty().subtract(new BoundsProperties.ScrollPaneViewPortHeightBinding(this))));
 
         // make subjectsList fixed when scrolling horizontal
         viewPortX.addListener((observable, oldValue, newValue) -> {
@@ -149,7 +149,6 @@ public class CodingControl extends ScrollPane implements Initializable {
     public void addSubject(Subject subject) {
         eventsPane.addSubject(subject);
         subjectsList.addSubject(subject);
-
     }
 
     public void removeSubject(Subject subject) {

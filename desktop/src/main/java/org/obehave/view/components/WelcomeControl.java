@@ -1,11 +1,11 @@
 package org.obehave.view.components;
 
 import javafx.fxml.FXMLLoader;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 
 import java.io.IOException;
 
-public class WelcomeControl extends AnchorPane {
+public class WelcomeControl extends BorderPane {
     public WelcomeControl() {
         super();
         FXMLLoader fxmlLoader = new FXMLLoader(
