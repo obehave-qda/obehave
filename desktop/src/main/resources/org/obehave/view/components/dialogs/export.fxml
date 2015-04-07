@@ -19,7 +19,7 @@
         </columnConstraints>
         <Label text="Directory" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
         <Label fx:id="labelPath" text="Choose export directory..." GridPane.rowIndex="0" GridPane.columnIndex="1"/>
-        <Button text="Choose" onAction="#chooseFile" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
+        <Button text="Choose" onAction="#chooseDirectory" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
 
         <Label text="Observations" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
         <CheckListView fx:id="observations" GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.columnSpan="2"/>
