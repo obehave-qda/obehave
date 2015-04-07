@@ -54,7 +54,7 @@ public class EventBusHolder {
 
         @Override
         public void handleException(Throwable exception, SubscriberExceptionContext context) {
-            log.error(message(context));
+            log.error(message(context), exception);
         }
 
         private static String message(SubscriberExceptionContext context) {

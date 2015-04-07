@@ -128,12 +128,16 @@ public class ObservationControl extends BorderPane {
         suggestionService = study.getSuggestionServiceBuilder().build(observation);
 
         if (observation.getVideo() != null) {
-            loadVideo(observation.getVideo());
+            if (observation.getVideo().exists()) {
+                loadVideo(observation.getVideo());
 
-            codingControl.setMsPlayed(msPlayed);
+                codingControl.setMsPlayed(msPlayed);
 
-            videoControl.totalDurationProperty().addListener((observable, oldValue, newValue) ->
-                    codingControl.lengthMsProperty().setValue(newValue.toMillis()));
+                videoControl.totalDurationProperty().addListener((observable, oldValue, newValue) ->
+                        codingControl.lengthMsProperty().setValue(newValue.toMillis()));
+            } else {
+                AlertUtil.showError("Video doesn't exist", "Selected video was deleted:\n" + observation.getVideo());
+            }
         } else {
             codingControl.setMsPlayed(new SimpleDoubleProperty(this, "dummyDoubleProperty", 0));
             codingControl.lengthMsProperty().setValue(observation.getEndOfLastCoding());
