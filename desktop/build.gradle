@@ -10,9 +10,11 @@ jar {
     }
 }
 
+applicationName = "Obehave"
 mainClassName = 'org.obehave.view.Obehave'
 
 javafx {
+    appName = applicationName
     mainClass mainClassName
 }
 
