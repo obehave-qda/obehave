@@ -31,7 +31,7 @@ import java.util.ResourceBundle;
 public class CodingControl extends ScrollPane implements Initializable {
     private static final Logger log = LoggerFactory.getLogger(CodingControl.class);
 
-    private DoubleProperty subjectHeightProperty = new SimpleDoubleProperty(this, "subjectHeightProperty", 30);
+    private DoubleProperty subjectHeightProperty = new SimpleDoubleProperty(this, "subjectHeightProperty", 50);
     private DoubleProperty timelineHeightProperty = new SimpleDoubleProperty(this, "timelineHeightProperty", 30);
     private DoubleProperty secondWithProperty = new SimpleDoubleProperty(this, "secondWithProperty", 15);
 
