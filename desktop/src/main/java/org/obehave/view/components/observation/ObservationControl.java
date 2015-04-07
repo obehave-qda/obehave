@@ -1,6 +1,5 @@
 package org.obehave.view.components.observation;
 
-import com.google.common.eventbus.Subscribe;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.fxml.FXML;
@@ -11,7 +10,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
-import org.obehave.events.EventBusHolder;
 import org.obehave.events.UiEvent;
 import org.obehave.exceptions.ServiceException;
 import org.obehave.model.Action;
@@ -70,8 +68,6 @@ public class ObservationControl extends BorderPane {
             throw new RuntimeException(exception);
         }
 
-        EventBusHolder.register(this);
-
         videoControl.maxHeightProperty().bind(heightProperty().multiply(0.75));
         codingControl.maxHeightProperty().bind(heightProperty().multiply(0.25));
         videoControl.codingHeight().bind(codingControl.heightProperty());
@@ -119,7 +115,6 @@ public class ObservationControl extends BorderPane {
         videoControl.loadVideo(video);
     }
 
-    @Subscribe
     public void loadObservation(UiEvent.LoadObservation event) {
         log.debug("Loading observation, because of {}", event);
 

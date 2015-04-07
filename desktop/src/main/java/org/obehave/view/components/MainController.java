@@ -1,13 +1,17 @@
 package org.obehave.view.components;
 
+import com.google.common.eventbus.Subscribe;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.SplitPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.controlsfx.dialog.CommandLinksDialog;
+import org.obehave.events.EventBusHolder;
+import org.obehave.events.UiEvent;
 import org.obehave.persistence.Daos;
 import org.obehave.service.Study;
 import org.obehave.util.FileUtil;
@@ -53,8 +57,10 @@ public class MainController {
     @FXML
     private MenuBar menubar;
 
-    @FXML
     private ObservationControl observationControl;
+
+    @FXML
+    private Pane mainArea;
 
     private Stage stage;
 
@@ -72,6 +78,12 @@ public class MainController {
         assert splitpane != null : "fx:id=\"splitpane\" was not injected: check your FXML file 'main.fxml'.";
 
         splitpane.prefHeightProperty().bind(vbox.heightProperty().subtract(menubar.heightProperty()));
+
+        EventBusHolder.register(this);
+
+        observationControl = new ObservationControl();
+
+        mainArea.getChildren().addAll(new WelcomeControl());
     }
 
     public void chooseStudy() {
@@ -226,4 +238,15 @@ public class MainController {
 
         aboutDialog.showAndWait();
     }
+
+    @Subscribe
+    public void loadObservation(UiEvent.LoadObservation event) {
+        if (!mainArea.getChildren().contains(observationControl)) {
+            mainArea.getChildren().clear();
+            mainArea.getChildren().addAll(observationControl);
+        }
+
+        observationControl.loadObservation(event);
+    }
+
 }

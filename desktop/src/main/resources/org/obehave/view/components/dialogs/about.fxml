@@ -13,9 +13,7 @@
         <top>
             <VBox>
                 <ImageView id="logoImage" preserveRatio="true" fitWidth="500">
-                    <image>
-                        <Image url="/org/obehave/view/pictures/obehave.png"/>
-                    </image>
+                    <Image url="/org/obehave/view/pictures/obehave.png"/>
                 </ImageView>
                 <Label fx:id="versionLabel"/>
             </VBox>
