@@ -22,6 +22,7 @@
         </Root>
         <Logger name="com.j256.ormlite" level="ERROR" additivity="false">
             <AppenderRef ref="Console"/>
+            <AppenderRef ref="fileLogger"/>
         </Logger>
     </Loggers>
 </Configuration>
