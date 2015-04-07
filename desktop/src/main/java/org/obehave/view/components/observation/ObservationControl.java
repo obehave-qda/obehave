@@ -136,7 +136,7 @@ public class ObservationControl extends BorderPane {
                 videoControl.totalDurationProperty().addListener((observable, oldValue, newValue) ->
                         codingControl.lengthMsProperty().setValue(newValue.toMillis()));
             } else {
-                AlertUtil.showError("Video doesn't exist", "Selected video was deleted:\n" + observation.getVideo());
+                AlertUtil.showError("Video doesn't exist", "Selected video wasn't found:\n" + observation.getVideo());
             }
         } else {
             codingControl.setMsPlayed(new SimpleDoubleProperty(this, "dummyDoubleProperty", 0));
