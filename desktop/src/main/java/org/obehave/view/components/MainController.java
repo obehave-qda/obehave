@@ -116,12 +116,16 @@ public class MainController {
             if (chosenFile != null) {
                 try {
                     if (create) {
-                        study = Study.create(chosenFile);
                         Optional<String> name;
                         do {
-                            name = showStudyNameDialog();
-                        } while (!name.isPresent() || name.get().isEmpty());
-                        study.setName(name.get());
+                            name = showStudyNameDialog(chosenFile.getName().substring(0,
+                                    chosenFile.getName().indexOf(Properties.getDatabaseSuffix())));
+                        } while (name.isPresent() && name.get().isEmpty());
+
+                        if (name.isPresent()) {
+                            study = Study.create(chosenFile);
+                            study.setName(name.get());
+                        }
                     } else {
                         try {
                             study = Study.load(chosenFile);
@@ -166,17 +170,17 @@ public class MainController {
         this.stage = stage;
     }
 
-    private Optional<String> showStudyNameDialog() {
+    private Optional<String> showStudyNameDialog(String preset) {
         return AlertUtil.askForString(I18n.get("ui.study.dialog.name.title"),
                 I18n.get("ui.study.dialog.name.description"),
-                study.getName());
+                preset);
     }
 
     @FXML
     void changeStudyName(ActionEvent event) {
         log.trace("Changing study name");
 
-        Optional<String> name = showStudyNameDialog();
+        Optional<String> name = showStudyNameDialog(study.getName());
         if (name.isPresent() && !name.get().isEmpty()) {
             study.setName(name.get());
         }
