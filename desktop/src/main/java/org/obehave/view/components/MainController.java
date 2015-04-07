@@ -147,9 +147,9 @@ public class MainController {
         final String openExistingOne = I18n.get("ui.study.open.title");
         final String closeApplication = I18n.get("ui.study.close");
         List<CommandLinksDialog.CommandLinksButtonType> links = Arrays.asList(
+                new CommandLinksDialog.CommandLinksButtonType(closeApplication, false),
                 new CommandLinksDialog.CommandLinksButtonType(createNewOne, I18n.get("ui.study.create.description"), false),
-                new CommandLinksDialog.CommandLinksButtonType(openExistingOne, I18n.get("ui.study.open.description"), false),
-                new CommandLinksDialog.CommandLinksButtonType(closeApplication, false));
+                new CommandLinksDialog.CommandLinksButtonType(openExistingOne, I18n.get("ui.study.open.description"), true));
 
         CommandLinksDialog commandLinksDialog = new CommandLinksDialog(links);
         commandLinksDialog.setTitle(I18n.get("ui.study.dialog"));
