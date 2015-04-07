@@ -9,6 +9,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import org.obehave.model.Action;
 import org.obehave.model.Coding;
+import org.obehave.model.Subject;
 import org.obehave.util.CodingArranger;
 import org.obehave.view.util.ColorConverter;
 import org.slf4j.Logger;
@@ -35,13 +36,10 @@ public class SubjectPane extends Pane {
         this.msPlayed = msPlayed;
     }
 
-    private void drawPointCoding(Coding coding) {
-        log.trace("Drawing rectangle for point coding {}", coding);
-
+    private void drawPointCoding(Coding coding, Subject subject) {
         final double x = secondWidthProperty.get() * (coding.getStartMs() / 1000);
 
-        Rectangle rectangle = getRectangle(x, 0, subjectHeightProperty.get(), subjectHeightProperty.get(),
-                coding.getSubject().getColor());
+        Rectangle rectangle = getRectangle(x, 0, subjectHeightProperty.get(), subjectHeightProperty.get(), subject.getColor());
         installRectangleInfo(coding, rectangle);
 
         rectangle.widthProperty().bind(rectangle.heightProperty().multiply(0.75));
@@ -51,29 +49,25 @@ public class SubjectPane extends Pane {
         codings.put(coding, rectangle);
     }
 
-    private void drawStateCoding(Coding coding) {
-        log.trace("Drawing rectangle for finished state coding {}", coding);
-
+    private void drawStateCoding(Coding coding, Subject subject) {
         final double positionStart = secondWidthProperty.get() * (coding.getStartMs() / 1000);
         final double positionEnd = secondWidthProperty.get() * (coding.getDuration() / 1000);
 
-        Rectangle rectangle = getRectangle(positionStart, 0, positionEnd, subjectHeightProperty.get(),
-                coding.getSubject().getColor());
+        Rectangle rectangle = getRectangle(positionStart, 0, positionEnd, subjectHeightProperty.get(), subject.getColor());
         installRectangleInfo(coding, rectangle);
 
         getChildren().add(rectangle);
         codings.put(coding, rectangle);
     }
 
-    private void startStateCoding(Coding coding) {
+    private void startStateCoding(Coding coding, Subject subject) {
         log.trace("Drawing growing rectangle for state coding {}", coding);
 
         final double positionStart = secondWidthProperty.get() * (coding.getStartMs() / 1000);
 
         final DoubleBinding width = new MinimumDoubleBinding(secondWidthProperty.multiply(msPlayed.divide(1000)).subtract(positionStart));
 
-        Rectangle rectangle = getRectangle(positionStart, 0, 0, subjectHeightProperty.get(),
-                coding.getSubject().getColor());
+        Rectangle rectangle = getRectangle(positionStart, 0, 0, subjectHeightProperty.get(), subject.getColor());
         rectangle.widthProperty().bind(width);
         installRectangleInfo(coding, rectangle);
 
@@ -98,14 +92,16 @@ public class SubjectPane extends Pane {
         Tooltip.install(rectangle, t);
     }
 
-    public void drawCoding(Coding coding) {
+    public void drawCoding(Coding coding, boolean primary) {
+        final Subject subject = primary ? coding.getSubject() : (Subject) coding.getModifier().get();
+
         if (coding.getAction().getType() == Action.Type.POINT) {
-            drawPointCoding(coding);
+            drawPointCoding(coding, subject);
         } else {
             if (!coding.isOpen()) {
-                drawStateCoding(coding);
+                drawStateCoding(coding, subject);
             } else {
-                startStateCoding(coding);
+                startStateCoding(coding, subject);
             }
         }
 
