@@ -59,6 +59,7 @@ public class Study implements Displayable {
         return new Study();
     }
 
+    // TODO throw ServiceException instead of SQLException
     public static Study create(File savePath) throws SQLException {
         log.info("Creating new study at {}", savePath);
 
@@ -80,6 +81,7 @@ public class Study implements Displayable {
         return study;
     }
 
+    // TODO throw ServiceException instead of SQLException
     public static Study load(File savePath) throws SQLException {
         log.info("Loading existing study from {}", savePath);
 

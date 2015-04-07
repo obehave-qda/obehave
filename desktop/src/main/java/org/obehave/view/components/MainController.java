@@ -8,7 +8,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.controlsfx.dialog.CommandLinksDialog;
-import org.obehave.exceptions.DatabaseUnavailableException;
 import org.obehave.persistence.Daos;
 import org.obehave.service.Study;
 import org.obehave.util.I18n;
@@ -129,8 +128,9 @@ public class MainController {
                     } else {
                         try {
                             study = Study.load(chosenFile);
-                        } catch (DatabaseUnavailableException e) {
-                            AlertUtil.showError("Couldn't open database", "Database is already locked by another application");
+                        } catch (Exception e) {
+                            AlertUtil.showError("Couldn't open database", "There was a problem loading the database.\n" +
+                                    "If your save file is valid, check if another instance of Obehave is using it already", e);
                         }
                     }
                 } catch (SQLException e) {
