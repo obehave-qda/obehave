@@ -5,7 +5,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.SplitPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -59,9 +58,6 @@ public class MainController {
 
     private ObservationControl observationControl;
 
-    @FXML
-    private Pane mainArea;
-
     private Stage stage;
 
     @FXML
@@ -77,13 +73,12 @@ public class MainController {
         assert tree != null : "fx:id=\"tree\" was not injected: check your FXML file 'main.fxml'.";
         assert splitpane != null : "fx:id=\"splitpane\" was not injected: check your FXML file 'main.fxml'.";
 
+        tree.setMinWidth(200);
         splitpane.prefHeightProperty().bind(vbox.heightProperty().subtract(menubar.heightProperty()));
 
         EventBusHolder.register(this);
 
         observationControl = new ObservationControl();
-
-        mainArea.getChildren().addAll(new WelcomeControl());
     }
 
     public void chooseStudy() {
@@ -241,10 +236,7 @@ public class MainController {
 
     @Subscribe
     public void loadObservation(UiEvent.LoadObservation event) {
-        if (!mainArea.getChildren().contains(observationControl)) {
-            mainArea.getChildren().clear();
-            mainArea.getChildren().addAll(observationControl);
-        }
+        splitpane.getItems().set(1, observationControl);
 
         observationControl.loadObservation(event);
     }
