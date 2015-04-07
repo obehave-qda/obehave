@@ -30,4 +30,10 @@ public class FileUtil {
             return absolutePath.substring(0, absolutePath.lastIndexOf(suffix));
         }
     }
+
+    public static boolean isDatabaseFileLocked(File file) {
+        final File lockFile = new File(file.getAbsolutePath().replace("\\.h2\\.db$", "lock.db"));
+
+        return lockFile.exists();
+    }
 }
