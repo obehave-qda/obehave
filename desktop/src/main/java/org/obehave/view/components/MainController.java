@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 import org.controlsfx.dialog.CommandLinksDialog;
 import org.obehave.persistence.Daos;
 import org.obehave.service.Study;
+import org.obehave.util.FileUtil;
 import org.obehave.util.I18n;
 import org.obehave.util.Properties;
 import org.obehave.view.components.dialogs.AboutDialog;
@@ -22,7 +23,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -114,6 +114,11 @@ public class MainController {
             File chosenFile = create ? fileChooser.showSaveDialog(stage) : fileChooser.showOpenDialog(stage);
             if (chosenFile != null) {
                 try {
+                    if (FileUtil.isDatabaseFileLocked(chosenFile)) {
+                        AlertUtil.showError("Database error", "This database is currently locked by another instance of Obehave");
+                        continue;
+                    }
+
                     if (create) {
                         Optional<String> name;
                         do {
@@ -130,10 +135,10 @@ public class MainController {
                             study = Study.load(chosenFile);
                         } catch (Exception e) {
                             AlertUtil.showError("Couldn't open database", "There was a problem loading the database.\n" +
-                                    "If your save file is valid, check if another instance of Obehave is using it already", e);
+                                    "Is your save file valid?", e);
                         }
                     }
-                } catch (SQLException e) {
+                } catch (Exception e) {
                     AlertUtil.showError(I18n.get("ui.study.error.database.title"),
                             I18n.get("ui.study.error.database.description", e.getMessage()), e);
                 }
