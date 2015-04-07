@@ -8,8 +8,10 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.Pane;
 import javafx.stage.*;
+import javafx.stage.Window;
 import org.controlsfx.control.CheckListView;
 import org.controlsfx.dialog.Dialog;
+import org.controlsfx.dialog.Dialogs;
 import org.obehave.model.Action;
 import org.obehave.model.Node;
 import org.obehave.model.Observation;
@@ -18,8 +20,8 @@ import org.obehave.service.ExcelExporter;
 import org.obehave.service.Study;
 import org.obehave.util.DisplayWrapper;
 import org.obehave.view.util.AlertUtil;
-import org.obehave.view.util.HostServicesHolder;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -90,12 +92,12 @@ public class ExportDialog extends Stage {
     }
 
     @FXML
-    public void chooseFile() {
-        FileChooser chooser = new FileChooser();
+    public void chooseDirectory() {
+        DirectoryChooser chooser = new DirectoryChooser();
         chooser.setTitle("Choose folder to export to");
-        chooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Excel files", ".xlsx"));
+        chooser.setInitialDirectory(new File(System.getProperty("user.dir")));
 
-        path = chooser.showOpenDialog(labelPath.getScene().getWindow());
+        path = chooser.showDialog(labelPath.getScene().getWindow());
 
         if (path != null) {
             labelPath.setText(path.getAbsolutePath());
@@ -137,14 +139,19 @@ public class ExportDialog extends Stage {
                 exporter.exportAction(selectedObservations, selectedSubjects, (Action) actionNode.getData());
             }
 
-            final org.controlsfx.control.action.Action response =
-                    AlertUtil.showConfirm("Export finished", "Exporting data has finished. Do you want to open the export?",
-                            labelPath.getScene().getWindow());
+            if (Desktop.isDesktopSupported()) {
+                final org.controlsfx.control.action.Action response =
+                        AlertUtil.showConfirm("Export finished",
+                                "Exporting data has finished. Do you want to open the export folder?",
+                                labelPath.getScene().getWindow());
 
-            if (response == Dialog.ACTION_YES) {
-                // not sure if HostServicesHolder is able to open excel files. Let's try.
-                HostServicesHolder.get().showDocument(path.toURI().toString());
+                if (response == Dialog.ACTION_YES) {
+                    Desktop.getDesktop().open(path);
+                }
+            } else {
+                Dialogs.create().title("Success").message("Successfully exported into " + path.getAbsolutePath()).showInformation();
             }
+
             close();
         } catch (Exception e) {
             AlertUtil.showError("Error during export", e.getMessage(), e);
