@@ -23,7 +23,6 @@ import org.obehave.view.util.AlertUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -111,10 +110,6 @@ public class ObservationControl extends BorderPane {
                 p -> (suggestionService.getModifierSuggestions(inputAction.getText(), p.getUserText()))));
     }
 
-    public void loadVideo(File video) {
-        videoControl.loadVideo(video);
-    }
-
     public void loadObservation(UiEvent.LoadObservation event) {
         log.debug("Loading observation, because of {}", event);
 
@@ -124,16 +119,19 @@ public class ObservationControl extends BorderPane {
 
         if (observation.getVideo() != null) {
             if (observation.getVideo().exists()) {
-                loadVideo(observation.getVideo());
+                videoControl.setVisible(true);
+                videoControl.loadVideo(observation.getVideo());
 
                 codingControl.setMsPlayed(msPlayed);
 
                 videoControl.totalDurationProperty().addListener((observable, oldValue, newValue) ->
                         codingControl.lengthMsProperty().setValue(newValue.toMillis()));
             } else {
+                videoControl.setVisible(false);
                 AlertUtil.showError("Video doesn't exist", "Selected video wasn't found:\n" + observation.getVideo());
             }
         } else {
+            videoControl.setVisible(false);
             codingControl.setMsPlayed(new SimpleDoubleProperty(this, "dummyDoubleProperty", 0));
             codingControl.lengthMsProperty().setValue(observation.getEndOfLastCoding());
         }
