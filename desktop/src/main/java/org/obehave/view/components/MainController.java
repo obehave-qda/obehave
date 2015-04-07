@@ -122,8 +122,8 @@ public class MainController {
                     if (create) {
                         Optional<String> name;
                         do {
-                            name = showStudyNameDialog(chosenFile.getName().substring(0,
-                                    chosenFile.getName().indexOf(Properties.getDatabaseSuffix())));
+                            name = showStudyNameDialog(
+                                    FileUtil.removeSuffixFromFileNameIfThere(chosenFile, Properties.getDatabaseSuffix()));
                         } while (name.isPresent() && name.get().isEmpty());
 
                         if (name.isPresent()) {
