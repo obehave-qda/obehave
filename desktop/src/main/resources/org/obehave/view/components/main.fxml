@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
-<?import org.obehave.view.components.observation.ObservationControl?>
 <?import org.obehave.view.components.tree.ProjectTreeControl?>
 <?import java.net.URL?>
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
@@ -10,7 +10,7 @@
     <MenuBar fx:id="menubar">
         <Menu text="File">
             <MenuItem onAction="#changeStudyName" text="Change Study Name"/>
-            <SeparatorMenuItem />
+            <SeparatorMenuItem/>
             <MenuItem onAction="#close" text="Close"/>
         </Menu>
         <Menu text="Export">
@@ -21,13 +21,13 @@
         </Menu>
         <Menu text="Help">
             <MenuItem onAction="#manual" text="Manual"/>
-            <SeparatorMenuItem />
+            <SeparatorMenuItem/>
             <MenuItem onAction="#about" text="About"/>
         </Menu>
     </MenuBar>
     <SplitPane dividerPositions="0.25" fx:id="splitpane">
         <ProjectTreeControl fx:id="tree" SplitPane.resizableWithParent="false"/>
-        <ObservationControl fx:id="observationControl" />
+        <Pane fx:id="mainArea"/>
     </SplitPane>
     <stylesheets>
         <URL value="@obehave.css"/>
