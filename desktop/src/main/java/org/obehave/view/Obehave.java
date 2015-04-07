@@ -12,6 +12,7 @@ import org.obehave.view.components.MainController;
 import org.obehave.view.util.HostServicesHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import java.net.URL;
 
@@ -62,6 +63,8 @@ public class Obehave extends Application {
     }
 
     public static void main(String[] args) {
+        SLF4JBridgeHandler.install();
+
         launch(args);
     }
 }
