@@ -93,7 +93,9 @@ public class VideoControl extends BorderPane {
         //TODO: subtract width until splitpane for tree is fixed
 
         mediaView.fitWidthProperty().bind(mediaView.getScene().widthProperty().subtract(200));
-        mediaView.fitHeightProperty().bind(mediaView.getScene().heightProperty().subtract(codingHeight));
+        mediaView.fitHeightProperty().bind(mediaView.getScene().heightProperty()
+                .subtract(codingHeight).subtract(200));
+
 
         mediaView.getMediaPlayer().currentTimeProperty().addListener(currentTimeListener);
         mediaView.getMediaPlayer().play();
