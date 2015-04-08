@@ -109,10 +109,11 @@ public class CodingService {
             if (actionParent.getExclusivity() != Node.Exclusivity.NOT_EXCLUSIVE) {
                 for (Coding openCoding : new ArrayList<>(openCodings)) {
                     Node codingParent = study.getActions().getParentOf(openCoding.getAction());
-                    if (actionParent.equals(codingParent)) {
+                    if (actionParent.equals(codingParent)
+                            && coding.getSubject().equals(openCoding.getSubject())) {
                         // FIXME this won't work, I guess, because of modifier input
                         if (openCoding.getStartMs() <= startMs) {
-                            endCoding(subject, action, null, startMs);
+                            endCoding(openCoding, startMs - 1);
                         }
 
                     }
@@ -205,6 +206,10 @@ public class CodingService {
                     + " and action " + action.getDisplayString());
         }
 
+        endCoding(coding, endMs);
+    }
+
+    public void endCoding(Coding coding, long endMs) throws ServiceException {
         if (endMs < coding.getStartMs()) {
             throw new ServiceException("Coding hasn't started yet!");
         }
