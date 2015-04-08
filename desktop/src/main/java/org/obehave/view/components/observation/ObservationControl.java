@@ -193,6 +193,8 @@ public class ObservationControl extends BorderPane {
                 createSubjectCompletionBinding();
                 createActionCompletionBinding();
                 createModifierCompletionBinding();
+
+                inputSubject.requestFocus();
             }
         } catch (ServiceException e) {
             AlertUtil.showError("Error while coding", "Couldn't code, because " + e.getMessage(), e);
