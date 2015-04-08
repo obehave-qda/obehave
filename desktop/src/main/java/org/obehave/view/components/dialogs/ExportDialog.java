@@ -95,7 +95,20 @@ public class ExportDialog extends Stage {
     public void chooseDirectory() {
         DirectoryChooser chooser = new DirectoryChooser();
         chooser.setTitle("Choose folder to export to");
-        chooser.setInitialDirectory(new File(System.getProperty("user.dir")));
+        final File defaultDir = new File(System.getProperty("user.home") + "/Obehave/exports");
+        if (!defaultDir.exists()) {
+            if (!defaultDir.mkdirs()) {
+                AlertUtil.showError("Error creating default exports directory", "Couldn't create directory at "
+                        + defaultDir.getAbsolutePath());
+            }
+        }
+
+        if (path != null || !defaultDir.exists()) {
+            chooser.setInitialDirectory(path);
+        } else {
+            chooser.setInitialDirectory(defaultDir);
+        }
+
 
         path = chooser.showDialog(labelPath.getScene().getWindow());
 
