@@ -4,6 +4,7 @@
 - FontAwesome for buttons
 - more comfort while coding: jumping back to subject after finished a coding
 - Fancy windows installer \o/ (iscc.exe has to be in %PATH% - http://www.jrsoftware.org/isdl.php)
+- changed default paths for studies, logs and exports to ~/Obehave/
 
 ## Bugfixes
 - 102: Closing codings shouldn't be a problem anymore.
