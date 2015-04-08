@@ -10,8 +10,8 @@
 - Drawing of subject modifier codings
 
 ## Known Issues
-- Ending active state codings (especially multiple ones, with different modifiers) won't work correctly
-- Timeline in CodingControl has issues with loading other observations with a different count of participating subjects
+- 102: Ending active state codings (especially multiple ones, with different modifiers) won't work correctly
+- 103: Timeline in CodingControl has issues with loading other observations with a different count of participating subjects
 
 ## Bugfixes
 - 83: closing program wasn't possible with window decoration
