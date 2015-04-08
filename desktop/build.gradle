@@ -14,8 +14,17 @@ applicationName = "Obehave"
 mainClassName = 'org.obehave.view.Obehave'
 
 javafx {
+    appID = 'Obehave'
     appName = applicationName
     mainClass mainClassName
+
+    category = 'Science'
+    copyright = 'Copyright (c) 2015 Obehave'
+    description = 'QDA application'
+    vendor = 'Obehave'
+    installSystemWide = true
+    menu = true
+    shortcut = true
 }
 
 dependencies {
