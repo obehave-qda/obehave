@@ -5,6 +5,7 @@ import org.obehave.model.Observation;
 import org.obehave.model.Subject;
 import org.obehave.model.modifier.ModifierFactory;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -12,8 +13,10 @@ import java.util.List;
 /**
  * Service class to build a list of suggestions represanted as strings for different use cases.
  */
-public class SuggestionService {
-    public static class SuggestionServiceBuilder {
+public class SuggestionService implements Serializable{
+    private static final long serialVersionUID = 1L;
+    public static class SuggestionServiceBuilder implements Serializable{
+        private static final long serialVersionUID = 1L;
         private final Study study;
 
         protected SuggestionServiceBuilder(Study study) {
