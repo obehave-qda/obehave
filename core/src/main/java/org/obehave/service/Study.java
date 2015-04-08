@@ -69,7 +69,7 @@ public class Study implements Displayable {
             if (!FileUtil.isDatabaseFileLocked(savePath)) {
                 log.info("File {} exists already, creating new one at same path", savePath);
                 if (!savePath.delete()) {
-                    log.error("Couldn't delete file {}!" + savePath);
+                    log.error("Couldn't delete file {}!", savePath);
                 }
             } else {
                 throw new DatabaseException("Cannot override locked database file");
