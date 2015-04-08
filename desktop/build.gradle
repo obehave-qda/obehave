@@ -4,6 +4,9 @@ apply from: "http://dl.bintray.com/content/shemnon/javafx-gradle/0.4.0/javafx.pl
 
 sourceCompatibility = 1.8
 
+// we don't need to implicitly deploy our application on each build
+assemble.dependsOn.remove(jfxDeploy)
+
 jar {
     manifest {
         attributes("Implementation-Version": version)
@@ -59,4 +62,3 @@ dependencies {
     testCompile "junit:junit:$versionJunit"
     testCompile "org.hamcrest:hamcrest-all:$versionHamcrest"
 }
-
