@@ -3,6 +3,9 @@
 ## New
 - FontAwesome for buttons
 
+## Bugfixes
+- 102: Closing codings shouldn't be a problem anymore.
+
 
 <!----------------------------------------------------------------------------->
 # 0.3.0 (2015-04-08)
