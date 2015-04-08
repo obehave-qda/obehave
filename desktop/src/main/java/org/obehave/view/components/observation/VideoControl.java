@@ -34,7 +34,7 @@ public class VideoControl extends BorderPane implements Initializable{
     private ChangeListener<Duration> currentTimeListener = (observable, oldValue, newValue) -> msPlayed.setValue(newValue.toMillis());
 
     private GlyphFont fontAwesome = new FontAwesome(getClass().getClassLoader()
-            .getResourceAsStream("/org/obehave/view/font/awesome-4.3.0/fonts/FontAwesome.otf"));
+            .getResourceAsStream("/org/obehave/view/font/awesome-4.3.0/FontAwesome.otf"));
 
     @FXML
     private MediaView mediaView;
