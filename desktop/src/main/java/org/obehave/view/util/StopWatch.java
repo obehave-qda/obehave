@@ -7,12 +7,19 @@ import javafx.beans.property.SimpleLongProperty;
 import javafx.util.Duration;
 
 public class StopWatch {
+    /**
+     * After how many ms should the stopwatch update?
+     */
+    private static final double PRECISION = 100;
+
+    private static final long NOT_STARTED = -1;
+
     private final Timeline timeline;
     private final TimeProvider timeProvider;
     private final LongProperty elapsedTime = new SimpleLongProperty(this, "elapsedTime", 0);
 
     private long elapsed = 0;
-    private long started = 0;
+    private long started = NOT_STARTED;
 
     /**
      * Creates a new {@code Timer} instance using {@link System#currentTimeMillis()} as {@link StopWatch.TimeProvider}
@@ -30,7 +37,7 @@ public class StopWatch {
 
         timeline = new Timeline();
         timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(1), e -> {
+        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(PRECISION), e -> {
             update();
         }));
     }
@@ -39,7 +46,7 @@ public class StopWatch {
      * Starts the timer
      */
     public void start() {
-        started = 0;
+        started = timeProvider.getTime();
 
         timeline.playFromStart();
     }
@@ -51,9 +58,21 @@ public class StopWatch {
         timeline.stop();
 
         elapsed += current();
-        started = 0;
+        started = NOT_STARTED;
 
         update();
+    }
+
+    public void toggle() {
+        if (isRunning()) {
+            stop();
+        } else {
+            start();
+        }
+    }
+
+    public boolean isRunning() {
+        return started != NOT_STARTED;
     }
 
     /**
@@ -72,6 +91,8 @@ public class StopWatch {
     }
 
     public long getElapsedTime() {
+        update();
+
         return elapsedTime.get();
     }
 
@@ -80,7 +101,7 @@ public class StopWatch {
     }
 
     private long current() {
-        return started != 0 ? timeProvider.getTime() - started : 0;
+        return isRunning() ? timeProvider.getTime() - started : 0;
     }
 
     private void update() {
