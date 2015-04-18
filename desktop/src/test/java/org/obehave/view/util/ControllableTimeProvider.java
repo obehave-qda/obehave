@@ -1,17 +1,17 @@
 package org.obehave.view.util;
 
 /**
- * Created by Markus.Moeslinger on 15.04.2015.
+ * Class to manipulate the time that {@link StopWatch} is using.
  */
 public class ControllableTimeProvider implements StopWatch.TimeProvider {
-    private int time= 0;
+    private int ms = 0;
 
-    public void setTime(int time) {
-        this.time = time;
+    public void forward(int ms) {
+        this.ms += ms;
     }
 
     @Override
     public long getTime() {
-        return time;
+        return ms;
     }
 }
