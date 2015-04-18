@@ -46,5 +46,8 @@ dependencies {
     compile "joda-time:joda-time:$versionJoda"
 
     compile "com.google.code.gson:gson:$versionGson"
+
+    // change to repo as soon as 1.0.9 is released: https://github.com/lviggiano/owner/issues/123
+    compile files('lib/owner-1.0.9-SNAPSHOT.jar')
 }
 
