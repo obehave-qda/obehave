@@ -3,6 +3,8 @@ package org.obehave.util;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import org.junit.Test;
 import org.obehave.persistence.Daos;
+import org.obehave.util.properties.AppProperties;
+import org.obehave.util.properties.AppPropertiesHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,11 +16,13 @@ import java.sql.SQLException;
  */
 public class TestStudyCreator {
     private static final Logger log = LoggerFactory.getLogger(TestStudyCreator.class);
+    private static final AppProperties PROPERTIES = AppPropertiesHolder.get();
 
     private void create(File path) throws SQLException {
         log.info("Creating teststudy at {}", path.getAbsolutePath());
 
-        Daos.asDefault(new JdbcConnectionSource(Properties.getDatabaseConnectionStringWithInit(path)));
+        final String h2Path = FileUtil.removeSuffixFromFileNameIfThere(path, PROPERTIES.databaseFileSuffix());
+        Daos.asDefault(new JdbcConnectionSource(PROPERTIES.databaseConnectionInitString(h2Path)));
         Daos.get().node().executeRaw("runscript from 'classpath:sql/populate.sql'");
         Daos.closeAll();
 

@@ -6,7 +6,8 @@ import javafx.stage.Window;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialogs;
 import org.obehave.util.I18n;
-import org.obehave.util.Properties;
+import org.obehave.util.properties.AppProperties;
+import org.obehave.util.properties.AppPropertiesHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +17,7 @@ import java.util.Optional;
  * @author Markus Möslinger
  */
 public class AlertUtil {
+    private static final AppProperties PROPERTIES = AppPropertiesHolder.get();
     private static final Logger log = LoggerFactory.getLogger(AlertUtil.class);
 
     private AlertUtil() {
@@ -24,7 +26,8 @@ public class AlertUtil {
 
     /**
      * Shows an blocking error alert
-     * @param title The title of the alert window
+     *
+     * @param title   The title of the alert window
      * @param content The message to display
      */
     public static void showError(String title, String content) {
@@ -37,15 +40,16 @@ public class AlertUtil {
     /**
      * If property {@code ui.error.exceptions.show} is set to true, this method will show an exception alert with a
      * full stacktrace. Otherwise, this will just delegate to {@link AlertUtil#showError(String, String)}
-     * @param title The title of the alert window
+     *
+     * @param title   The title of the alert window
      * @param content The message to display
-     * @param t The throwable to show in an expandable text area, if {@code ui.error.exceptions.show} is set to true.
-     *          Otherwise, it will be ignored
+     * @param t       The throwable to show in an expandable text area, if {@code ui.error.exceptions.show} is set to true.
+     *                Otherwise, it will be ignored
      */
     public static void showError(String title, String content, Throwable t) {
         log.error("Showing error popup\nTitle:\t\t{}\nContent:\t{}", title, content, t);
 
-        if (Properties.isUiErrorExceptionsShow()) {
+        if (PROPERTIES.showExceptions()) {
             Dialogs.create().title(title).message(content).showException(t);
         } else {
             showError(title, content);

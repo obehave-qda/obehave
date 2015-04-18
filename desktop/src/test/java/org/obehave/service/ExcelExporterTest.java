@@ -3,6 +3,7 @@ package org.obehave.service;
 import org.junit.Before;
 import org.junit.Test;
 import org.obehave.exceptions.FactoryException;
+import org.obehave.exceptions.ServiceException;
 import org.obehave.model.*;
 import org.obehave.model.modifier.ModifierFactory;
 
@@ -45,7 +46,7 @@ public class ExcelExporterTest {
 
 
     @Test
-    public void testExportServiceForActionData() {
+    public void testExportServiceForActionData() throws ServiceException {
         prepareData();
         action.setName("boobling");
 
@@ -53,7 +54,7 @@ public class ExcelExporterTest {
     }
 
     @Test
-    public void testExportServiceForNodeActionData() {
+    public void testExportServiceForNodeActionData() throws ServiceException {
         prepareData();
         action.setName("soodling");
         nodes = new Node(action, Action.class);
@@ -62,7 +63,7 @@ public class ExcelExporterTest {
     }
 
     @Test
-    public void testExportServiceForNodeActionDataWithMoreThanOneNode() {
+    public void testExportServiceForNodeActionDataWithMoreThanOneNode() throws ServiceException {
         prepareData();
 
         nodes = new Node(action, Action.class);
@@ -74,7 +75,7 @@ public class ExcelExporterTest {
     }
 
     @Test
-    public void testExportServiceWithSubjectModifier() throws FactoryException {
+    public void testExportServiceWithSubjectModifier() throws FactoryException, ServiceException {
 
         prepareData();
         Subject sub = new Subject("sub");

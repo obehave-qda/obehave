@@ -1,6 +1,7 @@
 package org.obehave.service;
 
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
+import com.j256.ormlite.support.ConnectionSource;
 import org.obehave.events.EventBusHolder;
 import org.obehave.events.UiEvent;
 import org.obehave.exceptions.DatabaseException;
@@ -8,9 +9,9 @@ import org.obehave.exceptions.Validate;
 import org.obehave.model.*;
 import org.obehave.model.modifier.ModifierFactory;
 import org.obehave.persistence.Daos;
-import org.obehave.util.DatabaseProperties;
 import org.obehave.util.FileUtil;
-import org.obehave.util.Properties;
+import org.obehave.util.properties.AppProperties;
+import org.obehave.util.properties.AppPropertiesHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +24,7 @@ import java.util.List;
  */
 public class Study implements Displayable {
     private static final Logger log = LoggerFactory.getLogger(Study.class);
+    private static final AppProperties PROPERTIES = AppPropertiesHolder.get();
 
     private String name;
 
@@ -38,27 +40,16 @@ public class Study implements Displayable {
     private ObservationService observationService;
     private SubjectService subjectService;
     private CodingService.CodingServiceBuilder codingServiceBuilder;
+    private StudyPropertyService studyPropertyService;
 
     private File savePath;
 
-    private Study() {
+    private final ConnectionSource connectionSource;
 
-    }
 
-    private Study(File savePath) {
+    private Study(File savePath, ConnectionSource connectionSource) {
         setSavePath(savePath);
-    }
-
-    @Deprecated
-    public Study(String name) {
-        this.name = name;
-    }
-
-    @Deprecated
-    public static Study create() {
-        log.info("Creating empty study");
-
-        return new Study();
+        this.connectionSource = connectionSource;
     }
 
     // TODO throw ServiceException instead of SQLException
@@ -76,8 +67,11 @@ public class Study implements Displayable {
             }
         }
 
-        final Study study = new Study(savePath);
-        Daos.asDefault(new JdbcConnectionSource(Properties.getDatabaseConnectionStringWithInit(savePath)));
+        final String path = savePath.getAbsolutePath().substring(0, savePath.getAbsolutePath().lastIndexOf(PROPERTIES.databaseFileSuffix()));
+        final JdbcConnectionSource connectionSource = new JdbcConnectionSource(PROPERTIES.databaseConnectionInitString(path));
+        final Study study = new Study(savePath, connectionSource);
+
+        Daos.asDefault(connectionSource);
 
         study.subjects = Validate.hasOnlyOneElement(Daos.get().node().getRoot(Subject.class)).get(0);
         study.actions = Validate.hasOnlyOneElement(Daos.get().node().getRoot(Action.class)).get(0);
@@ -91,8 +85,10 @@ public class Study implements Displayable {
     public static Study load(File savePath) throws SQLException {
         log.info("Loading existing study from {}", savePath);
 
-        final Study study = new Study(savePath);
-        Daos.asDefault(new JdbcConnectionSource(Properties.getDatabaseConnectionString(savePath)));
+        final String path = savePath.getAbsolutePath().substring(0, savePath.getAbsolutePath().lastIndexOf(PROPERTIES.databaseFileSuffix()));
+        final JdbcConnectionSource connectionSource = new JdbcConnectionSource(PROPERTIES.databaseConnectionString(path));
+        final Study study = new Study(savePath, connectionSource);
+        Daos.asDefault(connectionSource);
         study.load();
         return study;
     }
@@ -102,7 +98,7 @@ public class Study implements Displayable {
         long startLoad = System.currentTimeMillis();
 
         // we want to load a single value first to establish a database connection
-        name = DatabaseProperties.get(DatabaseProperties.STUDY_NAME);
+        name = studyPropertyService().get(StudyPropertyService.STUDY_NAME);
         final long startEntities = System.currentTimeMillis();
 
         subjects = Validate.hasOnlyOneElement(Daos.get().node().getRoot(Subject.class)).get(0);
@@ -170,7 +166,7 @@ public class Study implements Displayable {
     public void setName(String name) {
         log.debug("Setting study name to {}", name);
         this.name = name;
-        DatabaseProperties.set(DatabaseProperties.STUDY_NAME, name);
+        studyPropertyService().set(StudyPropertyService.STUDY_NAME, name);
 
         EventBusHolder.post(new UiEvent.RepaintStudyTree());
     }
@@ -186,6 +182,10 @@ public class Study implements Displayable {
     @Override
     public String getDisplayString() {
         return getName();
+    }
+
+    protected ConnectionSource getConnectionSource() {
+        return connectionSource;
     }
 
     public SuggestionService.SuggestionServiceBuilder getSuggestionServiceBuilder() {
@@ -242,5 +242,13 @@ public class Study implements Displayable {
         }
 
         return codingServiceBuilder;
+    }
+
+    public StudyPropertyService studyPropertyService() {
+        if (studyPropertyService == null) {
+            studyPropertyService = new StudyPropertyService(connectionSource);
+        }
+
+        return studyPropertyService;
     }
 }
