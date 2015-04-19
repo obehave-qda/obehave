@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+<fx:root type="javafx.scene.layout.BorderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+    <center>
+        <GridPane id="welcomePane">
+            <columnConstraints>
+                <ColumnConstraints halignment="CENTER" />
+            </columnConstraints>
+            <ImageView preserveRatio="true" fitWidth="800" GridPane.rowIndex="0">
+                <Image url="/org/obehave/view/pictures/obehave.png"/>
+            </ImageView>
+            <Label text="Welcome to Obehave!" GridPane.rowIndex="1"/>
+            <Label text="You can create your coding scheme using the project tree on the left side" GridPane.rowIndex="2"/>
+            <Label text="Start coding by creating an observation and double clicking it" GridPane.rowIndex="3"/>
+        </GridPane>
+    </center>
+    <stylesheets>
+        <URL value="@obehave.css"/>
+    </stylesheets>
+</fx:root>

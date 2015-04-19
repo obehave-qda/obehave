@@ -11,6 +11,7 @@ import org.obehave.events.EventBusHolder;
 import org.obehave.events.UiEvent;
 import org.obehave.model.Coding;
 import org.obehave.model.Subject;
+import org.obehave.model.modifier.Modifier;
 import org.obehave.view.util.NodeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +34,9 @@ public class EventsPane extends Pane {
 
     private DoubleProperty subjectListWidthProperty = new SimpleDoubleProperty(this, "subjectListWidthProperty");
 
-    private DoubleProperty currentTime = new SimpleDoubleProperty(this, "currentTimeProperty");
+    private DoubleProperty msPlayed = new SimpleDoubleProperty(this, "msPlayed");
+
+    private Line secondsLine = new Line();
 
     public EventsPane() {
         EventBusHolder.register(this);
@@ -42,10 +45,6 @@ public class EventsPane extends Pane {
 
         msProperty.addListener((observable, oldValue, newValue) -> refresh());
 
-        Line secondsLine = new Line();
-
-        secondsLine.startXProperty().bind(
-                NodeUtil.snapXY(secondWidthProperty.multiply(currentTime).add(subjectListWidthProperty)));
         secondsLine.endXProperty().bind(NodeUtil.snapXY(secondsLine.startXProperty()));
 
         secondsLine.startYProperty().setValue(0);
@@ -71,13 +70,12 @@ public class EventsPane extends Pane {
     }
 
     public void addSubject(Subject subject) {
-        SubjectPane pane = new SubjectPane();
+        SubjectPane pane = new SubjectPane(msPlayed);
         int currentSubjectPanes = subjectPanes.size();
 
         pane.setId("subjectPane" + currentSubjectPanes);
 
         pane.secondWidthProperty().bind(secondWidthProperty);
-        pane.currentTimeProperty().bind(currentTime);
 
         pane.layoutXProperty().set(0);
         pane.layoutYProperty().bind(subjectHeightProperty.multiply(currentSubjectPanes));
@@ -111,9 +109,19 @@ public class EventsPane extends Pane {
         final SubjectPane subjectPane = subjectPanes.get(subject);
 
         if (subjectPane != null) {
-            subjectPane.drawCoding(coding);
+            subjectPane.drawCoding(coding, true);
         } else {
             log.warn("Couldn't find a subject pane for subject {} - is it participating in this observation?", subject);
+        }
+
+        if (coding.getModifier() != null && coding.getModifier().getType() == Modifier.Type.SUBJECT_MODIFIER) {
+            final SubjectPane modifierSubject = subjectPanes.get((Subject) coding.getModifier().get());
+
+            if (modifierSubject != null) {
+                modifierSubject.drawCoding(coding, false);
+            } else {
+                log.warn("Couldn't find a subject pane for subject {} - is it participating in this observation?", subject);
+            }
         }
     }
 
@@ -173,7 +181,10 @@ public class EventsPane extends Pane {
         return line;
     }
 
-    public DoubleProperty currentTime() {
-        return currentTime;
+    public void setMsPlayed(DoubleProperty msPlayed) {
+        this.msPlayed = msPlayed;
+
+        secondsLine.startXProperty().bind(
+                NodeUtil.snapXY(secondWidthProperty.multiply(msPlayed.divide(1000)).add(subjectListWidthProperty)));
     }
 }

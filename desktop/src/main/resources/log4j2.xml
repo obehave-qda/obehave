@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n"/>
+        </Console>
+
+        <RollingFile name="fileLogger" fileName="${sys:user.home}/Obehave/log/obehave.log"
+                     filePattern="${sys:user.home}/Obehave/log/obehave-%i.log.gz">
+            <PatternLayout pattern="%d{yy-MM-dd HH:mm:ss.SSS} %-5level %logger{36} - %msg%n"/>
+            <Policies>
+                <OnStartupTriggeringPolicy/>
+            </Policies>
+            <DefaultRolloverStrategy max="5"/>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <Root level="TRACE">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="fileLogger"/>
+        </Root>
+        <Logger name="com.j256.ormlite" level="ERROR" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="fileLogger"/>
+        </Logger>
+    </Loggers>
+</Configuration>
