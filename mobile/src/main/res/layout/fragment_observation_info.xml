@@ -19,7 +19,7 @@
                       android:layout_marginTop="15dp" android:layout_marginRight="10dp"
                       android:layout_height="wrap_content" android:text="Involved Subjects" android:id="@+id/labelInvolvedSubjects"/>
             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:id="@+id/subjectContainer" android:orientation="vertical" android:layout_marginLeft="20dp"
-                          android:layout_marginTop="15dp" android:layout_marginRight="10dp">
+                          android:layout_marginRight="10dp">
             </LinearLayout>
             <ListView android:layout_width="match_parent" android:layout_height="wrap_content"
                       android:id="@+id/subjectsListView">
@@ -28,7 +28,7 @@
                       android:layout_marginTop="15dp" android:layout_marginRight="10dp"
                       android:layout_height="wrap_content" android:text="Focal Subject"/>
             <Spinner android:layout_width="match_parent" android:layout_marginLeft="10dp"
-                     android:layout_marginBottom="15dp" android:layout_marginRight="10dp"
+                     android:layout_marginRight="10dp"
                      android:layout_height="wrap_content" android:id="@+id/spFocalSubject"
                      android:entries="@array/sort_entries" android:prompt="@string/choose_main_subject">
             </Spinner>
@@ -37,8 +37,7 @@
                       android:layout_height="wrap_content" android:text="Interval"/>
             <EditText android:layout_width="match_parent" android:layout_height="wrap_content"
                       android:id="@+id/etInterval" android:textColor="#888888"
-                      android:layout_marginLeft="20dp"
-                      android:layout_marginTop="15dp" android:layout_marginRight="10dp"/>
+                      android:layout_marginLeft="20dp" android:layout_marginRight="10dp"/>
             <Button android:layout_width="match_parent" android:layout_height="wrap_content" android:text="create" android:id="@+id/btnCreate"/>
 
         </LinearLayout>

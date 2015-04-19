@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -137,6 +138,19 @@ public class Study implements Displayable, Serializable {
 
     public List<Action> getActionList() {
         return actions.flattenAs(Action.class);
+    }
+
+    public List<Action> getActionList(Node node){
+        List<Action> actionList = new ArrayList<Action>();
+
+        for(Node currentNode: node.getChildren()){
+            if(currentNode.getData() != null){
+                Action action  = (Action) currentNode.getData();
+                actionList.add(action);
+            }
+        }
+
+        return actionList;
     }
 
     public Node getObservations() {

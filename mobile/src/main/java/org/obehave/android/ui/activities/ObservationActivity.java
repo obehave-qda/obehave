@@ -1,30 +1,23 @@
 package org.obehave.android.ui.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import org.obehave.android.R;
 import org.obehave.android.ui.fragments.ObservationFragment;
-import org.obehave.service.Study;
 
 public class ObservationActivity extends FragmentActivity {
     public static final String RESULT_OBSERVATION = "android.ui.observation";
-    public final static String ARG_STUDY = "org.obehave.observation";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_observation);
         if (savedInstanceState == null) {
-            Intent intent = getIntent();
-            Bundle bundle = intent.getExtras();
-            Study study = (Study) bundle.getSerializable(ARG_STUDY);
-
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, ObservationFragment.newInstance(study))
-                    .commit();
+                    .add(R.id.container, ObservationFragment.newInstance())
+                            .commit();
         }
 
     }

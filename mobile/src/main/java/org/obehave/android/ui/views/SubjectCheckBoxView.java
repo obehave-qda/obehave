@@ -1,4 +1,4 @@
-package org.obehave.android.util;
+package org.obehave.android.ui.views;
 
 import android.app.Activity;
 import android.content.Context;
@@ -15,12 +15,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class LinearLayoutRender {
+public class SubjectCheckBoxView {
     private LinearLayout linearLayout;
     private List<Subject> subjects;
     private LayoutInflater inflater;
     private List<DataHolder> data;
-    private static final String LOG_TAG = LinearLayoutRender.class.getSimpleName();
+    private static final String LOG_TAG = SubjectCheckBoxView.class.getSimpleName();
 
     private static class DataHolder {
 
@@ -51,7 +51,7 @@ public class LinearLayoutRender {
         }
     }
 
-    public LinearLayoutRender(Context context, LinearLayout linearLayout, List<Subject> subjects){
+    public SubjectCheckBoxView(Context context, LinearLayout linearLayout, List<Subject> subjects){
         this.linearLayout = linearLayout;
         this.subjects = subjects;
         inflater = ((Activity) context).getLayoutInflater();
