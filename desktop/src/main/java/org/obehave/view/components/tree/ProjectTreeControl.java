@@ -35,10 +35,17 @@ public class ProjectTreeControl extends TreeView<DisplayWrapper<?>> {
 
     @Subscribe
     public void repaintStudy(UiEvent.RepaintStudyTree event) {
-        redoTree();
+        if (study != null) {
+            redoTree();
+        }
     }
 
     private void redoTree() {
+        if (study == null) {
+            log.warn("Not redoing tree, since study is null");
+            return;
+        }
+
         log.trace("Redoing project tree");
 
         TreeItem root = new TreeItem(DisplayWrapper.of(study.getName()));

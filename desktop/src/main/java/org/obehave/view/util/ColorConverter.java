@@ -1,28 +1,38 @@
 package org.obehave.view.util;
 
 /**
- * @author Markus Möslinger
+ * Converts instances of {@link org.obehave.model.Color} to {@link javafx.scene.paint.Color} and vice versa
  */
 public class ColorConverter {
-    public static javafx.scene.paint.Color convertToJavaFX(org.obehave.model.Color c) {
-        if (c == null) {
+    /**
+     * Converts an obehave color to a JavaFX one
+     * @param color an obehave color
+     * @return a JavaFX color
+     */
+    public static javafx.scene.paint.Color convertToJavaFX(org.obehave.model.Color color) {
+        if (color == null) {
             return javafx.scene.paint.Color.BLACK;
         }
 
-        return javafx.scene.paint.Color.color(c.getRed() / 255.0,
-                c.getGreen() / 255.0,
-                c.getBlue() / 255.0,
-                c.getOpacity() / 255.0);
+        return javafx.scene.paint.Color.color(color.getRed() / 255.0,
+                color.getGreen() / 255.0,
+                color.getBlue() / 255.0,
+                color.getOpacity() / 255.0);
     }
 
-    public static org.obehave.model.Color convertToObehave(javafx.scene.paint.Color c) {
-        if (c == null) {
+    /**
+     * Converts a JavaFX color to an obehave one
+     * @param color a JavaFX color
+     * @return an obehave color
+     */
+    public static org.obehave.model.Color convertToObehave(javafx.scene.paint.Color color) {
+        if (color == null) {
             return new org.obehave.model.Color(0);
         }
 
-        return new org.obehave.model.Color((int) (c.getRed() * 255),
-                (int) (c.getGreen() * 255),
-                (int) (c.getBlue() * 255),
-                (int) (c.getOpacity()) * 255);
+        return new org.obehave.model.Color((int) (color.getRed() * 255),
+                (int) (color.getGreen() * 255),
+                (int) (color.getBlue() * 255),
+                (int) (color.getOpacity()) * 255);
     }
 }

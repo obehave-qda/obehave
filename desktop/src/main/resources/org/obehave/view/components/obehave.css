@@ -41,3 +41,8 @@
 	-fx-background-radius: 0 3 3 0;
 	-fx-border-style: solid solid solid none;
 }
+
+#welcomePane Label {
+	-fx-font-size: 0.5cm;
+	-fx-font-weight: bold;
+}

@@ -112,9 +112,13 @@ public class CodingService implements Serializable{
             if (existsSubjectInOpenCodings(subject) && actionParent.getExclusivity() != Node.Exclusivity.NOT_EXCLUSIVE) {
                 for (Coding openCoding : new ArrayList<>(openCodings)) {
                     Node codingParent = study.getActions().getParentOf(openCoding.getAction());
-                    if (actionParent.equals(codingParent)) {
+                    if (actionParent.equals(codingParent)
+                            && coding.getSubject().equals(openCoding.getSubject())) {
                         // FIXME this won't work, I guess, because of modifier input
-                        endCoding(subject, action, null, startMs);
+                        if (openCoding.getStartMs() <= startMs) {
+                            endCoding(openCoding, startMs - 1);
+                        }
+
                     }
                 }
             }
@@ -204,6 +208,14 @@ public class CodingService implements Serializable{
         if (coding == null) {
             throw new ServiceException("Couldn't find a running coding for subject " + subject.getDisplayString()
                     + " and action " + action.getDisplayString());
+        }
+
+        endCoding(coding, endMs);
+    }
+
+    public void endCoding(Coding coding, long endMs) throws ServiceException {
+        if (endMs < coding.getStartMs()) {
+            throw new ServiceException("Coding hasn't started yet!");
         }
 
         try {

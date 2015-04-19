@@ -37,7 +37,7 @@ public class Properties {
     }
 
     public static File getSaveFolder() {
-        return new File(trySystemPropertyFirst("defaultsavefolder"));
+        return new File(System.getProperty("user.home") + "/Obehave/studies");
     }
 
     public static String getDatabaseConnectionStringWithInit(File path) {

@@ -1,5 +1,6 @@
 package org.obehave.view.components;
 
+import com.google.common.eventbus.Subscribe;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuBar;
@@ -8,10 +9,15 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.controlsfx.dialog.CommandLinksDialog;
+import org.obehave.events.EventBusHolder;
+import org.obehave.events.UiEvent;
 import org.obehave.persistence.Daos;
 import org.obehave.service.Study;
+import org.obehave.util.FileUtil;
 import org.obehave.util.I18n;
 import org.obehave.util.Properties;
+import org.obehave.view.components.dialogs.AboutDialog;
+import org.obehave.view.components.dialogs.ExportDialog;
 import org.obehave.view.components.observation.ObservationControl;
 import org.obehave.view.components.tree.ProjectTreeControl;
 import org.obehave.view.util.AlertUtil;
@@ -20,7 +26,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +34,9 @@ import java.util.ResourceBundle;
 public class MainController {
     private static final Logger log = LoggerFactory.getLogger(MainController.class);
     private Study study;
+
+    private AboutDialog aboutDialog;
+    private ExportDialog exportDialog;
 
     @FXML
     private ResourceBundle resources;
@@ -48,7 +56,6 @@ public class MainController {
     @FXML
     private MenuBar menubar;
 
-    @FXML
     private ObservationControl observationControl;
 
     private Stage stage;
@@ -66,7 +73,12 @@ public class MainController {
         assert tree != null : "fx:id=\"tree\" was not injected: check your FXML file 'main.fxml'.";
         assert splitpane != null : "fx:id=\"splitpane\" was not injected: check your FXML file 'main.fxml'.";
 
+        tree.setMinWidth(200);
         splitpane.prefHeightProperty().bind(vbox.heightProperty().subtract(menubar.heightProperty()));
+
+        EventBusHolder.register(this);
+
+        observationControl = new ObservationControl();
     }
 
     public void chooseStudy() {
@@ -109,17 +121,31 @@ public class MainController {
             File chosenFile = create ? fileChooser.showSaveDialog(stage) : fileChooser.showOpenDialog(stage);
             if (chosenFile != null) {
                 try {
+                    if (FileUtil.isDatabaseFileLocked(chosenFile)) {
+                        AlertUtil.showError("Database error", "This database is currently locked by another instance of Obehave");
+                        continue;
+                    }
+
                     if (create) {
-                        study = Study.create(chosenFile);
                         Optional<String> name;
                         do {
-                            name = showStudyNameDialog();
-                        } while (!name.isPresent() || name.get().isEmpty());
-                        study.setName(name.get());
+                            name = showStudyNameDialog(
+                                    FileUtil.removeSuffixFromFileNameIfThere(chosenFile, Properties.getDatabaseSuffix()));
+                        } while (name.isPresent() && name.get().isEmpty());
+
+                        if (name.isPresent()) {
+                            study = Study.create(chosenFile);
+                            study.setName(name.get());
+                        }
                     } else {
-                        study = Study.load(chosenFile);
+                        try {
+                            study = Study.load(chosenFile);
+                        } catch (Exception e) {
+                            AlertUtil.showError("Couldn't open database", "There was a problem loading the database.\n" +
+                                    "Is your save file valid?", e);
+                        }
                     }
-                } catch (SQLException e) {
+                } catch (Exception e) {
                     AlertUtil.showError(I18n.get("ui.study.error.database.title"),
                             I18n.get("ui.study.error.database.description", e.getMessage()), e);
                 }
@@ -137,9 +163,9 @@ public class MainController {
         final String openExistingOne = I18n.get("ui.study.open.title");
         final String closeApplication = I18n.get("ui.study.close");
         List<CommandLinksDialog.CommandLinksButtonType> links = Arrays.asList(
+                new CommandLinksDialog.CommandLinksButtonType(closeApplication, false),
                 new CommandLinksDialog.CommandLinksButtonType(createNewOne, I18n.get("ui.study.create.description"), false),
-                new CommandLinksDialog.CommandLinksButtonType(openExistingOne, I18n.get("ui.study.open.description"), false),
-                new CommandLinksDialog.CommandLinksButtonType(closeApplication, false));
+                new CommandLinksDialog.CommandLinksButtonType(openExistingOne, I18n.get("ui.study.open.description"), true));
 
         CommandLinksDialog commandLinksDialog = new CommandLinksDialog(links);
         commandLinksDialog.setTitle(I18n.get("ui.study.dialog"));
@@ -156,17 +182,17 @@ public class MainController {
         this.stage = stage;
     }
 
-    private Optional<String> showStudyNameDialog() {
+    private Optional<String> showStudyNameDialog(String preset) {
         return AlertUtil.askForString(I18n.get("ui.study.dialog.name.title"),
                 I18n.get("ui.study.dialog.name.description"),
-                study.getName());
+                preset);
     }
 
     @FXML
     void changeStudyName(ActionEvent event) {
         log.trace("Changing study name");
 
-        Optional<String> name = showStudyNameDialog();
+        Optional<String> name = showStudyNameDialog(study.getName());
         if (name.isPresent() && !name.get().isEmpty()) {
             study.setName(name.get());
         }
@@ -187,9 +213,32 @@ public class MainController {
     }
 
     @FXML
+    void export() {
+        log.trace("Starting exporter");
+
+        if (exportDialog == null) {
+            exportDialog = new ExportDialog(stage);
+        }
+
+        exportDialog.showAndWait(study);
+    }
+
+    @FXML
     void about(ActionEvent event) {
         log.trace("Showing about popup");
 
-        // TODO show about popup
+        if (aboutDialog == null) {
+            aboutDialog = new AboutDialog(stage);
+        }
+
+        aboutDialog.showAndWait();
     }
+
+    @Subscribe
+    public void loadObservation(UiEvent.LoadObservation event) {
+        splitpane.getItems().set(1, observationControl);
+
+        observationControl.loadObservation(event);
+    }
+
 }

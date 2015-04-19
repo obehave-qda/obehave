@@ -2,29 +2,32 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.VBox?>
-<?import org.obehave.view.components.observation.ObservationControl?>
 <?import org.obehave.view.components.tree.ProjectTreeControl?>
+<?import org.obehave.view.components.WelcomeControl?>
 <?import java.net.URL?>
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="org.obehave.view.components.MainController" fx:id="vbox" prefWidth="800">
     <MenuBar fx:id="menubar">
         <Menu text="File">
             <MenuItem onAction="#changeStudyName" text="Change Study Name"/>
-            <SeparatorMenuItem />
+            <SeparatorMenuItem/>
             <MenuItem onAction="#close" text="Close"/>
+        </Menu>
+        <Menu text="Export">
+            <MenuItem text="Export Excel" onAction="#export"/>
         </Menu>
         <Menu text="Options">
             <MenuItem onAction="#settings" text="Settings"/>
         </Menu>
         <Menu text="Help">
             <MenuItem onAction="#manual" text="Manual"/>
-            <SeparatorMenuItem />
+            <SeparatorMenuItem/>
             <MenuItem onAction="#about" text="About"/>
         </Menu>
     </MenuBar>
     <SplitPane dividerPositions="0.25" fx:id="splitpane">
         <ProjectTreeControl fx:id="tree" SplitPane.resizableWithParent="false"/>
-        <ObservationControl fx:id="observationControl" />
+        <WelcomeControl/>
     </SplitPane>
     <stylesheets>
         <URL value="@obehave.css"/>
