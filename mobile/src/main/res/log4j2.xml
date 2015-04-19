@@ -5,9 +5,9 @@
             <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n"/>
         </Console>
 
-        <RollingFile name="fileLogger" fileName="log/obehave.log"
-                     filePattern="log/obehave-%i-%d{MM-dd-yyyy-HH-mm}.log.gz">
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n"/>
+        <RollingFile name="fileLogger" fileName="../log/obehave.log"
+                     filePattern="../log/obehave-%i.log.gz">
+            <PatternLayout pattern="%d{yy-MM-dd HH:mm:ss.SSS} %-5level %logger{36} - %msg%n"/>
             <Policies>
                 <OnStartupTriggeringPolicy/>
             </Policies>
@@ -22,6 +22,7 @@
         </Root>
         <Logger name="com.j256.ormlite" level="ERROR" additivity="false">
             <AppenderRef ref="Console"/>
+            <AppenderRef ref="fileLogger"/>
         </Logger>
     </Loggers>
 </Configuration>

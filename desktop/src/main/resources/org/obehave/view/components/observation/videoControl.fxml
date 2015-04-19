@@ -10,7 +10,6 @@
          xmlns:fx="http://javafx.com/fxml/1" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0"
          AnchorPane.rightAnchor="20.0"
          AnchorPane.topAnchor="20.0">
-
     <center>
         <Group BorderPane.alignment="CENTER">
             <AnchorPane>
@@ -24,9 +23,10 @@
             <FlowPane alignment="CENTER" hgap="5.0" prefHeight="25.0" AnchorPane.bottomAnchor="0.0"
                       AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"
                       BorderPane.alignment="CENTER">
-                <Button maxWidth="75.0" text="Slower" onAction="#slower"/>
-                <Button maxWidth="75.0" text="Play/Pause" onAction="#playPause"/>
-                <Button maxWidth="75.0" text="Faster" onAction="#faster"/>
+                <Button fx:id="mute" prefWidth="40" onAction="#mute"/>
+                <Button fx:id="slower" prefWidth="40" onAction="#slower"/>
+                <Button fx:id="playpause" prefWidth="40" onAction="#playPause"/>
+                <Button fx:id="faster" prefWidth="40" onAction="#faster"/>
                 <BorderPane.margin>
                     <Insets/>
                 </BorderPane.margin>

@@ -1,6 +1,5 @@
 package org.obehave.view.components.observation;
 
-import com.google.common.eventbus.Subscribe;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.fxml.FXML;
@@ -9,8 +8,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
-import org.obehave.events.EventBusHolder;
 import org.obehave.events.UiEvent;
 import org.obehave.exceptions.ServiceException;
 import org.obehave.model.Action;
@@ -18,19 +17,23 @@ import org.obehave.model.Observation;
 import org.obehave.service.ActionService;
 import org.obehave.service.CodingService;
 import org.obehave.service.Study;
+import org.obehave.service.SuggestionService;
 import org.obehave.view.components.observation.coding.CodingControl;
 import org.obehave.view.util.AlertUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 
 public class ObservationControl extends BorderPane {
     private final Logger log = LoggerFactory.getLogger(ObservationControl.class);
 
     private Study study;
-    private Observation observation;
+
+    private SuggestionService suggestionService;
 
     private CodingService codingService;
     private ActionService actionService;
@@ -47,7 +50,9 @@ public class ObservationControl extends BorderPane {
     @FXML
     private TextField inputModifier;
 
-    private DoubleProperty currentTimeProperty = new SimpleDoubleProperty(this, "currentTimeProperty");
+    private Map<TextField, AutoCompletionBinding<String>> completions = new HashMap<>();
+
+    private DoubleProperty msPlayed = new SimpleDoubleProperty(this, "msPlayed");
 
     public ObservationControl() {
         super();
@@ -62,48 +67,72 @@ public class ObservationControl extends BorderPane {
             throw new RuntimeException(exception);
         }
 
-        EventBusHolder.register(this);
+        videoControl.maxHeightProperty().bind(heightProperty().multiply(0.75));
+        codingControl.maxHeightProperty().bind(heightProperty().multiply(0.25));
+        videoControl.codingHeight().bind(codingControl.heightProperty());
 
-        videoControl.maxHeightProperty().bind(heightProperty().divide(1.5));
-        codingControl.maxHeightProperty().bind(heightProperty().divide(3));
+        msPlayed = videoControl.msPlayed();
 
-        TextFields.bindAutoCompletion(inputSubject,
-                p -> (study.getSuggestionServiceBuilder().build(observation).getSubjectSuggestions(p.getUserText(), isEndCodingMode())))
-                .setOnAutoCompleted(e -> inputAction.requestFocus());
-        TextFields.bindAutoCompletion(inputAction,
-                p -> (study.getSuggestionServiceBuilder().build(observation).getActionSuggestions(p.getUserText(), isEndCodingMode(), inputSubject.getText())))
-                .setOnAutoCompleted(e -> inputModifier.requestFocus());
-        TextFields.bindAutoCompletion(inputModifier,
-                p -> (study.getSuggestionServiceBuilder().build(observation).getModifierSuggestions(inputAction.getText(), p.getUserText())));
+        // we have to redo the completion binding later, so store it in a variable
+        createSubjectCompletionBinding();
+        createActionCompletionBinding();
+        createModifierCompletionBinding();
+
+        inputModifier.focusedProperty().addListener((observable1, oldFocused, newFocused) -> {
+            if (newFocused) {
+                completions.get(inputModifier).setUserInput(inputModifier.getText());
+            }
+        });
 
         inputAction.textProperty().addListener((observable, oldValue, newValue) -> handleActionValue(newValue));
         inputModifier.setText("No valid action entered");
         inputModifier.setDisable(true);
     }
 
-    public void loadVideo(File video) {
-        videoControl.loadVideo(video);
+    private void createSubjectCompletionBinding() {
+        final AutoCompletionBinding<String> binding = TextFields.bindAutoCompletion(inputSubject,
+                p -> (suggestionService.getSubjectSuggestions(p.getUserText(), isEndCodingMode(), (long) (msPlayed.get()))));
+        binding.setOnAutoCompleted(e -> inputAction.requestFocus());
+
+        completions.put(inputSubject, binding);
     }
 
-    @Subscribe
+    private void createActionCompletionBinding() {
+        final AutoCompletionBinding<String> binding = TextFields.bindAutoCompletion(inputAction,
+                p -> (suggestionService.getActionSuggestions(p.getUserText(), isEndCodingMode(), inputSubject.getText(), (long) (msPlayed.get()))));
+        binding.setOnAutoCompleted(e -> inputModifier.requestFocus());
+
+        completions.put(inputAction, binding);
+    }
+
+    private void createModifierCompletionBinding() {
+        completions.put(inputModifier, TextFields.bindAutoCompletion(inputModifier,
+                p -> (suggestionService.getModifierSuggestions(inputAction.getText(), p.getUserText()))));
+    }
+
     public void loadObservation(UiEvent.LoadObservation event) {
         log.debug("Loading observation, because of {}", event);
 
-        observation = event.getObservation();
+        final Observation observation = event.getObservation();
         codingService = study.getCodingServiceBuilder().build(observation);
+        suggestionService = study.getSuggestionServiceBuilder().build(observation);
 
         if (observation.getVideo() != null) {
-            loadVideo(observation.getVideo());
+            if (observation.getVideo().exists()) {
+                videoControl.setVisible(true);
+                videoControl.loadVideo(observation.getVideo());
 
-            // FIXME there is some stupid bug with the seconds line
-            videoControl.currentTime().addListener((observable, oldValue, newValue) ->
-                currentTimeProperty.setValue(newValue.toSeconds()));
-            codingControl.currentTime().bind(currentTimeProperty);
+                codingControl.setMsPlayed(msPlayed);
 
-            videoControl.totalDurationProperty().addListener((observable, oldValue, newValue) ->
-                    codingControl.lengthMsProperty().setValue(newValue.toMillis()));
+                videoControl.totalDurationProperty().addListener((observable, oldValue, newValue) ->
+                        codingControl.lengthMsProperty().setValue(newValue.toMillis()));
+            } else {
+                videoControl.setVisible(false);
+                AlertUtil.showError("Video doesn't exist", "Selected video wasn't found:\n" + observation.getVideo());
+            }
         } else {
-            codingControl.currentTime().unbind();
+            videoControl.setVisible(false);
+            codingControl.setMsPlayed(new SimpleDoubleProperty(this, "dummyDoubleProperty", 0));
             codingControl.lengthMsProperty().setValue(observation.getEndOfLastCoding());
         }
 
@@ -119,14 +148,17 @@ public class ObservationControl extends BorderPane {
         Action a = actionService.getForName(newValue);
 
         if (a != null) {
-            if (a.getModifierFactory() == null && !inputModifier.isDisabled()) {
+            if (a.getModifierFactory() == null && !inputModifier.getText().startsWith("No modifier for")) {
                 log.trace("Disabling text field - no modifier factory for action {}", a);
                 inputModifier.setText("No modifier for " + a.getDisplayString());
                 inputModifier.setDisable(true);
             } else if (a.getModifierFactory() != null && inputModifier.isDisabled()) {
                 log.trace("Enabling text field - action has a modifier factory {}", a);
-                inputModifier.clear();
+
+                clearCompletionTextfield(inputModifier);
                 inputModifier.setDisable(false);
+
+                createModifierCompletionBinding();
             }
         } else {
             inputModifier.setText("No valid action entered");
@@ -135,13 +167,14 @@ public class ObservationControl extends BorderPane {
     }
 
     @FXML
-    public void code(KeyEvent event) {
-        if (event.getCode() == KeyCode.ENTER) {
+    public void codeEnter(KeyEvent event) {
+        if (event.isShortcutDown() && event.getCode() == KeyCode.ENTER) {
             code();
         }
     }
 
-    private void code() {
+    @FXML
+    public void code() {
         try {
             final String subject = inputSubject.getText();
             final String action = inputAction.getText();
@@ -150,10 +183,18 @@ public class ObservationControl extends BorderPane {
                 final String modifier = !inputModifier.isDisabled() ? inputModifier.getText() : null;
 
                 if (!isEndCodingMode()) {
-                    codingService.startCoding(subject, action, modifier, (long) (currentTimeProperty.get() * 1000));
+                    codingService.startCoding(subject, action, modifier, (long) (msPlayed.get()));
                 } else {
-                    codingService.endCoding(subject.substring(1), action, modifier, (long) (currentTimeProperty.get() * 1000));
+                    codingService.endCoding(subject.substring(1), action, modifier, (long) (msPlayed.get()));
                 }
+
+                clearAllCompletionTextFields();
+
+                createSubjectCompletionBinding();
+                createActionCompletionBinding();
+                createModifierCompletionBinding();
+
+                inputSubject.requestFocus();
             }
         } catch (ServiceException e) {
             AlertUtil.showError("Error while coding", "Couldn't code, because " + e.getMessage(), e);
@@ -162,5 +203,16 @@ public class ObservationControl extends BorderPane {
 
     private boolean isEndCodingMode() {
         return inputSubject.getText().length() >= 1 && inputSubject.getText().charAt(0) == '/';
+    }
+
+    private void clearCompletionTextfield(TextField textField) {
+        completions.get(textField).dispose();
+        completions.remove(textField);
+
+        textField.clear();
+    }
+
+    private void clearAllCompletionTextFields() {
+        new HashSet<>(completions.keySet()).forEach(this::clearCompletionTextfield);
     }
 }

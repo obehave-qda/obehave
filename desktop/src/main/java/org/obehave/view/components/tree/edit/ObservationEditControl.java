@@ -66,6 +66,13 @@ public class ObservationEditControl {
         FileChooser chooser = new FileChooser();
         chooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Video files", "*.mp4", "*.m4a", "*.m4v",
                 "*.m3u8", "*.fxm", "*.flv"));
+
+        if (videoPath != null) {
+            chooser.setInitialDirectory(videoPath.getParentFile());
+        } else {
+            chooser.setInitialDirectory(new File(System.getProperty("user.dir")));
+        }
+
         setVideoPath(chooser.showOpenDialog(video.getScene().getWindow()));
     }
 

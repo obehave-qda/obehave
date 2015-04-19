@@ -31,11 +31,10 @@ import java.util.ResourceBundle;
 public class CodingControl extends ScrollPane implements Initializable {
     private static final Logger log = LoggerFactory.getLogger(CodingControl.class);
 
-    private DoubleProperty subjectHeightProperty = new SimpleDoubleProperty(this, "subjectHeightProperty", 30);
+    private DoubleProperty subjectHeightProperty = new SimpleDoubleProperty(this, "subjectHeightProperty", 50);
     private DoubleProperty timelineHeightProperty = new SimpleDoubleProperty(this, "timelineHeightProperty", 30);
     private DoubleProperty secondWithProperty = new SimpleDoubleProperty(this, "secondWithProperty", 15);
 
-    private DoubleProperty currentTime = new SimpleDoubleProperty(this, "currentTime");
     private DoubleProperty lengthMs = new SimpleDoubleProperty(this, "lengthMs", 180 * 1000);
 
     /**
@@ -123,12 +122,9 @@ public class CodingControl extends ScrollPane implements Initializable {
         cover.setLayoutX(0);
         cover.setLayoutY(0);
 
-        eventsPane.currentTime().bind(currentTime);
-
-
         // ********* configuring scroll bindings
         viewPortX.bind(hvalueProperty().multiply(codingPane.widthProperty().subtract(new BoundsProperties.ScrollPaneViewPortWidthBinding(this))));
-        viewPortY.bind(vvalueProperty().multiply(codingPane.heightProperty().subtract(new BoundsProperties.ScrollPaneViewPortHeightBinding(this))));
+        viewPortY.bind(vvalueProperty().multiply(heightProperty().subtract(new BoundsProperties.ScrollPaneViewPortHeightBinding(this))));
 
         // make subjectsList fixed when scrolling horizontal
         viewPortX.addListener((observable, oldValue, newValue) -> {
@@ -153,7 +149,6 @@ public class CodingControl extends ScrollPane implements Initializable {
     public void addSubject(Subject subject) {
         eventsPane.addSubject(subject);
         subjectsList.addSubject(subject);
-
     }
 
     public void removeSubject(Subject subject) {
@@ -174,11 +169,11 @@ public class CodingControl extends ScrollPane implements Initializable {
         observation.getCodings().forEach(eventsPane::addCoding);
     }
 
-    public DoubleProperty currentTime() {
-        return currentTime;
-    }
-
     public DoubleProperty lengthMsProperty() {
         return lengthMs;
+    }
+
+    public void setMsPlayed(DoubleProperty msPlayed) {
+        eventsPane.setMsPlayed(msPlayed);
     }
 }
