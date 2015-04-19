@@ -3,5 +3,5 @@
              android:id="@+id/container"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context="org.obehave.android.ui.activities.OpenCodingSchemaActivity"
+             tools:context="org.obehave.android.ui.activities.SelectObservationActivity"
              tools:ignore="MergeRootFrame"/>

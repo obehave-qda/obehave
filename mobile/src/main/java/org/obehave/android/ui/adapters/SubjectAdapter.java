@@ -2,7 +2,6 @@ package org.obehave.android.ui.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,15 +64,17 @@ public class SubjectAdapter extends BaseAdapter{
         setNodes(nodes);
     }
 
-    private void setSubjects(List<Subject> subjects) {
+    public void setSubjects(List<Subject> subjects) {
         this.subjects =  new ArrayList<Subject>();
         this.subjects.addAll(subjects);
         defaultOrder = new ArrayList<Subject>();
         defaultOrder.addAll(subjects);
+        notifyDataSetChanged();
     }
 
-    private void setNodes(List<Node> nodes) {
+    public void setNodes(List<Node> nodes) {
         this.nodes = nodes;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -154,15 +155,8 @@ public class SubjectAdapter extends BaseAdapter{
 
     private void fillViewHolder(ViewHolderSubject holder, Subject subject){
         if(subject != null){
-            int red = 0, blue = 0, green = 0;
-            if(subject.getColor() != null) {
-                red = subject.getColor().getRed();
-                blue = subject.getColor().getBlue();
-                green = subject.getColor().getGreen();
-            }
-
             holder.txtView.setText(subject.getDisplayString());
-            holder.circle.setCircleColor(Color.rgb(red, green, blue));
+            holder.circle.setCircleColor(subject.getColor());
         }
     }
 

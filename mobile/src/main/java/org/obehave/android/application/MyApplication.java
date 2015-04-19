@@ -1,178 +1,136 @@
 package org.obehave.android.application;
 
-
 import android.app.Application;
 import android.content.Context;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
-import org.joda.time.DateTime;
-import org.obehave.android.database.DataHolder;
-import org.obehave.android.ui.events.TimerTaskEvent;
 import org.obehave.android.ui.exceptions.UiException;
-import org.obehave.events.EventBusHolder;
-import org.obehave.model.Action;
-import org.obehave.model.Coding;
-import org.obehave.model.Subject;
-import org.obehave.model.modifier.Modifier;
-import org.obehave.model.modifier.ModifierFactory;
+import org.obehave.android.ui.fragments.behaviors.SortType;
+import org.obehave.android.util.DateTimeHelper;
+import org.obehave.exceptions.ServiceException;
+import org.obehave.exceptions.Validate;
+import org.obehave.exceptions.ValidationException;
+import org.obehave.model.Observation;
+import org.obehave.service.CodingService;
+import org.obehave.service.NodeService;
+import org.obehave.service.ObservationService;
+import org.obehave.service.Study;
+import org.obehave.util.I18n;
 
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.io.File;
+import java.sql.SQLException;
 
-public class MyApplication  extends Application{
-
+public class MyApplication extends Application {
     private static final String LOG_TAG = MyApplication.class.getSimpleName();
-    private static final int INTERVAL_TIME = 130;
-    /**
-     * Stores the time when the timer is started
-     */
-    private static DateTime startTime;
-    /**
-     * Interval timer
-     */
-    private static Timer timer;
-    /**
-     * Callback function for timer, get called every x milliseconds
-     */
-    private static Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            MyApplication.doTimerTasks();
-        }
-    };
-
-    /**
-     * List of all Codings
-     */
-    private List<Coding> allCodings;
-
     private static Context context;
+
+    private Study study;
+    private Observation observation;
+    private BackStackHistory backStackHistory;
+
+    // stores the current selection (subject, action, modifier, timestamp
+    private CodingState codingState;
+    private int actionSortOrder = SortType.DEFAULT;
+    private int subjectSortOrder = SortType.DEFAULT;
 
     public void onCreate(){
         super.onCreate();
         MyApplication.context = getApplicationContext();
+        codingState = new CodingState();
+        backStackHistory = new BackStackHistory();
     }
 
     public static Context getAppContext() {
         return MyApplication.context;
     }
 
-    public static void loadFile(String filename) throws UiException {
-        DataHolder.loadStudy(filename);
+    public Study getStudy() {
+        return study;
     }
 
-    /**
-     * Checks if the timer is running.
-     * @return boolean
-     */
-    public static boolean isTimerRunning(){
-        return startTime != null;
-    }
-
-    /** starts Timer
-     *
-     */
-    public static void startTimer(){
-        // check if timer is running, if the timer is running no action needed!
-        if(!isTimerRunning()){
-            startTime = new DateTime();
-            timer = new Timer();
-            timer.scheduleAtFixedRate(new TimerTask() {
-                public void run() {
-                    mHandler.obtainMessage(1).sendToTarget();
-                }
-            }, 0, INTERVAL_TIME);
-            Log.d(LOG_TAG, "Timer started running!");
-        }
-
-    }
-    /**
-     * Stops the running Timer
-     */
-    public static void stopTimer(){
-        if(isTimerRunning()){
-            startTime = null;
-            timer.cancel();
-            timer = null;
-            Log.d(LOG_TAG, "Timer stopped!");
+    public void loadStudy(String srcFilename) throws UiException {
+        try {
+            // when we load a new study we have to close the observation
+            study = Study.load(new File(srcFilename));
+            observation = null;
+        } catch (SQLException e) {
+            throw new UiException(I18n.get("android.ui.study.error.studycannotbeloaded"), e);
         }
     }
 
-    /**
-     * fires event every x milliseconds.
-     */
-    public static void doTimerTasks(){
-        // update ui and such things!
-        Log.d(LOG_TAG, "do Timer Task");
-        EventBusHolder.post(new TimerTaskEvent(startTime));
+    public void setObservation(Observation observation) {
+        this.observation = observation;
     }
 
-    /**
-     *
-     * @returns ModifierFactory
-     * @throws UiException
-     */
-    public static ModifierFactory getModifierFactoryOfSelectedAction() throws UiException {
-        Action action = ApplicationState.getInstance().getAction();
-        if(action == null){
-            throw new UiException("Es wurde keine Aktion gewählt");
+    public Observation getObservation() {
+        return observation;
+    }
+
+    public ObservationService getObservationService() {
+        Validate.isNotNull(study, "Study");
+        return study.getObservationService();
+    }
+
+    public NodeService getNodeService(){
+        Validate.isNotNull(study, "Study");
+        return study.getNodeService();
+    }
+
+    public CodingService getCodingService() {
+        Validate.isNotNull(study, "Study");
+        Validate.isNotNull(observation, "Observation");
+        return study.getCodingServiceBuilder().build(observation);
+    }
+
+    public CodingState getCodingState() {
+        return codingState;
+    }
+
+    public void createCoding() throws UiException {
+        try {
+            Validate.isNotNull(getCodingState(), "CodingState");
+            Validate.isNotNull(getCodingState().getStartTime(), "StartTime");
+            Validate.isNotNull(getCodingState().getSubject(), "Subject");
+            Validate.isNotNull(getCodingState().getAction(), "Action");
+        }catch(ValidationException e){
+            throw new UiException(I18n.get("android.ui.coding.create.error"), e);
         }
 
-        return action.getModifierFactory();
+        try {
+            String modifierBuildString = null;
+            if(getCodingState().getModifier() != null){
+                modifierBuildString = getCodingState().getModifier().getBuildString();
+            }
+
+            getCodingService().startCoding(getCodingState().getSubject(),
+                    getCodingState().getAction(),
+                    modifierBuildString,
+                    DateTimeHelper.diffMs(getObservation().getDateTime(), getCodingState().getStartTime()));
+
+        } catch (ServiceException e) {
+            throw new UiException(I18n.get("android.ui.coding.create.error"), e);
+        }
     }
 
-    public static void selectItem(Subject subject){
-        ApplicationState.getInstance().setCodingStartedTime();
-        ApplicationState.getInstance().setSubject(subject);
+    public void resetCodingState() {
+        codingState = new CodingState();
     }
 
-    public static void selectItem(Action action){
-        ApplicationState.getInstance().setAction(action);
+    public void setActionSortOrder(int actionSortOrder) {
+        this.actionSortOrder = actionSortOrder;
     }
 
-    public static void selectItem(Modifier modifier){
-        ApplicationState.getInstance().setModifier(modifier);
+    public int getActionSortOrder() {
+        return actionSortOrder;
     }
 
-    public static Subject getSelectedSubject(){
-        return ApplicationState.getInstance().getSubject();
+    public void setSubjectSortOrder(int subjectSortOrder) {
+        this.subjectSortOrder = subjectSortOrder;
     }
 
-    public static Action getSelectedAction(){
-        return ApplicationState.getInstance().getAction();
+    public int getSubjectSortOrder() {
+        return subjectSortOrder;
     }
 
-    public static Modifier getSelectedModifer(){
-        return ApplicationState.getInstance().getModifier();
-    }
-
-    public static void setSubjectSortOrder(int sortType){
-        ApplicationState.getInstance().setSelectedSubjectSortType(sortType);
-    }
-
-    public static int getSubjectSortOrder(){
-        return ApplicationState.getInstance().getSelectedSubjectSortType();
-    }
-
-    public static void setActionSortOrder(int sortType){
-        ApplicationState.getInstance().setSelectedActionSortType(sortType);
-    }
-
-    public static int getActionSortOrder(){
-        return ApplicationState.getInstance().getSelectedActionSortType();
-    }
-
-    public static void createCoding() {
-        // pass method to observation service?
-
-    }
-
-    public MyApplication(){
-
-    }
-
-    public static void onDestroy() {
-        stopTimer();
+    public BackStackHistory getBackStackHistory() {
+        return backStackHistory;
     }
 }

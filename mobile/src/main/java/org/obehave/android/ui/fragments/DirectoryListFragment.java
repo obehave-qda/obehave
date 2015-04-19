@@ -1,7 +1,6 @@
 package org.obehave.android.ui.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,7 @@ import org.obehave.util.I18n;
 import java.io.File;
 import java.io.IOException;
 
-public class DirectoryListFragment extends BaseListFragment {
+public class DirectoryListFragment extends BaseListFragment implements Updateable {
 
     private ListAdapter adapter;
     private String DATABASE_FOLDER = "obehave";
@@ -26,7 +25,6 @@ public class DirectoryListFragment extends BaseListFragment {
     public static DirectoryListFragment newInstance() {
         return createFragment();
     }
-
 
     private static DirectoryListFragment createFragment(){
         DirectoryListFragment fragment = new DirectoryListFragment();
@@ -53,13 +51,10 @@ public class DirectoryListFragment extends BaseListFragment {
         return rootView;
     }
 
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Log.d(LOG_TAG, "onActivityCreated");
     }
-
 
     private void initListView(){
         adapter = new FileAdapter(getActivity(), ExternalStorageHelper.listFiles(DATABASE_FOLDER, ".h2.db"));
@@ -73,4 +68,8 @@ public class DirectoryListFragment extends BaseListFragment {
         EventBusHolder.post(new FileChoosenEvent(file));
     }
 
+    @Override
+    public void update() {
+
+    }
 }

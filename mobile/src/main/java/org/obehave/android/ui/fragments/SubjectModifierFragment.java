@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import org.obehave.android.R;
+import org.obehave.android.application.MyApplication;
 import org.obehave.android.ui.adapters.SubjectModifierAdapter;
 import org.obehave.android.ui.events.ItemSelectedEvent;
 import org.obehave.android.util.ErrorDialog;
@@ -16,18 +17,18 @@ import org.obehave.model.Action;
 import org.obehave.model.Subject;
 import org.obehave.model.modifier.Modifier;
 
-public class SubjectModifierFragment extends BaseModifierFragment {
+public class SubjectModifierFragment extends BaseModifierFragment implements Updateable{
 
     private static final String ARG_ACTION = "org.obehave.action";
 
     private Action action;
     private ListAdapter adapter;
+    private MyApplication app;
 
-    public static SubjectModifierFragment newInstance(int sectionNumber, Action action) {
+    public static SubjectModifierFragment newInstance(int sectionNumber) {
         SubjectModifierFragment fragment = new SubjectModifierFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-        args.putSerializable(ARG_ACTION, action);
         fragment.setArguments(args);
 
         return fragment;
@@ -41,7 +42,8 @@ public class SubjectModifierFragment extends BaseModifierFragment {
 
         View rootView = inflater.inflate(R.layout.fragment_modifier_listview, container, false);
 
-        initArgs();
+        app = (MyApplication) getActivity().getApplication();
+        action = app.getCodingState().getAction();
         initListview();
 
         return rootView;
@@ -68,6 +70,11 @@ public class SubjectModifierFragment extends BaseModifierFragment {
             ErrorDialog ed = new ErrorDialog(e, this.getActivity());
             ed.invoke();
         }
+
+    }
+
+    @Override
+    public void update() {
 
     }
 }

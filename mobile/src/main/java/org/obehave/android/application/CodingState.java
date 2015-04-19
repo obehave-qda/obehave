@@ -1,39 +1,41 @@
 package org.obehave.android.application;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 import org.obehave.model.Action;
 import org.obehave.model.Subject;
 import org.obehave.model.modifier.Modifier;
 
-/**
- * Created by patrick on 04.04.2015.
- */
-public class CodingState {
+import java.io.Serializable;
+
+public class CodingState implements Serializable{
+    private static final long serialVersionUID = 1L;
+
 
     private DateTime startTime;
     private Subject subject;
     private Action action;
     private Modifier modifier;
 
-    public void setStartTime(DateTime startTime){
-        this.startTime = startTime;
+
+    public CodingState setStartTime(LocalDateTime now){
+        this.startTime = DateTime.now();
+        return this;
     }
 
-    public void setStartTime(){
-        this.startTime = DateTime.now();
-    }
-
-    public void setSubject(Subject subject) {
-        this.startTime = DateTime.now();
+    public CodingState setSubject(Subject subject) {
         this.subject = subject;
+        return this;
     }
 
-    public void setAction(Action action) {
+    public CodingState setAction(Action action) {
         this.action = action;
+        return this;
     }
 
-    public void setModifier(Modifier modifier){
+    public CodingState setModifier(Modifier modifier){
         this.modifier = modifier;
+        return this;
     }
 
 

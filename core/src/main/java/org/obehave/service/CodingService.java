@@ -229,4 +229,14 @@ public class CodingService implements Serializable{
     public List<Coding> getOpenCodings() {
         return openCodings;
     }
+
+    public void delete(Coding coding) throws ServiceException {
+        try {
+            Daos.get().coding().delete(coding);
+        } catch (SQLException e) {
+            throw new ServiceException(e);
+        }
+
+        EventBusHolder.post(new UiEvent.RepaintStudyTree());
+    }
 }
