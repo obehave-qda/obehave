@@ -84,6 +84,10 @@ public class Modifier extends BaseEntity {
         }
     }
 
+    public Type getType() {
+        return type;
+    }
+
     public ModifierFactory getModifierFactory() {
         return modifierFactory;
     }

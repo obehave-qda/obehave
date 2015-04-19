@@ -3,11 +3,13 @@ package org.obehave.service;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import org.obehave.events.EventBusHolder;
 import org.obehave.events.UiEvent;
+import org.obehave.exceptions.DatabaseException;
 import org.obehave.exceptions.Validate;
 import org.obehave.model.*;
 import org.obehave.model.modifier.ModifierFactory;
 import org.obehave.persistence.Daos;
 import org.obehave.util.DatabaseProperties;
+import org.obehave.util.FileUtil;
 import org.obehave.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,13 +61,18 @@ public class Study implements Displayable {
         return new Study();
     }
 
+    // TODO throw ServiceException instead of SQLException
     public static Study create(File savePath) throws SQLException {
         log.info("Creating new study at {}", savePath);
 
         if (savePath.exists()) {
-            log.info("File {} exists already, creating new one at same path", savePath);
-            if (!savePath.delete()) {
-                log.error("Couldn't delete file {}!" + savePath);
+            if (!FileUtil.isDatabaseFileLocked(savePath)) {
+                log.info("File {} exists already, creating new one at same path", savePath);
+                if (!savePath.delete()) {
+                    log.error("Couldn't delete file {}!", savePath);
+                }
+            } else {
+                throw new DatabaseException("Cannot override locked database file");
             }
         }
 
@@ -80,6 +87,7 @@ public class Study implements Displayable {
         return study;
     }
 
+    // TODO throw ServiceException instead of SQLException
     public static Study load(File savePath) throws SQLException {
         return load(savePath, false);
     }

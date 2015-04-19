@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.controlsfx.control.CheckListView?>
+<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+    <GridPane AnchorPane.bottomAnchor="10" AnchorPane.topAnchor="10" AnchorPane.rightAnchor="10" AnchorPane.leftAnchor="10">
+        <rowConstraints>
+            <RowConstraints maxHeight="30"/>
+            <RowConstraints maxHeight="150"/>
+            <RowConstraints maxHeight="150"/>
+            <RowConstraints maxHeight="120"/>
+            <RowConstraints maxHeight="30"/>
+        </rowConstraints>
+        <columnConstraints>
+            <ColumnConstraints/>
+            <ColumnConstraints/>
+            <ColumnConstraints halignment="RIGHT"/>
+        </columnConstraints>
+        <Label text="Directory" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <Label fx:id="labelPath" text="Choose export directory..." GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+        <Button text="Choose" onAction="#chooseDirectory" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
+
+        <Label text="Observations" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <CheckListView fx:id="observations" GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.columnSpan="2"/>
+
+        <Label text="Subjects" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <CheckListView fx:id="subjects" GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.columnSpan="2"/>
+
+        <Label text="Actions" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <TreeView fx:id="actions" GridPane.rowIndex="3" GridPane.columnIndex="1" GridPane.columnSpan="2"/>
+
+        <Button text="Export" onAction="#export" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+        <Button text="Cancel" onAction="#cancel" GridPane.rowIndex="4" GridPane.columnIndex="2"/>
+    </GridPane>
+</AnchorPane>

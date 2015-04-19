@@ -30,4 +30,19 @@ public class FileUtil {
             return absolutePath.substring(0, absolutePath.lastIndexOf(suffix));
         }
     }
+
+    public static String removeSuffixFromFileNameIfThere(File file, String suffix) {
+        final String fileName = file.getName();
+        if (!fileName.endsWith(suffix)) {
+            return fileName;
+        } else {
+            return fileName.substring(0, fileName.lastIndexOf(suffix));
+        }
+    }
+
+    public static boolean isDatabaseFileLocked(File file) {
+        final File lockFile = new File(file.getAbsolutePath().replaceAll("\\.h2\\.db$", ".lock.db"));
+
+        return lockFile.exists();
+    }
 }

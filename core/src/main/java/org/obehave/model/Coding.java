@@ -2,6 +2,9 @@ package org.obehave.model;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.obehave.exceptions.FactoryException;
 import org.obehave.model.modifier.Modifier;
 import org.obehave.persistence.impl.CodingDaoImpl;
@@ -76,11 +79,11 @@ public class Coding extends BaseEntity{
     }
 
     public void setModifier(String input) throws FactoryException {
-        if (action.getModifierFactory() == null) {
-            throw new FactoryException("This action has no modifier factory!");
-        }
-
         if (input != null && !input.isEmpty()) {
+            if (action.getModifierFactory() == null) {
+                throw new FactoryException("This action has no modifier factory!");
+            }
+
             this.modifier = action.getModifierFactory().create(input);
         }
     }
@@ -90,8 +93,8 @@ public class Coding extends BaseEntity{
     }
 
     public void setStartMs(long startMs) {
-        if (startMs <= 0) {
-            throw new IllegalArgumentException("ms must not be lower or equal to 0");
+        if (startMs < 0) {
+            throw new IllegalArgumentException("ms must not be lower than 0");
         }
 
         this.startMs = startMs;
@@ -131,5 +134,46 @@ public class Coding extends BaseEntity{
 
     public void setObservation(Observation observation) {
         this.observation = observation;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Coding coding = (Coding) o;
+
+        return new EqualsBuilder()
+                .appendSuper(super.equals(o))
+                .append(startMs, coding.startMs)
+                .append(subject, coding.subject)
+                .append(action, coding.action)
+                .append(modifier, coding.modifier)
+                .append(observation, coding.observation)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .appendSuper(super.hashCode())
+                .append(subject)
+                .append(action)
+                .append(modifier)
+                .append(startMs)
+                .append(observation)
+                .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("subject", subject)
+                .append("action", action)
+                .append("modifier", modifier)
+                .append("startMs", startMs)
+                .append("endMs", endMs)
+                .toString();
     }
 }
