@@ -13,12 +13,12 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class ExcelExporterTest {
+public class MatrixExporterTest {
 
 
     private Action action;
     private List<Subject> subjects;
-    private ExcelExporter exportService = new ExcelExporter(new File("../studies"));
+    private MatrixExporter exportService = new MatrixExporter(new File("../studies"));
     private List<Observation> observations;
     private Observation observation;
     private Node nodes;

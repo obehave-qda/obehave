@@ -12,11 +12,12 @@ import javafx.stage.Window;
 import org.controlsfx.control.CheckListView;
 import org.controlsfx.dialog.Dialog;
 import org.controlsfx.dialog.Dialogs;
-import org.obehave.model.Action;
 import org.obehave.model.Node;
 import org.obehave.model.Observation;
 import org.obehave.model.Subject;
-import org.obehave.service.ExcelExporter;
+import org.obehave.service.ExcelWriter;
+import org.obehave.service.Exporter;
+import org.obehave.service.MatrixExporter;
 import org.obehave.service.Study;
 import org.obehave.util.DisplayWrapper;
 import org.obehave.view.util.AlertUtil;
@@ -24,6 +25,7 @@ import org.obehave.view.util.AlertUtil;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -144,13 +146,9 @@ public class ExportDialog extends Stage {
             return;
         }
 
-        final ExcelExporter exporter = new ExcelExporter(path);
+        final Exporter exporter = new MatrixExporter(new ExcelWriter(path), true);
         try {
-            if (actionNode.getData() == null) {
-                exporter.exportActionGroup(selectedObservations, selectedSubjects, actionNode);
-            } else {
-                exporter.exportAction(selectedObservations, selectedSubjects, (Action) actionNode.getData());
-            }
+            exporter.export(selectedObservations, selectedSubjects, Collections.singletonList(actionNode));
 
             if (Desktop.isDesktopSupported()) {
                 final org.controlsfx.control.action.Action response =
