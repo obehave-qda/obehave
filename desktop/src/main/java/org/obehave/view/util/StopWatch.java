@@ -2,8 +2,8 @@ package org.obehave.view.util;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.beans.property.LongProperty;
-import javafx.beans.property.SimpleLongProperty;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.util.Duration;
 
 public class StopWatch {
@@ -16,10 +16,12 @@ public class StopWatch {
 
     private final Timeline timeline;
     private final TimeProvider timeProvider;
-    private final LongProperty elapsedTime = new SimpleLongProperty(this, "elapsedTime", 0);
 
-    private long elapsed = 0;
-    private long started = NOT_STARTED;
+    private final DoubleProperty elapsedTime = new SimpleDoubleProperty(this, "elapsedTime", 0);
+    private final DoubleProperty rate = new SimpleDoubleProperty(this, "rate", 1);
+
+    private double elapsed = 0;
+    private double started = NOT_STARTED;
 
     /**
      * Creates a new {@code Timer} instance using {@link System#currentTimeMillis()} as {@link StopWatch.TimeProvider}
@@ -30,6 +32,7 @@ public class StopWatch {
 
     /**
      * Creates a new {@code Timer} instance using {@code timeProvider} as {@link StopWatch.TimeProvider}
+     *
      * @param timeProvider the timeProvider to use
      */
     public StopWatch(TimeProvider timeProvider) {
@@ -83,24 +86,26 @@ public class StopWatch {
         setElapsedTime(0);
     }
 
-    public void setElapsedTime(long elapsedTime) {
+    public void setElapsedTime(double elapsedTime) {
         elapsed = elapsedTime;
         started = timeProvider.getTime();
 
         update();
     }
 
-    public long getElapsedTime() {
+    public double getElapsedTime() {
         update();
 
         return elapsedTime.get();
     }
 
-    public LongProperty elapsedTimeProperty() {
+    public DoubleProperty elapsedTimeProperty() {
         return elapsedTime;
     }
 
-    private long current() {
+
+
+    private double current() {
         return isRunning() ? timeProvider.getTime() - started : 0;
     }
 
