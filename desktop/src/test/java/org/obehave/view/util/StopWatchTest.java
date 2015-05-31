@@ -21,10 +21,10 @@ public class StopWatchTest {
         stopWatch.start();
 
         timeProvider.forward(1);
-        assertEquals(1, stopWatch.getElapsedTime());
+        assertEquals(1, stopWatch.getElapsedTime(), 0);
 
         timeProvider.forward(1);
-        assertEquals(2, stopWatch.getElapsedTime());
+        assertEquals(2, stopWatch.getElapsedTime(), 0);
     }
 
     @Test
@@ -35,7 +35,7 @@ public class StopWatchTest {
         timeProvider.forward(50);
         stopWatch.stop();
 
-        assertEquals(50, stopWatch.getElapsedTime());
+        assertEquals(50, stopWatch.getElapsedTime(), 0);
     }
 
     @Test
@@ -52,7 +52,7 @@ public class StopWatchTest {
         timeProvider.forward(50);
         stopWatch.stop();
 
-        assertEquals(100, stopWatch.getElapsedTime());
+        assertEquals(100, stopWatch.getElapsedTime(), 0);
     }
 
     @Test
@@ -68,12 +68,12 @@ public class StopWatchTest {
         stopWatch.toggle();
         timeProvider.forward(1);
 
-        assertEquals(20, stopWatch.getElapsedTime());
+        assertEquals(20, stopWatch.getElapsedTime(), 0);
     }
 
     @Test
     public void initialElapsedTimeIsZero() {
-        assertEquals(0, stopWatch.getElapsedTime());
+        assertEquals(0, stopWatch.getElapsedTime(), 0);
     }
 
     @Test
@@ -82,9 +82,9 @@ public class StopWatchTest {
         timeProvider.forward(1000);
         stopWatch.stop();
 
-        assertEquals(1000, stopWatch.getElapsedTime());
+        assertEquals(1000, stopWatch.getElapsedTime(), 0);
         stopWatch.reset();
-        assertEquals(0, stopWatch.getElapsedTime());
+        assertEquals(0, stopWatch.getElapsedTime(), 0);
     }
 
     @Test
@@ -97,7 +97,7 @@ public class StopWatchTest {
         realStopWatch.start();
         Thread.sleep(running);
 
-        final long elapsed = realStopWatch.getElapsedTime();
+        final double elapsed = realStopWatch.getElapsedTime();
         System.out.println(elapsed);
         assertTrue(elapsed >= running && elapsed <= running + tolerance);
 

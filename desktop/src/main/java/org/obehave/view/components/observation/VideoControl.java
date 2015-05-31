@@ -18,6 +18,7 @@ import javafx.util.Duration;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.GlyphFont;
 import org.obehave.exceptions.Validate;
+import org.obehave.view.util.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,6 +49,8 @@ public class VideoControl extends BorderPane implements Initializable{
     @FXML
     private Button playpause;
 
+    private StopWatch stopWatch = new StopWatch();
+
     public VideoControl() {
         super();
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("org/obehave/view/components/observation/videoControl.fxml"));
@@ -68,10 +71,12 @@ public class VideoControl extends BorderPane implements Initializable{
         if (mediaView.getMediaPlayer().getStatus() == MediaPlayer.Status.PLAYING) {
             log.trace("Pausing video at {}s", mediaView.getMediaPlayer().getCurrentTime().toSeconds());
             mediaView.getMediaPlayer().pause();
+            stopWatch.stop();
             playpause.setGraphic(fontAwesome.create(FontAwesome.Glyph.PAUSE));
         } else {
             log.trace("Playing video at {}s", mediaView.getMediaPlayer().getCurrentTime().toSeconds());
             mediaView.getMediaPlayer().play();
+            stopWatch.start();
             playpause.setGraphic(fontAwesome.create(FontAwesome.Glyph.PLAY));
         }
     }
@@ -143,6 +148,9 @@ public class VideoControl extends BorderPane implements Initializable{
     }
 
     public void loadVideo(File file) {
+        stopWatch.stop();
+        stopWatch.reset();
+
         Media media = toMedia(file);
 
         if (mediaView.getMediaPlayer() != null) {
@@ -161,10 +169,11 @@ public class VideoControl extends BorderPane implements Initializable{
 
         mediaView.getMediaPlayer().currentTimeProperty().addListener(currentTimeListener);
         mediaView.getMediaPlayer().play();
+        stopWatch.start();
     }
 
     public DoubleProperty msPlayed() {
-        return msPlayed;
+        return stopWatch.elapsedTimeProperty();
     }
 
     public ReadOnlyObjectProperty<Duration> totalDurationProperty() {
