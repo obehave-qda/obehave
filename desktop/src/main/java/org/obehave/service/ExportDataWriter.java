@@ -5,6 +5,6 @@ import java.util.List;
 /**
  * @author Markus Möslinger
  */
-public interface DataWriter {
+public interface ExportDataWriter {
     void write(List<ExportData> data);
 }
