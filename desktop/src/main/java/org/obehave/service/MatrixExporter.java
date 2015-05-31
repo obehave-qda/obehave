@@ -2,7 +2,6 @@ package org.obehave.service;
 
 import com.google.common.collect.ArrayTable;
 import com.google.common.collect.Table;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -25,11 +24,11 @@ import java.util.stream.Collectors;
  */
 public class MatrixExporter implements Exporter {
     private static final Logger log = LoggerFactory.getLogger(MatrixExporter.class);
-    private final DataWriter dataWriter;
+    private final ExportDataWriter exportDataWriter;
     private final boolean summarize;
 
-    public MatrixExporter(DataWriter dataWriter, boolean summarize) {
-        this.dataWriter = dataWriter;
+    public MatrixExporter(ExportDataWriter exportDataWriter, boolean summarize) {
+        this.exportDataWriter = exportDataWriter;
         this.summarize = summarize;
     }
 
@@ -38,27 +37,29 @@ public class MatrixExporter implements Exporter {
         List<ExportData> exportDatas = new ArrayList<>();
 
         if (summarize) {
-            Pair<Table<String, String, Number>, Table<String, String, Number>> p = exportAction(observations, subjects, actionNodes);
-
-            exportDatas.add(new ExportData<>("Count", "Summary", p.getLeft()));
-            exportDatas.add(new ExportData<>("Duration", "Summary", p.getRight()));
+            for (Map.Entry<String, Table<String, String, Number>> e : aggregate(observations, subjects, actionNodes).entrySet()) {
+                exportDatas.add(new ExportData<>(e.getKey(), "Summary", e.getValue()));
+            }
         } else {
             for (Node n : actionNodes) {
-                Pair<Table<String, String, Number>, Table<String, String, Number>> p =
-                        exportAction(observations, subjects, Collections.singletonList(n));
-
-                exportDatas.add(new ExportData<>("Count", n.getDisplayString(), p.getLeft()));
-                exportDatas.add(new ExportData<>("Duration", n.getDisplayString(), p.getRight()));
+                for (Map.Entry<String, Table<String, String, Number>> e : aggregate(observations, subjects, Collections.singletonList(n)).entrySet()) {
+                    exportDatas.add(new ExportData<>(e.getKey(), n.getDisplayString(), e.getValue()));
+                }
             }
         }
 
-        dataWriter.write(exportDatas);
+        exportDataWriter.write(exportDatas);
     }
 
-    private Pair<Table<String, String, Number>, Table<String, String, Number>> exportAction(List<Observation> observations, List<Subject> subjects, List<Node> actions) throws ServiceException {
+    private Map<String, Table<String, String, Number>> aggregate(List<Observation> observations, List<Subject> subjects, List<Node> actions) throws ServiceException {
+        final Map<String, Table<String, String, Number>> dataMap = new HashMap<>();
         final List<String> subjectCaptions = subjects.stream().map(Subject::toString).collect(Collectors.toList());
+
         final Table<String, String, Number> countTable = ArrayTable.create(subjectCaptions, subjectCaptions);
         final Table<String, String, Number> durationTable = ArrayTable.create(subjectCaptions, subjectCaptions);
+
+        dataMap.put("Count", countTable);
+        dataMap.put("Duration", durationTable);
 
         final List<Action> allValidActions = getAllActions(actions);
 
@@ -83,7 +84,7 @@ public class MatrixExporter implements Exporter {
             }
         }
 
-        return Pair.of(countTable, durationTable);
+        return dataMap;
     }
 
     private List<Action> getAllActions(List<Node> actionNodes) {

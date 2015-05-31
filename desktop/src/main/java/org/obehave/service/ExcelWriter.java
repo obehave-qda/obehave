@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * @author Markus Möslinger
  */
-public class ExcelWriter implements DataWriter {
+public class ExcelWriter implements ExportDataWriter {
     private File path;
 
     public ExcelWriter(File path) {
