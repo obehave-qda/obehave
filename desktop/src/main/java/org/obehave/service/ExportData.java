@@ -2,9 +2,6 @@ package org.obehave.service;
 
 import com.google.common.collect.Table;
 
-/**
- * @author Markus Möslinger
- */
 public class ExportData<D> {
     private final String type;
     private final String caption;

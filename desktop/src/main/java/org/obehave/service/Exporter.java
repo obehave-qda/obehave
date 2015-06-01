@@ -7,9 +7,7 @@ import org.obehave.model.Subject;
 
 import java.util.List;
 
-/**
- * @author Markus Möslinger
- */
+
 public interface Exporter {
     void export(List<Observation> observations, List<Subject> subjects, List<Node> actionNode) throws ServiceException;
 }
