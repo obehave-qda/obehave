@@ -1,10 +1,10 @@
 package org.obehave.service;
 
+import org.obehave.exceptions.ServiceException;
+
 import java.util.List;
 
-/**
- * @author Markus Möslinger
- */
+
 public interface ExportDataWriter {
-    void write(List<ExportData> data);
+    void write(List<ExportData> data) throws ServiceException;
 }
