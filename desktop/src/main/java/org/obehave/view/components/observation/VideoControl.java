@@ -18,6 +18,7 @@ import javafx.util.Duration;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.GlyphFont;
 import org.obehave.exceptions.Validate;
+import org.obehave.view.util.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,6 +49,8 @@ public class VideoControl extends BorderPane implements Initializable{
     @FXML
     private Button playpause;
 
+    private StopWatch stopWatch = new StopWatch();
+
     public VideoControl() {
         super();
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("org/obehave/view/components/observation/videoControl.fxml"));
@@ -68,11 +71,19 @@ public class VideoControl extends BorderPane implements Initializable{
         if (mediaView.getMediaPlayer().getStatus() == MediaPlayer.Status.PLAYING) {
             log.trace("Pausing video at {}s", mediaView.getMediaPlayer().getCurrentTime().toSeconds());
             mediaView.getMediaPlayer().pause();
-            playpause.setGraphic(fontAwesome.create(FontAwesome.Glyph.PAUSE));
+            stopWatch.stop();
+            playpause.setGraphic(fontAwesome.create(FontAwesome.Glyph.PLAY));
+
+            final double watch = stopWatch.getElapsedTime() / 1000;
+            final double other = mediaView.getMediaPlayer().getCurrentTime().toSeconds();
+            final double diff = watch - other;
+            log.trace("Difference: {} (StopWatch {}s, Player {}s)", diff, watch,
+                    other);
         } else {
             log.trace("Playing video at {}s", mediaView.getMediaPlayer().getCurrentTime().toSeconds());
             mediaView.getMediaPlayer().play();
-            playpause.setGraphic(fontAwesome.create(FontAwesome.Glyph.PLAY));
+            stopWatch.start();
+            playpause.setGraphic(fontAwesome.create(FontAwesome.Glyph.PAUSE));
         }
     }
 
@@ -117,6 +128,7 @@ public class VideoControl extends BorderPane implements Initializable{
 
     private void adjustTempoButtons() {
         final double rate = mediaView.getMediaPlayer().getRate();
+        stopWatch.setRate(rate);
 
         if (rate < 1) {
             if (rate >= 0.5) {
@@ -143,6 +155,9 @@ public class VideoControl extends BorderPane implements Initializable{
     }
 
     public void loadVideo(File file) {
+        stopWatch.stop();
+        stopWatch.reset();
+
         Media media = toMedia(file);
 
         if (mediaView.getMediaPlayer() != null) {
@@ -161,10 +176,11 @@ public class VideoControl extends BorderPane implements Initializable{
 
         mediaView.getMediaPlayer().currentTimeProperty().addListener(currentTimeListener);
         mediaView.getMediaPlayer().play();
+        stopWatch.start();
     }
 
     public DoubleProperty msPlayed() {
-        return msPlayed;
+        return stopWatch.elapsedTimeProperty();
     }
 
     public ReadOnlyObjectProperty<Duration> totalDurationProperty() {
@@ -180,6 +196,6 @@ public class VideoControl extends BorderPane implements Initializable{
         mute.setGraphic(fontAwesome.create(FontAwesome.Glyph.VOLUME_UP));
         slower.setGraphic(fontAwesome.create(FontAwesome.Glyph.ANGLE_LEFT));
         faster.setGraphic(fontAwesome.create(FontAwesome.Glyph.ANGLE_RIGHT));
-        playpause.setGraphic(fontAwesome.create(FontAwesome.Glyph.PLAY));
+        playpause.setGraphic(fontAwesome.create(FontAwesome.Glyph.PAUSE));
     }
 }
