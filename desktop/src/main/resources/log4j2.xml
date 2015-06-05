@@ -5,8 +5,8 @@
             <PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n"/>
         </Console>
 
-        <RollingFile name="fileLogger" fileName="${sys:user.home}/Obehave/log/obehave.log"
-                     filePattern="${sys:user.home}/Obehave/log/obehave-%i.log.gz">
+        <RollingFile name="fileLogger" fileName="${sys:user.home}/obehave/log/obehave.log"
+                     filePattern="${sys:user.home}/obehave/log/obehave-%i.log.gz">
             <PatternLayout pattern="%d{yy-MM-dd HH:mm:ss.SSS} %-5level %logger{36} - %msg%n"/>
             <Policies>
                 <OnStartupTriggeringPolicy/>

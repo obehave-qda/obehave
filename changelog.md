@@ -5,6 +5,7 @@
 - updated Gradle from snapshot version to official 2.4 release
 - changed Play/Pause buttons
 - added StopWatch
+- using obehave instead of Obehave
 
 <!----------------------------------------------------------------------------->
 # 0.4.0 (2015-04-08)

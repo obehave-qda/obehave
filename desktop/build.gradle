@@ -13,18 +13,18 @@ jar {
     }
 }
 
-applicationName = "Obehave"
+applicationName = "obehave"
 mainClassName = 'org.obehave.view.Obehave'
 
 javafx {
-    appID = 'Obehave'
+    appID = 'obehave'
     appName = applicationName
     mainClass mainClassName
 
     category = 'Science'
-    copyright = 'Copyright (c) 2015 Obehave'
+    copyright = 'Copyright (c) 2015 obehave'
     description = 'QDA application'
-    vendor = 'Obehave'
+    vendor = 'obehave'
     installSystemWide = true
     menu = true
     shortcut = true

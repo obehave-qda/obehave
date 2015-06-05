@@ -17,7 +17,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 /**
- * Dialog to show information about and version of Obehave
+ * Dialog to show information about and version of obehave
  */
 public class AboutDialog extends Stage implements Initializable {
     @FXML
