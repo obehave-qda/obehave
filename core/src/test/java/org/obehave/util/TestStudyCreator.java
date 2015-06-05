@@ -1,7 +1,6 @@
 package org.obehave.util;
 
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
-import org.junit.Test;
 import org.obehave.persistence.Daos;
 import org.obehave.util.properties.AppProperties;
 import org.obehave.util.properties.AppPropertiesHolder;
@@ -31,7 +30,7 @@ public class TestStudyCreator {
 
     // if you want to keep your teststudy intact after running unit tests, ignore this test
     // @Ignore
-    @Test
+    // @Test
     public void createStudy() throws SQLException {
         // We want to create the file @ obehave/studies instead of obehave/core/studies
         final File folder = new File("../studies");
