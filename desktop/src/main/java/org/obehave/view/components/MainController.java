@@ -124,7 +124,7 @@ public class MainController {
             if (chosenFile != null) {
                 try {
                     if (FileUtil.isDatabaseFileLocked(chosenFile)) {
-                        AlertUtil.showError("Database error", "This database is currently locked by another instance of Obehave");
+                        AlertUtil.showError("Database error", "This database is currently locked by another instance of obehave");
                         continue;
                     }
 

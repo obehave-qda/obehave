@@ -14,7 +14,7 @@
             <ImageView preserveRatio="true" fitWidth="800" GridPane.rowIndex="0">
                 <Image url="/org/obehave/view/pictures/obehave.png"/>
             </ImageView>
-            <Label text="Welcome to Obehave!" GridPane.rowIndex="1"/>
+            <Label text="Welcome to obehave!" GridPane.rowIndex="1"/>
             <Label text="You can create your coding scheme using the project tree on the left side" GridPane.rowIndex="2"/>
             <Label text="Start coding by creating an observation and double clicking it" GridPane.rowIndex="3"/>
         </GridPane>
