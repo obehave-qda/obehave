@@ -3,6 +3,8 @@
 ## New
 - refactored Exporter
 - updated Gradle from snapshot version to official 2.4 release
+- changed Play/Pause buttons
+- added StopWatch
 
 <!----------------------------------------------------------------------------->
 # 0.4.0 (2015-04-08)
