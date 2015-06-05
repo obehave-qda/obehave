@@ -72,12 +72,18 @@ public class VideoControl extends BorderPane implements Initializable{
             log.trace("Pausing video at {}s", mediaView.getMediaPlayer().getCurrentTime().toSeconds());
             mediaView.getMediaPlayer().pause();
             stopWatch.stop();
-            playpause.setGraphic(fontAwesome.create(FontAwesome.Glyph.PAUSE));
+            playpause.setGraphic(fontAwesome.create(FontAwesome.Glyph.PLAY));
+
+            final double watch = stopWatch.getElapsedTime() / 1000;
+            final double other = mediaView.getMediaPlayer().getCurrentTime().toSeconds();
+            final double diff = watch - other;
+            log.trace("Difference: {} (StopWatch {}s, Player {}s)", diff, watch,
+                    other);
         } else {
             log.trace("Playing video at {}s", mediaView.getMediaPlayer().getCurrentTime().toSeconds());
             mediaView.getMediaPlayer().play();
             stopWatch.start();
-            playpause.setGraphic(fontAwesome.create(FontAwesome.Glyph.PLAY));
+            playpause.setGraphic(fontAwesome.create(FontAwesome.Glyph.PAUSE));
         }
     }
 
@@ -122,6 +128,7 @@ public class VideoControl extends BorderPane implements Initializable{
 
     private void adjustTempoButtons() {
         final double rate = mediaView.getMediaPlayer().getRate();
+        stopWatch.setRate(rate);
 
         if (rate < 1) {
             if (rate >= 0.5) {
@@ -189,6 +196,6 @@ public class VideoControl extends BorderPane implements Initializable{
         mute.setGraphic(fontAwesome.create(FontAwesome.Glyph.VOLUME_UP));
         slower.setGraphic(fontAwesome.create(FontAwesome.Glyph.ANGLE_LEFT));
         faster.setGraphic(fontAwesome.create(FontAwesome.Glyph.ANGLE_RIGHT));
-        playpause.setGraphic(fontAwesome.create(FontAwesome.Glyph.PLAY));
+        playpause.setGraphic(fontAwesome.create(FontAwesome.Glyph.PAUSE));
     }
 }
