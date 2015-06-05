@@ -12,8 +12,8 @@ dependencies {
     ext {
         versionCommonsLang = "3.1"
         guavaVersion = "18.0"
-        versionLog4j = "2.0.2"
-        versionSlf4j = "1.7.7"
+        versionLog4j = "2.3"
+        versionSlf4j = "1.7.12"
 
         versionJunit = "4.11"
         versionHamcrest = "1.3"
