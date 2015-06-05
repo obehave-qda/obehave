@@ -33,7 +33,7 @@ javafx {
 dependencies {
     ext {
         versionH2 = "1.3.176"
-        versionLog4j = "2.0.2"
+        versionLog4j = "2.3"
         versionOrmlite = "4.48"
         versionControlsFx = "8.20.8"
         versionApachePoi = "3.11"
