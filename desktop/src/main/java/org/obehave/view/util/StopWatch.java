@@ -14,13 +14,24 @@ public class StopWatch {
 
     private static final long NOT_STARTED = -1;
 
+    /**
+     * Needed to periodically call update
+     */
     private final Timeline timeline;
+
+    /**
+     * A simple interface to get the current time
+     */
     private final TimeProvider timeProvider;
 
+    /**
+     * The time that has been measured with this stop watch. Excluding the result of current()
+     */
     private final DoubleProperty elapsedTime = new SimpleDoubleProperty(this, "elapsedTime", 0);
     private final DoubleProperty rate = new SimpleDoubleProperty(this, "rate", 1);
-
-    private double elapsed = 0;
+    /**
+     * Stores the timeline when the StopWatch was last started
+     */
     private double started = NOT_STARTED;
 
     /**
@@ -43,6 +54,8 @@ public class StopWatch {
         timeline.getKeyFrames().add(new KeyFrame(Duration.millis(PRECISION), e -> {
             update();
         }));
+
+        rate.addListener((observable, oldRate, newRate) -> update(oldRate.doubleValue()));
     }
 
     /**
@@ -60,10 +73,9 @@ public class StopWatch {
     public void stop() {
         timeline.stop();
 
-        elapsed += current();
-        started = NOT_STARTED;
-
         update();
+
+        started = NOT_STARTED;
     }
 
     public void toggle() {
@@ -74,6 +86,10 @@ public class StopWatch {
         }
     }
 
+    /**
+     * Returns true if the StopWatch is currently running
+     * @return true if the StopWatch is running
+     */
     public boolean isRunning() {
         return started != NOT_STARTED;
     }
@@ -87,8 +103,7 @@ public class StopWatch {
     }
 
     public void setElapsedTime(double elapsedTime) {
-        elapsed = elapsedTime;
-        started = timeProvider.getTime();
+        elapsedTimeProperty().setValue(elapsedTime);
 
         update();
     }
@@ -103,14 +118,49 @@ public class StopWatch {
         return elapsedTime;
     }
 
+    public double getRate() {
+        return rate.get();
+    }
 
+    public DoubleProperty rateProperty() {
+        return rate;
+    }
+
+    /**
+     * Sets the rate of the current timer. Running for 2 seconds with a rate of 2 means that the time will add 4 seconds
+     * @param rate the rate to set
+     */
+    public void setRate(double rate) {
+        this.rate.set(rate);
+    }
 
     private double current() {
-        return isRunning() ? timeProvider.getTime() - started : 0;
+        return current(rate.get());
+    }
+
+    private double current(double rate) {
+        return isRunning() ? (timeProvider.getTime() - started) * rate : 0;
     }
 
     private void update() {
-        elapsedTimeProperty().set(elapsed + current());
+        update(rate.get());
+    }
+
+    private void update(double rate) {
+        elapsedTimeProperty().set(elapsedTimeProperty().get() + current(rate));
+
+        started = timeProvider.getTime();
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder();
+        sb.append("Elapsed: ").append(getElapsedTime());
+        if (isRunning()) {
+            sb.append(", Current: ").append(current()).append(" (with rate: ").append(rate).append(")");
+        }
+        sb.append(" (using time provider: ").append(timeProvider).append(")");
+        return sb.toString();
     }
 
     @FunctionalInterface
