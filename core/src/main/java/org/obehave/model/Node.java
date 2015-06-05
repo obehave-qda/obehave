@@ -45,7 +45,7 @@ public class Node extends BaseEntity implements Iterable<Displayable>, Displayab
     @ForeignCollectionField(eager = true)
     private Collection<Node> children = new ArrayList<>();
 
-    // Fields to store the actual data. Don't call them direcetly, use getData() and setData()!
+    // Fields to store the actual data. Don't call them directly, use getData() and setData()!
     // We could have just one generic field "T data", but then there would be problems with ORMLite. This. Sucks.
     @DatabaseField(columnName = COLUMN_TYPE)
     private Class<?> dataType;
