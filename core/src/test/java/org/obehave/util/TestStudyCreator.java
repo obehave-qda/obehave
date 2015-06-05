@@ -20,8 +20,9 @@ public class TestStudyCreator {
     private void create(File path) throws SQLException {
         log.info("Creating teststudy at {}", path.getAbsolutePath());
 
-        final String h2Path = FileUtil.removeSuffixFromFileNameIfThere(path, PROPERTIES.databaseFileSuffix());
-        Daos.asDefault(new JdbcConnectionSource(PROPERTIES.databaseConnectionInitString(h2Path)));
+        final String h2Path = FileUtil.removeSuffixIfThere(path, PROPERTIES.databaseFileSuffix());
+        String connectionString = PROPERTIES.databaseConnectionInitString(h2Path);
+        Daos.asDefault(new JdbcConnectionSource(connectionString));
         Daos.get().node().executeRaw("runscript from 'classpath:sql/populate.sql'");
         Daos.closeAll();
 

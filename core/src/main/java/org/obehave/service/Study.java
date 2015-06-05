@@ -67,7 +67,7 @@ public class Study implements Displayable {
             }
         }
 
-        final String path = savePath.getAbsolutePath().substring(0, savePath.getAbsolutePath().lastIndexOf(PROPERTIES.databaseFileSuffix()));
+        final String path = FileUtil.removeSuffixIfThere(savePath, PROPERTIES.databaseFileSuffix());
         final JdbcConnectionSource connectionSource = new JdbcConnectionSource(PROPERTIES.databaseConnectionInitString(path));
         final Study study = new Study(savePath, connectionSource);
 
