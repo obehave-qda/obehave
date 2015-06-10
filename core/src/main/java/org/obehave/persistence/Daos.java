@@ -251,7 +251,7 @@ public class Daos {
 
     public PropertyDao property() throws SQLException {
         if (propertyDao == null) {
-            propertyDao = DaoManager.createDao(connectionSource, Property.class);
+            propertyDao = DaoManager.createDao(connectionSource, PropertyDto.class);
         }
 
         return propertyDao;

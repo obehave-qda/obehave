@@ -11,7 +11,7 @@ import org.obehave.persistence.impl.PropertyDaoImpl;
  * @author Markus Möslinger
  */
 @DatabaseTable(tableName = "Property", daoClass = PropertyDaoImpl.class)
-public class Property extends BaseEntity{
+public class PropertyDto extends BaseEntity {
     public static final String COLUMN_KEY = "key";
     public static final String COLUMN_VALUE = "value";
 
@@ -21,11 +21,11 @@ public class Property extends BaseEntity{
     @DatabaseField(columnName = COLUMN_VALUE)
     private String value;
 
-    private Property() {
+    private PropertyDto() {
         // for frameworks
     }
 
-    public Property(String key, String value) {
+    public PropertyDto(String key, String value) {
         this.key = key;
         this.value = value;
     }
@@ -50,7 +50,7 @@ public class Property extends BaseEntity{
         if (obj.getClass() != getClass()) {
             return false;
         }
-        Property rhs = (Property) obj;
+        PropertyDto rhs = (PropertyDto) obj;
 
         return new EqualsBuilder().append(key, rhs.key).isEquals();
     }
