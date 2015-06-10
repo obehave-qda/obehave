@@ -15,7 +15,8 @@ import org.obehave.persistence.Daos;
 import org.obehave.service.Study;
 import org.obehave.util.FileUtil;
 import org.obehave.util.I18n;
-import org.obehave.util.Properties;
+import org.obehave.util.properties.AppProperties;
+import org.obehave.util.properties.AppPropertiesHolder;
 import org.obehave.view.components.dialogs.AboutDialog;
 import org.obehave.view.components.dialogs.ExportDialog;
 import org.obehave.view.components.observation.ObservationControl;
@@ -32,6 +33,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class MainController {
+    private static final AppProperties PROPERTIES = AppPropertiesHolder.get();
     private static final Logger log = LoggerFactory.getLogger(MainController.class);
     private Study study;
 
@@ -100,7 +102,7 @@ public class MainController {
             boolean create = selectedButtonTitle.equals(createNewOne);
 
             // configuring file chooser and show until a file was selected
-            final File defaultSaveFolder = Properties.getSaveFolder();
+            final File defaultSaveFolder = new File(PROPERTIES.saveFolder());
 
             FileChooser fileChooser = new FileChooser();
             if (defaultSaveFolder.exists()) {
@@ -115,7 +117,7 @@ public class MainController {
             }
             fileChooser.setTitle(selectedButtonTitle);
             fileChooser.getExtensionFilters().add(
-                    new FileChooser.ExtensionFilter("Save file", "*" + Properties.getDatabaseSuffix()));
+                    new FileChooser.ExtensionFilter("Save file", "*" + PROPERTIES.databaseFileSuffix()));
 
 
             File chosenFile = create ? fileChooser.showSaveDialog(stage) : fileChooser.showOpenDialog(stage);
@@ -130,7 +132,7 @@ public class MainController {
                         Optional<String> name;
                         do {
                             name = showStudyNameDialog(
-                                    FileUtil.removeSuffixFromFileNameIfThere(chosenFile, Properties.getDatabaseSuffix()));
+                                    FileUtil.removeSuffixFromFileNameIfThere(chosenFile, PROPERTIES.databaseFileSuffix()));
                         } while (name.isPresent() && name.get().isEmpty());
 
                         if (name.isPresent()) {
