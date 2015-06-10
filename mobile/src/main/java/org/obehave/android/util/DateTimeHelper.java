@@ -19,4 +19,10 @@ final public class DateTimeHelper {
         DateTime dateTime = new DateTime(tmstp);
         return "" + dateTime.getYear() + "-" + dateTime.getMonthOfYear() + "-" + dateTime.getDayOfMonth() + " " + dateTime.getHourOfDay() + ":" + dateTime.getMinuteOfHour();
     }
+
+    public static long diffMs(DateTime startTime, DateTime endTime){
+        Period period = new Period(startTime, endTime);
+        Duration duration = period.toStandardDuration();
+        return duration.getMillis();
+    }
 }

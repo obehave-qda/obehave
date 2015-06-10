@@ -4,10 +4,13 @@ import org.obehave.exceptions.ServiceException;
 import org.obehave.model.Displayable;
 import org.obehave.model.Node;
 
+import java.io.Serializable;
+
 /**
  * @author Markus Möslinger
  */
-abstract class BaseEntityService<T> {
+abstract class BaseEntityService<T> implements Serializable{
+    private static final long serialVersionUID = 1L;
     private final Study study;
     private final Node parent;
 

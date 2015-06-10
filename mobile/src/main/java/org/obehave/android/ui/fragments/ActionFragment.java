@@ -10,12 +10,11 @@ import android.widget.ListView;
 import com.google.common.eventbus.Subscribe;
 import org.obehave.android.R;
 import org.obehave.android.application.MyApplication;
-import org.obehave.android.database.DataHolder;
-import org.obehave.android.ui.events.NodeSelectedEvent;
 import org.obehave.android.ui.adapters.ActionAdapter;
 import org.obehave.android.ui.adapters.NameAscendingComparator;
 import org.obehave.android.ui.adapters.NameDescendingComparator;
 import org.obehave.android.ui.events.ItemSelectedEvent;
+import org.obehave.android.ui.events.NodeSelectedEvent;
 import org.obehave.android.ui.fragments.behaviors.FragmentBehavior;
 import org.obehave.android.ui.fragments.behaviors.SortType;
 import org.obehave.android.ui.fragments.behaviors.SortableBehavior;
@@ -24,13 +23,14 @@ import org.obehave.events.EventBusHolder;
 import org.obehave.model.Action;
 import org.obehave.model.Node;
 
-public class ActionFragment extends MyListFragment {
+public class ActionFragment extends BaseListFragment implements Updateable{
 
     private static final String ARG_SECTION_NUMBER = "section_number";
     private static final String ARG_PARENT_NODE = "parent_node";
 
     private ListAdapter adapter;
     private Node parent;
+    private MyApplication app;
 
     private FragmentBehavior sortableBehavior;
 
@@ -39,7 +39,7 @@ public class ActionFragment extends MyListFragment {
     }
 
     public static ActionFragment newInstance(int sectionNumber) {
-        return createFragment(sectionNumber, DataHolder.action().getRootNode());
+        return createFragment(sectionNumber, null);
     }
 
     private static ActionFragment createFragment(int sectionNumber, Node parent){
@@ -56,7 +56,7 @@ public class ActionFragment extends MyListFragment {
                              Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_action, container, false);
-
+        app = (MyApplication) getActivity().getApplication();
         initBehavior(rootView);
         initParentNode();
         initListview();
@@ -67,24 +67,29 @@ public class ActionFragment extends MyListFragment {
     private void initBehavior(View rootView) {
         sortableBehavior = new SortableBehavior();
         Bundle settings = new Bundle();
-        settings.putInt(SortableBehavior.ARG_START_SORT_ORDER, MyApplication.getActionSortOrder());
+        settings.putInt(SortableBehavior.ARG_START_SORT_ORDER, app.getActionSortOrder());
         sortableBehavior.init(getActivity(), this, rootView, settings);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        EventBusHolder.register(this);
         Log.d(LOG_TAG, "onActivityCreated");
     }
 
     private void initParentNode(){
         parent = (Node) this.getArguments().getSerializable(ARG_PARENT_NODE);
+        if(parent == null){
+            parent = app.getStudy().getActions();
+        }
     }
 
 
     private void initListview(){
-        adapter = new ActionAdapter(this.getActivity(), DataHolder.action().getData(parent), DataHolder.action().getChildren(parent));
+        adapter = new ActionAdapter(this.getActivity(), app.getStudy().getActionList(parent), app.getNodeService().getChildren(parent));
         setListAdapter(adapter);
+        changeOrderOfListView(app.getActionSortOrder());
     }
 
     @Override
@@ -94,7 +99,6 @@ public class ActionFragment extends MyListFragment {
 
         if (object instanceof Action) {
             Action action = (Action) object;
-            MyApplication.selectItem(action);
             EventBusHolder.post(new ItemSelectedEvent(action));
         } else if (object instanceof Node) {
             Node node = (Node) object;
@@ -110,30 +114,39 @@ public class ActionFragment extends MyListFragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onResume() {
+        super.onResume();
         EventBusHolder.register(this);
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onPause() {
+        super.onPause();
         EventBusHolder.unregister(this);
     }
 
     @Subscribe
-    public void sortingChanged(SortingChangedEvent event){
-        if (event.getSortType() == SortType.DEFAULT){
+    public void onSortOrderChanged(SortingChangedEvent event){
+        changeOrderOfListView(event.getSortType());
+    }
+
+    private void changeOrderOfListView(int sortType){
+        if (sortType == SortType.DEFAULT){
             ((ActionAdapter) adapter).sortDefault();
-            MyApplication.setActionSortOrder(SortType.DEFAULT);
+
         }
-        else if (event.getSortType() == SortType.ALPHABETICAL_ASCENDING){
+        else if (sortType == SortType.ALPHABETICAL_ASCENDING){
             ((ActionAdapter) adapter).sortByName(new NameAscendingComparator());
-            MyApplication.setActionSortOrder(SortType.ALPHABETICAL_ASCENDING);
         }
-        else if (event.getSortType() == SortType.ALPHABETICAL_DESCENDING){
+        else if (sortType == SortType.ALPHABETICAL_DESCENDING){
             ((ActionAdapter) adapter).sortByName(new NameDescendingComparator());
         }
+
+        app.setActionSortOrder(sortType);
+    }
+
+    @Override
+    public void update() {
 
     }
 }
