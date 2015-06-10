@@ -1,7 +1,6 @@
 package org.obehave.android.ui.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +12,12 @@ import org.obehave.android.ui.events.FileChoosenEvent;
 import org.obehave.android.util.ErrorDialog;
 import org.obehave.android.util.ExternalStorageHelper;
 import org.obehave.events.EventBusHolder;
+import org.obehave.util.I18n;
 
 import java.io.File;
 import java.io.IOException;
 
-public class DirectoryListFragment extends MyListFragment {
+public class DirectoryListFragment extends BaseListFragment implements Updateable {
 
     private ListAdapter adapter;
     private String DATABASE_FOLDER = "obehave";
@@ -25,7 +25,6 @@ public class DirectoryListFragment extends MyListFragment {
     public static DirectoryListFragment newInstance() {
         return createFragment();
     }
-
 
     private static DirectoryListFragment createFragment(){
         DirectoryListFragment fragment = new DirectoryListFragment();
@@ -43,8 +42,7 @@ public class DirectoryListFragment extends MyListFragment {
         try {
             ExternalStorageHelper.createFolderIfNotExists(DATABASE_FOLDER);
         } catch (IOException e) {
-            ErrorDialog ed = new ErrorDialog("Der Ordner " + DATABASE_FOLDER + " konnte nicht erstellt werden, " +
-                    "bitte versuchen Sie den Ordner händisch zu erstellen!", getActivity());
+            ErrorDialog ed = new ErrorDialog(I18n.get("android.ui.study.error.notpossibletocreatedirectory", DATABASE_FOLDER), getActivity());
             ed.invoke();
         }
 
@@ -53,13 +51,10 @@ public class DirectoryListFragment extends MyListFragment {
         return rootView;
     }
 
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Log.d(LOG_TAG, "onActivityCreated");
     }
-
 
     private void initListView(){
         adapter = new FileAdapter(getActivity(), ExternalStorageHelper.listFiles(DATABASE_FOLDER, ".h2.db"));
@@ -73,4 +68,8 @@ public class DirectoryListFragment extends MyListFragment {
         EventBusHolder.post(new FileChoosenEvent(file));
     }
 
+    @Override
+    public void update() {
+
+    }
 }

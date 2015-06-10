@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.obehave.android" >
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <application
-            android:name=".application.MyApplication"
+        android:name=".application.MyApplication"
         android:allowBackup="true"
         android:icon="@drawable/logo"
         android:label="@string/app_name"
@@ -14,11 +16,12 @@
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name="org.obehave.android.ui.activities.OpenCodingSchemaActivity"
+            android:name=".ui.activities.SelectObservationActivity"
             android:label="@string/title_activity_open_coding_schema"
             android:parentActivityName="org.obehave.android.ui.activities.MainActivity" >
             <meta-data
@@ -26,11 +29,19 @@
                 android:value="org.obehave.android.ui.activities.MainActivity" />
         </activity>
         <activity
-            android:name=".ui.activities.OpenStudyActivity"
+            android:name="org.obehave.android.ui.activities.OpenStudyActivity"
             android:label="@string/title_activity_start" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="org.obehave.android.ui.activities.ObservationActivity"
+            android:label="@string/title_activity_observation"
+            android:parentActivityName="org.obehave.android.ui.activities.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.obehave.android.ui.activities.MainActivity" />
         </activity>
     </application>
 

@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 import org.obehave.android.R;
+import org.obehave.model.Color;
 
 public class Circle extends View{
 
@@ -44,6 +45,19 @@ public class Circle extends View{
         //redraw the view
         invalidate();
         requestLayout();
+    }
+
+    public void setCircleColor(Color color){
+        int red = 0;
+        int green = 0;
+        int blue = 0;
+        if(color != null){
+            red = color.getRed();
+            green = color.getGreen();
+            blue = color.getBlue();
+        }
+
+        setCircleColor(android.graphics.Color.rgb(red, green, blue));
     }
 
     @Override

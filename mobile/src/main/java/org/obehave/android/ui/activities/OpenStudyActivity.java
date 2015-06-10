@@ -20,7 +20,7 @@ import java.io.File;
 public class OpenStudyActivity extends FragmentActivity {
 
     private final String LOG_TAG = this.getClass().getSimpleName();
-    public final static String ARG_FILENAME = "org.obehave.OpenStudyActivity.filename";
+    public final static String RESULT_OBJECT_FILENAME = "org.obehave.OpenStudyActivity.filename";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +46,7 @@ public class OpenStudyActivity extends FragmentActivity {
     public void fileChoosen(FileChoosenEvent event) {
         File file = event.getFile();
         Intent resultIntent = new Intent();
-        resultIntent.putExtra(ARG_FILENAME, file.getAbsolutePath());
+        resultIntent.putExtra(RESULT_OBJECT_FILENAME, file.getAbsolutePath());
         setResult(Activity.RESULT_OK, resultIntent);
         finish();
     }

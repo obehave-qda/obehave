@@ -2,7 +2,6 @@ package org.obehave.android.ui.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,8 +39,6 @@ public class SubjectModifierAdapter extends ArrayAdapter{
             holder = new ViewHolder();
             holder.txtView = (TextView) convertView.findViewById(R.id.liListHeader);
             holder.circle = (Circle) convertView.findViewById(R.id.circle);
-
-
             // associate the holder with the view for later lookup
             convertView.setTag(holder);
         }
@@ -52,17 +49,8 @@ public class SubjectModifierAdapter extends ArrayAdapter{
 
         Subject subject = (Subject) getItem(position);
         if(subject != null){
-            int red = 0;
-            int blue = 0;
-            int green = 0;
-            if(subject.getColor() != null) {
-                red = subject.getColor().getRed();
-                blue = subject.getColor().getBlue();
-                green = subject.getColor().getGreen();
-            }
-
             holder.txtView.setText(subject.getDisplayString());
-            holder.circle.setCircleColor(Color.rgb(red, green, blue));
+            holder.circle.setCircleColor(subject.getColor());
         }
         return convertView;
     }
