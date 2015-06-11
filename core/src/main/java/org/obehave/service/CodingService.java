@@ -95,6 +95,10 @@ public class CodingService implements Serializable{
             throw new ServiceException(e);
         }
 
+        if (!observation.getParticipatingSubjects().contains(subject)) {
+            throw new ServiceException("Subject " + subject.getDisplayString() + " isn't participating in this study!");
+        }
+
         log.info("Starting coding for subject {}, action {}, input {} and start time {}", subject, action, modifierInput, startMs);
 
         Coding coding;
