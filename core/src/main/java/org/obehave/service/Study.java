@@ -35,6 +35,7 @@ public class Study implements Displayable {
 
     private SuggestionService.SuggestionServiceBuilder suggestionServiceBuilder;
     private ActionService actionService;
+    private ActionGroupService actionGroupService;
     private NodeService nodeService;
     private ModifierFactoryService modifierFactoryService;
     private ObservationService observationService;
@@ -95,7 +96,7 @@ public class Study implements Displayable {
 
     private void load() throws SQLException {
         log.info("Starting loading of entities");
-        long startLoad = System.currentTimeMillis();
+        final long startLoad = System.currentTimeMillis();
 
         // we want to load a single value first to establish a database connection
         name = studyPropertyService().get(StudyPropertyService.STUDY_NAME);
@@ -250,5 +251,13 @@ public class Study implements Displayable {
         }
 
         return studyPropertyService;
+    }
+
+    public ActionGroupService actionGroupService() {
+        if (actionGroupService == null) {
+            actionGroupService = new ActionGroupService(this);
+        }
+
+        return actionGroupService;
     }
 }
