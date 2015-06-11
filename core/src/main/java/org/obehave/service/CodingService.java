@@ -11,6 +11,7 @@ import org.obehave.persistence.Daos;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,11 +19,13 @@ import java.util.List;
 /**
  * @author Markus Möslinger
  */
-public class CodingService {
+public class CodingService implements Serializable{
+    private static final long serialVersionUID = 1L;
     private static final Logger log = LoggerFactory.getLogger(CodingService.class);
 
-    public static class CodingServiceBuilder {
+    public static class CodingServiceBuilder implements Serializable{
         private final Study study;
+        private static final long serialVersionUID = 1L;
 
         public CodingServiceBuilder(Study study) {
             this.study = study;
@@ -106,7 +109,7 @@ public class CodingService {
             // ending all open codings from the same group for the same subject
             // this could become a bottleneck. Keep care.
             Node actionParent = study.getActions().getParentOf(action);
-            if (actionParent.getExclusivity() != Node.Exclusivity.NOT_EXCLUSIVE) {
+            if (existsSubjectInOpenCodings(subject) && actionParent.getExclusivity() != Node.Exclusivity.NOT_EXCLUSIVE) {
                 for (Coding openCoding : new ArrayList<>(openCodings)) {
                     Node codingParent = study.getActions().getParentOf(openCoding.getAction());
                     if (actionParent.equals(codingParent)
@@ -119,6 +122,7 @@ public class CodingService {
                     }
                 }
             }
+
 
             if (action.getType() == Action.Type.STATE) {
                 openCodings.add(coding);
@@ -224,7 +228,27 @@ public class CodingService {
         }
     }
 
+    private boolean existsSubjectInOpenCodings(Subject subject){
+        for (Coding openCoding : new ArrayList<>(openCodings)) {
+            if(openCoding.getSubject().equals(subject)){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public List<Coding> getOpenCodings() {
         return openCodings;
+    }
+
+    public void delete(Coding coding) throws ServiceException {
+        try {
+            Daos.get().coding().delete(coding);
+        } catch (SQLException e) {
+            throw new ServiceException(e);
+        }
+
+        EventBusHolder.post(new UiEvent.RepaintStudyTree());
     }
 }

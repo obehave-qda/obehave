@@ -7,6 +7,8 @@ import org.obehave.model.Node;
 import org.obehave.persistence.Daos;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Markus Möslinger
@@ -36,5 +38,15 @@ public class NodeService {
         }
 
         EventBusHolder.post(new UiEvent.RepaintStudyTree());
+    }
+
+    public List<Node> getChildren(Node node){
+        List<Node> nodes = new ArrayList<Node>();
+        for(Node currentNode: node.getChildren()){
+            if(currentNode.getChildren() != null && currentNode.getData() == null){
+                nodes.add(currentNode);
+            }
+        }
+        return nodes;
     }
 }
