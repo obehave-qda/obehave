@@ -1,6 +1,5 @@
 package org.obehave.view.components.observation;
 
-
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -27,6 +26,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import static org.controlsfx.glyphfont.FontAwesome.Glyph.*;
+
 public class VideoControl extends BorderPane implements Initializable{
     private static final Logger log = LoggerFactory.getLogger(VideoControl.class);
     private final DoubleProperty msPlayed = new SimpleDoubleProperty(this, "msPlayed", 0);
@@ -49,6 +50,8 @@ public class VideoControl extends BorderPane implements Initializable{
     @FXML
     private Button playpause;
 
+    private boolean playing = true;
+
     private StopWatch stopWatch = new StopWatch();
 
     public VideoControl() {
@@ -67,24 +70,33 @@ public class VideoControl extends BorderPane implements Initializable{
     }
 
     @FXML
-    void playPause(ActionEvent event) {
-        if (mediaView.getMediaPlayer().getStatus() == MediaPlayer.Status.PLAYING) {
-            log.trace("Pausing video at {}s", mediaView.getMediaPlayer().getCurrentTime().toSeconds());
-            mediaView.getMediaPlayer().pause();
-            stopWatch.stop();
-            playpause.setGraphic(fontAwesome.create(FontAwesome.Glyph.PLAY));
-
-            final double watch = stopWatch.getElapsedTime() / 1000;
-            final double other = mediaView.getMediaPlayer().getCurrentTime().toSeconds();
-            final double diff = watch - other;
-            log.trace("Difference: {} (StopWatch {}s, Player {}s)", diff, watch,
-                    other);
+    void playPause() {
+        if (playing) {
+            pause();
         } else {
-            log.trace("Playing video at {}s", mediaView.getMediaPlayer().getCurrentTime().toSeconds());
-            mediaView.getMediaPlayer().play();
-            stopWatch.start();
-            playpause.setGraphic(fontAwesome.create(FontAwesome.Glyph.PAUSE));
+            start();
         }
+    }
+
+    public void pause() {
+        log.trace("Pausing at {}s", mediaView.getMediaPlayer().getCurrentTime().toSeconds());
+        mediaView.getMediaPlayer().pause();
+        stopWatch.stop();
+        playpause.setGraphic(fontAwesome.create(PLAY));
+
+        // keep them synchronized
+        mediaView.getMediaPlayer().seek(Duration.millis(stopWatch.getElapsedTime()));
+
+        playing = false;
+    }
+
+    public void start() {
+        log.trace("Playing at {}s", mediaView.getMediaPlayer().getCurrentTime().toSeconds());
+        mediaView.getMediaPlayer().play();
+        stopWatch.start();
+        playpause.setGraphic(fontAwesome.create(PAUSE));
+
+        playing = true;
     }
 
     @FXML
@@ -95,12 +107,12 @@ public class VideoControl extends BorderPane implements Initializable{
             log.trace("Enabling sound for video");
             mediaView.getMediaPlayer().setVolume(1);
             mute.setText("");
-            mute.setGraphic(fontAwesome.create(FontAwesome.Glyph.VOLUME_UP));
+            mute.setGraphic(fontAwesome.create(VOLUME_OFF));
         } else {
             log.trace("Disabling sound for video");
             mediaView.getMediaPlayer().setVolume(0);
             mute.setText("");
-            mute.setGraphic(fontAwesome.create(FontAwesome.Glyph.VOLUME_OFF));
+            mute.setGraphic(fontAwesome.create(VOLUME_UP));
         }
     }
 
@@ -132,19 +144,19 @@ public class VideoControl extends BorderPane implements Initializable{
 
         if (rate < 1) {
             if (rate >= 0.5) {
-                slower.setGraphic(fontAwesome.create(FontAwesome.Glyph.ANGLE_DOUBLE_LEFT));
+                slower.setGraphic(fontAwesome.create(ANGLE_DOUBLE_LEFT));
             }
 
-            faster.setGraphic(fontAwesome.create(FontAwesome.Glyph.ANGLE_RIGHT));
+            faster.setGraphic(fontAwesome.create(ANGLE_RIGHT));
         } else if (rate == 1) {
-            slower.setGraphic(fontAwesome.create(FontAwesome.Glyph.ANGLE_LEFT));
-            faster.setGraphic(fontAwesome.create(FontAwesome.Glyph.ANGLE_RIGHT));
+            slower.setGraphic(fontAwesome.create(ANGLE_LEFT));
+            faster.setGraphic(fontAwesome.create(ANGLE_RIGHT));
         } else {
             if (rate <= 2) {
-                faster.setGraphic(fontAwesome.create(FontAwesome.Glyph.ANGLE_DOUBLE_RIGHT));
+                faster.setGraphic(fontAwesome.create(ANGLE_DOUBLE_RIGHT));
             }
 
-            slower.setGraphic(fontAwesome.create(FontAwesome.Glyph.ANGLE_LEFT));
+            slower.setGraphic(fontAwesome.create(ANGLE_LEFT));
         }
     }
 
@@ -193,9 +205,9 @@ public class VideoControl extends BorderPane implements Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        mute.setGraphic(fontAwesome.create(FontAwesome.Glyph.VOLUME_UP));
-        slower.setGraphic(fontAwesome.create(FontAwesome.Glyph.ANGLE_LEFT));
-        faster.setGraphic(fontAwesome.create(FontAwesome.Glyph.ANGLE_RIGHT));
-        playpause.setGraphic(fontAwesome.create(FontAwesome.Glyph.PAUSE));
+        mute.setGraphic(fontAwesome.create(VOLUME_OFF));
+        slower.setGraphic(fontAwesome.create(ANGLE_LEFT));
+        faster.setGraphic(fontAwesome.create(ANGLE_RIGHT));
+        playpause.setGraphic(fontAwesome.create(PAUSE));
     }
 }

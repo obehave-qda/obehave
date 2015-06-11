@@ -35,10 +35,10 @@ public class StopWatch {
     private double started = NOT_STARTED;
 
     /**
-     * Creates a new {@code Timer} instance using {@link System#currentTimeMillis()} as {@link StopWatch.TimeProvider}
+     * Creates a new {@code Timer} instance using {@link System#nanoTime()}} as {@link StopWatch.TimeProvider}
      */
     public StopWatch() {
-        this(System::currentTimeMillis);
+        this(() -> System.nanoTime() / 1000000);
     }
 
     /**
