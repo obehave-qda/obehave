@@ -5,6 +5,8 @@ Bored? Have a look at this file for inspirations about refactoring opportunities
 Discovered something really ugly, that others should refactor? Or maybe even yourself, but not now?
 Take a note.
 
+We don't need no (technical) debt
+
 Eliminate Node
 --------------
 Nodes are awful. They were once designed to support nesting all kinds of stuff (subjects, actions, modifiers, observations),
@@ -27,3 +29,7 @@ Generify / Subclass ModifierFactory
 -----------------------------------
 Since OrmLite doesn't support mapping of inheritance structures, ModifierFactory.class is designed to support
 EVERY possible ModifierFactory.
+
+Debts without fancy description
+-------------------------------
+- ...
