@@ -12,7 +12,7 @@ import java.sql.SQLException;
  * @author Markus Möslinger
  */
 public class NodeService {
-    private final Study study;
+    protected final Study study;
 
     protected NodeService(Study study) {
         this.study = study;

@@ -5,6 +5,8 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import org.obehave.events.EventBusHolder;
+import org.obehave.events.UiEvent;
 import org.obehave.exceptions.ServiceException;
 import org.obehave.model.Action;
 import org.obehave.model.Node;
@@ -92,7 +94,7 @@ public class ActionGroupEditControl {
         if (!edit) {
             log.debug("Creating new action");
             node = new Node(Action.class);
-            loadedActionNode.addChild(node);
+            node.setParent(loadedActionNode);
         } else {
             node = loadedActionNode;
         }
@@ -105,10 +107,19 @@ public class ActionGroupEditControl {
             node.setExclusivity(Node.Exclusivity.NOT_EXCLUSIVE);
         }
 
-        node.setInitialAction(initialAction.getSelectionModel().getSelectedItem().get());
+        DisplayWrapper<Action> selectedItem = initialAction.getSelectionModel().getSelectedItem();
+        if (selectedItem != null) {
+            node.setInitialAction(selectedItem.get());
+        }
 
         try {
-            study.getNodeService().save(study.getActions());
+            if (!edit) {
+                loadedActionNode.addChild(node);
+            } else {
+                study.actionGroupService().save(node);
+            }
+
+            EventBusHolder.post(new UiEvent.RepaintStudyTree());
 
             loadedActionNode = null;
             saveCallback.run();
@@ -129,7 +140,7 @@ public class ActionGroupEditControl {
         this.study = study;
     }
 
-    private void buildInitialActionCombobox(Node node) {
+    public void buildInitialActionCombobox(Node node) {
         initialAction.getItems().clear();
         initialAction.getItems().add(DisplayWrapper.of((Action) null));
 

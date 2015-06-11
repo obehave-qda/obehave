@@ -161,7 +161,7 @@ public class ActionEditControl {
     @Subscribe
     public void refreshModifierFactories(UiEvent.RepaintStudyTree event) {
         modifierFactoryCombo.getItems().clear();
-        modifierFactoryCombo.getItems().add(DisplayWrapper.of(null));
+        modifierFactoryCombo.getItems().add(DisplayWrapper.of((ModifierFactory) null));
 
         Node modifierFactories = study.getModifierFactories();
 
