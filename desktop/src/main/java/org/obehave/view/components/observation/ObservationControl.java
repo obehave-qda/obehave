@@ -84,6 +84,12 @@ public class ObservationControl extends BorderPane {
             }
         });
 
+        inputSubject.textProperty().addListener(((observable1, oldValue, newValue) -> {
+            if ("".equals(oldValue) && !"".equals(newValue)) {
+                videoControl.pause();
+            }
+        }));
+
         inputAction.textProperty().addListener((observable, oldValue, newValue) -> handleActionValue(newValue));
         inputModifier.setText("No valid action entered");
         inputModifier.setDisable(true);
@@ -195,6 +201,7 @@ public class ObservationControl extends BorderPane {
                 createModifierCompletionBinding();
 
                 inputSubject.requestFocus();
+                videoControl.start();
             }
         } catch (ServiceException e) {
             AlertUtil.showError("Error while coding", "Couldn't code, because " + e.getMessage(), e);
