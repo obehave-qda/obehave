@@ -78,13 +78,12 @@ public class ModifierFactoryEditControl implements Initializable {
 
     public void enumerationAdd() {
         final String text = enumerationEntry.getText();
-        if (!text.isEmpty()) {
+        if (!text.isEmpty() && !enumerationList.getItems().contains(text)) {
             log.debug("Adding {} to list", text);
             enumerationList.getItems().add(text);
-
-            enumerationEntry.setText("");
         }
 
+        enumerationEntry.setText("");
         enumerationEntry.requestFocus();
     }
 
