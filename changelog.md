@@ -7,6 +7,8 @@
 - added StopWatch
 - naming: obehave instead of Obehave
 
+## Bugfixes
+- 114: Words in wordlist modifiers are only allowed once
 
 <!----------------------------------------------------------------------------->
 # 0.4.0 (2015-04-08)
