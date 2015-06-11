@@ -87,7 +87,8 @@ public class ActionFragment extends BaseListFragment implements Updateable{
 
 
     private void initListview(){
-        adapter = new ActionAdapter(this.getActivity(), app.getStudy().getActionList(parent), app.getNodeService().getChildren(parent));
+        // was:  app.getStudy().getActionList(parent)
+        adapter = new ActionAdapter(this.getActivity(), app.getStudy().getActionList(), app.getNodeService().getChildren(parent));
         setListAdapter(adapter);
         changeOrderOfListView(app.getActionSortOrder());
     }
