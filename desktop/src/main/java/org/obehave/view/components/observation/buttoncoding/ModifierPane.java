@@ -1,7 +1,9 @@
 package org.obehave.view.components.observation.buttoncoding;
 
 import javafx.scene.control.Button;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.TilePane;
+import javafx.scene.text.Text;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.obehave.events.EventBusHolder;
@@ -14,7 +16,14 @@ import java.util.stream.Collectors;
 /**
  * Created by Markus.Moeslinger on 18.06.2015.
  */
-public class ModifierPane extends TilePane {
+public class ModifierPane extends BorderPane {
+    private final TilePane tilePane = new TilePane();
+
+    public ModifierPane() {
+        setTop(new Text("Choose modifier"));
+        setCenter(tilePane);
+    }
+
     public void forModifierFactory(ModifierFactory mf) {
         if (mf != null) {
             switch (mf.getType()) {
@@ -55,9 +64,9 @@ public class ModifierPane extends TilePane {
     }
 
     private void showButtons(List<Button> buttons, int columns) {
-        getChildren().clear();
-        setPrefColumns(columns);
-        getChildren().addAll(buttons);
+        tilePane.getChildren().clear();
+        tilePane.setPrefColumns(columns);
+        tilePane.getChildren().addAll(buttons);
     }
 
     private static class ModifierButton extends Button {

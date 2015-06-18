@@ -1,7 +1,9 @@
 package org.obehave.view.components.observation.buttoncoding;
 
 import javafx.scene.control.Button;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.TilePane;
+import javafx.scene.text.Text;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.obehave.events.EventBusHolder;
@@ -11,22 +13,28 @@ import org.obehave.service.Study;
 /**
  * Created by Markus.Moeslinger on 18.06.2015.
  */
-public class ActionButtonPane extends TilePane {
+public class ActionButtonPane extends BorderPane {
+    private final TilePane tilePane = new TilePane();
+
     public ActionButtonPane() {
         EventBusHolder.register(this);
-        setPrefColumns(2);
+
+        tilePane.setPrefColumns(2);
+
+        setTop(new Text("Choose action"));
+        setCenter(tilePane);
     }
 
     public void setStudy(Study study) {
-        getChildren().clear();
+        tilePane.getChildren().clear();
         study.getActionList().forEach(this::addAction);
     }
 
     public void addAction(Action action) {
         final Button actionButton = new ActionButton(action);
 
-        if (!getChildren().contains(actionButton)) {
-            getChildren().add(actionButton);
+        if (!tilePane.getChildren().contains(actionButton)) {
+            tilePane.getChildren().add(actionButton);
         }
     }
 
