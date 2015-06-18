@@ -7,7 +7,7 @@ import org.obehave.model.Subject;
 /**
  * @author Markus Möslinger
  */
-class eventsi {
+class Events {
     public static class SubjectClicked extends AbstractEvent<Subject> {
         public SubjectClicked(Subject subject) {
             super(subject);

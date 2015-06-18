@@ -48,14 +48,14 @@ public class ButtonCodingPane extends ScrollPane {
     }
 
     @Subscribe
-    public void subjectSelected(eventsi.SubjectClicked subjectClicked) {
+    public void subjectSelected(Events.SubjectClicked subjectClicked) {
         selectedSubject = subjectClicked.get();
 
         switchToPane(actionButtonPane);
     }
 
     @Subscribe
-    public void actionSelected(eventsi.ActionClicked actionClicked) {
+    public void actionSelected(Events.ActionClicked actionClicked) {
         selectedAction = actionClicked.get();
 
         if (selectedAction.getModifierFactory() != null) {
@@ -68,7 +68,7 @@ public class ButtonCodingPane extends ScrollPane {
     }
 
     @Subscribe
-    public void modifierSelected(eventsi.ModifierClicked modifierClicked) {
+    public void modifierSelected(Events.ModifierClicked modifierClicked) {
         code(modifierClicked.get());
 
         switchToPane(subjectButtonPane);
