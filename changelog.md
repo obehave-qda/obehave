@@ -1,15 +1,17 @@
 <!----------------------------------------------------------------------------->
-# 0.5.0 (2015-05-1x)
+# 0.5.0 (2015-05-18)
 ## New
 - refactored Exporter
 - updated Gradle from snapshot version to official 2.4 release
 - changed Play/Pause buttons
 - added StopWatch
 - naming: obehave instead of Obehave
+- coding per button clicks! \o/
 
 ## Bugfixes
 - 114: Words in wordlist modifiers are only allowed once
 - 111: action groups now appear immediately
+
 
 <!----------------------------------------------------------------------------->
 # 0.4.0 (2015-04-08)
@@ -54,6 +56,7 @@
 ## Known Issues
 - 91: Linux can't play mp4/H264 videos
 - 92: PopOvers won't stay in the back
+
 
 <!----------------------------------------------------------------------------->
 # 0.1.0 (2015-03-22)
