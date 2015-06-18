@@ -32,4 +32,4 @@ EVERY possible ModifierFactory.
 
 Debts without fancy description
 -------------------------------
-- ...
+- refactor context menu handling. It's just ugly.
