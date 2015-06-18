@@ -4,9 +4,9 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.shape.Rectangle?>
-<?import org.obehave.view.components.observation.coding.EventsPane?>
-<?import org.obehave.view.components.observation.coding.SubjectsList?>
-<?import org.obehave.view.components.observation.coding.TimelinePane?>
+<?import org.obehave.view.components.observation.timeline.EventsPane?>
+<?import org.obehave.view.components.observation.timeline.SubjectsList?>
+<?import org.obehave.view.components.observation.timeline.TimelinePane?>
 <fx:root type="javafx.scene.control.ScrollPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
          hbarPolicy="NEVER" pannable="true" prefWidth="600">
     <Pane fx:id="codingPane">

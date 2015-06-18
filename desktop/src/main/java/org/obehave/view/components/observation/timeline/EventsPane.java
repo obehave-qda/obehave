@@ -1,4 +1,4 @@
-package org.obehave.view.components.observation.coding;
+package org.obehave.view.components.observation.timeline;
 
 import com.google.common.eventbus.Subscribe;
 import javafx.beans.property.DoubleProperty;

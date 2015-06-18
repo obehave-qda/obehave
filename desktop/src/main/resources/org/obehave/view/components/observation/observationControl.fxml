@@ -3,7 +3,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.*?>
-<?import org.obehave.view.components.observation.coding.CodingControl?>
+<?import org.obehave.view.components.observation.timeline.CodingControl?>
 <?import org.obehave.view.components.observation.VideoControl?>
 <fx:root type="javafx.scene.layout.BorderPane" xmlns="http://javafx.com/javafx/8"
          xmlns:fx="http://javafx.com/fxml/1" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0"
