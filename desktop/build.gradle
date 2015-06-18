@@ -53,7 +53,6 @@ dependencies {
     compile "com.h2database:h2:$versionH2"
 
     compile "org.controlsfx:controlsfx:$versionControlsFx"
-    //compile "org.controlsfx:openjfx-dialogs:1.0.2"
 
     compile "org.apache.poi:poi:$versionApachePoi"
 
