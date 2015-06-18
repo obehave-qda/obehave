@@ -13,7 +13,6 @@ import org.obehave.model.Subject;
 import org.obehave.service.CodingService;
 import org.obehave.service.Study;
 import org.obehave.view.util.AlertUtil;
-import org.obehave.view.util.StopWatch;
 
 public class ButtonCodingPane extends ScrollPane {
     private final Pane showingPane = new Pane();
@@ -91,7 +90,7 @@ public class ButtonCodingPane extends ScrollPane {
         selectedAction = null;
     }
 
-    public void setStopWatch(StopWatch stopWatch) {
-        elapsedTimeProperty.bind(stopWatch.elapsedTimeProperty());
+    public void setElapsedTimeProperty(DoubleProperty elapsedTimeProperty) {
+        this.elapsedTimeProperty.bind(elapsedTimeProperty);
     }
 }
