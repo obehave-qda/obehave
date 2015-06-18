@@ -38,7 +38,7 @@ public class ActionButtonPane extends TilePane {
 
             this.action = action;
 
-            setOnAction(event -> EventBusHolder.post(new Events.ActionClicked(action)));
+            setOnAction(event -> EventBusHolder.post(new Eventsis.ActionClicked(action)));
         }
 
         @Override
