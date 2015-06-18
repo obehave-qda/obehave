@@ -1,4 +1,4 @@
-package org.obehave.view.components.observation.coding;
+package org.obehave.view.components.observation.timeline;
 
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.DoubleProperty;

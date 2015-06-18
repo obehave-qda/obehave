@@ -18,7 +18,7 @@ import org.obehave.service.ActionService;
 import org.obehave.service.CodingService;
 import org.obehave.service.Study;
 import org.obehave.service.SuggestionService;
-import org.obehave.view.components.observation.coding.CodingControl;
+import org.obehave.view.components.observation.timeline.CodingControl;
 import org.obehave.view.util.AlertUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
