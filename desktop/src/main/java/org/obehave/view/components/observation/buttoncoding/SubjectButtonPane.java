@@ -43,7 +43,7 @@ public class SubjectButtonPane extends TilePane {
 
             this.subject = subject;
 
-            setOnAction(event -> EventBusHolder.post(new Events.SubjectClicked(subject)));
+            setOnAction(event -> EventBusHolder.post(new Eventsis.SubjectClicked(subject)));
         }
 
         @Override

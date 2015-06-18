@@ -68,7 +68,7 @@ public class ModifierPane extends TilePane {
 
             this.modifierInput = modifierInput;
 
-            setOnAction(event -> EventBusHolder.post(new Events.ModifierClicked(modifierInput)));
+            setOnAction(event -> EventBusHolder.post(new Eventsis.ModifierClicked(modifierInput)));
         }
 
         @Override
