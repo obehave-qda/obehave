@@ -5,6 +5,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import org.obehave.events.EventBusHolder;
 import org.obehave.events.UiEvent;
 import org.obehave.exceptions.ServiceException;
@@ -14,8 +15,9 @@ import org.obehave.service.CodingService;
 import org.obehave.service.Study;
 import org.obehave.view.util.AlertUtil;
 
-public class ButtonCodingPane extends ScrollPane {
-    private final Pane showingPane = new Pane();
+
+public class ButtonCodingPane extends VBox {
+    private final ScrollPane showingGroup = new ScrollPane();
     private final SubjectButtonPane subjectButtonPane = new SubjectButtonPane();
     private final ActionButtonPane actionButtonPane = new ActionButtonPane();
     private final ModifierPane modifierPane = new ModifierPane();
@@ -31,10 +33,10 @@ public class ButtonCodingPane extends ScrollPane {
     public ButtonCodingPane() {
         EventBusHolder.register(this);
 
-        setHbarPolicy(ScrollBarPolicy.NEVER);
+        showingGroup.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
 
-        getChildren().addAll(showingPane, new OpenCodingPane());
-        showingPane.getChildren().add(subjectButtonPane);
+        getChildren().addAll(showingGroup, new OpenCodingPane());
+        showingGroup.setContent(subjectButtonPane);
     }
 
     public void setStudy(Study study) {
@@ -75,8 +77,7 @@ public class ButtonCodingPane extends ScrollPane {
     }
 
     private void switchToPane(Pane pane) {
-        showingPane.getChildren().clear();
-        showingPane.getChildren().add(pane);
+        showingGroup.setContent(pane);
     }
 
     private void code(String modifierInput) {
