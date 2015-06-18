@@ -3,6 +3,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.*?>
+<?import org.obehave.view.components.observation.buttoncoding.ButtonCodingPane?>
 <?import org.obehave.view.components.observation.timeline.CodingControl?>
 <?import org.obehave.view.components.observation.VideoControl?>
 <fx:root type="javafx.scene.layout.BorderPane" xmlns="http://javafx.com/javafx/8"
@@ -15,18 +16,25 @@
                 <RowConstraints percentHeight="25"/>
             </rowConstraints>
             <columnConstraints>
-                <ColumnConstraints percentWidth="100" />
+                <ColumnConstraints percentWidth="100"/>
             </columnConstraints>
             <AnchorPane GridPane.rowIndex="0" GridPane.columnIndex="0">
-                <VBox>
-                    <VideoControl fx:id="videoControl"/>
-                    <HBox>
-                        <TextField fx:id="inputSubject"/>
-                        <TextField fx:id="inputAction" onKeyReleased="#codeEnter"/>
-                        <TextField fx:id="inputModifier" onKeyReleased="#codeEnter"/>
-                        <Button text="Code" onAction="#code"/>
-                    </HBox>
-                </VBox>
+                <BorderPane>
+                    <center>
+                        <VBox>
+                            <VideoControl fx:id="videoControl"/>
+                            <HBox>
+                                <TextField fx:id="inputSubject"/>
+                                <TextField fx:id="inputAction" onKeyReleased="#codeEnter"/>
+                                <TextField fx:id="inputModifier" onKeyReleased="#codeEnter"/>
+                                <Button text="Code" onAction="#code"/>
+                            </HBox>
+                        </VBox>
+                    </center>
+                    <right>
+                        <ButtonCodingPane fx:id="buttonCodingPane"/>
+                    </right>
+                </BorderPane>
             </AnchorPane>
             <AnchorPane GridPane.rowIndex="1" GridPane.columnIndex="0">
                 <CodingControl AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0"

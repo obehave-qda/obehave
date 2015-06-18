@@ -18,6 +18,7 @@ import org.obehave.service.ActionService;
 import org.obehave.service.CodingService;
 import org.obehave.service.Study;
 import org.obehave.service.SuggestionService;
+import org.obehave.view.components.observation.buttoncoding.ButtonCodingPane;
 import org.obehave.view.components.observation.timeline.CodingControl;
 import org.obehave.view.util.AlertUtil;
 import org.slf4j.Logger;
@@ -49,6 +50,9 @@ public class ObservationControl extends BorderPane {
     private TextField inputAction;
     @FXML
     private TextField inputModifier;
+
+    @FXML
+    private ButtonCodingPane buttonCodingPane;
 
     private Map<TextField, AutoCompletionBinding<String>> completions = new HashMap<>();
 
@@ -93,6 +97,8 @@ public class ObservationControl extends BorderPane {
         inputAction.textProperty().addListener((observable, oldValue, newValue) -> handleActionValue(newValue));
         inputModifier.setText("No valid action entered");
         inputModifier.setDisable(true);
+
+        buttonCodingPane.setElapsedTimeProperty(msPlayed);
     }
 
     private void createSubjectCompletionBinding() {
@@ -148,6 +154,8 @@ public class ObservationControl extends BorderPane {
     public void setStudy(Study study) {
         this.study = study;
         this.actionService = study.getActionService();
+
+        buttonCodingPane.setStudy(study);
     }
 
     private void handleActionValue(String newValue) {
