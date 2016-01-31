@@ -1,2 +1,6 @@
 language: java
 jdk: oraclejdk8
+script:
+  - ./gradlew core:check
+# desktop:check has a broken test - should be included, but I want to see a passing build
+# android:check needs an installed SDK, which could get complicated. We'll see
