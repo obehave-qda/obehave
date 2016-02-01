@@ -7,6 +7,7 @@ import org.obehave.model.modifier.ModifierFactory;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -118,7 +119,7 @@ public class SuggestionService {
                 }
             }
         }
-        suggestedActions.sort(null);
+        Collections.sort(suggestedActions);
         return suggestedActions;
     }
 
@@ -154,7 +155,7 @@ public class SuggestionService {
             }
         }
 
-        suggestedSubjects.sort(null);
+        Collections.sort(suggestedSubjects);
         return suggestedSubjects;
     }
 
