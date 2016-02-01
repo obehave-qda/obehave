@@ -8,7 +8,7 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
     - $HOME/.cache/pip
-    - $HOME/.android-sdk # this may not be the best idea...
+#    - $HOME/.android-sdk # this may not be the best idea... - breaks the build, why?
 before_install:
   - pip install --user codecov
 install:
