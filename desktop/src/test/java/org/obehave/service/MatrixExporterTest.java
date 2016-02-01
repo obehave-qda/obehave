@@ -43,7 +43,8 @@ public class MatrixExporterTest {
     }
 
 
-    @Test
+    // FIXME test deactivated - should not depend on directory ../studies!
+    //@Test
     public void testExportServiceForActionData() throws ServiceException {
         prepareData();
         action.setName("boobling");
