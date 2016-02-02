@@ -14,8 +14,7 @@ cache:
 #    - $HOME/.android-sdk # this may not be the best idea... - breaks the build, why?
 
 before_install:
-  - ls -l
-  - ls -l $ANDROID_HOME
+  - ls -la $HOME
 
 addons:
   apt:
