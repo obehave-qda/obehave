@@ -9,11 +9,3 @@ cache:
     - $HOME/.gradle/wrapper/
     - $HOME/.cache/pip
 #    - $HOME/.android-sdk # this may not be the best idea... - breaks the build, why?
-before_install:
-  - pip install --user codecov
-install:
-  - ./gradlew core:assemble
-after_success:
-  - codecov
-# desktop:check has a broken test - should be included, but I want to see a passing build
-# android:check needs an installed SDK, which could get complicated. We'll see
