@@ -9,3 +9,10 @@ cache:
     - $HOME/.gradle/wrapper/
     - $HOME/.cache/pip
 #    - $HOME/.android-sdk # this may not be the best idea... - breaks the build, why?
+
+addons:
+  apt:
+    packages:
+    - libstdc++6:i386
+    - lib32z1
+    - expect
