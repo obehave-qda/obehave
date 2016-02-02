@@ -2,7 +2,7 @@ language: java
 jdk: oraclejdk8
 
 env:
-  - ANDROID_HOME="$HOME/.android"
+  - ANDROID_HOME="$HOME/.androidsdk"
 
 before_cache:
   - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -10,11 +10,16 @@ cache:
   directories:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
-    - $HOME/.android/
+    - $ANDROID_HOME
 #    - $HOME/.android-sdk # this may not be the best idea... - breaks the build, why?
 
 before_install:
-  - ls -la $HOME
+  # cache will create an empty directory when there is no sdk cached.
+  # android-sdk won't download sdk manager when there is a directory
+  - if ! [ "$(ls -A $ANDROID_HOME)" ]; then rm -r $ANDROID_HOME; fi
+
+before_cache:
+  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
 
 addons:
   apt:
