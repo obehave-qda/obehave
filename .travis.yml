@@ -18,7 +18,7 @@ before_install:
   - if ! [ "$(ls -A $ANDROID_HOME)" ]; then rm -r $ANDROID_HOME; fi
 
 install:
-# we don't need to prepare anything
+  - ./gradlew clean core:compileJava desktop:compileJava mobile:compileReleaseSources
 
 before_cache:
   - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
