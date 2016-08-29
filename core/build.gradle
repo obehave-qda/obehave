@@ -8,6 +8,11 @@ jar {
     }
 }
 
+task listrepos << {
+    println "Repositories:"
+    project.repositories.each { println "Name: " + it.name + "; url: " + it.url }
+}
+
 dependencies {
     ext {
         versionCommonsLang = "3.1"
@@ -39,15 +44,14 @@ dependencies {
     testCompile "org.hamcrest:hamcrest-all:$versionHamcrest"
 
     testCompile "com.h2database:h2:$versionH2"
-    compile "com.j256.ormlite:ormlite-jdbc:$versionOrmlite"
 
+    compile "com.j256.ormlite:ormlite-jdbc:$versionOrmlite"
     compile "com.j256.ormlite:ormlite-core:$versionOrmlite"
 
     compile "joda-time:joda-time:$versionJoda"
 
     compile "com.google.code.gson:gson:$versionGson"
 
-    // change to repo as soon as 1.0.9 is released: https://github.com/lviggiano/owner/issues/123
-    compile files('lib/owner-1.0.9-SNAPSHOT.jar')
+    compile "org.aeonbits.owner:owner:1.0.9"
 }
 
